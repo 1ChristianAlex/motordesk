@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: motordesk_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: motordesk
+      POSTGRES_PASSWORD: motordesk_pass
+      POSTGRES_DB: motordesk
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
+
+# Notes:
+# - This creates a Postgres 15 container with a persistent named volume `db_data`.
+# - Credentials are set in the `environment` section. For production, prefer using a `.env`
+#   file or Docker secrets instead of hardcoding credentials in this file.
+# - To start: `docker compose up -d` (or `docker-compose up -d` depending on your Docker CLI).
+
