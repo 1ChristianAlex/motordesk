@@ -1,11 +1,13 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Página-1" id="w7HYpww9-J7Z20PZzRJU">
-    <mxGraphModel dx="1414" dy="743" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1664" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-8" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="S1UZLs32Uq9Vu9_8KYrw-7" value="Try Login">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-8" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="S1UZLs32Uq9Vu9_8KYrw-7" value="try login using&amp;nbsp;&lt;div&gt;client access&lt;/div&gt;">
+          <mxGeometry relative="1" x="0.0182" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Client" vertex="1">
           <mxGeometry height="60" width="30" x="10" y="10" as="geometry" />
@@ -15,29 +17,36 @@
             <mxPoint x="240" y="40" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-26" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="euwPyyy4HeOdZjgNxWr8-25" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-7" parent="1" style="rhombus;whiteSpace=wrap;html=1;verticalAlign=top;" value="Has account?" vertex="1">
           <mxGeometry height="80" width="80" x="95" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-12" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="S1UZLs32Uq9Vu9_8KYrw-11" value="">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-12" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-11" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="40" />
+              <mxPoint x="470" y="45" />
+            </Array>
+            <mxPoint x="480" y="100" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-9" parent="1" style="whiteSpace=wrap;html=1;verticalAlign=top;" value="Create new account" vertex="1">
           <mxGeometry height="60" width="120" x="310" y="10" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-14" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="730" y="40" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-1" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-13">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-11" parent="1" style="whiteSpace=wrap;html=1;verticalAlign=top;" value="Enter client data (Name, lastname, email, phone, password, birthdate)" vertex="1">
           <mxGeometry height="70" width="120" x="510" y="10" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-16" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="S1UZLs32Uq9Vu9_8KYrw-15" value="Yes">
+        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-16" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-15" value="Yes">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="770" y="80" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-18" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="S1UZLs32Uq9Vu9_8KYrw-17" value="No">
+        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-18" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-17" value="No">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="810" y="40" as="sourcePoint" />
           </mxGeometry>
@@ -45,13 +54,16 @@
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-13" parent="1" style="rhombus;whiteSpace=wrap;html=1;verticalAlign=top;" value="Is Company" vertex="1">
           <mxGeometry height="80" width="80" x="655" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-21" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-19">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-21" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-19" value="Do CNPJ&amp;nbsp;&lt;div&gt;validation&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="746" y="200" as="sourcePoint" />
+            <mxPoint x="861" y="200" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;" value="Request Company info - CNPJ - Company name" vertex="1">
-          <mxGeometry height="60" width="120" x="710" y="170" as="geometry" />
+          <mxGeometry height="60" width="120" x="635" y="170" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-20" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="S1UZLs32Uq9Vu9_8KYrw-19" value="">
+        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-20" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="S1UZLs32Uq9Vu9_8KYrw-19" value="Do CPF numeric validation">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;" value="Request CPF" vertex="1">
@@ -63,14 +75,65 @@
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;" value="Request address / company address" vertex="1">
           <mxGeometry height="60" width="120" x="870" y="170" as="geometry" />
         </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-3" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="euwPyyy4HeOdZjgNxWr8-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-22" parent="1" style="whiteSpace=wrap;html=1;verticalAlign=top;rounded=1;" value="Do account validation using email / phone" vertex="1">
           <mxGeometry height="60" width="120" x="870" y="310" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-27" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-9">
+        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-27" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-9" value="Yes">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-26" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Already in an OS made in a physical store" vertex="1">
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-12" edge="1" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="euwPyyy4HeOdZjgNxWr8-11" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-26" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Has an existing OS made in physical store - First web access" vertex="1">
           <mxGeometry height="80" width="80" x="250" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-5" edge="1" parent="1" source="euwPyyy4HeOdZjgNxWr8-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="euwPyyy4HeOdZjgNxWr8-4" value="Yes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-7" edge="1" parent="1" source="euwPyyy4HeOdZjgNxWr8-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="euwPyyy4HeOdZjgNxWr8-6" value="No">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-2" parent="1" style="rhombus;whiteSpace=wrap;html=1;verticalAlign=top;rounded=1;" value="Validation success" vertex="1">
+          <mxGeometry height="80" width="80" x="690" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-4" parent="1" style="whiteSpace=wrap;html=1;verticalAlign=top;rounded=1;" value="Client is ready to access the application" vertex="1">
+          <mxGeometry height="60" width="120" x="670" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-10" edge="1" parent="1" source="euwPyyy4HeOdZjgNxWr8-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-6" parent="1" style="whiteSpace=wrap;html=1;verticalAlign=top;rounded=1;" value="Client can request new code" vertex="1">
+          <mxGeometry height="60" width="120" x="510" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-18" edge="1" parent="1" source="euwPyyy4HeOdZjgNxWr8-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="euwPyyy4HeOdZjgNxWr8-17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Client enter with CPF / CNPJ / OS number" vertex="1">
+          <mxGeometry height="60" width="120" x="230" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-21" edge="1" parent="1" source="euwPyyy4HeOdZjgNxWr8-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-9" value="No">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-23" edge="1" parent="1" source="euwPyyy4HeOdZjgNxWr8-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="euwPyyy4HeOdZjgNxWr8-22" value="Yes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-17" parent="1" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" value="Check if info exists" vertex="1">
+          <mxGeometry height="80" width="80" x="250" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-24" edge="1" parent="1" source="euwPyyy4HeOdZjgNxWr8-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="S1UZLs32Uq9Vu9_8KYrw-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-22" parent="1" style="whiteSpace=wrap;html=1;rounded=1;" value="Create a password and update missing required data" vertex="1">
+          <mxGeometry height="60" width="120" x="230" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-27" edge="1" parent="1" source="euwPyyy4HeOdZjgNxWr8-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="euwPyyy4HeOdZjgNxWr8-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="euwPyyy4HeOdZjgNxWr8-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;" value="Enter with CPF / CNPJ and password" vertex="1">
+          <mxGeometry height="60" width="120" x="75" y="170" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
