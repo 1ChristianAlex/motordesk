@@ -1,6 +1,5 @@
 package com.khrix.infrastructure.http.register.resources.dto
 
-import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,13 +11,16 @@ data class NewClientDto(
     val password: String,
     val cpf: String,
     val address: AddressDto,
-    val binaryRefAddr: LocalDate
 )
 
 @Serializable
 data class AddressDto(
     val street: String,
+    val number: String,
+    val complement: String? = null,
+    val neighborhood: String,
     val city: String,
-    val zipcode: String,
-    val streetNumber: String,
+    val state: String,
+    val country: String,
+    val zipCode: String,
 )

@@ -19,8 +19,6 @@ object AddressTable : BaseTable("address") {
     val country = varchar("country", 100)
 
     val zipCode = varchar("zipCode", 20)
-
-    val isDefault = bool("isDefault").default(false)
 }
 
 class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -34,8 +32,6 @@ class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
     var state by AddressTable.state
     var country by AddressTable.country
     var zipCode by AddressTable.zipCode
-
-    var isDefault by AddressTable.isDefault
 
     var createdAt by AddressTable.createdAt
     var updatedAt by AddressTable.updatedAt

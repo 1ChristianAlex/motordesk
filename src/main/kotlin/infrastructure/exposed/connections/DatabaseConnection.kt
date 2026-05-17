@@ -9,15 +9,13 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 abstract class DatabaseConnection {
     abstract val database: Database
 
-    companion object {
-        fun getConnection(database: Database): Database {
-            return database.apply {
-                transaction {
-                    SchemaUtils.create(
-                        UsersTable,
-                        AddressTable,
-                    )
-                }
+    fun getConnection(): Database {
+        return database.apply {
+            transaction {
+                SchemaUtils.create(
+                    UsersTable,
+                    AddressTable,
+                )
             }
         }
     }

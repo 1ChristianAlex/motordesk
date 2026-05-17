@@ -9,7 +9,7 @@ group = "com.khrix"
 version = "1.0.0-SNAPSHOT"
 
 application {
-    mainClass = "io.ktor.server.cio.EngineMain"
+    mainClass = "com.khrix.MainKt"
 }
 
 kotlin {
@@ -30,13 +30,14 @@ dependencies {
     implementation(ktorLibs.server.di)
     implementation(ktorLibs.server.requestValidation)
     implementation(ktorLibs.server.resources)
-    implementation(libs.exposed.core)
     implementation(libs.exposed.r2dbc)
     implementation(libs.h2database.h2)
     implementation(libs.h2database.r2dbc)
     implementation(libs.logback.classic)
     implementation(libs.postgresql)
     implementation(libs.konform)
+
+    implementation(libs.argon2)
 
     implementation(libs.exposed.core)
     implementation(libs.exposed.dao)
@@ -45,4 +46,5 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
+    testImplementation("io.ktor:ktor-server-test-host-jvm:3.4.0")
 }

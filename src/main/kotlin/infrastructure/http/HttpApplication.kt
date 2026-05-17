@@ -33,13 +33,6 @@ private fun Application.routing() {
             ignoreUnknownKeys = true
         })
     }
-    routing {
-        val appRoutingList: List<AppRouting> by dependencies
-        appRoutingList.forEach {
-            it.map(this)
-        }
-    }
-
     install(RequestValidation) {
         validate<String> { bodyText ->
             if (!bodyText.startsWith("Hello"))
@@ -47,7 +40,11 @@ private fun Application.routing() {
             else ValidationResult.Valid
         }
     }
-    install(RoutingRoot) {
+    routing {
+        val appRoutingList: List<AppRouting> by dependencies
+        appRoutingList.forEach {
+            it.map(this)
+        }
     }
 }
 
