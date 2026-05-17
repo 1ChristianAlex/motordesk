@@ -17,8 +17,8 @@ object UsersTable : BaseTable("users") {
     val email = varchar("email", 255).uniqueIndex()
     val password = varchar("passwordHash", 255)
 
-    val phone = varchar("phone", 30).nullable()
-    val cpf = varchar("cpf", 11).nullable()
+    val phone = varchar("phone", 30)
+    val cpf = varchar("cpf", 11)
 
     val isActive = bool("isActive").default(true)
 }

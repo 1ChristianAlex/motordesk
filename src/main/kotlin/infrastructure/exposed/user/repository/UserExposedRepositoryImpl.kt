@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalUuidApi::class)
-
 package com.khrix.infrastructure.exposed.user.repository
 
 import com.khrix.domain.user.model.User
@@ -9,7 +7,6 @@ import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.user.mapper.toModel
 import org.jetbrains.exposed.v1.jdbc.Database
-import kotlin.uuid.ExperimentalUuidApi
 
 class UserExposedRepositoryImpl(
     database: Database,

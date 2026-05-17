@@ -1,5 +1,6 @@
 package com.khrix.domain.address.model
 
+import com.khrix.domain.valueobject.AddressValueObject
 import kotlinx.datetime.LocalDateTime
 
 data class Address(
@@ -14,4 +15,9 @@ data class Address(
     val zipCode: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-)
+) {
+    init {
+        val validation = AddressValueObject(this)
+        validation.validate()
+    }
+}
