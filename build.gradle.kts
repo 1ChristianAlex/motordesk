@@ -29,6 +29,7 @@ dependencies {
     implementation(ktorLibs.server.defaultHeaders)
     implementation(ktorLibs.server.di)
     implementation(ktorLibs.server.requestValidation)
+    implementation(ktorLibs.server.resources)
     implementation(libs.exposed.core)
     implementation(libs.exposed.r2dbc)
     implementation(libs.h2database.h2)
