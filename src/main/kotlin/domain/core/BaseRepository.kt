@@ -1,4 +1,4 @@
-package com.khrix.domain.address.core
+package com.khrix.domain.core
 
 interface BaseRepository<Model> :
     BaseCreateReturn<Model>,

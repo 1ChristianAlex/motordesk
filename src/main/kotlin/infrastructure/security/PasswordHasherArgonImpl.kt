@@ -1,11 +1,12 @@
-package com.khrix.domain.address.core
+package com.khrix.infrastructure.security
 
+import com.khrix.domain.security.PasswordHasher
 import de.mkammerer.argon2.Argon2Factory
 
-object PasswordService {
+class PasswordHasherArgonImpl : PasswordHasher {
     private val argon2 = Argon2Factory.create()
 
-    fun hash(password: String): String {
+    override fun hash(password: String): String {
         val iterations = 3
         val memory = 65536
         val parallelism = 1
@@ -18,7 +19,7 @@ object PasswordService {
         )
     }
 
-    fun verify(password: String, hash: String): Boolean {
+    override fun verify(password: String, hash: String): Boolean {
         return try {
             argon2.verify(hash, password.toCharArray())
         } finally {

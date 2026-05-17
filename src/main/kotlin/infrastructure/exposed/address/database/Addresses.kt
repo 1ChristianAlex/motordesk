@@ -36,5 +36,5 @@ class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
     var createdAt by AddressTable.createdAt
     var updatedAt by AddressTable.updatedAt
 
-    val user by UserEntity referrersOn UsersTable.addressId
+    val user by UserEntity optionalReferencedOn UsersTable.addressId
 }

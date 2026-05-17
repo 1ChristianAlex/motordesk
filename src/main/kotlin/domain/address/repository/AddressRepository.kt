@@ -1,9 +1,9 @@
 package com.khrix.domain.address.repository
 
-import com.khrix.domain.address.core.BaseDelete
-import com.khrix.domain.address.core.BaseRead
-import com.khrix.domain.address.core.BaseUpdate
 import com.khrix.domain.address.model.Address
+import com.khrix.domain.core.BaseDelete
+import com.khrix.domain.core.BaseRead
+import com.khrix.domain.core.BaseUpdate
 
 interface AddressRepository :
     BaseRead<Address>,

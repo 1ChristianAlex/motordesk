@@ -9,7 +9,7 @@ import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object UsersTable : BaseTable("users") {
-    val addressId = reference("addressId", AddressTable.id)
+    val addressId = reference("addressId", AddressTable.id).nullable()
 
     val firstName = varchar("firstName", 100)
     val lastName = varchar("lastName", 100)
@@ -26,7 +26,7 @@ object UsersTable : BaseTable("users") {
 class UserEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UserEntity>(UsersTable)
 
-    var address by AddressEntity referencedOn UsersTable.addressId
+    var address by AddressEntity optionalReferencedOn UsersTable.addressId
 
     var firstName by UsersTable.firstName
     var lastName by UsersTable.lastName
