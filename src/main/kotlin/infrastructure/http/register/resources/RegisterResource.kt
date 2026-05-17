@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 
 @Resource("/register")
 @Serializable
-class RegisterResource {}
+class RegisterResource

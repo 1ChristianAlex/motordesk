@@ -38,6 +38,11 @@ dependencies {
     implementation(libs.postgresql)
     implementation(libs.konform)
 
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.kotlin.datetime)
+
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
 }
