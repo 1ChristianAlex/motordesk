@@ -13,4 +13,9 @@ interface AddressRepository :
         data: Address,
         userId: Int
     ): Address
+
+    suspend fun create(
+        data: Address,
+        userId: Int
+    ): Int
 }

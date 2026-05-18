@@ -5,6 +5,7 @@ import com.khrix.domain.address.repository.AddressRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.address.mapper.toModel
+import com.khrix.infrastructure.exposed.user.database.UserEntity
 import org.jetbrains.exposed.v1.jdbc.Database
 
 class AddressExposedRepositoryImpl(
@@ -48,5 +49,21 @@ class AddressExposedRepositoryImpl(
 
     override suspend fun delete(id: Int) {
         suspendedQuery { AddressEntity[id].delete() }
+    }
+
+    override suspend fun create(data: Address, userId: Int): Int {
+        return suspendedQuery {
+            AddressEntity.new {
+                street = data.street
+                number = data.number
+                complement = data.complement
+                neighborhood = data.neighborhood
+                city = data.city
+                state = data.state
+                country = data.country
+                zipCode = data.zipCode
+                user = UserEntity.get(userId)
+            }.id.value
+        }
     }
 }

@@ -8,5 +8,6 @@ import kotlinx.serialization.Serializable
 data class HTTPResult<Data>(
     val data: Data?,
     @Serializable(with = HttpStatusCodeSerializer::class)
-    val status: HttpStatusCode = HttpStatusCode.OK
+    val status: HttpStatusCode = HttpStatusCode.OK,
+    val message: String? = null
 )

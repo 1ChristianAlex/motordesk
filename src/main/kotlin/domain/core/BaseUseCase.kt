@@ -18,19 +18,19 @@ abstract class BaseTryBlock<TOutData>(
     }
 }
 
-abstract class BaseUseCase<TInputData, TOutData>() : BaseTryBlock<TOutData>() {
-    suspend fun execute(inputData: TInputData): Result<TOutData> {
-        return tryBlock(useCaseDescription()) { internalExecute(inputData) }
+abstract class BaseUseCaseImpl<TInputData, TOutData>() : BaseTryBlock<TOutData>() {
+    suspend fun execute(command: TInputData): Result<TOutData> {
+        return tryBlock(useCaseDescription()) { internalExecute(command) }
     }
 
     protected abstract suspend fun internalExecute(
-        inputData: TInputData,
+        command: TInputData,
     ): TOutData
 
     protected abstract suspend fun useCaseDescription(): String
 }
 
-abstract class BaseUseCaseNoParam<TOutData>() : BaseTryBlock<TOutData>() {
+abstract class BaseUseCaseNoParamImpl<TOutData>() : BaseTryBlock<TOutData>() {
     suspend fun execute(): Result<TOutData> {
         return tryBlock(useCaseDescription()) { internalExecute() }
     }
@@ -38,4 +38,21 @@ abstract class BaseUseCaseNoParam<TOutData>() : BaseTryBlock<TOutData>() {
     protected abstract suspend fun internalExecute(): TOutData
 
     protected abstract suspend fun useCaseDescription(): String
+}
+
+interface BaseUseCase<TInputData, TOutData> {
+    suspend fun execute(
+        command: TInputData
+    ): Result<TOutData>
+
+    suspend fun internalExecute(
+        command: TInputData
+    ): TOutData
+
+    suspend fun useCaseDescription(): String
+}
+
+interface BaseUseCaseNoParam<TInputData, TOutData> : BaseUseCase<Unit, TOutData> {
+    suspend fun execute(): Result<TOutData>
+    suspend fun internalExecute(): TOutData
 }

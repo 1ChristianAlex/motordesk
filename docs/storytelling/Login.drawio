@@ -1,6 +1,6 @@
-<mxfile host="drawio-plugin" modified="2026-05-17T01:48:09.127Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" etag="FuXzEJP-bkBHb5imyKyp" version="22.1.22" type="embed" pages="3">
+<mxfile host="drawio-plugin" modified="2026-05-17T21:08:10.140Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" etag="APk334kOvlsfHzYSFfos" version="22.1.22" type="embed" pages="3">
   <diagram name="Process" id="w7HYpww9-J7Z20PZzRJU">
-    <mxGraphModel dx="1725" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1245" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -151,7 +151,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="0GEsKpHLbtNqE5ORcXCh" name="Event Storming">
-    <mxGraphModel dx="898" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="418" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />

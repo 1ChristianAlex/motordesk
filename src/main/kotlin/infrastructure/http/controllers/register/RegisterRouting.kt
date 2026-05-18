@@ -1,7 +1,7 @@
-package com.khrix.infrastructure.http.register
+package com.khrix.infrastructure.http.controllers.register
 
 import com.khrix.infrastructure.http.core.AppRouting
-import com.khrix.infrastructure.http.register.resources.RegisterResource
+import com.khrix.infrastructure.http.controllers.register.resources.RegisterResource
 import io.ktor.server.routing.*
 import kotlinx.serialization.ExperimentalSerializationApi
 
