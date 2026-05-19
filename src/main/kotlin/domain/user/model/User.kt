@@ -15,4 +15,8 @@ data class User(
     val isActive: Boolean,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-)
+) {
+    fun updatePassword(password: Password): User {
+        return this.copy(password = password)
+    }
+}

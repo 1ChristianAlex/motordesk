@@ -1,0 +1,8 @@
+$kind: http-request
+name: Create User
+url: http://127.0.0.1:8080/register
+method: POST
+body:
+  type: json
+  content: "{}"
+order: 2420714402901910

@@ -9,5 +9,5 @@ data class HTTPResult<Data>(
     val data: Data?,
     @Serializable(with = HttpStatusCodeSerializer::class)
     val status: HttpStatusCode = HttpStatusCode.OK,
-    val message: String? = null
+    val errors: List<String>? = null
 )

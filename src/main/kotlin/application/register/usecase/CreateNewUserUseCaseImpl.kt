@@ -7,6 +7,7 @@ import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
+import com.khrix.domain.valueobject.Password
 
 class CreateNewUserUseCaseImpl constructor(
     private val userRepository: UserRepository,
@@ -16,7 +17,7 @@ class CreateNewUserUseCaseImpl constructor(
     BaseUseCaseImpl<CreateNewUserUseCaseCommand, User>() {
     override suspend fun internalExecute(command: CreateNewUserUseCaseCommand): User {
         val hashedPass = passwordHasher.hash(command.user.password.value)
-        val userWithHashedPassword = command.user.copy(password = command.user.password.copy(value = hashedPass))
+        val userWithHashedPassword = command.user.updatePassword(Password(hashedPass, true))
 
         val userId = userRepository.create(userWithHashedPassword)
         addressRepository.create(command.address, userId)

@@ -9,17 +9,16 @@ data class CPF(val value: String) {
             val cleaned = onlyDigits(value)
 
             validate("trimmedCPF", { cleaned }) {
-                pattern("^\\d{11}$") hint "CPF must contain exactly 11 digits when non-digit characters are removed"
-                constrain("validCPF") { !isValidCPF(cleaned) } hint "Invalid CPF number"
+                pattern("^\\d{11}$") hint "CPF must contain exactly 11 number digits"
+                constrain("validCPF") { isValidCPF(cleaned) } hint "Invalid CPF number"
             }
-            pattern("^[0-9.-\\s]+$") hint "CPF must contain only digits, dots, dashes or spaces"
         }
     }
 
     init {
         val validationResult = validation.validate(this)
         if (validationResult.errors.isNotEmpty()) {
-            throw IllegalArgumentException(validationResult.errors.joinToString { it.message })
+            throw validationResult.toValidationError()
         }
     }
 

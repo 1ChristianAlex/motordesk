@@ -9,19 +9,18 @@ data class Name(val value: String) {
 
     val validation = Validation<Name> {
         Name::value {
-            minLength(2) hint "Must be at least 2 characters long"
-            maxLength(100) hint "Must not exceed 100 characters"
-            pattern("^[a-zA-ZáéíóúãõçÁÉÍÓÚÃÕÇ\\s'-]+$") hint "Can only contain letters, spaces, hyphens, and apostrophes"
+            validate("trimmed", { value.trim() }) {
+                minLength(2) hint "Must be at least 2 characters long"
+                maxLength(100) hint "Must not exceed 100 characters"
+                pattern("^\\w+\\s?\\w+$".toRegex()) hint "Can only contain letters, spaces, hyphens, and apostrophes"
+            }
         }
     }
 
     init {
-        val trimmed = value.trim()
-
-        val nameToValidate = this.copy(value = trimmed)
-        val validationResult = validation.validate(nameToValidate)
+        val validationResult = validation.validate(this)
         if (validationResult.errors.isNotEmpty()) {
-            throw IllegalArgumentException(validationResult.errors.joinToString { it.message })
+            throw validationResult.toValidationError()
         }
     }
 }

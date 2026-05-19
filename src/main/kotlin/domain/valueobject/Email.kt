@@ -6,6 +6,7 @@ import io.konform.validation.constraints.pattern
 
 data class Email(val value: String) {
 
+    private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
     val validEmail = Validation<Email> {
         Email::value  {
             minLength(5) hint "Email must be at least 5 characters long"
@@ -16,10 +17,7 @@ data class Email(val value: String) {
     init {
         val validationResult = validEmail.validate(this)
         if (validationResult.errors.isNotEmpty()) {
-            throw IllegalArgumentException(validationResult.errors.joinToString { it.message })
+            throw validationResult.toValidationError()
         }
     }
-
-    private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
-
 }

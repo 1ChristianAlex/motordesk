@@ -12,7 +12,6 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.di.*
-import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
@@ -20,7 +19,7 @@ import org.slf4j.event.Level
 
 fun Application.httpApplication() {
     httpHeaders()
-    install(Resources)
+
     routing()
     logging()
 }
@@ -33,13 +32,7 @@ private fun Application.routing() {
             ignoreUnknownKeys = true
         })
     }
-    install(RequestValidation) {
-        validate<String> { bodyText ->
-            if (!bodyText.startsWith("Hello"))
-                ValidationResult.Invalid("Body text should start with 'Hello'")
-            else ValidationResult.Valid
-        }
-    }
+    install(Resources)
     routing {
         val appRoutingList: List<AppRouting> by dependencies
         appRoutingList.forEach {
