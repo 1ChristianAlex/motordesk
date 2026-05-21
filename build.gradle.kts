@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
@@ -15,6 +14,10 @@ application {
 kotlin {
     jvmToolchain(21)
 }
+ktor {
+    development = true
+}
+
 dependencies {
     implementation(ktorLibs.serialization.kotlinx.json)
     implementation(ktorLibs.server.auth)
@@ -30,19 +33,13 @@ dependencies {
     implementation(ktorLibs.server.di)
     implementation(ktorLibs.server.requestValidation)
     implementation(ktorLibs.server.resources)
-    implementation(libs.exposed.r2dbc)
-    implementation(libs.h2database.h2)
-    implementation(libs.h2database.r2dbc)
+
     implementation(libs.logback.classic)
-    implementation(libs.postgresql)
     implementation(libs.konform)
 
     implementation(libs.argon2)
 
-    implementation(libs.exposed.core)
-    implementation(libs.exposed.dao)
-    implementation(libs.exposed.jdbc)
-    implementation(libs.exposed.kotlin.datetime)
+    implementation(libs.bundles.exposed)
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

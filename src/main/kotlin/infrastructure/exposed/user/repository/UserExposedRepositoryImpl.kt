@@ -2,10 +2,13 @@ package com.khrix.infrastructure.exposed.user.repository
 
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
+import com.khrix.domain.valueobject.Email
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.user.database.UserEntity
+import com.khrix.infrastructure.exposed.user.database.UsersTable
 import com.khrix.infrastructure.exposed.user.mapper.toModel
+import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database
 
 class UserExposedRepositoryImpl(
@@ -37,32 +40,30 @@ class UserExposedRepositoryImpl(
     }
 
     override suspend fun createRead(data: User): User {
-        return suspendedQuery {
-            UserEntity.new {
-                firstName = data.firstName.value
-                lastName = data.lastName.value
-                email = data.email.value
-                password = data.password.value
-                phone = data.phone.value
-                cpf = data.cpf.value
-                isActive = data.isActive
-                address = null
-            }.toModel()
-        }
+        return suspendedQuery { createCleanUser(data).toModel() }
     }
 
     override suspend fun create(data: User): Int {
+        return suspendedQuery { createCleanUser(data).id.value }
+    }
+
+    private fun createCleanUser(data: User): UserEntity {
+        return UserEntity.new {
+            firstName = data.firstName.value
+            lastName = data.lastName.value
+            email = data.email.value
+            password = data.password.value
+            phone = data.phone.normalize()
+            cpf = data.cpf.normalize()
+            isActive = true
+            isEmailValid = false
+            address = if (data.addressId > 0) AddressEntity[data.addressId] else null
+        }
+    }
+
+    override suspend fun getByEmail(email: Email): User? {
         return suspendedQuery {
-            UserEntity.new {
-                firstName = data.firstName.value
-                lastName = data.lastName.value
-                email = data.email.value
-                password = data.password.value
-                phone = data.phone.value
-                cpf = data.cpf.value
-                isActive = data.isActive
-                address = null
-            }.id.value
+            UserEntity.find { UsersTable.email eq email.value }.firstOrNull()?.toModel()
         }
     }
 }

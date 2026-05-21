@@ -9,6 +9,6 @@ fun main(args: Array<String>) {
         factory = CIO,
         port = 8080,
         host = "0.0.0.0",
-        module = Application::rootModule
+        module = Application::rootModule,
     ).start(wait = true)
 }

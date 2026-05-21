@@ -4,5 +4,47 @@ url: http://127.0.0.1:8080/register
 method: POST
 body:
   type: json
-  content: "{}"
+  content: "{\r
+
+    \    \"user\": {\r
+
+    \        \"firstName\": \"Kaique\",\r
+
+    \        \"lastName\": \"Lopes\",\r
+
+    \        \"email\": \"augusto_lopes@indaiamidias.com.br\",\r
+
+    \        \"phone\": \"(47) 3733-9296\",\r
+
+    \        \"password\": \"test@123!\",\r
+
+    \        \"cpf\": \"216.417.800-96\"\r
+
+    \    },\r
+
+    \    \"address\": {\r
+
+    \        \"street\": \"Rua das Flores\",\r
+
+    \        \"number\": \"123\",\r
+
+    \        \"complement\": \"Apto 4B\",\r
+
+    \        \"neighborhood\": \"Centro\",\r
+
+    \        \"city\": \"São Paulo\",\r
+
+    \        \"state\": \"SP\",\r
+
+    \        \"country\": \"Brazil\",\r
+
+    \        \"zipCode\": \"01310-100\"\r
+
+    \    },\r
+
+    \    \"cnpj\": \"12345678000190\",\r
+
+    \    \"companyName\": \"Test Company\"\r
+
+    }"
 order: 2420714402901910

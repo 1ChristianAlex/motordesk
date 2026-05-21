@@ -36,5 +36,5 @@ class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
     var createdAt by AddressTable.createdAt
     var updatedAt by AddressTable.updatedAt
 
-    var user by UserEntity optionalReferencedOn UsersTable.addressId
+    val user by UserEntity optionalBackReferencedOn UsersTable.address
 }

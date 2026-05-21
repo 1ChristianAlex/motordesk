@@ -1,4 +1,4 @@
-package com.khrix.infrastructure.application
+package com.khrix.infrastructure.app
 
 import com.khrix.infrastructure.http.configureSecurityJWT
 import com.khrix.infrastructure.http.httpApplication

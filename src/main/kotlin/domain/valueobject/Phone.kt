@@ -16,6 +16,8 @@ data class Phone(val value: String) {
         }
     }
 
+    fun normalize(): String = value.filter { it.isDigit() }
+
     init {
         val validationResult = validation.validate(this)
         if (validationResult.errors.isNotEmpty()) {

@@ -6,7 +6,7 @@ import io.konform.validation.constraints.pattern
 data class CPF(val value: String) {
     val validation = Validation<CPF> {
         CPF::value {
-            val cleaned = onlyDigits(value)
+            val cleaned = normalize()
 
             validate("trimmedCPF", { cleaned }) {
                 pattern("^\\d{11}$") hint "CPF must contain exactly 11 number digits"
@@ -22,7 +22,7 @@ data class CPF(val value: String) {
         }
     }
 
-    private fun onlyDigits(input: String): String = input.filter { it.isDigit() }
+    fun normalize(): String = value.filter { it.isDigit() }
 
     private fun isValidCPF(cpf: String): Boolean {
         if (cpf.all { it == cpf[0] }) return false

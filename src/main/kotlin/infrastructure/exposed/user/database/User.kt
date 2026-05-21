@@ -9,7 +9,7 @@ import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object UsersTable : BaseTable("users") {
-    val addressId = reference("addressId", AddressTable.id).nullable()
+    val address = reference("addressId", AddressTable).nullable()
 
     val firstName = varchar("firstName", 100)
     val lastName = varchar("lastName", 100)
@@ -21,12 +21,13 @@ object UsersTable : BaseTable("users") {
     val cpf = varchar("cpf", 11)
 
     val isActive = bool("isActive").default(true)
+    val isEmailValid = bool("isEmailValid").default(false)
 }
 
 class UserEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UserEntity>(UsersTable)
 
-    var address by AddressEntity optionalReferencedOn UsersTable.addressId
+    var address by AddressEntity optionalReferencedOn UsersTable.address
 
     var firstName by UsersTable.firstName
     var lastName by UsersTable.lastName
@@ -35,6 +36,7 @@ class UserEntity(id: EntityID<Int>) : IntEntity(id) {
     var phone by UsersTable.phone
     var cpf by UsersTable.cpf
     var isActive by UsersTable.isActive
+    var isEmailValid by UsersTable.isEmailValid
     var createdAt by UsersTable.createdAt
     var updatedAt by UsersTable.updatedAt
 }

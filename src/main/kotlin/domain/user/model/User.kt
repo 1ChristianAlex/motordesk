@@ -16,7 +16,11 @@ data class User(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 ) {
-    fun updatePassword(password: Password): User {
-        return this.copy(password = password)
+    fun updatePassword(password: String, bypass: Boolean = false): User {
+        return copy(password = Password(password, bypass))
+    }
+
+    fun updateAddress(addressId: Int): User {
+        return copy(addressId = addressId)
     }
 }

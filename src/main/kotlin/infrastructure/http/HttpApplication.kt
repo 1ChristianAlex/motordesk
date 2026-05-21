@@ -19,7 +19,6 @@ import org.slf4j.event.Level
 
 fun Application.httpApplication() {
     httpHeaders()
-
     routing()
     logging()
 }

@@ -5,24 +5,14 @@ import com.khrix.domain.address.repository.AddressRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.address.mapper.toModel
-import com.khrix.infrastructure.exposed.user.database.UserEntity
 import org.jetbrains.exposed.v1.jdbc.Database
 
 class AddressExposedRepositoryImpl(
     database: Database,
 ) : BaseExposedRepository<AddressEntity, Address>(database), AddressRepository {
-    override suspend fun createRead(data: Address, userId: Int): Address {
+    override suspend fun createRead(data: Address): Address {
         return suspendedQuery {
-            AddressEntity.new {
-                street = data.street
-                number = data.number
-                complement = data.complement
-                neighborhood = data.neighborhood
-                city = data.city
-                state = data.state
-                country = data.country
-                zipCode = data.zipCode
-            }.toModel()
+            createNewAddress(data).toModel()
         }
     }
 
@@ -51,19 +41,20 @@ class AddressExposedRepositoryImpl(
         suspendedQuery { AddressEntity[id].delete() }
     }
 
-    override suspend fun create(data: Address, userId: Int): Int {
+    override suspend fun create(data: Address): Int {
         return suspendedQuery {
-            AddressEntity.new {
-                street = data.street
-                number = data.number
-                complement = data.complement
-                neighborhood = data.neighborhood
-                city = data.city
-                state = data.state
-                country = data.country
-                zipCode = data.zipCode
-                user = UserEntity.get(userId)
-            }.id.value
+            createNewAddress(data).id.value
         }
+    }
+
+    private fun createNewAddress(data: Address) = AddressEntity.new {
+        street = data.street
+        number = data.number
+        complement = data.complement
+        neighborhood = data.neighborhood
+        city = data.city
+        state = data.state
+        country = data.country
+        zipCode = data.zipCode
     }
 }

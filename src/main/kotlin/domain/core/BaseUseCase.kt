@@ -13,7 +13,7 @@ abstract class BaseTryBlock<TOutData>(
             Result.success(callback())
         } catch (ex: Exception) {
             ex.printStackTrace()
-            Result.failure(Exception(description, ex))
+            Result.failure(ex)
         }
     }
 }

@@ -1,12 +1,13 @@
 package com.khrix.infrastructure.exposed.connections
 
+import io.ktor.server.plugins.di.annotations.*
 import org.jetbrains.exposed.v1.jdbc.Database
 import java.util.*
 
-class PostgresConnection : DatabaseConnection() {
+class PostgresConnection(@Named("isDevelopment") isDevelopment: Boolean) : DatabaseConnection(isDevelopment) {
     private val properties: Properties by lazy {
         Properties().apply {
-            this::class.java.classLoader.getResourceAsStream("secrets.properties")?.use {
+            object {}.javaClass.classLoader.getResourceAsStream("secrets.properties")?.use {
                 load(it)
             }
         }

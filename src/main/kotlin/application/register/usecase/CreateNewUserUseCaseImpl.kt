@@ -7,7 +7,6 @@ import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
-import com.khrix.domain.valueobject.Password
 
 class CreateNewUserUseCaseImpl constructor(
     private val userRepository: UserRepository,
@@ -17,10 +16,13 @@ class CreateNewUserUseCaseImpl constructor(
     BaseUseCaseImpl<CreateNewUserUseCaseCommand, User>() {
     override suspend fun internalExecute(command: CreateNewUserUseCaseCommand): User {
         val hashedPass = passwordHasher.hash(command.user.password.value)
-        val userWithHashedPassword = command.user.updatePassword(Password(hashedPass, true))
+        val addressId = addressRepository.create(command.address)
 
+        val userWithHashedPassword = command.user
+            .updatePassword(hashedPass, true)
+            .updateAddress(addressId)
+        
         val userId = userRepository.create(userWithHashedPassword)
-        addressRepository.create(command.address, userId)
 
         val user = userRepository.read(userId) ?: throw Exception("User not found after creation")
 

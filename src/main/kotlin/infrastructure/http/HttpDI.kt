@@ -10,7 +10,7 @@ import io.ktor.server.plugins.di.*
 fun httpDI(dependencies: DependencyRegistry) {
     with(dependencies) {
         provide<CreateNewUserHandler> {
-            CreateNewUserHandlerImpl(resolve())
+            CreateNewUserHandlerImpl(resolve(), resolve())
         }
         provide<List<AppRouting>> {
             listOf<AppRouting>(

@@ -7,7 +7,12 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.di.*
 
 fun Application.appInfrastructure() {
+    val isDevelopment = developmentMode
+
+    dependencies {
+        provide<Boolean>(name = "isDevelopment") { isDevelopment }
+    }
+    appDatabase(dependencies)
     securityDI(dependencies)
     httpDI(dependencies)
-    appDatabase(dependencies)
 }
