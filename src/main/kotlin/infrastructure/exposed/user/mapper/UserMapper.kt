@@ -20,6 +20,7 @@ suspend fun UserEntity.toModel(): User {
             addressId = address?.id?.value ?: 0,
             createdAt = createdAt,
             updatedAt = updatedAt,
+            companyId = company?.id?.value,
         )
     }
 }

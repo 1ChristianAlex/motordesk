@@ -33,7 +33,7 @@ data class Password(val value: String, val bypass: Boolean = false) {
         if (!bypass) {
             val validationResult = validation.validate(this)
             if (validationResult.errors.isNotEmpty()) {
-                throw validationResult.toValidationError()
+                throw validationResult.toValidationError(this::class)
             }
         }
     }

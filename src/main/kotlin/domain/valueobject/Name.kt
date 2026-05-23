@@ -20,7 +20,7 @@ data class Name(val value: String) {
     init {
         val validationResult = validation.validate(this)
         if (validationResult.errors.isNotEmpty()) {
-            throw validationResult.toValidationError()
+            throw validationResult.toValidationError(this::class)
         }
     }
 }

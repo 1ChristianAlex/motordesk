@@ -5,7 +5,7 @@ import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
 import com.khrix.domain.valueobject.Email
 
-class VerifyIsEmailAvailableUseCaseImpl constructor(
+class VerifyIsEmailAvailableUseCaseImpl(
     private val userRepository: UserRepository,
 ) : VerifyIsEmailAvailableUseCase,
     BaseUseCaseImpl<Email, Boolean>() {

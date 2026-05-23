@@ -1,6 +1,7 @@
 package com.khrix.infrastructure.exposed.address.repository
 
 import com.khrix.domain.address.model.Address
+import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.infrastructure.exposed.connections.MemoryConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -8,10 +9,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.test.*
-import kotlin.time.Clock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddressExposedRepositoryImplTest {
@@ -31,7 +29,7 @@ class AddressExposedRepositoryImplTest {
         val database = MemoryConnection().getConnection()
         val repo = AddressExposedRepositoryImpl(database)
 
-        val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+        val now = getCurrentUtcDateTime()
 
         val input = Address(
             id = null,

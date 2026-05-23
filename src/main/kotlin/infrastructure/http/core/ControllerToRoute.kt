@@ -38,7 +38,7 @@ class ControllerToRoute {
             when (root) {
                 is MissingFieldException -> {
                     respond(
-                        HTTPResult(
+                        HttpResult(
                             root.missingFields.joinToString(";") + " are required",
                             HttpStatusCode.BadRequest
                         )
@@ -46,7 +46,7 @@ class ControllerToRoute {
                 }
 
                 else -> {
-                    respond(HTTPResult(ex.message, HttpStatusCode.BadRequest))
+                    respond(HttpResult(ex.message, HttpStatusCode.BadRequest))
                 }
             }
         }
@@ -69,7 +69,7 @@ class ControllerToRoute {
 
     private suspend fun handleSuccess(
         call: RoutingCall,
-        result: HTTPResult<out Any?>
+        result: HttpResult<out Any?>
     ) {
         call.apply {
             if (HttpStatusCode.NoContent == result.status) {

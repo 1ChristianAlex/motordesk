@@ -14,5 +14,7 @@ fun User.toOutputDto(): UserOutputDto {
         isActive = this.isActive,
         createdAt = this.createdAt,
         updatedAt = this.updatedAt,
+        companyId = this.companyId,
+        addressId = this.addressId
     )
 }

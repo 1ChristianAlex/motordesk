@@ -17,7 +17,7 @@ data class Email(val value: String) {
     init {
         val validationResult = validEmail.validate(this)
         if (validationResult.errors.isNotEmpty()) {
-            throw validationResult.toValidationError()
+            throw validationResult.toValidationError(this::class)
         }
     }
 }

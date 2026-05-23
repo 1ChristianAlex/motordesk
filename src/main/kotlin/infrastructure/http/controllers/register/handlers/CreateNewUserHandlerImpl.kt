@@ -5,16 +5,16 @@ import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
 import com.khrix.domain.valueobject.ValidationErrorResult
 import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
-import com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto
+import com.khrix.infrastructure.http.controllers.register.resources.dto.RegisterOutputDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
-import com.khrix.infrastructure.http.core.HTTPResult
+import com.khrix.infrastructure.http.core.HttpResult
 import io.ktor.http.*
 
-class CreateNewUserHandlerImpl constructor(
+class CreateNewUserHandlerImpl(
     private val createNewUserUseCase: CreateNewUserUseCase,
     private val verifyIsEmailAvailableUseCase: VerifyIsEmailAvailableUseCase
 ) : CreateNewUserHandler {
-    override suspend fun handler(body: ClientRegisterDto): HTTPResult<UserOutputDto> {
+    override suspend fun handler(body: ClientRegisterDto): HttpResult<RegisterOutputDto> {
         return try {
             val userModel = body.user.toDomain()
             val isEmailAvailable = verifyIsEmailAvailableUseCase.execute(userModel.email).getOrElse { false }
@@ -27,17 +27,17 @@ class CreateNewUserHandlerImpl constructor(
                 CreateNewUserUseCaseCommand(
                     user = userModel,
                     address = body.address.toDomain(),
-                    cnpj = body.cnpj,
-                    companyName = body.companyName,
+                    company = body.company?.toDomain()
                 )
             ).getOrThrow()
 
-            val outputDto = user.toOutputDto()
-            HTTPResult(outputDto, HttpStatusCode.Created)
+            val userOutputDto = user.toOutputDto()
+
+            HttpResult(RegisterOutputDto("", userOutputDto), HttpStatusCode.Created)
         } catch (error: ValidationErrorResult) {
-            HTTPResult(null, HttpStatusCode.BadRequest, error.validationErrors)
+            HttpResult(null, HttpStatusCode.BadRequest, error.validationErrors)
         } catch (exception: Exception) {
-            HTTPResult(
+            HttpResult(
                 null,
                 HttpStatusCode.BadRequest,
                 listOf(exception.message ?: "An error occurred")

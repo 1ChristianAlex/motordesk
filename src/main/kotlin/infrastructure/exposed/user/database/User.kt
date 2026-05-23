@@ -4,12 +4,15 @@ package com.khrix.infrastructure.exposed.user.database
 import com.khrix.infrastructure.exposed.BaseTable
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.address.database.AddressTable
+import com.khrix.infrastructure.exposed.company.database.CompanyEntity
+import com.khrix.infrastructure.exposed.company.database.CompanyTable
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object UsersTable : BaseTable("users") {
     val address = reference("addressId", AddressTable).nullable()
+    val company = reference("companyId", CompanyTable).nullable()
 
     val firstName = varchar("firstName", 100)
     val lastName = varchar("lastName", 100)
@@ -28,6 +31,7 @@ class UserEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UserEntity>(UsersTable)
 
     var address by AddressEntity optionalReferencedOn UsersTable.address
+    var company by CompanyEntity optionalReferencedOn UsersTable.company
 
     var firstName by UsersTable.firstName
     var lastName by UsersTable.lastName

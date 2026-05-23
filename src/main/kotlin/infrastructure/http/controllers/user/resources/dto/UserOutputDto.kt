@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserOutputDto(
     val id: Int,
+    val addressId: Int,
+    val companyId: Int?,
     val firstName: String,
     val lastName: String,
     val email: String,

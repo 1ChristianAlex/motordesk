@@ -6,8 +6,6 @@ import io.ktor.server.plugins.di.*
 
 fun securityDI(dependencies: DependencyRegistry) {
     with(dependencies) {
-        provide<PasswordHasher> {
-            PasswordHasherArgonImpl()
-        }
+        provide<PasswordHasher>(PasswordHasherArgonImpl::class)
     }
 }

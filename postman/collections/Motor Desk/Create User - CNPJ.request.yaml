@@ -1,5 +1,5 @@
 $kind: http-request
-name: Create User
+name: Create User - CNPJ
 url: http://127.0.0.1:8080/register
 method: POST
 body:
@@ -12,7 +12,7 @@ body:
 
     \        \"lastName\": \"Lopes\",\r
 
-    \        \"email\": \"augusto_lopes@indaiamidias.com.br\",\r
+    \        \"email\": \"{{$guid}}@indaiamidias.com.br\",\r
 
     \        \"phone\": \"(47) 3733-9296\",\r
 
@@ -42,9 +42,13 @@ body:
 
     \    },\r
 
-    \    \"cnpj\": \"12345678000190\",\r
+    \    \"company\": {\r
 
-    \    \"companyName\": \"Test Company\"\r
+    \        \"cnpj\": \"07.318.144/0001-30\",\r
+
+    \        \"name\": \"Test Company\"\r
+
+    \    }\r
 
     }"
-order: 2420714402901910
+order: 2000

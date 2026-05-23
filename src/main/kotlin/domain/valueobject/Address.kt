@@ -55,7 +55,7 @@ data class AddressValueObject(
     fun validate() {
         val validationResult = validation.validate(address)
         if (validationResult.errors.isNotEmpty()) {
-            throw validationResult.toValidationError()
+            throw validationResult.toValidationError(this::class)
         }
     }
 }

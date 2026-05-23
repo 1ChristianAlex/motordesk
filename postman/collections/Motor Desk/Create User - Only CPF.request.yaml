@@ -1,0 +1,48 @@
+$kind: http-request
+name: Create User - Only CPF
+url: http://127.0.0.1:8080/register
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"user\": {\r
+
+    \        \"firstName\": \"Peter\",\r
+
+    \        \"lastName\": \"Parker\",\r
+
+    \        \"email\": \"{{$guid}}@indaiamidias.com.br\",\r
+
+    \        \"phone\": \"(47) 3733-9296\",\r
+
+    \        \"password\": \"test@123!\",\r
+
+    \        \"cpf\": \"216.417.800-96\"\r
+
+    \    },\r
+
+    \    \"address\": {\r
+
+    \        \"street\": \"Rua das Flores\",\r
+
+    \        \"number\": \"123\",\r
+
+    \        \"complement\": \"Apto 4B\",\r
+
+    \        \"neighborhood\": \"Centro\",\r
+
+    \        \"city\": \"São Paulo\",\r
+
+    \        \"state\": \"SP\",\r
+
+    \        \"country\": \"Brazil\",\r
+
+    \        \"zipCode\": \"01310-100\"\r
+
+    \    },\r
+
+    \    \"company\":null\r
+
+    }"
+order: 1947

@@ -5,6 +5,7 @@ import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.valueobject.Email
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
+import com.khrix.infrastructure.exposed.company.database.CompanyEntity
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.user.database.UsersTable
 import com.khrix.infrastructure.exposed.user.mapper.toModel
@@ -25,6 +26,9 @@ class UserExposedRepositoryImpl(
                 it.cpf = data.cpf.value
                 it.isActive = data.isActive
                 it.address = AddressEntity[data.addressId]
+                if (data.companyId != null) {
+                    it.company = CompanyEntity[data.companyId]
+                }
             }
         }
     }
@@ -58,6 +62,9 @@ class UserExposedRepositoryImpl(
             isActive = true
             isEmailValid = false
             address = if (data.addressId > 0) AddressEntity[data.addressId] else null
+            if (data.companyId != null) {
+                company = CompanyEntity[data.companyId]
+            }
         }
     }
 

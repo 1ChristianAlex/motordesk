@@ -6,6 +6,7 @@ import kotlinx.datetime.LocalDateTime
 data class User(
     val id: Int,
     val addressId: Int,
+    val companyId: Int?,
     val firstName: Name,
     val lastName: Name,
     val email: Email,
@@ -22,5 +23,9 @@ data class User(
 
     fun updateAddress(addressId: Int): User {
         return copy(addressId = addressId)
+    }
+
+    fun updateCompany(companyId: Int?): User {
+        return copy(companyId = companyId)
     }
 }
