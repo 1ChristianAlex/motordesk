@@ -26,7 +26,7 @@ class AddressExposedRepositoryImplTest {
 
     @Test
     fun `create read update delete address lifecycle`() = runTest {
-        val database = MemoryConnection().getConnection()
+        val database = MemoryConnection(true).getConnection()
         val repo = AddressExposedRepositoryImpl(database)
 
         val now = getCurrentUtcDateTime()
@@ -46,7 +46,7 @@ class AddressExposedRepositoryImplTest {
         )
 
         // create
-        val created = repo.createRead(input, userId = 0)
+        val created = repo.createRead(input)
         assertNotNull(created.id)
         assertEquals(input.street, created.street)
         assertEquals(input.number, created.number)

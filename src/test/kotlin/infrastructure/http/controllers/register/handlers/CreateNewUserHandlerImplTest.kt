@@ -1,24 +1,38 @@
 package com.khrix.infrastructure.http.controllers.register.handlers
 
+import com.khrix.domain.security.TokenService
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
+import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
 import com.khrix.infrastructure.http.controllers.register.resources.dto.AddressDto
 import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
+import com.khrix.infrastructure.http.controllers.register.resources.dto.CompanyDto
 import com.khrix.infrastructure.http.controllers.register.resources.dto.CreateUserDto
 import io.ktor.http.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
+import kotlin.test.*
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CreateNewUserHandlerImplTest {
 
     private val createNewUserUseCase = mockk<CreateNewUserUseCase>()
-    private val handler = CreateNewUserHandlerImpl(createNewUserUseCase)
+    private val verifyIsEmailAvailableUseCase: VerifyIsEmailAvailableUseCase = mockk()
+    private val tokenService: TokenService = mockk()
+    private val handler = CreateNewUserHandlerImpl(
+        createNewUserUseCase = createNewUserUseCase,
+        verifyIsEmailAvailableUseCase = verifyIsEmailAvailableUseCase,
+        tokenService = tokenService
+    )
+
+    @BeforeTest
+    fun setUp() {
+        coEvery { verifyIsEmailAvailableUseCase.execute(any()) } returns Result.success(true)
+        coEvery { tokenService.generate(any()) } returns Uuid.generateV4().toString()
+    }
 
     @Test
     fun `should return 201 Created with user data on successful registration`() = runTest {
@@ -42,8 +56,10 @@ class CreateNewUserHandlerImplTest {
                 country = "Brazil",
                 zipCode = "01310-100"
             ),
-            cnpj = "12345678000190",
-            companyName = "Test Company",
+            company = CompanyDto(
+                cnpj = "22.855.604/0001-52",
+                name = "Test Company",
+            )
         )
 
         val createdUserDto = clientRegisterDto.user.toDomain()
@@ -83,8 +99,10 @@ class CreateNewUserHandlerImplTest {
                 country = "Brazil",
                 zipCode = "01310-100"
             ),
-            cnpj = "12345678000190",
-            companyName = "Test Company",
+            company = CompanyDto(
+                cnpj = "12345678000190",
+                name = "Test Company",
+            )
         )
 
 

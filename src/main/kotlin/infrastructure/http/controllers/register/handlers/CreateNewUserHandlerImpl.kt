@@ -5,8 +5,8 @@ import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
 import com.khrix.domain.valueobject.ValidationErrorResult
+import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
-import com.khrix.infrastructure.http.controllers.register.resources.dto.RegisterOutputDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
 import com.khrix.infrastructure.http.core.HttpResult
 import io.ktor.http.*
@@ -16,7 +16,7 @@ class CreateNewUserHandlerImpl(
     private val verifyIsEmailAvailableUseCase: VerifyIsEmailAvailableUseCase,
     private val tokenService: TokenService
 ) : CreateNewUserHandler {
-    override suspend fun handler(body: ClientRegisterDto): HttpResult<RegisterOutputDto> {
+    override suspend fun handler(body: ClientRegisterDto): HttpResult<AuthenticateOutputDto> {
         return try {
             val userModel = body.user.toDomain()
             val isEmailAvailable = verifyIsEmailAvailableUseCase.execute(userModel.email).getOrElse { false }
@@ -36,7 +36,7 @@ class CreateNewUserHandlerImpl(
             val userOutputDto = user.toOutputDto()
             val token = tokenService.generate(user)
 
-            HttpResult(RegisterOutputDto(token, userOutputDto), HttpStatusCode.Created)
+            HttpResult(AuthenticateOutputDto(token, userOutputDto), HttpStatusCode.Created)
         } catch (error: ValidationErrorResult) {
             HttpResult(null, HttpStatusCode.BadRequest, error.validationErrors)
         } catch (exception: Exception) {

@@ -2,6 +2,7 @@ package com.khrix.infrastructure.exposed.user.repository
 
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
+import com.khrix.domain.valueobject.CPF
 import com.khrix.domain.valueobject.Email
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
@@ -71,6 +72,12 @@ class UserExposedRepositoryImpl(
     override suspend fun getByEmail(email: Email): User? {
         return suspendedQuery {
             UserEntity.find { UsersTable.email eq email.value }.firstOrNull()?.toModel()
+        }
+    }
+
+    override suspend fun getByCpf(cpf: CPF): User? {
+        return suspendedQuery {
+            UserEntity.find { UsersTable.cpf eq cpf.normalize() }.firstOrNull()?.toModel()
         }
     }
 }

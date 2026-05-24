@@ -5,7 +5,6 @@ import com.khrix.domain.company.model.Company
 import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.domain.user.model.User
 import com.khrix.domain.valueobject.*
-import com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -89,9 +88,3 @@ data class AddressDto(
     }
 }
 
-@Serializable
-data class RegisterOutputDto(
-    val token: String,
-    val user: UserOutputDto
-) {
-}
