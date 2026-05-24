@@ -1,5 +1,6 @@
 package com.khrix.infrastructure.http.controllers.register.handlers
 
+import com.khrix.domain.security.TokenService
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
@@ -12,7 +13,8 @@ import io.ktor.http.*
 
 class CreateNewUserHandlerImpl(
     private val createNewUserUseCase: CreateNewUserUseCase,
-    private val verifyIsEmailAvailableUseCase: VerifyIsEmailAvailableUseCase
+    private val verifyIsEmailAvailableUseCase: VerifyIsEmailAvailableUseCase,
+    private val tokenService: TokenService
 ) : CreateNewUserHandler {
     override suspend fun handler(body: ClientRegisterDto): HttpResult<RegisterOutputDto> {
         return try {
@@ -32,8 +34,9 @@ class CreateNewUserHandlerImpl(
             ).getOrThrow()
 
             val userOutputDto = user.toOutputDto()
+            val token = tokenService.generate(user)
 
-            HttpResult(RegisterOutputDto("", userOutputDto), HttpStatusCode.Created)
+            HttpResult(RegisterOutputDto(token, userOutputDto), HttpStatusCode.Created)
         } catch (error: ValidationErrorResult) {
             HttpResult(null, HttpStatusCode.BadRequest, error.validationErrors)
         } catch (exception: Exception) {

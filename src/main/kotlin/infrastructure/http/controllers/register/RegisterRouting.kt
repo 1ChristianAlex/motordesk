@@ -6,6 +6,8 @@ import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRe
 import com.khrix.infrastructure.http.core.AppRouting
 import com.khrix.infrastructure.http.core.HttpResult
 import io.ktor.http.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.post
 import io.ktor.server.response.*
@@ -33,6 +35,14 @@ class RegisterRouting(
                 }
                 get("/") {
                     call.respond("Hello from register route")
+                }
+                authenticate("auth-jwt") {
+                    get("/hello") {
+                        val principal = call.principal<JWTPrincipal>()
+                        val cpf = principal!!.payload.getClaim("cpf").asString()
+                        val expiresAt = principal.expiresAt?.time?.minus(System.currentTimeMillis())
+                        call.respondText("Hello, $cpf! Token is expired at $expiresAt ms.")
+                    }
                 }
             }
         }

@@ -1,10 +1,15 @@
 package com.khrix.infrastructure.http
 
+import com.auth0.jwt.JWT
 import com.khrix.infrastructure.http.core.AppRouting
+import com.khrix.infrastructure.http.core.HttpResult
+import com.khrix.infrastructure.security.JwtConfig
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.compression.*
@@ -13,17 +18,18 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.di.*
 import io.ktor.server.resources.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
 
 fun Application.httpApplication() {
     httpHeaders()
-    routing()
+    appRoute()
     logging()
 }
 
-private fun Application.routing() {
+private fun Application.appRoute() {
     install(ContentNegotiation) {
         json(Json {
             prettyPrint = true
@@ -32,10 +38,42 @@ private fun Application.routing() {
         })
     }
     install(Resources)
+    bindAuth()
+    bindRoutes()
+}
+
+private fun Application.bindRoutes() {
     routing {
         val appRoutingList: List<AppRouting> by dependencies
         appRoutingList.forEach {
             it.map(this)
+        }
+    }
+}
+
+private fun Application.bindAuth() {
+    val jwtConfig: JwtConfig by dependencies
+    install(Authentication) {
+        jwt("auth-jwt") {
+            realm = jwtConfig.realm
+            verifier(
+                JWT
+                    .require(jwtConfig.algorithm)
+                    .withAudience(jwtConfig.audience)
+                    .withIssuer(jwtConfig.issuer)
+                    .build()
+            )
+            challenge { defaultScheme, realm ->
+                call.respond(HttpResult(null, HttpStatusCode.Unauthorized, null))
+            }
+            validate { credential ->
+                val userId = credential.payload.getClaim("userId").asInt()
+                if (userId != null && userId > 0) {
+                    JWTPrincipal(credential.payload)
+                } else {
+                    null
+                }
+            }
         }
     }
 }
