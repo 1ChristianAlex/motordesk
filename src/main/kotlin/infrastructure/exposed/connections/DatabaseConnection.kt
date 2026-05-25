@@ -13,9 +13,18 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 abstract class DatabaseConnection(private val isDevelopment: Boolean, private val loadSeeds: LoadSeeds) {
     abstract val database: Database
 
+    private val tableList = listOf(
+        UsersTable,
+        AddressTable,
+        CompanyTable,
+    ).toTypedArray()
+
     fun JdbcTransaction.beforeLoad() {
         if (isDevelopment) {
             addLogger(StdOutSqlLogger)
+            SchemaUtils.drop(
+                *tableList
+            )
         }
     }
 
@@ -29,18 +38,12 @@ abstract class DatabaseConnection(private val isDevelopment: Boolean, private va
     fun getConnection(): Database {
         return database.apply {
             transaction {
-                val tableList = listOf(
-                    UsersTable,
-                    AddressTable,
-                    CompanyTable,
-                ).toTypedArray()
+
 
                 beforeLoad()
-
                 SchemaUtils.create(
                     *tableList
                 )
-
                 afterLoad()
             }
         }

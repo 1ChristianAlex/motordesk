@@ -1,12 +1,15 @@
 package com.khrix.infrastructure.exposed.seeds
 
+import com.khrix.domain.security.PasswordHasher
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.company.database.CompanyEntity
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-class LoadSeeds {
+class LoadSeeds(
+    private val passwordHasher: PasswordHasher
+) {
     fun loadSeeds(database: Database) {
         transaction(database) {
             createDefaultUser()
@@ -29,7 +32,7 @@ class LoadSeeds {
             firstName = "Christian"
             lastName = "Alexsander"
             email = "christian.alex@email.com"
-            password = "test@123!"
+            password = passwordHasher.hash("test@123!")
             phone = "4737339296"
             cpf = "21641780096"
             isActive = true
@@ -59,7 +62,7 @@ class LoadSeeds {
             firstName = "Chris"
             lastName = "Alexsander"
             email = "christian.alexsander@email.com"
-            password = "test@123!"
+            password = passwordHasher.hash("test@123!")
             phone = "4737339296"
             cpf = "21641780096"
             isActive = true

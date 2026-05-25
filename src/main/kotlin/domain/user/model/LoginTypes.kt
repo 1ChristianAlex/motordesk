@@ -1,12 +1,15 @@
 package com.khrix.domain.user.model
 
+import com.khrix.domain.valueobject.CNPJ
 import com.khrix.domain.valueobject.CPF
 import com.khrix.domain.valueobject.Email
 import com.khrix.domain.valueobject.Password
 
+
 sealed class LoginTypes(val password: Password) {
     class EmailCredentials(val email: Email, password: Password) : LoginTypes(password)
     class CpfCredentials(val cpf: CPF, password: Password) : LoginTypes(password)
+    class CNPJCredentials(val cnpj: CNPJ, password: Password) : LoginTypes(password)
 
     companion object {
         fun create(userName: String, password: String): LoginTypes {
@@ -19,7 +22,14 @@ sealed class LoginTypes(val password: Password) {
                         CPF(userName),
                         passwordData
                     )
-                }.getOrElse { throw IllegalArgumentException("Invalid email or CPF format") }
+                }.getOrElse {
+                    runCatching {
+                        CNPJCredentials(
+                            CNPJ(userName),
+                            passwordData
+                        )
+                    }.getOrElse { throw IllegalArgumentException("Invalid email or CPF format") }
+                }
             }
 
             return loginCredentials

@@ -2,10 +2,13 @@ package com.khrix.infrastructure.exposed.user.repository
 
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
+import com.khrix.domain.valueobject.CNPJ
 import com.khrix.domain.valueobject.CPF
 import com.khrix.domain.valueobject.Email
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
+import com.khrix.infrastructure.exposed.company.database.CompanyEntity
+import com.khrix.infrastructure.exposed.company.database.CompanyTable
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.user.database.UsersTable
 import com.khrix.infrastructure.exposed.user.mapper.toModel
@@ -73,6 +76,14 @@ class UserExposedRepositoryImpl(
     override suspend fun getByCpf(cpf: CPF): User? {
         return suspendedQuery {
             UserEntity.find { UsersTable.cpf eq cpf.normalize() }.firstOrNull()?.toModel()
+        }
+    }
+
+    override suspend fun getByCnpj(cnpf: CNPJ): User? {
+        return suspendedQuery {
+            val company = CompanyEntity.find { CompanyTable.cnpj eq cnpf.normalize() }.firstOrNull()
+
+            company?.user?.toModel()
         }
     }
 }

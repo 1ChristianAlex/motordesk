@@ -18,6 +18,7 @@ class LoginUserUseCaseImpl(
         val user = when (command) {
             is LoginTypes.EmailCredentials -> handleLoginWithEmail(command)
             is LoginTypes.CpfCredentials -> handleLoginWithCpf(command)
+            is LoginTypes.CNPJCredentials -> handleLoginWithCnpj(command)
         }
 
         if (user == null) {
@@ -31,6 +32,10 @@ class LoginUserUseCaseImpl(
         }
 
         return user
+    }
+
+    private suspend fun handleLoginWithCnpj(command: LoginTypes.CNPJCredentials): User? {
+        return userRepository.getByCnpj(command.cnpj)
     }
 
     private suspend fun handleLoginWithEmail(command: LoginTypes.EmailCredentials): User? {
