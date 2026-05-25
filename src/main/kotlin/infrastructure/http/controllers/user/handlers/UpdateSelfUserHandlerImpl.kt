@@ -1,0 +1,42 @@
+package com.khrix.infrastructure.http.controllers.user.handlers
+
+import com.khrix.domain.security.TokenService
+import com.khrix.domain.user.usecase.GetUserUseCase
+import com.khrix.domain.user.usecase.UpdateUserUseCase
+import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
+import com.khrix.infrastructure.http.controllers.user.resources.dto.UserInputDto
+import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
+import com.khrix.infrastructure.http.core.BaseHTTPHandler
+import com.khrix.infrastructure.http.core.HttpResult
+import io.ktor.http.*
+
+class UpdateSelfUserHandlerImpl(
+    private val updateUserUseCase: UpdateUserUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val tokenService: TokenService
+) : UpdateSelfUserHandler, BaseHTTPHandler<UserInputDto, AuthenticateOutputDto>() {
+    override suspend fun handle(body: UserInputDto): HttpResult<AuthenticateOutputDto> {
+        val user = getUserUseCase.execute(body.id).getOrNull()!!
+
+        user.updateFull(
+            addressId = body.addressId,
+            companyId = body.companyId,
+            firstName = body.firstName,
+            lastName = body.lastName,
+            email = body.email,
+            password = body.password,
+            phone = body.phone,
+            cpf = body.cpf,
+            isActive = true
+        )
+
+        updateUserUseCase.execute(user)
+
+        val updatedUser = getUserUseCase.execute(body.id).getOrNull()!!
+
+        val userOutputDto = updatedUser.toOutputDto()
+        val token = tokenService.generate(user)
+
+        return HttpResult(AuthenticateOutputDto(token, userOutputDto), HttpStatusCode.Accepted)
+    }
+}

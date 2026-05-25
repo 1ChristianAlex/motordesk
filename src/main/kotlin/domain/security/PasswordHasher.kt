@@ -9,4 +9,6 @@ interface PasswordHasher {
         password: String,
         hash: String
     ): Boolean
+
+    fun isHashedPassword(password: String): Boolean
 }

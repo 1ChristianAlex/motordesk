@@ -17,3 +17,17 @@ data class UserOutputDto(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 )
+
+@Serializable
+data class UserInputDto(
+    val id: Int,
+    val addressId: Int?,
+    val companyId: Int?,
+    val firstName: String?,
+    val lastName: String?,
+    val email: String?,
+    val password: String?,
+    val phone: String?,
+    val cpf: String?,
+) {
+}

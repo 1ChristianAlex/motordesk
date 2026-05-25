@@ -1,151 +1,143 @@
-<mxfile host="drawio-plugin" modified="2026-05-25T00:27:56.494Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" etag="gcJjA26RAJ3qpxZmyo3G" version="22.1.22" type="embed" pages="3">
+<mxfile host="drawio-plugin" modified="2026-05-25T00:37:55.839Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" etag="EQiifUXmI-7PeZ1AXdeY" version="22.1.22" type="embed" pages="3">
   <diagram name="Process" id="w7HYpww9-J7Z20PZzRJU">
-    <mxGraphModel dx="1725" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2181" dy="1918" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-8" value="try login using&amp;nbsp;&lt;div&gt;client access&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-1" target="S1UZLs32Uq9Vu9_8KYrw-7" edge="1">
-          <mxGeometry x="0.0182" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-1" value="Client" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=middle;html=1;outlineConnect=0;" parent="1" vertex="1">
-          <mxGeometry x="10" y="10" width="30" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-10" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-7" target="S1UZLs32Uq9Vu9_8KYrw-26" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="240" y="40" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-7" target="euwPyyy4HeOdZjgNxWr8-25" edge="1">
+        <mxCell id="11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" edge="1" parent="1" source="8" target="10">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-7" value="Has account?" style="rhombus;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="95" width="80" height="80" as="geometry" />
+        <mxCell id="8" value="Operator" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=middle;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-9" target="S1UZLs32Uq9Vu9_8KYrw-11" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="470" y="40" />
-              <mxPoint x="470" y="45" />
-            </Array>
-            <mxPoint x="480" y="100" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-9" value="Create new account" style="whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="310" y="10" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-11" target="S1UZLs32Uq9Vu9_8KYrw-13" edge="1">
+        <mxCell id="13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" edge="1" parent="1" source="10" target="12">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-11" value="Enter client data (Name, lastname, email, phone, password, birthdate)" style="whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="510" y="10" width="120" height="70" as="geometry" />
+        <mxCell id="10" value="Want to register vehicle" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="30" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-16" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-13" target="S1UZLs32Uq9Vu9_8KYrw-15" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="770" y="80" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-18" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-13" target="S1UZLs32Uq9Vu9_8KYrw-17" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="810" y="40" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-13" value="Is Company" style="rhombus;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="655" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-21" value="Do CNPJ&amp;nbsp;&lt;div&gt;validation&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" target="S1UZLs32Uq9Vu9_8KYrw-19" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="746" y="200" as="sourcePoint" />
-            <mxPoint x="861" y="200" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-15" value="Request Company info - CNPJ - Company name" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="635" y="170" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-20" value="Do CPF numeric validation" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-17" target="S1UZLs32Uq9Vu9_8KYrw-19" edge="1">
+        <mxCell id="15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="12" target="14">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-17" value="Request CPF" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="870" y="10" width="120" height="60" as="geometry" />
+        <mxCell id="12" value="Add vehicle&#39;s plate" style="whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="30" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-19" target="S1UZLs32Uq9Vu9_8KYrw-22" edge="1">
+        <mxCell id="17" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="14" target="16">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-19" value="Request address / company address" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="870" y="170" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-22" target="euwPyyy4HeOdZjgNxWr8-2" edge="1">
+        <mxCell id="19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="14" target="18">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-22" value="Do account validation using email / phone" style="whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="870" y="310" width="120" height="60" as="geometry" />
+        <mxCell id="14" value="Check if vehicle is already registered" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="-5" width="130" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-27" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-26" target="S1UZLs32Uq9Vu9_8KYrw-9" edge="1">
+        <mxCell id="16" value="Loads vehicle info" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="445" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="18" target="16">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="S1UZLs32Uq9Vu9_8KYrw-26" target="euwPyyy4HeOdZjgNxWr8-11" edge="1">
+        <mxCell id="18" value="Operator enters with plate, brand, model, year, owner" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="655" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="21" target="22">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="S1UZLs32Uq9Vu9_8KYrw-26" value="Has an existing OS made in physical store - First web access" style="rhombus;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="250" y="100" width="80" height="80" as="geometry" />
+        <mxCell id="21" value="Operator" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=middle;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="360" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-5" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="euwPyyy4HeOdZjgNxWr8-2" target="euwPyyy4HeOdZjgNxWr8-4" edge="1">
+        <mxCell id="27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="22" target="24">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-7" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="euwPyyy4HeOdZjgNxWr8-2" target="euwPyyy4HeOdZjgNxWr8-6" edge="1">
+        <mxCell id="22" value="Want to update vehicle data" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="360" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="24" target="25">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-2" value="Validation success" style="rhombus;whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="690" y="300" width="80" height="80" as="geometry" />
+        <mxCell id="24" value="Enter with vehicle plate and new data" style="whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="360" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-4" value="Client is ready to access the application" style="whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="670" y="650" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" source="euwPyyy4HeOdZjgNxWr8-6" target="S1UZLs32Uq9Vu9_8KYrw-22" edge="1">
+        <mxCell id="29" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="25" target="26">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-6" value="Client can request new code" style="whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="510" y="310" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="euwPyyy4HeOdZjgNxWr8-11" target="euwPyyy4HeOdZjgNxWr8-17" edge="1">
+        <mxCell id="31" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="25" target="30">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-11" value="Client enter with CPF / CNPJ&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="230" y="270" width="120" height="60" as="geometry" />
+        <mxCell id="25" value="Check if vehicle is already registered" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="325" width="130" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-21" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" source="euwPyyy4HeOdZjgNxWr8-17" target="S1UZLs32Uq9Vu9_8KYrw-9" edge="1">
+        <mxCell id="26" value="Updates vehicle data" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="385" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30" value="Notify vehicle not found" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="570" y="360" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="33" target="35">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-23" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="euwPyyy4HeOdZjgNxWr8-17" target="euwPyyy4HeOdZjgNxWr8-22" edge="1">
+        <mxCell id="33" value="Operator" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=middle;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry y="655" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="35" target="37">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-17" value="Check if info exists" style="rhombus;whiteSpace=wrap;html=1;rounded=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="250" y="400" width="80" height="80" as="geometry" />
+        <mxCell id="35" value="Want to delete vehicle data" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="655" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" source="euwPyyy4HeOdZjgNxWr8-22" target="S1UZLs32Uq9Vu9_8KYrw-22" edge="1">
+        <mxCell id="36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="37" target="40">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-22" value="Create a password and update missing required data" style="whiteSpace=wrap;html=1;rounded=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="230" y="570" width="120" height="60" as="geometry" />
+        <mxCell id="37" value="Enter with vehicle plate" style="whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="655" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="euwPyyy4HeOdZjgNxWr8-25" target="2" edge="1">
+        <mxCell id="38" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="40" target="41">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="euwPyyy4HeOdZjgNxWr8-25" value="Enter with CPF / CNPJ and password" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="75" y="170" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="6" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=middle;" parent="1" source="2" target="euwPyyy4HeOdZjgNxWr8-4" edge="1">
+        <mxCell id="39" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="40" target="42">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="8" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;verticalAlign=middle;" parent="1" source="2" target="7" edge="1">
+        <mxCell id="40" value="Check if vehicle is already registered" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="620" width="130" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="41" value="Deletes vehicle data" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="365" y="815" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="Notify vehicle not found" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="655" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="44" target="46">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="2" value="Check password" style="rhombus;whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="95" y="300" width="80" height="80" as="geometry" />
+        <mxCell id="44" value="Operator" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=middle;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="-15" y="925" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="7" value="Show wrong credentials erro" style="whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="-85" y="310" width="120" height="60" as="geometry" />
+        <mxCell id="45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="46" target="48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="46" value="Want to read vehicle data" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="925" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="48" target="51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="48" value="Enter with vehicle plate" style="whiteSpace=wrap;html=1;verticalAlign=middle;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="195" y="925" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="49" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="51" target="52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="50" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="51" target="53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="Check if vehicle is already registered" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="345" y="890" width="130" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="52" value="Load vehicle data" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="1085" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="53" value="Notify vehicle not found" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="535" y="925" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
