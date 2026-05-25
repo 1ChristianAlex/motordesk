@@ -7,12 +7,14 @@ import com.khrix.infrastructure.exposed.address.repository.AddressExposedReposit
 import com.khrix.infrastructure.exposed.company.repository.CompanyExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.connections.MemoryConnection
 import com.khrix.infrastructure.exposed.connections.PostgresConnection
+import com.khrix.infrastructure.exposed.seeds.LoadSeeds
 import com.khrix.infrastructure.exposed.user.repository.UserExposedRepositoryImpl
 import io.ktor.server.plugins.di.*
 import org.jetbrains.exposed.v1.jdbc.Database
 
 fun appDatabase(dependencies: DependencyRegistry) {
     with(dependencies) {
+        provide(LoadSeeds::class)
         provide(MemoryConnection::class)
         provide(PostgresConnection::class)
         provide<Database> {

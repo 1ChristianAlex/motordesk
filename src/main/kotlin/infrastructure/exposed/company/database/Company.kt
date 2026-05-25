@@ -10,6 +10,7 @@ import org.jetbrains.exposed.v1.dao.IntEntityClass
 object CompanyTable : BaseTable("company") {
     val name = varchar("name", 255)
     val cnpj = varchar("cnpj", 14).uniqueIndex()
+    val user = reference("userId", UsersTable).uniqueIndex()
 }
 
 class CompanyEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -21,6 +22,5 @@ class CompanyEntity(id: EntityID<Int>) : IntEntity(id) {
     var createdAt by CompanyTable.createdAt
     var updatedAt by CompanyTable.updatedAt
 
-    val users by UserEntity optionalBackReferencedOn UsersTable.company
+    var user by UserEntity referencedOn CompanyTable.user
 }
-
