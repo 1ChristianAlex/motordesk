@@ -1,7 +1,7 @@
 $kind: http-request
-name: Create User - CNPJ
-url: http://127.0.0.1:8080/register
-method: POST
+name: Get current user info
+url: http://127.0.0.1:8080/self
+method: GET
 body:
   type: json
   content: "{\r
@@ -51,4 +51,8 @@ body:
     \    }\r
 
     }"
-order: 97453825320509
+auth:
+  type: bearer
+  credentials:
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJcImt0b3ItdXNlcnNcIiIsImlzcyI6Ilwia3Rvci1hcGlcIiIsImZpcnN0TmFtZSI6IlBldGVyIiwibGFzdE5hbWUiOiJQYXJrZXIiLCJlbWFpbCI6IjExNjliZGMzLWNkZWItNDQ1ZC04ZGEyLWJiZWM0ZDBmNzBkZkBpbmRhaWFtaWRpYXMuY29tLmJyIiwiY3BmIjoiMjE2NDE3ODAwOTYiLCJ1c2VySWQiOjMsImV4cCI6MTc3OTkyNjQwMH0.yxictc7ecEAZli-OH7HFghV_iCRczXy576U0mcGur7Y
+order: 2579

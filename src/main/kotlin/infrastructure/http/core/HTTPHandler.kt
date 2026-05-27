@@ -1,7 +1,7 @@
 package com.khrix.infrastructure.http.core
 
 import com.khrix.domain.valueobject.ValidationErrorResult
-import io.ktor.http.*
+import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 
 interface HTTPHandler<Body, Output> {
     suspend fun handler(body: Body): HttpResult<Output>
@@ -12,13 +12,9 @@ abstract class BaseHTTPHandler<Body, Output> : HTTPHandler<Body, Output> {
         return try {
             handle(body)
         } catch (error: ValidationErrorResult) {
-            HttpResult(null, HttpStatusCode.BadRequest, error.validationErrors)
+            HandlerException.fromValidationErrorResult(error)
         } catch (exception: Exception) {
-            HttpResult(
-                null,
-                HttpStatusCode.BadRequest,
-                listOf(exception.message ?: "An error occurred")
-            )
+            HandlerException.toHttpResultError(HandlerException.BadRequest(exception))
         }
     }
 

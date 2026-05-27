@@ -8,6 +8,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
+import kotlinx.serialization.json.Json
 import java.util.*
 import kotlin.time.toJavaInstant
 
@@ -17,17 +18,13 @@ class JwtTokenServiceImpl(private val jwtConfig: JwtConfig) : TokenService {
         user: User
     ): String {
         val expiration = getCurrentUtcDateTime().date.plus(1, DateTimeUnit.DAY)
-
         val javaInstant = expiration.atStartOfDayIn(TimeZone.UTC).toJavaInstant()
+        val claims = UserClaims.toClaims(user)
 
         val token = JWT.create()
             .withAudience(jwtConfig.audience)
             .withIssuer(jwtConfig.issuer)
-            .withClaim("firstName", user.firstName.value)
-            .withClaim("lastName", user.lastName.value)
-            .withClaim("email", user.email.value)
-            .withClaim("cpf", user.cpf.value)
-            .withClaim("userId", user.id)
+            .withPayload(Json.encodeToString(claims))
             .withExpiresAt(Date.from(javaInstant))
             .sign(jwtConfig.algorithm)
 
