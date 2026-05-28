@@ -1,6 +1,10 @@
 package com.khrix.domain.user.model
 
-import com.khrix.domain.valueobject.*
+import com.khrix.domain.valueobject.CPF
+import com.khrix.domain.valueobject.Email
+import com.khrix.domain.valueobject.Name
+import com.khrix.domain.valueobject.Password
+import com.khrix.domain.valueobject.Phone
 import kotlinx.datetime.LocalDateTime
 
 data class User(
@@ -34,7 +38,7 @@ data class User(
             firstName = Name(firstName ?: this.firstName.value),
             lastName = Name(lastName ?: this.lastName.value),
             email = Email(email ?: this.email.value),
-            password = Password(password ?: this.password.value, true),
+            password = Password(password ?: this.password.value),
             phone = Phone(phone ?: this.phone.value),
             cpf = CPF(cpf ?: this.cpf.value),
             isActive = isActive ?: this.isActive,

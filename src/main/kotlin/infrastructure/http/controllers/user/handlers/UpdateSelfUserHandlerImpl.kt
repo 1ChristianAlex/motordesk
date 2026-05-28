@@ -25,7 +25,7 @@ class UpdateSelfUserHandlerImpl(
 
         val user = getUserUseCase.execute(body.id).getOrNull()!!
 
-        user.updateFull(
+        val userUpdate = user.updateFull(
             addressId = body.addressId,
             companyId = body.companyId,
             firstName = body.firstName,
@@ -37,9 +37,9 @@ class UpdateSelfUserHandlerImpl(
             isActive = true
         )
 
-        updateUserUseCase.execute(user)
+        updateUserUseCase.execute(userUpdate)
 
-        val updatedUser = getUserUseCase.execute(body.id).getOrNull()!!
+        val updatedUser = getUserUseCase.execute(user.id).getOrNull()!!
 
         val userOutputDto = updatedUser.toOutputDto()
         val token = tokenService.generate(user)

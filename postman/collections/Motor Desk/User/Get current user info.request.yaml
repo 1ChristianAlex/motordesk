@@ -4,55 +4,9 @@ url: http://127.0.0.1:8080/self
 method: GET
 body:
   type: json
-  content: "{\r
-
-    \    \"user\": {\r
-
-    \        \"firstName\": \"Kaique\",\r
-
-    \        \"lastName\": \"Lopes\",\r
-
-    \        \"email\": \"{{$guid}}@indaiamidias.com.br\",\r
-
-    \        \"phone\": \"(47) 3733-9296\",\r
-
-    \        \"password\": \"test@123!\",\r
-
-    \        \"cpf\": \"216.417.800-96\"\r
-
-    \    },\r
-
-    \    \"address\": {\r
-
-    \        \"street\": \"Rua das Flores\",\r
-
-    \        \"number\": \"123\",\r
-
-    \        \"complement\": \"Apto 4B\",\r
-
-    \        \"neighborhood\": \"Centro\",\r
-
-    \        \"city\": \"São Paulo\",\r
-
-    \        \"state\": \"SP\",\r
-
-    \        \"country\": \"Brazil\",\r
-
-    \        \"zipCode\": \"01310-100\"\r
-
-    \    },\r
-
-    \    \"company\": {\r
-
-    \        \"cnpj\": \"22.855.604/0001-52\",\r
-
-    \        \"name\": \"Test Company\"\r
-
-    \    }\r
-
-    }"
+  content: ""
 auth:
   type: bearer
   credentials:
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJcImt0b3ItdXNlcnNcIiIsImlzcyI6Ilwia3Rvci1hcGlcIiIsImZpcnN0TmFtZSI6IlBldGVyIiwibGFzdE5hbWUiOiJQYXJrZXIiLCJlbWFpbCI6IjExNjliZGMzLWNkZWItNDQ1ZC04ZGEyLWJiZWM0ZDBmNzBkZkBpbmRhaWFtaWRpYXMuY29tLmJyIiwiY3BmIjoiMjE2NDE3ODAwOTYiLCJ1c2VySWQiOjMsImV4cCI6MTc3OTkyNjQwMH0.yxictc7ecEAZli-OH7HFghV_iCRczXy576U0mcGur7Y
-order: 2579
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJcImt0b3ItdXNlcnNcIiIsImlzcyI6Ilwia3Rvci1hcGlcIiIsImZpcnN0TmFtZSI6IkNocmlzdGlhbiIsImxhc3ROYW1lIjoiQWxleHNhbmRlciIsImVtYWlsIjoiY2hyaXN0aWFuLmFsZXhAZW1haWwuY29tIiwiY3BmIjoiMjE2NDE3ODAwOTYiLCJ1c2VySWQiOjIsImV4cCI6MTc4MDAxMjgwMH0.TdOgUbvONh9lhGFLQyzBc_lPdj4BoIYzSwna5knWNuY
+order: 3000

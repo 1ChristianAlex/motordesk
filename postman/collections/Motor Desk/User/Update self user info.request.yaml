@@ -1,0 +1,32 @@
+$kind: http-request
+name: Update self user info
+url: http://127.0.0.1:8080/self/update
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"id\": 2,\r
+
+    \    \"addressId\": 2,\r
+
+    \    \"companyId\": 1,\r
+
+    \    \"firstName\": \"Christian\",\r
+
+    \    \"lastName\": \"Santos\",\r
+
+    \    \"email\": \"christian.alex@email.com\",\r
+
+    \    \"phone\": \"4737339296\",\r
+
+    \    \"cpf\": \"21641780096\",\r
+
+    \    \"password\": \"dddddd\"\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJcImt0b3ItdXNlcnNcIiIsImlzcyI6Ilwia3Rvci1hcGlcIiIsImZpcnN0TmFtZSI6IkNocmlzdGlhbiIsImxhc3ROYW1lIjoiQWxleHNhbmRlciIsImVtYWlsIjoiY2hyaXN0aWFuLmFsZXhAZW1haWwuY29tIiwiY3BmIjoiMjE2NDE3ODAwOTYiLCJ1c2VySWQiOjIsImV4cCI6MTc4MDAxMjgwMH0.TdOgUbvONh9lhGFLQyzBc_lPdj4BoIYzSwna5knWNuY
+order: 2166
