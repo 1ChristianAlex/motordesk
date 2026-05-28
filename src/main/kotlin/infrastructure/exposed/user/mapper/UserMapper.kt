@@ -1,7 +1,11 @@
 package com.khrix.infrastructure.exposed.user.mapper
 
 import com.khrix.domain.user.model.User
-import com.khrix.domain.valueobject.*
+import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.Email
+import com.khrix.domain.valueobject.user.Name
+import com.khrix.domain.valueobject.user.Password
+import com.khrix.domain.valueobject.user.Phone
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 

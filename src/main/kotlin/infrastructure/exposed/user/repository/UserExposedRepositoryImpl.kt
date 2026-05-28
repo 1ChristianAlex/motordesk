@@ -2,9 +2,9 @@ package com.khrix.infrastructure.exposed.user.repository
 
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.valueobject.CNPJ
-import com.khrix.domain.valueobject.CPF
-import com.khrix.domain.valueobject.Email
+import com.khrix.domain.valueobject.company.CNPJ
+import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.Email
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.company.database.CompanyEntity

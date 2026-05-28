@@ -1,9 +1,9 @@
 package com.khrix.domain.user.model
 
-import com.khrix.domain.valueobject.CNPJ
-import com.khrix.domain.valueobject.CPF
-import com.khrix.domain.valueobject.Email
-import com.khrix.domain.valueobject.Password
+import com.khrix.domain.valueobject.company.CNPJ
+import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.Email
+import com.khrix.domain.valueobject.user.Password
 
 
 sealed class LoginTypes(val password: Password) {

@@ -1,6 +1,6 @@
 package com.khrix.domain.address.model
 
-import com.khrix.domain.valueobject.AddressValueObject
+import com.khrix.domain.valueobject.address.AddressValueObject
 import kotlinx.datetime.LocalDateTime
 
 data class Address(

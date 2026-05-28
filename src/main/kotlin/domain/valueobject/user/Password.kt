@@ -1,5 +1,6 @@
-package com.khrix.domain.valueobject
+package com.khrix.domain.valueobject.user
 
+import com.khrix.domain.valueobject.toValidationError
 import io.konform.validation.Validation
 import io.konform.validation.constraints.minLength
 

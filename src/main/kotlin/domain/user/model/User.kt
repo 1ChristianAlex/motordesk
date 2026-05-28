@@ -1,10 +1,10 @@
 package com.khrix.domain.user.model
 
-import com.khrix.domain.valueobject.CPF
-import com.khrix.domain.valueobject.Email
-import com.khrix.domain.valueobject.Name
-import com.khrix.domain.valueobject.Password
-import com.khrix.domain.valueobject.Phone
+import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.Email
+import com.khrix.domain.valueobject.user.Name
+import com.khrix.domain.valueobject.user.Password
+import com.khrix.domain.valueobject.user.Phone
 import kotlinx.datetime.LocalDateTime
 
 data class User(

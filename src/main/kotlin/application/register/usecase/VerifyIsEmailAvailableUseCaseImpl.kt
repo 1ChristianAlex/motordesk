@@ -3,7 +3,7 @@ package com.khrix.application.register.usecase
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
-import com.khrix.domain.valueobject.Email
+import com.khrix.domain.valueobject.user.Email
 
 class VerifyIsEmailAvailableUseCaseImpl(
     private val userRepository: UserRepository,

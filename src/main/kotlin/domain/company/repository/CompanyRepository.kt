@@ -2,7 +2,7 @@ package com.khrix.domain.company.repository
 
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.core.*
-import com.khrix.domain.valueobject.CNPJ
+import com.khrix.domain.valueobject.company.CNPJ
 
 interface CompanyRepository :
     BaseRead<Company>,

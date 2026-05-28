@@ -2,8 +2,8 @@ package com.khrix.domain.company.usecase
 
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.core.BaseUseCase
-import com.khrix.domain.valueobject.CNPJ
-import com.khrix.domain.valueobject.Name
+import com.khrix.domain.valueobject.company.CNPJ
+import com.khrix.domain.valueobject.user.Name
 
 data class CreateNewCompanyUseCaseCommand(
     val name: Name,

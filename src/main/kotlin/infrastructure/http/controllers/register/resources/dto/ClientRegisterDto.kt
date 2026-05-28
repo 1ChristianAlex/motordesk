@@ -4,7 +4,12 @@ import com.khrix.domain.address.model.Address
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.domain.user.model.User
-import com.khrix.domain.valueobject.*
+import com.khrix.domain.valueobject.company.CNPJ
+import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.Email
+import com.khrix.domain.valueobject.user.Name
+import com.khrix.domain.valueobject.user.Password
+import com.khrix.domain.valueobject.user.Phone
 import kotlinx.serialization.Serializable
 
 @Serializable

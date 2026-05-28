@@ -1,8 +1,8 @@
 package com.khrix.domain.user.model
 
 
-import com.khrix.domain.valueobject.CPF
-import com.khrix.domain.valueobject.Email
+import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.Email
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

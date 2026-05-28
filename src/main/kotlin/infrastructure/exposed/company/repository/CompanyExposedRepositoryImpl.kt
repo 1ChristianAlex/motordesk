@@ -2,7 +2,7 @@ package com.khrix.infrastructure.exposed.company.repository
 
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.company.repository.CompanyRepository
-import com.khrix.domain.valueobject.CNPJ
+import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.company.database.CompanyEntity
 import com.khrix.infrastructure.exposed.company.database.CompanyTable

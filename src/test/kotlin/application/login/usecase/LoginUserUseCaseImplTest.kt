@@ -5,7 +5,11 @@ import com.khrix.domain.security.PasswordHasher
 import com.khrix.domain.user.model.LoginTypes
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.valueobject.*
+import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.Email
+import com.khrix.domain.valueobject.user.Name
+import com.khrix.domain.valueobject.user.Password
+import com.khrix.domain.valueobject.user.Phone
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers

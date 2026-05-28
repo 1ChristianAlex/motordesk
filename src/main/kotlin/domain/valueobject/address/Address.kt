@@ -1,6 +1,7 @@
-package com.khrix.domain.valueobject
+package com.khrix.domain.valueobject.address
 
 import com.khrix.domain.address.model.Address
+import com.khrix.domain.valueobject.toValidationError
 import io.konform.validation.Validation
 import io.konform.validation.constraints.maxLength
 import io.konform.validation.constraints.minLength

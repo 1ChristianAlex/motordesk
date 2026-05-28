@@ -1,8 +1,8 @@
 package com.khrix.infrastructure.exposed.company.mapper
 
 import com.khrix.domain.company.model.Company
-import com.khrix.domain.valueobject.CNPJ
-import com.khrix.domain.valueobject.Name
+import com.khrix.domain.valueobject.company.CNPJ
+import com.khrix.domain.valueobject.user.Name
 import com.khrix.infrastructure.exposed.company.database.CompanyEntity
 
 fun CompanyEntity.toModel(): Company = Company(
