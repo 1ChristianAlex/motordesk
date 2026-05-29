@@ -2,7 +2,7 @@ package com.khrix.infrastructure.http
 
 import com.auth0.jwt.JWT
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
-import com.khrix.infrastructure.http.core.AppRouting
+import com.khrix.infrastructure.http.core.AppController
 import com.khrix.infrastructure.http.core.HttpResult
 import com.khrix.infrastructure.security.JwtConfig
 import io.ktor.http.*
@@ -45,8 +45,8 @@ private fun Application.appRoute() {
 
 private fun Application.bindRoutes() {
     routing {
-        val appRoutingList: List<AppRouting> by dependencies
-        appRoutingList.forEach {
+        val appControllerList: List<AppController> by dependencies
+        appControllerList.forEach {
             it.map(this)
         }
     }

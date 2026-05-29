@@ -2,7 +2,7 @@ package com.khrix.infrastructure.http.core
 
 import io.ktor.server.routing.*
 
-interface AppRouting {
+interface AppController {
     fun map(
         routing: Routing
     )

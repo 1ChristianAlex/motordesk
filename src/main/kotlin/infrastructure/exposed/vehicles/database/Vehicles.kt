@@ -9,14 +9,14 @@ import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object VehiclesTable : BaseTable("vehicles") {
     val owner = reference("ownerId", UsersTable)
-    val plate = varchar("plate", 10).uniqueIndex()
+    val plate = varchar("plate", 7).uniqueIndex()
     val brand = varchar("brand", 100)
     val model = varchar("model", 100)
     val color = varchar("color", 50)
     val year = integer("year")
     val mileage = integer("mileage").default(0)
     val chassis = varchar("chassis", 30).nullable()
-    val fuelType = varchar("fuelType", 30).nullable()
+    val fuelType = varchar("fuelType", 30)
 }
 
 class VehicleEntity(id: EntityID<Int>) : IntEntity(id) {
