@@ -9,4 +9,4 @@ auth:
   type: bearer
   credentials:
     token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJcImt0b3ItdXNlcnNcIiIsImlzcyI6Ilwia3Rvci1hcGlcIiIsImZpcnN0TmFtZSI6IkNocmlzdGlhbiIsImxhc3ROYW1lIjoiQWxleHNhbmRlciIsImVtYWlsIjoiY2hyaXN0aWFuLmFsZXhAZW1haWwuY29tIiwiY3BmIjoiMjE2NDE3ODAwOTYiLCJ1c2VySWQiOjIsImV4cCI6MTc4MDAxMjgwMH0.TdOgUbvONh9lhGFLQyzBc_lPdj4BoIYzSwna5knWNuY
-order: 3000
+order: 4000

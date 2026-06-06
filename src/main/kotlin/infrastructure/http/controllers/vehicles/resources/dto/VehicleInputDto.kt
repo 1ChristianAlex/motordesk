@@ -15,7 +15,7 @@ data class VehicleInputDto(
     val color: String,
     val year: Int,
     val mileage: Int = 0,
-    val chassis: String? = null,
+    val chassis: String,
     val fuelType: FuelType,
 ) {
     fun toModel(userId: Int): Vehicle {
