@@ -1,10 +1,16 @@
 package com.khrix.infrastructure.http.core
 
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-interface AppController {
-    fun map(
+abstract class AppController {
+    abstract fun map(
         routing: Routing
     )
+
+    suspend inline fun <reified Output> RoutingCall.send(httpResult: HttpResult<Output>) {
+        response.status(httpResult.status)
+        respond(httpResult)
+    }
 }
 

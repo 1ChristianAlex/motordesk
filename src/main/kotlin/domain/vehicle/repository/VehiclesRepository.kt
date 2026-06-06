@@ -10,4 +10,7 @@ interface VehiclesRepository :
     BaseRead<Vehicle>,
     BaseUpdate<Vehicle>,
     BaseDelete,
-    BaseCreateReturn<Vehicle>
+    BaseCreateReturn<Vehicle> {
+    suspend fun getVehicleByOwnerId(id: Int): List<Vehicle>
+    suspend fun getByPlateOrChassis(plate: String, chassis: String): Vehicle?
+}

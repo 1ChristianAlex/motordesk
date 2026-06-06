@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.http.controllers.vehicles.handlers
 
-import com.khrix.domain.vehicle.model.CreateNewVehicleUseCase
+import com.khrix.domain.vehicle.usecase.CreateNewVehicleUseCase
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.mappers.toOutputDto
 import com.khrix.infrastructure.http.core.BaseHTTPHandler

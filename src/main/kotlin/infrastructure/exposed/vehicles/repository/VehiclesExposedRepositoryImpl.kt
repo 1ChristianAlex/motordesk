@@ -5,15 +5,18 @@ import com.khrix.domain.vehicle.repository.VehiclesRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
+import com.khrix.infrastructure.exposed.vehicles.database.VehiclesTable
 import com.khrix.infrastructure.exposed.vehicles.mapper.toModel
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.Database
 
 class VehiclesExposedRepositoryImpl(
     database: Database,
 ) : BaseExposedRepository<VehicleEntity, Vehicle>(database), VehiclesRepository {
-    override suspend fun read(id: Int): Vehicle {
+    override suspend fun read(id: Int): Vehicle? {
         return suspendedQuery {
-            VehicleEntity[id].toModel()
+            VehicleEntity.findById(id)?.toModel()
         }
     }
 
@@ -52,5 +55,21 @@ class VehiclesExposedRepositoryImpl(
 
     override suspend fun createRead(data: Vehicle): Vehicle {
         return suspendedQuery { createNewVehicle(data).toModel() }
+    }
+
+    override suspend fun getVehicleByOwnerId(id: Int): List<Vehicle> {
+        return suspendedQuery {
+            VehicleEntity.find { VehiclesTable.owner eq id }.map { it.toModel() }
+        }
+    }
+
+    override suspend fun getByPlateOrChassis(
+        plate: String,
+        chassis: String
+    ): Vehicle? {
+        return suspendedQuery {
+            VehicleEntity.find { (VehiclesTable.plate eq plate) or (VehiclesTable.chassis eq chassis) }.firstOrNull()
+                ?.toModel()
+        }
     }
 }

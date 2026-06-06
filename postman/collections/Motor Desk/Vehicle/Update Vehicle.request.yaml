@@ -1,12 +1,12 @@
 $kind: http-request
-name: Create Vehicle
-url: http://127.0.0.1:8080/vehicles/create
-method: POST
+name: Update Vehicle
+url: http://127.0.0.1:8080/vehicles/update
+method: PUT
 body:
   type: json
   content: "{\r
 
-    \  \"plate\": \"ABC1E23\",\r
+    \  \"plate\": \"ABC1D23\",\r
 
     \  \"brand\": \"Toyota\",\r
 

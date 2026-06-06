@@ -15,6 +15,12 @@ import com.khrix.infrastructure.http.controllers.user.handlers.UpdateSelfUserHan
 import com.khrix.infrastructure.http.controllers.vehicles.VehiclesController
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.CreateNewVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.CreateNewVehicleHandlerImpl
+import com.khrix.infrastructure.http.controllers.vehicles.handlers.DeleteVehicleHandler
+import com.khrix.infrastructure.http.controllers.vehicles.handlers.DeleteVehicleHandlerImpl
+import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByOwnerHandler
+import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByOwnerHandlerImpl
+import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandler
+import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandlerImpl
 import com.khrix.infrastructure.http.core.AppController
 import io.ktor.server.plugins.di.*
 
@@ -25,12 +31,20 @@ fun httpDI(dependencies: DependencyRegistry) {
         provide<GetSelfUserHandler>(GetSelfUserHandlerImpl::class)
         provide<UpdateSelfUserHandler>(UpdateSelfUserHandlerImpl::class)
         provide<CreateNewVehicleHandler>(CreateNewVehicleHandlerImpl::class)
+        provide<DeleteVehicleHandler>(DeleteVehicleHandlerImpl::class)
+        provide<GetVehicleByOwnerHandler>(GetVehicleByOwnerHandlerImpl::class)
+        provide<UpdateVehicleHandler>(UpdateVehicleHandlerImpl::class)
         provide<List<AppController>> {
             listOf<AppController>(
                 RegisterController(resolve()),
                 LoginController(resolve()),
                 UserController(resolve(), resolve()),
-                VehiclesController(resolve())
+                VehiclesController(
+                    createNewVehicleHandler = resolve(),
+                    updateVehicleHandler = resolve(),
+                    deleteVehicleHandler = resolve(),
+                    getVehicleByOwnerHandler = resolve()
+                )
             )
         }
     }

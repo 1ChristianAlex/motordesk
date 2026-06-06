@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VehicleInputDto(
+    val id: Int? = null,
     val plate: String,
     val brand: String,
     val model: String,
@@ -20,7 +21,7 @@ data class VehicleInputDto(
 ) {
     fun toModel(userId: Int): Vehicle {
         return Vehicle(
-            id = 0,
+            id = id,
             userId = userId,
             plate = Plate(plate),
             brand = brand,

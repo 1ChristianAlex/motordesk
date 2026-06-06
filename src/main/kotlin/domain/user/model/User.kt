@@ -18,6 +18,7 @@ data class User(
     val phone: Phone,
     val cpf: CPF,
     val isActive: Boolean,
+    val role: Role,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 ) {

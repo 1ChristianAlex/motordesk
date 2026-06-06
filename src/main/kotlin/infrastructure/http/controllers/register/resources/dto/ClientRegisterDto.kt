@@ -3,6 +3,7 @@ package com.khrix.infrastructure.http.controllers.register.resources.dto
 import com.khrix.domain.address.model.Address
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.core.getCurrentUtcDateTime
+import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.model.User
 import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.domain.valueobject.user.CPF
@@ -16,7 +17,8 @@ import kotlinx.serialization.Serializable
 data class ClientRegisterDto(
     val user: CreateUserDto,
     val address: AddressDto,
-    val company: CompanyDto?
+    val company: CompanyDto?,
+    private val role: Role = Role.CLIENT
 )
 
 @Serializable
@@ -59,7 +61,8 @@ data class CreateUserDto(
             isActive = false,
             createdAt = now,
             updatedAt = now,
-            companyId = null
+            companyId = null,
+            role = Role.CLIENT
         )
     }
 }

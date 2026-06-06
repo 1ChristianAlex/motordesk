@@ -30,16 +30,6 @@ abstract class BaseUseCaseImpl<TInputData, TOutData>() : BaseTryBlock<TOutData>(
     protected abstract suspend fun useCaseDescription(): String
 }
 
-abstract class BaseUseCaseNoParamImpl<TOutData>() : BaseTryBlock<TOutData>() {
-    suspend fun execute(): Result<TOutData> {
-        return tryBlock(useCaseDescription()) { internalExecute() }
-    }
-
-    protected abstract suspend fun internalExecute(): TOutData
-
-    protected abstract suspend fun useCaseDescription(): String
-}
-
 interface BaseUseCase<TInputData, TOutData> {
     suspend fun execute(
         command: TInputData

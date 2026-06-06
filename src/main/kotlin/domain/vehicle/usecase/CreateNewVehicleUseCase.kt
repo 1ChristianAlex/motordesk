@@ -1,5 +1,6 @@
-package com.khrix.domain.vehicle.model
+package com.khrix.domain.vehicle.usecase
 
 import com.khrix.domain.core.BaseUseCase
+import com.khrix.domain.vehicle.model.Vehicle
 
 interface CreateNewVehicleUseCase : BaseUseCase<Vehicle, Vehicle>

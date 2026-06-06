@@ -1,10 +1,12 @@
 package com.khrix.infrastructure.http
 
 import com.auth0.jwt.JWT
+import com.khrix.domain.user.model.Role
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 import com.khrix.infrastructure.http.core.AppController
 import com.khrix.infrastructure.http.core.HttpResult
 import com.khrix.infrastructure.security.JwtConfig
+import com.khrix.infrastructure.security.UserClaims
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.serialization.kotlinx.json.*
@@ -56,25 +58,42 @@ private fun Application.bindAuth() {
     val jwtConfig: JwtConfig by dependencies
     install(Authentication) {
         jwt("auth-jwt") {
-            realm = jwtConfig.realm
-            verifier(
-                JWT
-                    .require(jwtConfig.algorithm)
-                    .withAudience(jwtConfig.audience)
-                    .withIssuer(jwtConfig.issuer)
-                    .build()
-            )
-            challenge { defaultScheme, realm ->
-                call.respond<HttpResult<Nothing>>(HandlerException.toHttpResultError(HandlerException.UnauthenticatedOperation()))
-            }
+            clientJwtConfig(jwtConfig)
+        }
+        jwt("auth-jwt-manager") {
+            clientJwtConfig(jwtConfig)
             validate { credential ->
-                val userId = credential.payload.getClaim("userId").asInt()
-                if (userId != null && userId > 0) {
+                val userClaims = UserClaims.getClaims(credential.payload)
+
+                if ((userClaims.role == Role.MANAGER || userClaims.role == Role.ADMIN) && userClaims.userId > 0) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null
                 }
             }
+        }
+    }
+}
+
+private fun JWTAuthenticationProvider.Config.clientJwtConfig(jwtConfig: JwtConfig) {
+    realm = jwtConfig.realm
+    verifier(
+        JWT
+            .require(jwtConfig.algorithm)
+            .withAudience(jwtConfig.audience)
+            .withIssuer(jwtConfig.issuer)
+            .build()
+    )
+    challenge { defaultScheme, realm ->
+        call.respond<HttpResult<Nothing>>(HandlerException.toHttpResultError(HandlerException.UnauthenticatedOperation()))
+    }
+    validate { credential ->
+        val userClaims = UserClaims.getClaims(credential.payload)
+
+        if (userClaims.userId > 0) {
+            JWTPrincipal(credential.payload)
+        } else {
+            null
         }
     }
 }

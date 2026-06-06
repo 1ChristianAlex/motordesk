@@ -15,7 +15,7 @@ object VehiclesTable : BaseTable("vehicles") {
     val color = varchar("color", 50)
     val year = integer("year")
     val mileage = integer("mileage").default(0)
-    val chassis = varchar("chassis", 30)
+    val chassis = varchar("chassis", 30).uniqueIndex()
     val fuelType = varchar("fuelType", 30)
 }
 
