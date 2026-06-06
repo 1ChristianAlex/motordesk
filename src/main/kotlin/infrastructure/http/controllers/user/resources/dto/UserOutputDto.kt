@@ -29,5 +29,4 @@ data class UserInputDto(
     val password: String?,
     val phone: String?,
     val cpf: String?,
-) {
-}
+)

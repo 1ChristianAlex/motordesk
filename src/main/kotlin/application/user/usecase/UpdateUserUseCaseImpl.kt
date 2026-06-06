@@ -11,7 +11,7 @@ class UpdateUserUseCaseImpl(
     private val passwordHasher: PasswordHasher
 ) : UpdateUserUseCase,
     BaseUseCaseImpl<User, Unit>() {
-    override suspend fun internalExecute(command: User): Unit {
+    override suspend fun internalExecute(command: User) {
         val passwordIsArgon = passwordHasher.isHashedPassword(command.password.value)
         val password = if (passwordIsArgon) {
             command.password.value

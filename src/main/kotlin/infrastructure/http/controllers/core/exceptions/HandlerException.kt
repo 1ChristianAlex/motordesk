@@ -6,10 +6,10 @@ import io.ktor.http.*
 
 sealed class HandlerException(val statusCode: HttpStatusCode, override val message: String?) : Exception(message) {
 
-    class UnauthenticatedOperation() :
+    class UnauthenticatedOperation :
         HandlerException(HttpStatusCode.Unauthorized, "Unauthenticated operation. Please provide valid credentials.")
 
-    class InvalidPermissionOperation() :
+    class InvalidPermissionOperation :
         HandlerException(
             HttpStatusCode.Forbidden,
             "Invalid permission. You do not have the necessary permissions to perform this operation."

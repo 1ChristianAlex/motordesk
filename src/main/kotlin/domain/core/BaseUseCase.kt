@@ -1,8 +1,7 @@
 package com.khrix.domain.core
 
 
-abstract class BaseTryBlock<TOutData>(
-) {
+abstract class BaseTryBlock<TOutData> {
     private val className get() = this::class.simpleName ?: javaClass.simpleName
 
     suspend fun tryBlock(
@@ -18,7 +17,7 @@ abstract class BaseTryBlock<TOutData>(
     }
 }
 
-abstract class BaseUseCaseImpl<TInputData, TOutData>() : BaseTryBlock<TOutData>() {
+abstract class BaseUseCaseImpl<TInputData, TOutData> : BaseTryBlock<TOutData>() {
     suspend fun execute(command: TInputData): Result<TOutData> {
         return tryBlock(useCaseDescription()) { internalExecute(command) }
     }

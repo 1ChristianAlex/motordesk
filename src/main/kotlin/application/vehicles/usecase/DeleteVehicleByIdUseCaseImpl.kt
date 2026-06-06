@@ -8,7 +8,7 @@ class DeleteVehicleByIdUseCaseImpl(
     private val vehiclesRepository: VehiclesRepository
 ) : DeleteVehicleByIdUseCase,
     BaseUseCaseImpl<Int, Unit>() {
-    override suspend fun internalExecute(command: Int): Unit {
+    override suspend fun internalExecute(command: Int) {
         val vehicleExists = vehiclesRepository.read(command) != null
         if (!vehicleExists) {
             throw Exception("Vehicle with id $command does not exist")
