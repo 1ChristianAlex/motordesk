@@ -1,6 +1,7 @@
 package com.khrix.infrastructure.exposed.seeds
 
 import com.khrix.domain.security.PasswordHasher
+import com.khrix.domain.user.model.Role
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.company.database.CompanyEntity
 import com.khrix.infrastructure.exposed.user.database.UserEntity
@@ -38,6 +39,7 @@ class LoadSeeds(
             isActive = true
             isEmailValid = true
             address = addressData
+            role = Role.ADMIN
         }
         CompanyEntity.new {
             name = "Fake Company"

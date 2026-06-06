@@ -29,6 +29,7 @@ class UserExposedRepositoryImpl(
                 it.cpf = data.cpf.value
                 it.isActive = data.isActive
                 it.address = AddressEntity[data.addressId]
+                it.role = data.role
             }
         }
     }
@@ -62,6 +63,7 @@ class UserExposedRepositoryImpl(
             isActive = true
             isEmailValid = false
             address = if (data.addressId > 0) AddressEntity[data.addressId] else null
+            role = data.role
         }
 
         return user

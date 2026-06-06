@@ -1,7 +1,10 @@
 package com.khrix.infrastructure.http.controllers.register
 
+import com.khrix.domain.user.model.Role
+import com.khrix.infrastructure.http.controllers.core.AuthNames
 import com.khrix.infrastructure.http.controllers.core.getBody
 import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserHandler
+import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserRequest
 import com.khrix.infrastructure.http.controllers.register.resources.RegisterResource
 import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
 import com.khrix.infrastructure.http.core.AppController
@@ -18,13 +21,15 @@ class RegisterController(
         with(routing) {
             post<RegisterResource> {
                 val body = getBody<ClientRegisterDto>()
-                call.send(createNewUserHandler.handler(body))
+                call.send(createNewUserHandler.handler(CreateNewUserRequest(body)))
             }
 
-            authenticate("auth-jwt-manager") {
+            authenticate(AuthNames.AUTH_JWT_MANAGER) {
                 post<RegisterResource> {
                     val body = getBody<ClientRegisterDto>()
-                    call.send(createNewUserHandler.handler(body))
+                    val request = CreateNewUserRequest(body)
+                    request.updateRole(Role.MANAGER)
+                    call.send(createNewUserHandler.handler(request))
                 }
             }
         }

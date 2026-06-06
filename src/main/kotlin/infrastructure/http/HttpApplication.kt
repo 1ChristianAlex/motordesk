@@ -2,9 +2,9 @@ package com.khrix.infrastructure.http
 
 import com.auth0.jwt.JWT
 import com.khrix.domain.user.model.Role
+import com.khrix.infrastructure.http.controllers.core.AuthNames
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 import com.khrix.infrastructure.http.core.AppController
-import com.khrix.infrastructure.http.core.HttpResult
 import com.khrix.infrastructure.security.JwtConfig
 import com.khrix.infrastructure.security.UserClaims
 import io.ktor.http.*
@@ -57,10 +57,10 @@ private fun Application.bindRoutes() {
 private fun Application.bindAuth() {
     val jwtConfig: JwtConfig by dependencies
     install(Authentication) {
-        jwt("auth-jwt") {
+        jwt(AuthNames.AUTHENTICATE) {
             clientJwtConfig(jwtConfig)
         }
-        jwt("auth-jwt-manager") {
+        jwt(AuthNames.AUTH_JWT_MANAGER) {
             clientJwtConfig(jwtConfig)
             validate { credential ->
                 val userClaims = UserClaims.getClaims(credential.payload)
@@ -85,7 +85,9 @@ private fun JWTAuthenticationProvider.Config.clientJwtConfig(jwtConfig: JwtConfi
             .build()
     )
     challenge { defaultScheme, realm ->
-        call.respond<HttpResult<Nothing>>(HandlerException.toHttpResultError(HandlerException.UnauthenticatedOperation()))
+        val httpResult = HandlerException.toHttpResultError<Nothing>(HandlerException.UnauthenticatedOperation())
+        call.response.status(httpResult.status)
+        call.respond(httpResult)
     }
     validate { credential ->
         val userClaims = UserClaims.getClaims(credential.payload)

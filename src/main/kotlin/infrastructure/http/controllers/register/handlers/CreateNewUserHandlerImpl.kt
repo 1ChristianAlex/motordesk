@@ -5,7 +5,6 @@ import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
 import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
-import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
 import com.khrix.infrastructure.http.core.BaseHTTPHandler
 import com.khrix.infrastructure.http.core.HttpResult
@@ -15,9 +14,12 @@ class CreateNewUserHandlerImpl(
     private val createNewUserUseCase: CreateNewUserUseCase,
     private val verifyIsEmailAvailableUseCase: VerifyIsEmailAvailableUseCase,
     private val tokenService: TokenService
-) : CreateNewUserHandler, BaseHTTPHandler<ClientRegisterDto, AuthenticateOutputDto>() {
-    override suspend fun handle(body: ClientRegisterDto): HttpResult<AuthenticateOutputDto> {
-        val userModel = body.user.toDomain()
+) : CreateNewUserHandler, BaseHTTPHandler<CreateNewUserRequest, AuthenticateOutputDto>() {
+    override suspend fun handle(body: CreateNewUserRequest): HttpResult<AuthenticateOutputDto> {
+        val userModel = body.clientRegisterDto.user.toDomain()
+        val addressModel = body.clientRegisterDto.address.toDomain()
+        val companyModel = body.clientRegisterDto.company?.toDomain()
+
         val isEmailAvailable = verifyIsEmailAvailableUseCase.execute(userModel.email).getOrElse { false }
 
         if (!isEmailAvailable) {
@@ -26,7 +28,7 @@ class CreateNewUserHandlerImpl(
 
         val user = createNewUserUseCase.execute(
             CreateNewUserUseCaseCommand(
-                user = userModel, address = body.address.toDomain(), company = body.company?.toDomain()
+                user = userModel, address = addressModel, company = companyModel
             )
         ).getOrThrow()
 

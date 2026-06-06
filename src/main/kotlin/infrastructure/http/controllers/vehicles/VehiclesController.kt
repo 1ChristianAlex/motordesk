@@ -1,12 +1,11 @@
 package com.khrix.infrastructure.http.controllers.vehicles
 
+import com.khrix.infrastructure.http.controllers.core.AuthNames
 import com.khrix.infrastructure.http.controllers.core.getBody
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.CreateNewVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.DeleteVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByOwnerHandler
-import com.khrix.infrastructure.http.controllers.vehicles.handlers.NewVehicleRequest
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandler
-import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleRequest
 import com.khrix.infrastructure.http.controllers.vehicles.resources.VehiclesResource
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleInputDto
 import com.khrix.infrastructure.http.core.AppController
@@ -26,21 +25,21 @@ class VehiclesController(
     @OptIn(ExperimentalSerializationApi::class)
     override fun map(routing: Routing) {
         with(routing) {
-            authenticate("auth-jwt") {
-                post<VehiclesResource.Create> {
-                    val body = getBody<VehicleInputDto>()
-                    val claims = UserClaims.getClaims(call)
-                    call.send(createNewVehicleHandler.handler(NewVehicleRequest(claims, body)))
-                }
-                post<VehiclesResource.Update> {
-                    val body = getBody<VehicleInputDto>()
-
-                    val claims = UserClaims.getClaims(call)
-                    call.send(updateVehicleHandler.handler(UpdateVehicleRequest(body, claims.userId)))
-                }
+            authenticate(AuthNames.AUTHENTICATE) {
                 get<VehiclesResource.Owner> {
                     val claims = UserClaims.getClaims(call)
                     call.send(getVehicleByOwnerHandler.handler(claims.userId))
+                }
+            }
+            authenticate(AuthNames.AUTH_JWT_MANAGER) {
+                post<VehiclesResource.Create> {
+                    val body = getBody<VehicleInputDto>()
+
+                    call.send(createNewVehicleHandler.handler(body))
+                }
+                post<VehiclesResource.Update> {
+                    val body = getBody<VehicleInputDto>()
+                    call.send(updateVehicleHandler.handler(body))
                 }
                 delete<VehiclesResource.Delete> {
                     call.send(deleteVehicleHandler.handler(it.id.toInt()))

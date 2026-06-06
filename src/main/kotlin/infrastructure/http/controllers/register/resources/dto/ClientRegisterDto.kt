@@ -18,7 +18,6 @@ data class ClientRegisterDto(
     val user: CreateUserDto,
     val address: AddressDto,
     val company: CompanyDto?,
-    private val role: Role = Role.CLIENT
 )
 
 @Serializable

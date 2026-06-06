@@ -9,7 +9,7 @@ import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
 fun VehicleEntity.toModel(): Vehicle {
     return Vehicle(
         id = id.value,
-        userId = owner.id.value,
+        ownerId = owner.id.value,
         plate = Plate(plate),
         brand = brand,
         model = model,

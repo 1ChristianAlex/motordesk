@@ -1,5 +1,6 @@
 package com.khrix.infrastructure.http.controllers.user
 
+import com.khrix.infrastructure.http.controllers.core.AuthNames
 import com.khrix.infrastructure.http.controllers.core.getBody
 import com.khrix.infrastructure.http.controllers.user.handlers.GetSelfUserHandler
 import com.khrix.infrastructure.http.controllers.user.handlers.UpdateSelfUserHandler
@@ -21,7 +22,7 @@ class UserController(
     @OptIn(ExperimentalSerializationApi::class)
     override fun map(routing: Routing) {
         with(routing) {
-            authenticate("auth-jwt") {
+            authenticate(AuthNames.AUTHENTICATE) {
                 get<UserResource> {
                     val claims = UserClaims.getClaims(call)
                     call.send(getSelfUserHandler.handler(claims))

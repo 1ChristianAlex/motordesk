@@ -49,7 +49,7 @@ class VehiclesExposedRepositoryImpl(
             mileage = data.mileage
             chassis = data.chassis
             fuelType = data.fuelType.value
-            owner = UserEntity[data.userId]
+            owner = UserEntity[data.ownerId]
         }
     }
 

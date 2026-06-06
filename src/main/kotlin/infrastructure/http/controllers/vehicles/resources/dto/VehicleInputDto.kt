@@ -18,11 +18,12 @@ data class VehicleInputDto(
     val mileage: Int = 0,
     val chassis: String,
     val fuelType: FuelType,
+    val ownerId: Int,
 ) {
-    fun toModel(userId: Int): Vehicle {
+    fun toModel(): Vehicle {
         return Vehicle(
             id = id,
-            userId = userId,
+            ownerId = ownerId,
             plate = Plate(plate),
             brand = brand,
             model = model,

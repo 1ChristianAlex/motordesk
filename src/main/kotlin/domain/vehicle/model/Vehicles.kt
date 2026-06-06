@@ -1,6 +1,5 @@
 package com.khrix.domain.vehicle.model
 
-import com.khrix.domain.user.model.Role
 import com.khrix.domain.valueobject.toValidationError
 import com.khrix.domain.valueobject.vehicle.Plate
 import com.khrix.domain.valueobject.vehicle.Year
@@ -25,7 +24,7 @@ enum class FuelType(val value: String) {
 
 data class Vehicle(
     val id: Int? = null,
-    val userId: Int,
+    val ownerId: Int,
     val plate: Plate,
     val brand: String,
     val model: String,
@@ -53,7 +52,7 @@ data class Vehicle(
         Vehicle::chassis {
             constrain("Chassis cannot be blank") { it.isNotBlank() }
         }
-        Vehicle::userId {
+        Vehicle::ownerId {
             constrain("User ID cannot be blank") { it >= 0 }
         }
         Vehicle::fuelType {
@@ -68,12 +67,12 @@ data class Vehicle(
         }
     }
 
-    fun updateVehicle(vehicle: Vehicle, role: Role): Vehicle {
+    fun updateVehicle(vehicle: Vehicle): Vehicle {
         if (vehicle.id != this.id) {
             throw IllegalArgumentException("Cannot update vehicle with different ID")
         }
 
-        if (vehicle.userId != this.userId && role == Role.CLIENT) {
+        if (vehicle.ownerId != this.ownerId) {
             throw IllegalArgumentException("Cannot update vehicle with different owner")
         }
 

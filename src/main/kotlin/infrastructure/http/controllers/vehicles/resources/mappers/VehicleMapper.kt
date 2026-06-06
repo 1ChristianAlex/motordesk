@@ -6,7 +6,7 @@ import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleO
 fun Vehicle.toOutputDto(): VehicleOutputDto {
     return VehicleOutputDto(
         id = id,
-        userId = userId,
+        userId = ownerId,
         plate = plate.value,
         brand = brand,
         model = model,

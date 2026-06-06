@@ -1,6 +1,7 @@
 package com.khrix.infrastructure.http.controllers.vehicles.handlers
 
 import com.khrix.domain.vehicle.usecase.CreateNewVehicleUseCase
+import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleInputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.mappers.toOutputDto
 import com.khrix.infrastructure.http.core.BaseHTTPHandler
@@ -9,11 +10,9 @@ import io.ktor.http.*
 
 class CreateNewVehicleHandlerImpl(
     private val createNewVehicleUseCase: CreateNewVehicleUseCase
-) : CreateNewVehicleHandler, BaseHTTPHandler<NewVehicleRequest, VehicleOutputDto>() {
-    override suspend fun handle(body: NewVehicleRequest): HttpResult<VehicleOutputDto> {
-        val vehicleData = body.run {
-            vehicle.toModel(claims.userId)
-        }
+) : CreateNewVehicleHandler, BaseHTTPHandler<VehicleInputDto, VehicleOutputDto>() {
+    override suspend fun handle(body: VehicleInputDto): HttpResult<VehicleOutputDto> {
+        val vehicleData = body.toModel()
 
         val newVehicle = createNewVehicleUseCase.execute(vehicleData).getOrThrow()
         return HttpResult(newVehicle.toOutputDto(), HttpStatusCode.Accepted)

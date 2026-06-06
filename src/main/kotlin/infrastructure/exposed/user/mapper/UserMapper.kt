@@ -25,6 +25,7 @@ suspend fun UserEntity.toModel(): User {
             createdAt = createdAt,
             updatedAt = updatedAt,
             companyId = company?.id?.value,
+            role = role
         )
     }
 }

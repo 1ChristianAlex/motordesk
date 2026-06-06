@@ -1,6 +1,7 @@
 package com.khrix.infrastructure.exposed.user.database
 
 
+import com.khrix.domain.user.model.Role
 import com.khrix.infrastructure.exposed.BaseTable
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.address.database.AddressTable
@@ -12,6 +13,7 @@ import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object UsersTable : BaseTable("users") {
     val address = reference("addressId", AddressTable).nullable()
+    val role = enumeration("role", Role::class).default(Role.CLIENT)
 
     val firstName = varchar("firstName", 100)
     val lastName = varchar("lastName", 100)
@@ -40,6 +42,8 @@ class UserEntity(id: EntityID<Int>) : IntEntity(id) {
     var cpf by UsersTable.cpf
     var isActive by UsersTable.isActive
     var isEmailValid by UsersTable.isEmailValid
+    var role by UsersTable.role
+
     var createdAt by UsersTable.createdAt
     var updatedAt by UsersTable.updatedAt
 }
