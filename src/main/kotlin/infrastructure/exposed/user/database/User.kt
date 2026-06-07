@@ -13,7 +13,7 @@ import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object UsersTable : BaseTable("users") {
     val address = reference("addressId", AddressTable).nullable()
-    val role = enumeration("role", Role::class).default(Role.CLIENT)
+    val role = enumerationByName<Role>("role", 20).default(Role.CLIENT)
 
     val firstName = varchar("firstName", 100)
     val lastName = varchar("lastName", 100)

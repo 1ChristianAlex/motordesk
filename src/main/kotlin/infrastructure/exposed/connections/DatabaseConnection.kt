@@ -2,7 +2,12 @@ package com.khrix.infrastructure.exposed.connections
 
 import com.khrix.infrastructure.exposed.address.database.AddressTable
 import com.khrix.infrastructure.exposed.company.database.CompanyTable
+import com.khrix.infrastructure.exposed.inventory.database.InventoryTable
 import com.khrix.infrastructure.exposed.seeds.LoadSeeds
+import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderPartsTable
+import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderServicesTable
+import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrdersTable
+import com.khrix.infrastructure.exposed.serviceorder.database.ServicesTable
 import com.khrix.infrastructure.exposed.user.database.UsersTable
 import com.khrix.infrastructure.exposed.vehicles.database.VehiclesTable
 import org.jetbrains.exposed.v1.core.StdOutSqlLogger
@@ -18,7 +23,12 @@ abstract class DatabaseConnection(private val isDevelopment: Boolean, private va
         UsersTable,
         AddressTable,
         CompanyTable,
-        VehiclesTable
+        VehiclesTable,
+        InventoryTable,
+        ServicesTable,
+        ServiceOrdersTable,
+        ServiceOrderPartsTable,
+        ServiceOrderServicesTable
     ).toTypedArray()
 
     fun JdbcTransaction.beforeLoad() {
