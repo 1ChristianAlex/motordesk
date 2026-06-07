@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.http.controllers.register.resources.dto
 
-import com.khrix.domain.address.model.Address
+import com.khrix.domain.user.address.model.Address
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.domain.user.model.Role

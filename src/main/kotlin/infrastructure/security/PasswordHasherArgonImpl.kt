@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.security
 
-import com.khrix.domain.security.PasswordHasher
+import com.khrix.domain.user.security.PasswordHasher
 import de.mkammerer.argon2.Argon2Factory
 import java.util.regex.Pattern
 

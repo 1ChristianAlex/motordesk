@@ -2,21 +2,22 @@ package com.khrix.infrastructure.exposed.serviceorder.database
 
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.infrastructure.exposed.BaseTable
+import com.khrix.infrastructure.exposed.inventory.database.InventoryEntity
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.user.database.UsersTable
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
-import com.khrix.infrastructure.exposed.vehicles.database.VehiclesTable
+import com.khrix.infrastructure.exposed.vehicles.database.VehicleTable
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object ServiceOrdersTable : BaseTable("serviceOrders") {
 
-    val customer = reference("customerId", UsersTable)
+    val client = reference("clientId", UsersTable)
 
-    val createdBy = reference("createdById", UsersTable)
+    val operator = reference("operatorId", UsersTable)
 
-    val vehicle = reference("vehicleId", VehiclesTable)
+    val vehicle = reference("vehicleId", VehicleTable)
 
     val status = enumerationByName<ServiceOrderStatus>(
         "status",
@@ -37,9 +38,12 @@ class ServiceOrderEntity(id: EntityID<Int>) : IntEntity(id) {
         ServiceOrdersTable
     )
 
-    var customer by UserEntity referencedOn ServiceOrdersTable.customer
+    var client by UserEntity referencedOn ServiceOrdersTable.client
 
-    var createdBy by UserEntity referencedOn ServiceOrdersTable.createdBy
+    var operator by UserEntity referencedOn ServiceOrdersTable.operator
+
+    var tasks by TaskEntity via ServiceOrderTasksTable
+    var parts by InventoryEntity via ServiceOrderPartsTable
 
     var vehicle by VehicleEntity referencedOn ServiceOrdersTable.vehicle
 

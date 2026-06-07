@@ -1,10 +1,10 @@
-<mxfile host="drawio-plugin" modified="2026-06-07T15:57:06.297Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" etag="lWCobsqnTTasTWNcGKSh" version="22.1.22" type="embed" pages="3">
+<mxfile host="drawio-plugin" modified="2026-06-07T17:24:09.327Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" etag="qrnW7DgMCgC6bS3RdD8-" version="22.1.22" type="embed" pages="3">
   <diagram name="Process" id="w7HYpww9-J7Z20PZzRJU">
-    <mxGraphModel dx="2997" dy="2497" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="899" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="10" value="" style="group" vertex="1" connectable="0" parent="1">
+        <mxCell id="10" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry width="1075" height="710" as="geometry" />
         </mxCell>
         <mxCell id="S1UZLs32Uq9Vu9_8KYrw-1" value="Client" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=middle;html=1;outlineConnect=0;" parent="10" vertex="1">

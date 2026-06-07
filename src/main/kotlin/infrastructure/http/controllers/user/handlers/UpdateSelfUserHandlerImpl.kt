@@ -1,13 +1,13 @@
 package com.khrix.infrastructure.http.controllers.user.handlers
 
-import com.khrix.domain.security.TokenService
+import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.user.usecase.UpdateUserUseCase
 import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
-import com.khrix.infrastructure.http.core.BaseHTTPHandler
-import com.khrix.infrastructure.http.core.HttpResult
+import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
+import com.khrix.infrastructure.http.controllers.core.HttpResult
 import io.ktor.http.*
 
 class UpdateSelfUserHandlerImpl(

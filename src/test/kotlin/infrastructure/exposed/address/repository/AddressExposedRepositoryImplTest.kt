@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.exposed.address.repository
 
-import com.khrix.domain.address.model.Address
+import com.khrix.domain.user.address.model.Address
 import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.infrastructure.exposed.connections.MemoryConnection
 import kotlinx.coroutines.Dispatchers

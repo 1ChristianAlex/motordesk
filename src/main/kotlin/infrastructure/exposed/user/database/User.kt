@@ -22,7 +22,7 @@ object UsersTable : BaseTable("users") {
     val password = varchar("passwordHash", 255)
 
     val phone = varchar("phone", 30)
-    val cpf = varchar("cpf", 11)
+    val cpf = varchar("cpf", 11).uniqueIndex()
 
     val isActive = bool("isActive").default(true)
     val isEmailValid = bool("isEmailValid").default(false)

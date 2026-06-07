@@ -1,7 +1,7 @@
 package com.khrix.infrastructure.http.controllers.core.exceptions
 
 import com.khrix.domain.valueobject.ValidationErrorResult
-import com.khrix.infrastructure.http.core.HttpResult
+import com.khrix.infrastructure.http.controllers.core.HttpResult
 import io.ktor.http.*
 
 sealed class HandlerException(val statusCode: HttpStatusCode, override val message: String?) : Exception(message) {

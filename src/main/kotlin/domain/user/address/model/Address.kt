@@ -1,4 +1,4 @@
-package com.khrix.domain.address.model
+package com.khrix.domain.user.address.model
 
 import com.khrix.domain.valueobject.address.AddressValueObject
 import kotlinx.datetime.LocalDateTime

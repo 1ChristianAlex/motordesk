@@ -1,7 +1,7 @@
 package com.khrix.application.login.usecase
 
 import com.khrix.domain.core.getCurrentUtcDateTime
-import com.khrix.domain.security.PasswordHasher
+import com.khrix.domain.user.security.PasswordHasher
 import com.khrix.domain.user.model.LoginTypes
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository

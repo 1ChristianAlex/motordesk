@@ -1,7 +1,7 @@
 package com.khrix.infrastructure.exposed.address.repository
 
-import com.khrix.domain.address.model.Address
-import com.khrix.domain.address.repository.AddressRepository
+import com.khrix.domain.user.address.model.Address
+import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.address.mapper.toModel

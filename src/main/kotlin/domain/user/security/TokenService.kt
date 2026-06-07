@@ -1,4 +1,4 @@
-package com.khrix.domain.security
+package com.khrix.domain.user.security
 
 import com.khrix.domain.user.model.User
 

@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.http.controllers.vehicles
 
-import com.khrix.infrastructure.http.controllers.core.AuthNames
+import com.khrix.infrastructure.http.controllers.core.AppController
 import com.khrix.infrastructure.http.controllers.core.getBody
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.CreateNewVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.DeleteVehicleHandler
@@ -8,9 +8,7 @@ import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByO
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.resources.VehiclesResource
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleInputDto
-import com.khrix.infrastructure.http.core.AppController
 import com.khrix.infrastructure.security.UserClaims
-import io.ktor.server.auth.*
 import io.ktor.server.resources.*
 import io.ktor.server.resources.post
 import io.ktor.server.routing.*
@@ -25,13 +23,13 @@ class VehiclesController(
     @OptIn(ExperimentalSerializationApi::class)
     override fun map(routing: Routing) {
         with(routing) {
-            authenticate(AuthNames.AUTHENTICATE) {
+            client {
                 get<VehiclesResource.Owner> {
                     val claims = UserClaims.getClaims(call)
                     call.send(getVehicleByOwnerHandler.handler(claims.userId))
                 }
             }
-            authenticate(AuthNames.AUTH_JWT_MANAGER) {
+            manager {
                 post<VehiclesResource.Create> {
                     val body = getBody<VehicleInputDto>()
 

@@ -5,7 +5,7 @@ import com.khrix.domain.vehicle.repository.VehiclesRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
-import com.khrix.infrastructure.exposed.vehicles.database.VehiclesTable
+import com.khrix.infrastructure.exposed.vehicles.database.VehicleTable
 import com.khrix.infrastructure.exposed.vehicles.mapper.toModel
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.or
@@ -30,7 +30,7 @@ class VehiclesExposedRepositoryImpl(
                 it.year = data.year.value
                 it.mileage = data.mileage
                 it.chassis = data.chassis
-                it.fuelType = data.fuelType.value
+                it.fuelType = data.fuelType
             }
         }
     }
@@ -48,7 +48,7 @@ class VehiclesExposedRepositoryImpl(
             year = data.year.value
             mileage = data.mileage
             chassis = data.chassis
-            fuelType = data.fuelType.value
+            fuelType = data.fuelType
             owner = UserEntity[data.ownerId]
         }
     }
@@ -59,7 +59,7 @@ class VehiclesExposedRepositoryImpl(
 
     override suspend fun getVehicleByOwnerId(id: Int): List<Vehicle> {
         return suspendedQuery {
-            VehicleEntity.find { VehiclesTable.owner eq id }.map { it.toModel() }
+            VehicleEntity.find { VehicleTable.owner eq id }.map { it.toModel() }
         }
     }
 
@@ -68,7 +68,7 @@ class VehiclesExposedRepositoryImpl(
         chassis: String
     ): Vehicle? {
         return suspendedQuery {
-            VehicleEntity.find { (VehiclesTable.plate eq plate) or (VehiclesTable.chassis eq chassis) }.firstOrNull()
+            VehicleEntity.find { (VehicleTable.plate eq plate) or (VehicleTable.chassis eq chassis) }.firstOrNull()
                 ?.toModel()
         }
     }

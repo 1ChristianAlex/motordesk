@@ -1,7 +1,7 @@
 package com.khrix.application.register.usecase
 
-import com.khrix.domain.address.model.Address
-import com.khrix.domain.address.repository.AddressRepository
+import com.khrix.domain.user.address.model.Address
+import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
 import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseCommand

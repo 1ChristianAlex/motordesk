@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.http.controllers.register.handlers
 
-import com.khrix.domain.security.TokenService
+import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase

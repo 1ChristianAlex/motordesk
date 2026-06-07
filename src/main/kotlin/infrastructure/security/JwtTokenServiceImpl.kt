@@ -2,7 +2,7 @@ package com.khrix.infrastructure.security
 
 import com.auth0.jwt.JWT
 import com.khrix.domain.core.getCurrentUtcDateTime
-import com.khrix.domain.security.TokenService
+import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.model.User
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone

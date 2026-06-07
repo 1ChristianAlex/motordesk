@@ -1,13 +1,13 @@
 package com.khrix.application.register.usecase
 
-import com.khrix.domain.address.repository.AddressRepository
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
 import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseCommand
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCaseCommand
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.security.PasswordHasher
+import com.khrix.domain.user.security.PasswordHasher
+import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.user.usecase.CreateNewUserUseCase

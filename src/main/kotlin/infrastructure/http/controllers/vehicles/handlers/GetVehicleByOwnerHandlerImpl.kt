@@ -3,8 +3,8 @@ package com.khrix.infrastructure.http.controllers.vehicles.handlers
 import com.khrix.domain.vehicle.usecase.GetVehicleByOwnerIdUseCase
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.mappers.toOutputDto
-import com.khrix.infrastructure.http.core.BaseHTTPHandler
-import com.khrix.infrastructure.http.core.HttpResult
+import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
+import com.khrix.infrastructure.http.controllers.core.HttpResult
 import io.ktor.http.*
 
 class GetVehicleByOwnerHandlerImpl(

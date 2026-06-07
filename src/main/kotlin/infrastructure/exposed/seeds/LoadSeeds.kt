@@ -1,12 +1,20 @@
 package com.khrix.infrastructure.exposed.seeds
 
-import com.khrix.domain.security.PasswordHasher
 import com.khrix.domain.user.model.Role
+import com.khrix.domain.user.security.PasswordHasher
+import com.khrix.domain.vehicle.model.FuelType
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.company.database.CompanyEntity
 import com.khrix.infrastructure.exposed.inventory.database.InventoryEntity
-import com.khrix.infrastructure.exposed.serviceorder.database.ServiceEntity
+import com.khrix.infrastructure.exposed.inventory.database.InventoryTable
+import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderEntity
+import com.khrix.infrastructure.exposed.serviceorder.database.TaskEntity
+import com.khrix.infrastructure.exposed.serviceorder.database.TaskTable
 import com.khrix.infrastructure.exposed.user.database.UserEntity
+import com.khrix.infrastructure.exposed.user.database.UsersTable
+import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
+import com.khrix.infrastructure.exposed.vehicles.database.VehicleTable
+import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.math.BigDecimal
@@ -18,103 +26,138 @@ class LoadSeeds(
         transaction(database) {
             createDefaultUser()
             createCompanyUser()
+            createVehicle()
             createInventory()
             createServiceList()
+            createServiceOrder()
+        }
+    }
+
+    private fun createVehicle() {
+        VehicleEntity.new {
+            plate = "ABC1E23"
+            model = "Civic"
+            brand = "Honda"
+            year = 2020
+            color = "Prata"
+            mileage = 45800
+            owner = UserEntity.find { UsersTable.cpf eq "84783736081" }.first()
+            fuelType = FuelType.GASOLINE
+            chassis = "9BRBD48E0D1234567"
+        }
+    }
+
+    private fun createServiceOrder() {
+        val tasksList = TaskEntity.find { TaskTable.isActive eq true }.limit(2)
+        val partsList = InventoryEntity.find { InventoryTable.isActive eq true }.limit(3)
+        val vehicleItem = VehicleEntity.find { VehicleTable.plate eq "ABC1E23" }.first()
+        val clientItem = UserEntity.find { UsersTable.cpf eq "84783736081" }.first()
+        val operatorItem = UserEntity.find { UsersTable.cpf eq "21641780096" }.first()
+
+        ServiceOrderEntity.new {
+            client = clientItem
+            operator = operatorItem
+            tasks = tasksList
+            parts = partsList
+            vehicle = vehicleItem
+            complaint = "This is a test"
+            diagnosis = "There is a problem for sure"
+            totalAmount = BigDecimal("10")
         }
     }
 
     private fun createServiceList() {
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Óleo"
             description = "Substituição do óleo do motor e verificação dos níveis"
             estimatedMinutes = 30
             price = BigDecimal("89.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Filtro de Óleo"
             description = "Substituição do filtro de óleo do motor"
             estimatedMinutes = 15
             price = BigDecimal("39.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Filtro de Ar"
             description = "Substituição do filtro de ar do motor"
             estimatedMinutes = 20
             price = BigDecimal("29.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Filtro de Cabine"
             description = "Substituição do filtro do ar-condicionado"
             estimatedMinutes = 20
             price = BigDecimal("34.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Alinhamento"
             description = "Alinhamento da direção e suspensão"
             estimatedMinutes = 40
             price = BigDecimal("79.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Balanceamento"
             description = "Balanceamento das rodas"
             estimatedMinutes = 30
             price = BigDecimal("59.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Pastilhas de Freio"
             description = "Substituição das pastilhas de freio dianteiras ou traseiras"
             estimatedMinutes = 60
             price = BigDecimal("149.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Discos de Freio"
             description = "Substituição dos discos de freio"
             estimatedMinutes = 90
             price = BigDecimal("199.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Amortecedores"
             description = "Substituição dos amortecedores do veículo"
             estimatedMinutes = 120
             price = BigDecimal("299.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Bateria"
             description = "Substituição da bateria automotiva"
             estimatedMinutes = 20
             price = BigDecimal("49.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Correia Dentada"
             description = "Substituição da correia dentada e inspeção do sistema"
             estimatedMinutes = 180
             price = BigDecimal("499.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Diagnóstico Eletrônico"
             description = "Leitura de falhas utilizando scanner automotivo"
             estimatedMinutes = 45
             price = BigDecimal("99.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Revisão Preventiva"
             description = "Inspeção geral dos principais componentes do veículo"
             estimatedMinutes = 180
             price = BigDecimal("399.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Higienização de Ar-Condicionado"
             description = "Limpeza e higienização completa do sistema de ar-condicionado"
             estimatedMinutes = 60
             price = BigDecimal("129.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Fluido de Freio"
             description = "Substituição completa do fluido do sistema de freios"
             estimatedMinutes = 45
             price = BigDecimal("89.90")
         }
-        ServiceEntity.new {
+        TaskEntity.new {
             name = "Troca de Aditivo do Radiador"
             description = "Limpeza e troca do fluido de arrefecimento"
             estimatedMinutes = 60
@@ -269,7 +312,7 @@ class LoadSeeds(
             email = "christian.alexsander@email.com"
             password = passwordHasher.hash("test@123!")
             phone = "4737339296"
-            cpf = "21641780096"
+            cpf = "84783736081"
             isActive = true
             isEmailValid = true
             address = addressData

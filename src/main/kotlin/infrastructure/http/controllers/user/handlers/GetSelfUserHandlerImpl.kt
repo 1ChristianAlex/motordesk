@@ -3,8 +3,8 @@ package com.khrix.infrastructure.http.controllers.user.handlers
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
-import com.khrix.infrastructure.http.core.BaseHTTPHandler
-import com.khrix.infrastructure.http.core.HttpResult
+import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
+import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.security.UserClaims
 import io.ktor.http.*
 

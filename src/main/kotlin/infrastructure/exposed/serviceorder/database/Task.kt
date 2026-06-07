@@ -7,7 +7,7 @@ import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 
-object ServicesTable : BaseTable("services") {
+object TaskTable : BaseTable("task") {
 
     val name = varchar("name", 150)
 
@@ -20,19 +20,19 @@ object ServicesTable : BaseTable("services") {
     val isActive = bool("isActive").default(true)
 }
 
-class ServiceEntity(id: EntityID<Int>) : IntEntity(id) {
+class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
 
-    companion object : IntEntityClass<ServiceEntity>(ServicesTable)
+    companion object : IntEntityClass<TaskEntity>(TaskTable)
 
-    var name by ServicesTable.name
-    var description by ServicesTable.description
+    var name by TaskTable.name
+    var description by TaskTable.description
 
-    var estimatedMinutes by ServicesTable.estimatedMinutes
+    var estimatedMinutes by TaskTable.estimatedMinutes
 
-    var price by ServicesTable.price
+    var price by TaskTable.price
 
-    var isActive by ServicesTable.isActive
+    var isActive by TaskTable.isActive
 
-    var createdAt by ServicesTable.createdAt
-    var updatedAt by ServicesTable.updatedAt
+    var createdAt by TaskTable.createdAt
+    var updatedAt by TaskTable.updatedAt
 }

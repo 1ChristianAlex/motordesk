@@ -1,4 +1,4 @@
-package com.khrix.infrastructure.http.core
+package com.khrix.infrastructure.http.controllers.core
 
 import com.khrix.infrastructure.http.serializers.HttpStatusCodeSerializer
 import io.ktor.http.*

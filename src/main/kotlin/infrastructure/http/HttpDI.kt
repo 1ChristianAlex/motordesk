@@ -21,7 +21,7 @@ import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByO
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByOwnerHandlerImpl
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandlerImpl
-import com.khrix.infrastructure.http.core.AppController
+import com.khrix.infrastructure.http.controllers.core.AppController
 import io.ktor.server.plugins.di.*
 
 fun httpDI(dependencies: DependencyRegistry) {

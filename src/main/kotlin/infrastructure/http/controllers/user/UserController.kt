@@ -7,7 +7,7 @@ import com.khrix.infrastructure.http.controllers.user.handlers.UpdateSelfUserHan
 import com.khrix.infrastructure.http.controllers.user.handlers.UpdateSelfUserHandlerBody
 import com.khrix.infrastructure.http.controllers.user.resources.UserResource
 import com.khrix.infrastructure.http.controllers.user.resources.dto.UserInputDto
-import com.khrix.infrastructure.http.core.AppController
+import com.khrix.infrastructure.http.controllers.core.AppController
 import com.khrix.infrastructure.security.UserClaims
 import io.ktor.server.auth.*
 import io.ktor.server.resources.*
@@ -22,7 +22,7 @@ class UserController(
     @OptIn(ExperimentalSerializationApi::class)
     override fun map(routing: Routing) {
         with(routing) {
-            authenticate(AuthNames.AUTHENTICATE) {
+            client {
                 get<UserResource> {
                     val claims = UserClaims.getClaims(call)
                     call.send(getSelfUserHandler.handler(claims))

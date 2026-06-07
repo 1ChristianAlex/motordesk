@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT
 import com.khrix.domain.user.model.Role
 import com.khrix.infrastructure.http.controllers.core.AuthNames
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
-import com.khrix.infrastructure.http.core.AppController
+import com.khrix.infrastructure.http.controllers.core.AppController
 import com.khrix.infrastructure.security.JwtConfig
 import com.khrix.infrastructure.security.UserClaims
 import io.ktor.http.*

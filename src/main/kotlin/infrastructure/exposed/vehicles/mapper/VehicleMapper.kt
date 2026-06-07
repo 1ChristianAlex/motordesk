@@ -2,7 +2,6 @@ package com.khrix.infrastructure.exposed.vehicles.mapper
 
 import com.khrix.domain.valueobject.vehicle.Plate
 import com.khrix.domain.valueobject.vehicle.Year
-import com.khrix.domain.vehicle.model.FuelType
 import com.khrix.domain.vehicle.model.Vehicle
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
 
@@ -17,7 +16,7 @@ fun VehicleEntity.toModel(): Vehicle {
         year = Year(year),
         mileage = mileage,
         chassis = chassis,
-        fuelType = FuelType.valueOf(fuelType),
+        fuelType = fuelType,
         createdAt = createdAt,
         updatedAt = updatedAt,
     )
