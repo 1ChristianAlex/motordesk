@@ -1,6 +1,8 @@
 package com.khrix.infrastructure.exposed
 
 import com.khrix.domain.company.repository.CompanyRepository
+import com.khrix.domain.inventory.repository.InventoryRepository
+import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.repository.TaskRepository
 import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.domain.user.repository.UserRepository
@@ -9,7 +11,9 @@ import com.khrix.infrastructure.exposed.address.repository.AddressExposedReposit
 import com.khrix.infrastructure.exposed.company.repository.CompanyExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.connections.MemoryConnection
 import com.khrix.infrastructure.exposed.connections.PostgresConnection
+import com.khrix.infrastructure.exposed.inventory.repository.InventoryExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.seeds.LoadSeeds
+import com.khrix.infrastructure.exposed.serviceorder.repository.ServiceOrderExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.serviceorder.repository.TaskExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.user.repository.UserExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.vehicles.repository.VehiclesExposedRepositoryImpl
@@ -29,5 +33,7 @@ fun appDatabase(dependencies: DependencyRegistry) {
         provide<CompanyRepository>(CompanyExposedRepositoryImpl::class)
         provide<VehiclesRepository>(VehiclesExposedRepositoryImpl::class)
         provide<TaskRepository>(TaskExposedRepositoryImpl::class)
+        provide<InventoryRepository>(InventoryExposedRepositoryImpl::class)
+        provide<ServiceOrderRepository>(ServiceOrderExposedRepositoryImpl::class)
     }
 }

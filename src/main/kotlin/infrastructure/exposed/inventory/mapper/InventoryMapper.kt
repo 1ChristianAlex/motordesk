@@ -11,5 +11,6 @@ fun InventoryEntity.toModel(): InventoryItem = InventoryItem(
     minimumQuantity = this.minimumQuantity,
     unitPrice = this.unitPrice,
     isActive = this.isActive,
+    id = this.id.value
 )
 

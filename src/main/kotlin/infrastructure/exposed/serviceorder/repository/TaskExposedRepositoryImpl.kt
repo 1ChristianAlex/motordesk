@@ -43,10 +43,11 @@ class TaskExposedRepositoryImpl(
     }
 
     override suspend fun delete(id: Int) {
-        this.update(
-            id,
-            read(id)?.copy(isActive = false) ?: throw IllegalArgumentException("Task with id $id not found")
-        )
+        suspendedQuery {
+            TaskEntity.findByIdAndUpdate(id) {
+                it.isActive = false
+            }
+        }
     }
 
     override suspend fun createRead(data: Task): Task {

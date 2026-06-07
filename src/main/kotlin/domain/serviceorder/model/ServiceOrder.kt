@@ -6,7 +6,7 @@ import com.khrix.domain.user.model.User
 import com.khrix.domain.vehicle.model.Vehicle
 import java.math.BigDecimal
 
-data class ServiceOrders(
+data class ServiceOrder(
     val client: User,
     val operator: User,
     val vehicle: Vehicle,

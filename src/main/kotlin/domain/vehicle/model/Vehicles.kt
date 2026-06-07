@@ -23,7 +23,7 @@ enum class FuelType(val value: String) {
 }
 
 data class Vehicle(
-    val id: Int? = null,
+    val id: Int = 0,
     val ownerId: Int,
     val plate: Plate,
     val brand: String,

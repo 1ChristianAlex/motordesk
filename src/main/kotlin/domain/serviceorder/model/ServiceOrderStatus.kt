@@ -8,6 +8,7 @@ enum class ServiceOrderStatus {
     IN_DIAGNOSIS,
     IN_PROGRESS,
     FINISHED,
-    DELIVERED
+    DELIVERED,
+    CANCELLED,
 }
 

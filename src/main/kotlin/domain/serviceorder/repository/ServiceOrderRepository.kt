@@ -5,14 +5,14 @@ import com.khrix.domain.core.BaseCreateReturn
 import com.khrix.domain.core.BaseDelete
 import com.khrix.domain.core.BaseRead
 import com.khrix.domain.core.BaseUpdate
-import com.khrix.domain.serviceorder.task.model.Task
+import com.khrix.domain.serviceorder.model.ServiceOrder
 
 interface ServiceOrderRepository :
-    BaseRead<Task>,
-    BaseUpdate<Task>,
-    BaseCreate<Task>,
+    BaseRead<ServiceOrder>,
+    BaseUpdate<ServiceOrder>,
+    BaseCreate<ServiceOrder>,
     BaseDelete,
-    BaseCreateReturn<Task> {
+    BaseCreateReturn<ServiceOrder> {
 }
 
 
