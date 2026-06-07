@@ -4,7 +4,9 @@ import com.khrix.domain.serviceorder.task.model.Task
 import com.khrix.domain.serviceorder.task.repository.TaskRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.serviceorder.database.TaskEntity
+import com.khrix.infrastructure.exposed.serviceorder.database.TaskTable
 import com.khrix.infrastructure.exposed.serviceorder.mapper.toModel
+import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.Database
 
 class TaskExposedRepositoryImpl(
@@ -22,8 +24,11 @@ class TaskExposedRepositoryImpl(
                 it.name = data.name
                 it.description = data.description
                 it.estimatedMinutes = data.estimatedMinutes
-                it.price = data.price
-                it.isActive = data.isActive
+                it.category = data.category
+
+                if (!it.isActive) {
+                    it.isActive = data.isActive
+                }
             }
         }
     }
@@ -37,8 +42,9 @@ class TaskExposedRepositoryImpl(
             name = data.name
             description = data.description
             estimatedMinutes = data.estimatedMinutes
-            price = data.price
+            price = data.price.value
             isActive = data.isActive
+            category = data.category
         }
     }
 
@@ -52,5 +58,11 @@ class TaskExposedRepositoryImpl(
 
     override suspend fun createRead(data: Task): Task {
         return createTask(data).toModel()
+    }
+
+    override suspend fun getTasks(ids: List<Int>): List<Task> {
+        return suspendedQuery {
+            TaskEntity.find { TaskTable.id inList ids }.map { it.toModel() }
+        }
     }
 }

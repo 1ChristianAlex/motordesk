@@ -55,7 +55,7 @@ data class UserClaims(
                     userId = userId,
                     role = Role.valueOf(role)
                 )
-            } ?: throw Exception("User claims not found")
+            } ?: throw NoSuchElementException("User claims not found")
         }
 
         fun toClaims(user: User): UserClaims {

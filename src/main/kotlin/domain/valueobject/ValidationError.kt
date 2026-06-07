@@ -11,3 +11,4 @@ fun ValidationResult<*>.toValidationError(kClass: KClass<*>): ValidationErrorRes
     val allErrors = this.errors.map { "${kClass.simpleName} - ${it.message}" }
     return ValidationErrorResult(allErrors)
 }
+

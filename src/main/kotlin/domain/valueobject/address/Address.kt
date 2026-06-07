@@ -10,7 +10,6 @@ import io.konform.validation.constraints.pattern
 data class AddressValueObject(
     val address: Address,
 ) {
-
     val validation = Validation<Address> {
         Address::street {
             minLength(3) hint "Street must be at least 3 characters long"

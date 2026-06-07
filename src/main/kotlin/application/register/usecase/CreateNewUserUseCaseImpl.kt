@@ -55,7 +55,7 @@ class CreateNewUserUseCaseImpl(
 
             val userId = userRepository.create(userWithHashedPassword)
 
-            val user = userRepository.read(userId) ?: throw Exception("User not found after creation")
+            val user = userRepository.read(userId) ?: throw NoSuchElementException("User not found after creation")
 
             user
         }

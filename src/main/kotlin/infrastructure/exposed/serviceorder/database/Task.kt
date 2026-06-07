@@ -1,6 +1,7 @@
 package com.khrix.infrastructure.exposed.serviceorder.database
 
 
+import com.khrix.domain.serviceorder.task.model.TaskCategory
 import com.khrix.infrastructure.exposed.BaseTable
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
@@ -18,6 +19,8 @@ object TaskTable : BaseTable("task") {
     val price = decimal("price", 12, 2)
 
     val isActive = bool("isActive").default(true)
+
+    val category = enumerationByName<TaskCategory>("category", 50)
 }
 
 class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -32,6 +35,7 @@ class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
     var price by TaskTable.price
 
     var isActive by TaskTable.isActive
+    var category by TaskTable.category
 
     var createdAt by TaskTable.createdAt
     var updatedAt by TaskTable.updatedAt

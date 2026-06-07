@@ -16,7 +16,6 @@ suspend fun ServiceOrderEntity.toModel(): ServiceOrder {
             status = status,
             complaint = complaint,
             diagnosis = diagnosis,
-            totalAmount = totalAmount,
             tasks = tasks.map { it.toModel() },
             inventoryItems = parts.map { it.toModel() },
         )

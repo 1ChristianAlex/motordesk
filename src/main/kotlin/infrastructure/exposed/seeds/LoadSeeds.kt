@@ -1,5 +1,6 @@
 package com.khrix.infrastructure.exposed.seeds
 
+import com.khrix.domain.serviceorder.task.model.TaskCategory
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.security.PasswordHasher
 import com.khrix.domain.vehicle.model.FuelType
@@ -72,92 +73,108 @@ class LoadSeeds(
             description = "Substituição do óleo do motor e verificação dos níveis"
             estimatedMinutes = 30
             price = BigDecimal("89.90")
+            category = TaskCategory.ELECTRICAL
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Filtro de Óleo"
             description = "Substituição do filtro de óleo do motor"
             estimatedMinutes = 15
             price = BigDecimal("39.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Filtro de Ar"
             description = "Substituição do filtro de ar do motor"
             estimatedMinutes = 20
             price = BigDecimal("29.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Filtro de Cabine"
             description = "Substituição do filtro do ar-condicionado"
             estimatedMinutes = 20
             price = BigDecimal("34.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Alinhamento"
             description = "Alinhamento da direção e suspensão"
             estimatedMinutes = 40
             price = BigDecimal("79.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Balanceamento"
             description = "Balanceamento das rodas"
             estimatedMinutes = 30
             price = BigDecimal("59.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Pastilhas de Freio"
             description = "Substituição das pastilhas de freio dianteiras ou traseiras"
             estimatedMinutes = 60
             price = BigDecimal("149.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Discos de Freio"
             description = "Substituição dos discos de freio"
             estimatedMinutes = 90
             price = BigDecimal("199.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Amortecedores"
             description = "Substituição dos amortecedores do veículo"
             estimatedMinutes = 120
             price = BigDecimal("299.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Bateria"
             description = "Substituição da bateria automotiva"
             estimatedMinutes = 20
             price = BigDecimal("49.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Correia Dentada"
             description = "Substituição da correia dentada e inspeção do sistema"
             estimatedMinutes = 180
             price = BigDecimal("499.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Diagnóstico Eletrônico"
             description = "Leitura de falhas utilizando scanner automotivo"
             estimatedMinutes = 45
             price = BigDecimal("99.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Revisão Preventiva"
             description = "Inspeção geral dos principais componentes do veículo"
             estimatedMinutes = 180
             price = BigDecimal("399.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Higienização de Ar-Condicionado"
             description = "Limpeza e higienização completa do sistema de ar-condicionado"
             estimatedMinutes = 60
             price = BigDecimal("129.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Fluido de Freio"
             description = "Substituição completa do fluido do sistema de freios"
             estimatedMinutes = 45
             price = BigDecimal("89.90")
         }
         TaskEntity.new {
+            category = TaskCategory.ELECTRICAL
             name = "Troca de Aditivo do Radiador"
             description = "Limpeza e troca do fluido de arrefecimento"
             estimatedMinutes = 60

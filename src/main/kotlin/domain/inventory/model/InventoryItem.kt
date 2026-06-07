@@ -1,5 +1,7 @@
 package com.khrix.domain.inventory.model
 
+import com.khrix.domain.valueobject.Price
+
 data class InventoryItem(
     val id: Int,
     val sku: String,
@@ -7,6 +9,6 @@ data class InventoryItem(
     val description: String?,
     val quantity: Int,
     val minimumQuantity: Int,
-    val unitPrice: java.math.BigDecimal,
+    val unitPrice: Price,
     val isActive: Boolean
 )

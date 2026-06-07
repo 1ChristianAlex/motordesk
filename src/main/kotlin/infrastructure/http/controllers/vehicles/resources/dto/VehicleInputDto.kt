@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VehicleInputDto(
-    val id: Int? = null,
+    val id: Int = 0,
     val plate: String,
     val brand: String,
     val model: String,

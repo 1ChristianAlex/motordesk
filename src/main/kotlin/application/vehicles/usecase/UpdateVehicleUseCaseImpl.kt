@@ -10,7 +10,7 @@ class UpdateVehicleUseCaseImpl(
 ) : UpdateVehicleUseCase,
     BaseUseCaseImpl<Vehicle, Unit>() {
     override suspend fun internalExecute(command: Vehicle) {
-        val vehicleId = command.id ?: throw Exception("Id is required to update vehicle")
+        val vehicleId = command.id
         val vehicle = vehiclesRepository.read(vehicleId) ?: throw Exception("Could not find vehicle with id $vehicleId")
 
         val updated = vehicle.updateVehicle(command)

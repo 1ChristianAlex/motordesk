@@ -1,6 +1,7 @@
 package com.khrix.infrastructure.exposed.inventory.mapper
 
 import com.khrix.domain.inventory.model.InventoryItem
+import com.khrix.domain.valueobject.Price
 import com.khrix.infrastructure.exposed.inventory.database.InventoryEntity
 
 fun InventoryEntity.toModel(): InventoryItem = InventoryItem(
@@ -9,7 +10,7 @@ fun InventoryEntity.toModel(): InventoryItem = InventoryItem(
     description = this.description,
     quantity = this.quantity,
     minimumQuantity = this.minimumQuantity,
-    unitPrice = this.unitPrice,
+    unitPrice = Price(this.unitPrice),
     isActive = this.isActive,
     id = this.id.value
 )

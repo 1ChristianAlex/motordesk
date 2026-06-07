@@ -13,6 +13,7 @@ interface TaskRepository :
     BaseCreate<Task>,
     BaseDelete,
     BaseCreateReturn<Task> {
+    suspend fun getTasks(ids: List<Int>): List<Task>
 }
 
 

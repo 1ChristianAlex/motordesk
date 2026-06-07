@@ -10,7 +10,8 @@ class GetVehicleByIdUseCaseImpl(
 ) : GetVehicleByIdUseCase,
     BaseUseCaseImpl<Int, Vehicle>() {
     override suspend fun internalExecute(command: Int): Vehicle {
-        return vehiclesRepository.read(command) ?: throw Exception("Vehicle with id $command does not exist")
+        return vehiclesRepository.read(command)
+            ?: throw NoSuchElementException("Vehicle with id $command does not exist")
     }
 
     override suspend fun useCaseDescription(): String {
