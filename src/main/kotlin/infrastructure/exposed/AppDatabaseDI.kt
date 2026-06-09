@@ -1,6 +1,7 @@
 package com.khrix.infrastructure.exposed
 
 import com.khrix.domain.company.repository.CompanyRepository
+import com.khrix.domain.email.repository.EmailQueueRepository
 import com.khrix.domain.inventory.repository.InventoryRepository
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.repository.TaskRepository
@@ -11,6 +12,7 @@ import com.khrix.infrastructure.exposed.address.repository.AddressExposedReposit
 import com.khrix.infrastructure.exposed.company.repository.CompanyExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.connections.MemoryConnection
 import com.khrix.infrastructure.exposed.connections.PostgresConnection
+import com.khrix.infrastructure.exposed.email.repository.EmailQueueExposedQueueRepositoryImpl
 import com.khrix.infrastructure.exposed.inventory.repository.InventoryExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.seeds.LoadSeeds
 import com.khrix.infrastructure.exposed.serviceorder.repository.ServiceOrderExposedRepositoryImpl
@@ -35,5 +37,6 @@ fun appDatabase(dependencies: DependencyRegistry) {
         provide<TaskRepository>(TaskExposedRepositoryImpl::class)
         provide<InventoryRepository>(InventoryExposedRepositoryImpl::class)
         provide<ServiceOrderRepository>(ServiceOrderExposedRepositoryImpl::class)
+        provide<EmailQueueRepository>(EmailQueueExposedQueueRepositoryImpl::class)
     }
 }

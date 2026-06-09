@@ -2,6 +2,7 @@ package com.khrix.application
 
 import com.khrix.application.company.usecase.CreateNewCompanyUseCaseImpl
 import com.khrix.application.company.usecase.SearchCompanyByCnpjUseCaseImpl
+import com.khrix.application.email.usecase.CreateEmailQueueUseCaseImpl
 import com.khrix.application.inventory.CreateInventoryUseCaseImpl
 import com.khrix.application.inventory.DecrementItemInventoryUseCaseImpl
 import com.khrix.application.inventory.DeleteInventoryUseCaseImpl
@@ -25,6 +26,7 @@ import com.khrix.application.vehicles.usecase.GetVehicleByOwnerIdUseCaseImpl
 import com.khrix.application.vehicles.usecase.UpdateVehicleUseCaseImpl
 import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
+import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.CreateInventoryUseCase
 import com.khrix.domain.inventory.usecase.DecrementItemInventoryUseCase
 import com.khrix.domain.inventory.usecase.DeleteInventoryUseCase
@@ -74,5 +76,6 @@ fun Application.applicationDI() {
         provide<DeleteInventoryUseCase>(DeleteInventoryUseCaseImpl::class)
         provide<GetInventoryByIdOrSkuUseCase>(GetInventoryByIdOrSkuUseCaseImpl::class)
         provide<UpdateInventoryUseCase>(UpdateInventoryUseCaseImpl::class)
+        provide<CreateEmailQueueUseCase>(CreateEmailQueueUseCaseImpl::class)
     }
 }

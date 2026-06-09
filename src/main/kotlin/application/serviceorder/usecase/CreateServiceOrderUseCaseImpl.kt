@@ -1,6 +1,7 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
+import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
@@ -12,6 +13,7 @@ import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class CreateServiceOrderUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,
@@ -19,6 +21,7 @@ class CreateServiceOrderUseCaseImpl(
     private val getUserUseCase: GetUserUseCase,
     private val getVehicleByIdUseCase: GetVehicleByIdUseCase,
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
+    private val createEmailQueueUseCase: CreateEmailQueueUseCase,
 ) : CreateServiceOrderUseCase, BaseUseCaseImpl<CreateServiceOrderCommand, ServiceOrder>() {
     override suspend fun internalExecute(command: CreateServiceOrderCommand): ServiceOrder {
         return coroutineScope {
@@ -43,7 +46,7 @@ class CreateServiceOrderUseCaseImpl(
 
             val order = serviceOrderRepository.createRead(serviceOrder)
 
-
+            launch { createEmailQueueUseCase.execute(serviceOrder) }
 
             order
         }
