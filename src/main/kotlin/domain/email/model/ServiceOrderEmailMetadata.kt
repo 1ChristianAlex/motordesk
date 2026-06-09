@@ -1,12 +1,15 @@
 package com.khrix.domain.email.model
 
+import com.khrix.domain.core.serializer.DecimalAsStringSerializer
 import com.khrix.domain.inventory.model.InventoryItem
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.domain.serviceorder.task.model.Task
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.vehicle.model.Vehicle
+import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 
+@Serializable
 data class UserEmailMetadata(
     val id: Int,
     val address: AddressEmailMetadata,
@@ -18,6 +21,7 @@ data class UserEmailMetadata(
     val role: Role,
 )
 
+@Serializable
 data class AddressEmailMetadata(
     val street: String,
     val number: String,
@@ -28,6 +32,7 @@ data class AddressEmailMetadata(
     val zipCode: String
 )
 
+@Serializable
 data class ServiceOrderEmailMetadata(
     val client: UserEmailMetadata,
     val operator: UserEmailMetadata,
@@ -37,5 +42,6 @@ data class ServiceOrderEmailMetadata(
     val diagnosis: String? = null,
     val tasks: List<Task>,
     val inventoryItems: List<InventoryItem> = listOf(),
+    @Serializable(with = DecimalAsStringSerializer::class)
     val totalAmount: BigDecimal
 )

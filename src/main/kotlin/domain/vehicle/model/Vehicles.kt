@@ -5,6 +5,7 @@ import com.khrix.domain.valueobject.vehicle.Plate
 import com.khrix.domain.valueobject.vehicle.Year
 import io.konform.validation.Validation
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 
 enum class FuelType(val value: String) {
     GASOLINE("GASOLINE"),
@@ -22,6 +23,7 @@ enum class FuelType(val value: String) {
     }
 }
 
+@Serializable
 data class Vehicle(
     val id: Int = 0,
     val ownerId: Int,

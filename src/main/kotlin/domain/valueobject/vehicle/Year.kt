@@ -3,7 +3,10 @@ package com.khrix.domain.valueobject.vehicle
 import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.domain.valueobject.toValidationError
 import io.konform.validation.Validation
+import kotlinx.serialization.Serializable
 
+
+@Serializable
 data class Year(val value: Int) {
 
     private val MIN_YEAR = 1900

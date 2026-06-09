@@ -1,7 +1,9 @@
 package com.khrix.domain.inventory.model
 
 import com.khrix.domain.valueobject.Price
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class InventoryItem(
     val id: Int,
     val sku: String,

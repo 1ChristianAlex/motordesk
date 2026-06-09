@@ -1,9 +1,13 @@
 package com.khrix.domain.valueobject
 
+import com.khrix.domain.core.serializer.DecimalAsStringSerializer
 import io.konform.validation.Validation
+import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 
-data class Price(val value: BigDecimal) {
+
+@Serializable
+data class Price(@Serializable(with = DecimalAsStringSerializer::class) val value: BigDecimal) {
     val validation = Validation.Companion<Price> {
         Price::value  {
             constrain("Price cannot be negative") { it >= BigDecimal.ZERO }

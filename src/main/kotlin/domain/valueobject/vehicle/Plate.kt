@@ -4,7 +4,9 @@ import com.khrix.domain.valueobject.toValidationError
 import io.konform.validation.Validation
 import io.konform.validation.constraints.notBlank
 import io.konform.validation.constraints.pattern
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Plate(val value: String) {
     val validation = Validation.Companion<Plate> {
         Plate::value  {

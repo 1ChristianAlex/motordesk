@@ -4,7 +4,9 @@ import com.khrix.domain.valueobject.Price
 import com.khrix.domain.valueobject.toValidationError
 import io.konform.validation.Validation
 import io.konform.validation.constraints.notBlank
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Task(
     val id: Int,
     val name: String,

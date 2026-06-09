@@ -12,13 +12,13 @@ import com.khrix.infrastructure.exposed.serviceorder.database.TaskTable
 import com.khrix.infrastructure.exposed.user.database.UsersTable
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleTable
 import org.jetbrains.exposed.v1.core.StdOutSqlLogger
+import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
 
 abstract class DatabaseConnection(private val isDevelopment: Boolean, private val loadSeeds: LoadSeeds) {
-    abstract val database: R2dbcDatabase
+    abstract val database: Database
 
     private val tableList = listOf(
         UsersTable,
@@ -49,7 +49,7 @@ abstract class DatabaseConnection(private val isDevelopment: Boolean, private va
     }
 
 
-    fun getConnection(): R2dbcDatabase {
+    fun getConnection(): Database {
         return database.apply {
             transaction {
                 beforeLoad()

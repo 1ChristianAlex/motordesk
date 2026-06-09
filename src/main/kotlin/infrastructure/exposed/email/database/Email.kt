@@ -15,7 +15,8 @@ object EmailQueueTable : BaseTable("emailQueue") {
 
     val subject = varchar("subject", 255)
 
-    val metadata = jsonb<ServiceOrderEmailMetadata>("metadata", Json.Default)
+    val metadata =
+        jsonb<ServiceOrderEmailMetadata>("metadata", Json.Default)
 
     val status = enumeration(
         "status", EmailStatus::class

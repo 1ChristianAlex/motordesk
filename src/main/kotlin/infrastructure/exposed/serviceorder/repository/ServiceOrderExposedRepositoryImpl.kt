@@ -10,10 +10,10 @@ import com.khrix.infrastructure.exposed.serviceorder.database.TaskEntity
 import com.khrix.infrastructure.exposed.serviceorder.mapper.toModel
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
-import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
+import org.jetbrains.exposed.v1.jdbc.Database
 
 class ServiceOrderExposedRepositoryImpl(
-    database: R2dbcDatabase,
+    database: Database,
 ) : BaseExposedRepository<ServiceOrderEntity, ServiceOrder>(database), ServiceOrderRepository {
     override suspend fun read(id: Int): ServiceOrder? {
         return suspendedQuery {
