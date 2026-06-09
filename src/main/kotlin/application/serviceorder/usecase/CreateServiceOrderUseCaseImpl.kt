@@ -8,7 +8,6 @@ import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
-import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
 import kotlinx.coroutines.async
@@ -42,7 +41,11 @@ class CreateServiceOrderUseCaseImpl(
                 status = ServiceOrderStatus.CREATED,
             )
 
-            serviceOrderRepository.createRead(serviceOrder)
+            val order = serviceOrderRepository.createRead(serviceOrder)
+
+
+
+            order
         }
     }
 

@@ -12,7 +12,6 @@ mockk = "1.14.9"
 exposed-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-r2dbc", version.ref = "exposed" }
 migration-core = { group = "org.jetbrains.exposed", name = "exposed-migration-core", version.ref = "exposed" }
 migration-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-migration-r2dbc", version.ref = "exposed" }
-h2database-h2 = { module = "com.h2database:h2", version.ref = "h2" }
 h2database-r2dbc = { module = "io.r2dbc:r2dbc-h2", version.ref = "r2dbc_h2" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
@@ -21,6 +20,7 @@ exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version
 exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "exposed" }
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
 exposed-kotlin-datetime = { group = "org.jetbrains.exposed", name = "exposed-kotlin-datetime", version.ref = "exposed" }
+exposed-jsonb = { group = "org.jetbrains.exposed", name = "exposed-json", version.ref = "exposed" }
 argon2 = { module = "de.mkammerer:argon2-jvm", version = "2.11" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
@@ -32,10 +32,10 @@ exposed = [
     "exposed-kotlin-datetime",
     "migration-core",
     "migration-r2dbc",
-    "h2database-h2",
     "h2database-r2dbc",
     "postgresql",
-    "exposed-r2dbc"
+    "exposed-r2dbc",
+    "exposed-jsonb"
 ]
 
 [plugins]

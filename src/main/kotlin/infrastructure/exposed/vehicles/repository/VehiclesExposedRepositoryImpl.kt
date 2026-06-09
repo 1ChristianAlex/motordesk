@@ -9,10 +9,10 @@ import com.khrix.infrastructure.exposed.vehicles.database.VehicleTable
 import com.khrix.infrastructure.exposed.vehicles.mapper.toModel
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.or
-import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
 
 class VehiclesExposedRepositoryImpl(
-    database: Database,
+    database: R2dbcDatabase,
 ) : BaseExposedRepository<VehicleEntity, Vehicle>(database), VehiclesRepository {
     override suspend fun read(id: Int): Vehicle? {
         return suspendedQuery {

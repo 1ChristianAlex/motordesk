@@ -18,14 +18,14 @@ import com.khrix.infrastructure.exposed.serviceorder.repository.TaskExposedRepos
 import com.khrix.infrastructure.exposed.user.repository.UserExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.vehicles.repository.VehiclesExposedRepositoryImpl
 import io.ktor.server.plugins.di.*
-import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
 
 fun appDatabase(dependencies: DependencyRegistry) {
     with(dependencies) {
         provide(LoadSeeds::class)
         provide(MemoryConnection::class)
         provide(PostgresConnection::class)
-        provide<Database> {
+        provide<R2dbcDatabase> {
             resolve<PostgresConnection>().getConnection()
         }
         provide<AddressRepository>(AddressExposedRepositoryImpl::class)

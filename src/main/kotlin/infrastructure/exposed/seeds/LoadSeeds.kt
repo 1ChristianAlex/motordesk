@@ -16,15 +16,15 @@ import com.khrix.infrastructure.exposed.user.database.UsersTable
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleTable
 import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.jdbc.Database
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
+import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import java.math.BigDecimal
 
 class LoadSeeds(
     private val passwordHasher: PasswordHasher
 ) {
-    fun loadSeeds(database: Database) {
-        transaction(database) {
+    suspend fun loadSeeds(database: R2dbcDatabase) {
+        suspendTransaction(database) {
             createDefaultUser()
             createCompanyUser()
             createVehicle()

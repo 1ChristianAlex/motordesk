@@ -11,11 +11,11 @@ import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.minus
 import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.core.plus
-import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.update
+import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
 
 class InventoryExposedRepositoryImpl(
-    database: Database,
+    database: R2dbcDatabase,
 ) : BaseExposedRepository<InventoryEntity, InventoryItem>(database), InventoryRepository {
     override suspend fun update(id: Int, data: InventoryItem) {
         suspendedQuery {
