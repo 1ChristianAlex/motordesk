@@ -1,12 +1,16 @@
 package com.khrix.infrastructure.http
 
 
+import com.khrix.infrastructure.http.controllers.core.AppController
 import com.khrix.infrastructure.http.controllers.login.LoginController
 import com.khrix.infrastructure.http.controllers.login.handlers.LoginHandler
 import com.khrix.infrastructure.http.controllers.login.handlers.LoginHandlerImpl
 import com.khrix.infrastructure.http.controllers.register.RegisterController
 import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserHandler
 import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserHandlerImpl
+import com.khrix.infrastructure.http.controllers.serviceorder.ServiceOrderController
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrder
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderImpl
 import com.khrix.infrastructure.http.controllers.user.UserController
 import com.khrix.infrastructure.http.controllers.user.handlers.GetSelfUserHandler
 import com.khrix.infrastructure.http.controllers.user.handlers.GetSelfUserHandlerImpl
@@ -21,7 +25,6 @@ import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByO
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByOwnerHandlerImpl
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandlerImpl
-import com.khrix.infrastructure.http.controllers.core.AppController
 import io.ktor.server.plugins.di.*
 
 fun httpDI(dependencies: DependencyRegistry) {
@@ -34,6 +37,7 @@ fun httpDI(dependencies: DependencyRegistry) {
         provide<DeleteVehicleHandler>(DeleteVehicleHandlerImpl::class)
         provide<GetVehicleByOwnerHandler>(GetVehicleByOwnerHandlerImpl::class)
         provide<UpdateVehicleHandler>(UpdateVehicleHandlerImpl::class)
+        provide<CreateNewServiceOrder>(CreateNewServiceOrderImpl::class)
         provide<List<AppController>> {
             listOf<AppController>(
                 RegisterController(resolve()),
@@ -44,6 +48,9 @@ fun httpDI(dependencies: DependencyRegistry) {
                     updateVehicleHandler = resolve(),
                     deleteVehicleHandler = resolve(),
                     getVehicleByOwnerHandler = resolve()
+                ),
+                ServiceOrderController(
+                    createNewServiceOrder = resolve()
                 )
             )
         }
