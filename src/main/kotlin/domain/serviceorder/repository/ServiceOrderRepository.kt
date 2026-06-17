@@ -13,6 +13,7 @@ interface ServiceOrderRepository :
     BaseCreate<ServiceOrder>,
     BaseDelete,
     BaseCreateReturn<ServiceOrder> {
+    suspend fun getByClientId(clientId: Int): List<ServiceOrder>
 }
 
 

@@ -42,6 +42,7 @@ class CreateServiceOrderUseCaseImpl(
                 tasks = tasks.await(),
                 inventoryItems = inventoryItems.await(),
                 status = ServiceOrderStatus.CREATED,
+                id = 0
             )
 
             val order = serviceOrderRepository.createRead(serviceOrder)

@@ -11,6 +11,7 @@ import io.konform.validation.constraints.notBlank
 import java.math.BigDecimal
 
 data class ServiceOrder(
+    val id: Int,
     val client: User,
     val operator: User,
     val vehicle: Vehicle,
@@ -49,6 +50,65 @@ data class ServiceOrder(
         ServiceOrder::inventoryItems  {
             constrain("Inventory items must be active") { it.all { inventoryItem -> inventoryItem.isActive } }
         }
+    }
+
+    fun update(
+        status: ServiceOrderStatus,
+    ): ServiceOrder {
+        return this.copy(status = status)
+    }
+
+    fun update(
+        complaint: String,
+    ): ServiceOrder {
+        val statusListNotAllow = listOf(
+            ServiceOrderStatus.IN_DIAGNOSIS,
+            ServiceOrderStatus.IN_PROGRESS,
+            ServiceOrderStatus.FINISHED,
+            ServiceOrderStatus.DELIVERED,
+            ServiceOrderStatus.CANCELLED,
+        )
+        if (status in statusListNotAllow) {
+            throw IllegalArgumentException("Complaint can only be updated after diagnosis")
+        }
+        return this.copy(complaint = complaint)
+    }
+
+    fun update(
+        diagnosis: String? = null,
+    ): ServiceOrder {
+        if (status != ServiceOrderStatus.IN_DIAGNOSIS) {
+            throw IllegalArgumentException("Diagnosis can only be updated when service order is in diagnosis status")
+        }
+        return this.copy(diagnosis = diagnosis)
+    }
+
+    private fun isListDiff(newList: List<Int>, oldList: List<Int>): Boolean {
+        return newList.sorted() != oldList.sorted()
+    }
+
+    fun update(
+        tasks: List<Task>,
+    ): ServiceOrder {
+        val newIds = tasks.map { it.id }
+        val oldIds = this.tasks.map { it.id }
+
+        if (isListDiff(newIds, oldIds)) {
+            return this.copy(tasks = tasks, status = ServiceOrderStatus.WAITING_APPROVAL)
+        }
+        return this
+    }
+
+    fun update(
+        inventoryItems: List<InventoryItem> = listOf()
+    ): ServiceOrder {
+        val newIds = inventoryItems.map { it.id }
+        val oldIds = this.inventoryItems.map { it.id }
+
+        if (isListDiff(newIds, oldIds)) {
+            return this.copy(inventoryItems = inventoryItems, status = ServiceOrderStatus.WAITING_APPROVAL)
+        }
+        return this
     }
 
     val totalAmount: BigDecimal

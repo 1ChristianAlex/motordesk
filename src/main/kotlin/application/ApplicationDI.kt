@@ -17,6 +17,10 @@ import com.khrix.application.serviceorder.task.usecase.DeleteTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.GetTaskByIdUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.GetTaskByListIdUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.UpdateTaskUseCaseImpl
+import com.khrix.application.serviceorder.usecase.CreateServiceOrderUseCaseImpl
+import com.khrix.application.serviceorder.usecase.DeleteServiceOrderUseCaseImpl
+import com.khrix.application.serviceorder.usecase.GetServiceOrdersByClientIdUseCaseImpl
+import com.khrix.application.serviceorder.usecase.UpdateServiceOrderUseCaseImpl
 import com.khrix.application.user.usecase.GetUserUseCaseImpl
 import com.khrix.application.user.usecase.UpdateUserUseCaseImpl
 import com.khrix.application.vehicles.usecase.CreateNewVehicleUseCaseImpl
@@ -38,6 +42,10 @@ import com.khrix.domain.serviceorder.task.usecase.DeleteTaskUseCase
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByIdUseCase
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.task.usecase.UpdateTaskUseCase
+import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
+import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderUseCase
+import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByClientIdUseCase
+import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.user.usecase.LoginUserUseCase
@@ -77,5 +85,9 @@ fun Application.applicationDI() {
         provide<GetInventoryByIdOrSkuUseCase>(GetInventoryByIdOrSkuUseCaseImpl::class)
         provide<UpdateInventoryUseCase>(UpdateInventoryUseCaseImpl::class)
         provide<CreateEmailQueueUseCase>(CreateEmailQueueUseCaseImpl::class)
+        provide<CreateServiceOrderUseCase>(CreateServiceOrderUseCaseImpl::class)
+        provide<DeleteServiceOrderUseCase>(DeleteServiceOrderUseCaseImpl::class)
+        provide<GetServiceOrdersByClientIdUseCase>(GetServiceOrdersByClientIdUseCaseImpl::class)
+        provide<UpdateServiceOrderUseCase>(UpdateServiceOrderUseCaseImpl::class)
     }
 }

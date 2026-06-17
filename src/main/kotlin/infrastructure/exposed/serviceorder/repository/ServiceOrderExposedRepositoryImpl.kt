@@ -6,10 +6,12 @@ import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.inventory.database.InventoryEntity
 import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderEntity
+import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrdersTable
 import com.khrix.infrastructure.exposed.serviceorder.database.TaskEntity
 import com.khrix.infrastructure.exposed.serviceorder.mapper.toModel
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
+import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database
 
 class ServiceOrderExposedRepositoryImpl(
@@ -65,5 +67,11 @@ class ServiceOrderExposedRepositoryImpl(
 
     override suspend fun createRead(data: ServiceOrder): ServiceOrder {
         return createTask(data).toModel()
+    }
+
+    override suspend fun getByClientId(clientId: Int): List<ServiceOrder> {
+        return suspendedQuery {
+            ServiceOrderEntity.find { ServiceOrdersTable.client eq clientId }.map { it.toModel() }
+        }
     }
 }
