@@ -4,7 +4,7 @@ import com.khrix.domain.inventory.model.InventoryItem
 import com.khrix.domain.serviceorder.task.model.Task
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.model.User
-import com.khrix.domain.valueobject.DomainValidation
+import com.khrix.domain.valueobject.toValidationError
 import com.khrix.domain.vehicle.model.Vehicle
 import io.konform.validation.Validation
 import io.konform.validation.constraints.notBlank
@@ -20,8 +20,8 @@ data class ServiceOrder(
     val diagnosis: String? = null,
     val tasks: List<Task>,
     val inventoryItems: List<InventoryItem> = listOf()
-) : DomainValidation<ServiceOrder>() {
-    override val validation = Validation.Companion<ServiceOrder> {
+) {
+    val validation = Validation.Companion<ServiceOrder> {
         ServiceOrder::client  {
             constrain("Client must have CLIENT role") { it.role == Role.CLIENT }
             constrain("Client must be active") { it.isActive }
@@ -52,15 +52,21 @@ data class ServiceOrder(
         }
     }
 
-    fun update(
-        status: ServiceOrderStatus,
+    fun updateStatus(
+        status: ServiceOrderStatus?,
     ): ServiceOrder {
-        return this.copy(status = status)
+        if (status === this.status) {
+            return this
+        }
+        return this.copy(status = status ?: this.status)
     }
 
-    fun update(
-        complaint: String,
+    fun updateComplaint(
+        complaint: String?,
     ): ServiceOrder {
+        if (complaint == this.complaint) {
+            return this
+        }
         val statusListNotAllow = listOf(
             ServiceOrderStatus.IN_DIAGNOSIS,
             ServiceOrderStatus.IN_PROGRESS,
@@ -71,12 +77,16 @@ data class ServiceOrder(
         if (status in statusListNotAllow) {
             throw IllegalArgumentException("Complaint can only be updated after diagnosis")
         }
-        return this.copy(complaint = complaint)
+        return this.copy(complaint = complaint ?: this.complaint)
     }
 
-    fun update(
+    fun updateDiagnosis(
         diagnosis: String? = null,
     ): ServiceOrder {
+        if (diagnosis == this.diagnosis) {
+            return this
+        }
+
         if (status != ServiceOrderStatus.IN_DIAGNOSIS) {
             throw IllegalArgumentException("Diagnosis can only be updated when service order is in diagnosis status")
         }
@@ -87,7 +97,7 @@ data class ServiceOrder(
         return newList.sorted() != oldList.sorted()
     }
 
-    fun update(
+    fun updateTasks(
         tasks: List<Task>,
     ): ServiceOrder {
         val newIds = tasks.map { it.id }
@@ -99,7 +109,7 @@ data class ServiceOrder(
         return this
     }
 
-    fun update(
+    fun updateInventoryItems(
         inventoryItems: List<InventoryItem> = listOf()
     ): ServiceOrder {
         val newIds = inventoryItems.map { it.id }
@@ -123,4 +133,11 @@ data class ServiceOrder(
         .add(inventoryItems.fold(BigDecimal.ZERO) { acc, item ->
             acc.add(item.unitPrice.value * item.quantity.toBigDecimal())
         })
+
+    init {
+        val validationResult = validation.validate(this)
+        if (validationResult.errors.isNotEmpty()) {
+            throw validationResult.toValidationError(this::class)
+        }
+    }
 }

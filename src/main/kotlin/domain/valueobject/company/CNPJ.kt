@@ -1,12 +1,12 @@
 package com.khrix.domain.valueobject.company
 
-import com.khrix.domain.valueobject.DomainValidation
+import com.khrix.domain.valueobject.toValidationError
 import io.konform.validation.Validation
 import io.konform.validation.constraints.pattern
 
-data class CNPJ(val value: String): DomainValidation<CNPJ>() {
+data class CNPJ(val value: String) {
     private val expectedCnpjLength = 14
-    override val validation = Validation.Companion<CNPJ> {
+    val validation = Validation.Companion<CNPJ> {
         CNPJ::value {
             val cleaned = normalize()
             validate("trimmedCNPJ", { cleaned }) {
@@ -77,6 +77,13 @@ data class CNPJ(val value: String): DomainValidation<CNPJ>() {
             } catch (ex: Exception) {
                 return false
             }
+        }
+    }
+
+    init {
+        val validationResult = validation.validate(this)
+        if (validationResult.errors.isNotEmpty()) {
+            throw validationResult.toValidationError(this::class)
         }
     }
 }

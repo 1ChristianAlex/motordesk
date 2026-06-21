@@ -1,7 +1,7 @@
 package com.khrix.infrastructure.exposed.address.repository
 
-import com.khrix.domain.user.address.model.Address
 import com.khrix.domain.core.getCurrentUtcDateTime
+import com.khrix.domain.user.address.model.Address
 import com.khrix.infrastructure.exposed.connections.MemoryConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -9,7 +9,12 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddressExposedRepositoryImplTest {
@@ -26,7 +31,12 @@ class AddressExposedRepositoryImplTest {
 
     @Test
     fun `create read update delete address lifecycle`() = runTest {
-        val database = MemoryConnection(true).getConnection()
+        val loadSeeds = com.khrix.infrastructure.exposed.seeds.LoadSeeds(object : com.khrix.domain.user.security.PasswordHasher {
+            override fun hash(password: String): String = password
+            override fun verify(password: String, hash: String): Boolean = true
+            override fun isHashedPassword(password: String): Boolean = true
+        })
+        val database = MemoryConnection(true, loadSeeds).getConnection()
         val repo = AddressExposedRepositoryImpl(database)
 
         val now = getCurrentUtcDateTime()

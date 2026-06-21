@@ -25,12 +25,12 @@ class UpdateServiceOrderUseCaseImpl(
             val newInventoryItems = async {
                 getInventoryByListIdOrSkuUseCase.execute(command.inventoryItemsIds.map { it.toString() }).getOrThrow()
             }
-            val newServiceOrder = serviceOrder
-                .update(command.complaint)
-                .update(command.diagnosis)
-                .update(newTasks.await())
-                .update(newInventoryItems.await())
-                .update(command.status)
+                val newServiceOrder = serviceOrder
+                .updateStatus(command.status)
+                .updateComplaint(command.complaint)
+                .updateDiagnosis(command.diagnosis)
+                .updateTasks(newTasks.await())
+                .updateInventoryItems(newInventoryItems.await())
 
             serviceOrderRepository.update(newServiceOrder.id, newServiceOrder)
         }

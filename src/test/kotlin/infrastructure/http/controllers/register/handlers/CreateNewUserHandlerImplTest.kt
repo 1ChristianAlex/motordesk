@@ -12,7 +12,11 @@ import io.ktor.http.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -69,7 +73,7 @@ class CreateNewUserHandlerImplTest {
         )
 
         // Act
-        val result = handler.handler(clientRegisterDto)
+        val result = handler.handler(com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserRequest(clientRegisterDto))
 
         // Assert
         assertEquals(HttpStatusCode.Created, result.status)
@@ -111,7 +115,7 @@ class CreateNewUserHandlerImplTest {
         )
 
         // Act
-        val result = handler.handler(clientRegisterDto)
+        val result = handler.handler(com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserRequest(clientRegisterDto))
 
         // Assert
         assertEquals(HttpStatusCode.BadRequest, result.status)
