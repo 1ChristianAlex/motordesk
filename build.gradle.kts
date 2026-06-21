@@ -12,12 +12,20 @@ application {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 ktor {
     development = true
 }
-
+allprojects {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
+        compilerOptions {
+            freeCompilerArgs.addAll(
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+            )
+        }
+    }
+}
 dependencies {
     implementation(ktorLibs.serialization.kotlinx.json)
     implementation(ktorLibs.server.auth)
@@ -38,6 +46,7 @@ dependencies {
     implementation(libs.konform)
 
     implementation(libs.argon2)
+    implementation(libs.sqids)
 
     implementation(libs.bundles.exposed)
 

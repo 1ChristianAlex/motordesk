@@ -47,7 +47,7 @@ data class User(
     }
 
     fun updatePassword(password: String): User {
-        return copy(password = Password.Raw(password))
+        return copy(password = Password.Hashed(password))
     }
 
     fun updateAddress(addressId: Int): User {

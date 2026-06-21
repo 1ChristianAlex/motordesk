@@ -34,16 +34,16 @@ class ServiceOrderExposedRepositoryImpl(
                 it.status = data.status
                 it.complaint = data.complaint
                 it.diagnosis = data.diagnosis
-                it.totalAmount = data.totalAmount
+                it.totalAmount = data.totalPrice
             }
         }
     }
 
     override suspend fun create(data: ServiceOrder): Int {
-        return createTask(data).id.value
+        return createServiceOrder(data).id.value
     }
 
-    private suspend fun createTask(data: ServiceOrder) = suspendedQuery {
+    private suspend fun createServiceOrder(data: ServiceOrder) = suspendedQuery {
         ServiceOrderEntity.new {
             client = UserEntity[data.client.id]
             operator = UserEntity[data.operator.id]
@@ -53,7 +53,8 @@ class ServiceOrderExposedRepositoryImpl(
             status = data.status
             complaint = data.complaint
             diagnosis = data.diagnosis
-            totalAmount = data.totalAmount
+            totalAmount = data.totalPrice
+            code = data.code
         }
     }
 
@@ -66,7 +67,7 @@ class ServiceOrderExposedRepositoryImpl(
     }
 
     override suspend fun createRead(data: ServiceOrder): ServiceOrder {
-        return createTask(data).toModel()
+        return createServiceOrder(data).toModel()
     }
 
     override suspend fun getByClientId(clientId: Int): List<ServiceOrder> {

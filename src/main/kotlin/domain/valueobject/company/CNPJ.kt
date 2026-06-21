@@ -1,5 +1,6 @@
 package com.khrix.domain.valueobject.company
 
+import com.khrix.domain.core.mask.maskString
 import com.khrix.domain.core.validateWith
 import io.konform.validation.Validation
 import io.konform.validation.constraints.pattern
@@ -17,6 +18,14 @@ value class CNPJ(val value: String) {
                 constrain("validCNPJ") { isValidCNPJ() } hint "Invalid CNPJ number"
             }
         }
+    }
+
+    fun format(): String {
+        return value.replace(Regex("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})"), "$1.$2.$3/$4-$5")
+    }
+
+    fun mask(): String {
+        return maskString(format(), 4, listOf('.', '/', '-'))
     }
 
     fun normalize() = value.filter(Char::isDigit)

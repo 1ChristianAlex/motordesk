@@ -1,9 +1,11 @@
 package com.khrix.infrastructure.http.controllers.serviceorder.resources.dto
 
+import com.khrix.domain.core.serializer.DecimalAsStringSerializer
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto
 import kotlinx.serialization.Serializable
+import java.math.BigDecimal
 
 @Serializable
 data class ServiceOrderInputDto(
@@ -25,6 +27,9 @@ data class ServiceOrderOutputDto(
     val vehicle: VehicleOutputDto,
     val status: ServiceOrderStatus,
     val complaint: String,
+    val expectedMinutes: Int,
+    @Serializable(with = DecimalAsStringSerializer::class)
+    val totalPrice: BigDecimal,
     val diagnosis: String? = null,
     val tasks: List<TaskOutputDto>,
     val inventoryItems: List<InventoryItemOutputDto> = listOf()

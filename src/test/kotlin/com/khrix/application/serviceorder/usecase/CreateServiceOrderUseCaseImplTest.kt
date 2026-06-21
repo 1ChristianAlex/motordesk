@@ -6,11 +6,18 @@ import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
+import com.khrix.infrastructure.sqids.SqIdsShortIdImpl
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import testutils.sampleServiceOrder
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -28,11 +35,20 @@ class CreateServiceOrderUseCaseImplTest {
         getUserUseCase,
         getVehicleByIdUseCase,
         getTaskByListIdUseCase,
-        createEmailQueueUseCase
+        createEmailQueueUseCase,
+        shortId = SqIdsShortIdImpl()
     )
+    @BeforeTest
+    fun setUp() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
 
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
     @Test
-    fun `internalExecute creates service order and enqueues email`() = runBlocking {
+    fun `internalExecute creates service order and enqueues email`() = runTest {
         val sample = sampleServiceOrder()
         val command = com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand(
             clientId = sample.client.id,

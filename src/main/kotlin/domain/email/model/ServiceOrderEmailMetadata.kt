@@ -82,6 +82,6 @@ data class ServiceOrderEmailMetadata(
         diagnosis = serviceOrder.diagnosis,
         tasks = serviceOrder.tasks.toList(),
         inventoryItems = serviceOrder.inventoryItems.toList(),
-        totalAmount = serviceOrder.totalAmount
+        totalAmount = serviceOrder.totalPrice
     )
 }

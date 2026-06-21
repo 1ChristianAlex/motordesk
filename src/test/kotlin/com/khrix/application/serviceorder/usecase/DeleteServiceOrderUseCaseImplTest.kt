@@ -4,18 +4,32 @@ import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import testutils.sampleServiceOrder
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
-import testutils.sampleServiceOrder
 
 class DeleteServiceOrderUseCaseImplTest {
     private val serviceOrderRepository = mockk<ServiceOrderRepository>()
     private val impl = DeleteServiceOrderUseCaseImpl(serviceOrderRepository)
+    @BeforeTest
+    fun setUp() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
 
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
     @Test
     fun `internalExecute throws when service order not found`() {
-        runBlocking {
+        runTest {
             coEvery { serviceOrderRepository.read(1) } returns null
             val res = impl.execute(com.khrix.domain.serviceorder.usecase.DeleteServiceOrderCommand(complaint = "reason", serviceOrderId = 1))
             assertFailsWith<NoSuchElementException> { res.getOrThrow() }
@@ -24,7 +38,7 @@ class DeleteServiceOrderUseCaseImplTest {
 
     @Test
     fun `internalExecute deletes when found`() {
-        runBlocking {
+        runTest {
             val so = sampleServiceOrder()
             coEvery { serviceOrderRepository.read(so.id) } returns so
             coEvery { serviceOrderRepository.delete(so.id) } returns Unit

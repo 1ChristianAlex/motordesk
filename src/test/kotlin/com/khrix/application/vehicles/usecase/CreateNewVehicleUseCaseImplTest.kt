@@ -4,18 +4,32 @@ import com.khrix.domain.vehicle.repository.VehiclesRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import testutils.sampleVehicle
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
-import testutils.sampleVehicle
 
 class CreateNewVehicleUseCaseImplTest {
     private val vehiclesRepository = mockk<VehiclesRepository>()
     private val impl = CreateNewVehicleUseCaseImpl(vehiclesRepository)
+    @BeforeTest
+    fun setUp() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
 
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
     @Test
     fun `internalExecute throws when existing vehicle found`() {
-        runBlocking {
+        runTest {
             val vehicle = sampleVehicle()
             coEvery { vehiclesRepository.getByPlateOrChassis(any(), any()) } returns vehicle
 
@@ -26,7 +40,7 @@ class CreateNewVehicleUseCaseImplTest {
 
     @Test
     fun `internalExecute creates when not exists`() {
-        runBlocking {
+        runTest {
             val vehicle = sampleVehicle()
             coEvery { vehiclesRepository.getByPlateOrChassis(any(), any()) } returns null
             coEvery { vehiclesRepository.createRead(vehicle) } returns vehicle

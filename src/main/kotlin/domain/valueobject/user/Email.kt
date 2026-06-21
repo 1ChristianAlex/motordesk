@@ -1,5 +1,6 @@
 package com.khrix.domain.valueobject.user
 
+import com.khrix.domain.core.mask.maskString
 import com.khrix.domain.core.validateWith
 import io.konform.validation.Validation
 import io.konform.validation.constraints.minLength
@@ -14,6 +15,10 @@ value class Email(val value: String) {
             minLength(5) hint "Email must be at least 5 characters long"
             pattern(emailRegex) hint "Invalid email format"
         }
+    }
+
+    fun mask(): String {
+        return maskString(value, 4, listOf('.', '@'))
     }
 
     init {

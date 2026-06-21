@@ -1,17 +1,25 @@
-package com.khrix.infrastructure.http.controllers.register.handlers
+package infrastructure.http.controllers.register.handlers
 
 import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCase
+import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserHandlerImpl
+import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserRequest
 import com.khrix.infrastructure.http.controllers.register.resources.dto.AddressDto
 import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
 import com.khrix.infrastructure.http.controllers.register.resources.dto.CompanyDto
 import com.khrix.infrastructure.http.controllers.register.resources.dto.CreateUserDto
 import io.ktor.http.*
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,9 +40,18 @@ class CreateNewUserHandlerImplTest {
         tokenService = tokenService
     )
 
+
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
     @BeforeTest
     fun setUp() {
-        coEvery { verifyIsUserDataAvailableUseCase.execute(any()) } returns Result.success(true)
+        Dispatchers.setMain(StandardTestDispatcher())
+        coJustRun {
+            verifyIsUserDataAvailableUseCase.execute(any())
+        }
         coEvery { tokenService.generate(any()) } returns Uuid.generateV4().toString()
     }
 

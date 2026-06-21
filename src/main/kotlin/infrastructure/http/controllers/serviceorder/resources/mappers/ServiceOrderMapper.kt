@@ -30,5 +30,7 @@ fun ServiceOrder.toOutputDto(): ServiceOrderOutputDto {
         diagnosis = this.diagnosis,
         tasks = this.tasks.map { it.toOutputDto() },
         inventoryItems = this.inventoryItems.map { it.toOutputDto() },
+        expectedMinutes = this.expectedMinutes,
+        totalPrice = this.totalPrice
     )
 }

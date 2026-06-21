@@ -30,6 +30,8 @@ object ServiceOrdersTable : BaseTable("serviceOrders") {
 
     val totalAmount = decimal("totalAmount", 12, 2)
         .default(java.math.BigDecimal.ZERO)
+
+    val code = varchar("code", 25).uniqueIndex()
 }
 
 class ServiceOrderEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -50,7 +52,7 @@ class ServiceOrderEntity(id: EntityID<Int>) : IntEntity(id) {
     var status by ServiceOrdersTable.status
 
     var complaint by ServiceOrdersTable.complaint
-
+    var code by ServiceOrdersTable.code
     var diagnosis by ServiceOrdersTable.diagnosis
 
     var totalAmount by ServiceOrdersTable.totalAmount

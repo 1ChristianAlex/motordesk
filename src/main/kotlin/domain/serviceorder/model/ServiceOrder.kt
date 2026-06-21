@@ -1,5 +1,6 @@
 package com.khrix.domain.serviceorder.model
 
+import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.domain.core.validateWith
 import com.khrix.domain.inventory.model.InventoryItem
 import com.khrix.domain.serviceorder.task.model.Task
@@ -21,6 +22,16 @@ data class ServiceOrder(
     val tasks: List<Task>,
     val inventoryItems: List<InventoryItem> = listOf()
 ) {
+    var code: String = ""
+        set(value) {
+            field = "#$value"
+        }
+
+    val expectedMinutes: Int
+        get() {
+            return tasks.fold(0) { acc, task -> acc + task.estimatedMinutes }
+        }
+
     private val validation = Validation.Companion<ServiceOrder> {
         ServiceOrder::client  {
             constrain("Client must have CLIENT role") { it.role == Role.CLIENT }
@@ -121,7 +132,7 @@ data class ServiceOrder(
         return this
     }
 
-    val totalAmount: BigDecimal
+    val totalPrice: BigDecimal
         get() {
             return calculateTotal()
         }
@@ -136,5 +147,9 @@ data class ServiceOrder(
 
     init {
         validateWith(validation)
+    }
+
+    fun codeIds(): List<Int> {
+        return listOf(client.id, operator.id, vehicle.id, getCurrentUtcDateTime().year)
     }
 }

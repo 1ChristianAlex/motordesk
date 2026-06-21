@@ -5,7 +5,7 @@ import io.konform.validation.Validation
 import io.konform.validation.constraints.minLength
 
 sealed class Password(val value: String) {
-    data class Hashed(private val _value: String) : Password(_value) {}
+    data class Hashed(private val _value: String) : Password(_value)
 
     data class Raw(private val _value: String) : Password(_value) {
 

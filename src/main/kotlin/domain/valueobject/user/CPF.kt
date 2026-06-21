@@ -1,5 +1,6 @@
 package com.khrix.domain.valueobject.user
 
+import com.khrix.domain.core.mask.maskString
 import com.khrix.domain.core.validateWith
 import io.konform.validation.Validation
 import io.konform.validation.constraints.pattern
@@ -15,6 +16,14 @@ value class CPF(val value: String) {
                 constrain("validCPF") { isValidCPF(cleaned) } hint "Invalid CPF number"
             }
         }
+    }
+
+    fun format(): String {
+        return normalize().replace("(\\d{3})(\\d{3})(\\d{3})(\\d{2})".toRegex(), "$1.$2.$3-$4")
+    }
+
+    fun mask(): String {
+        return maskString(format(), 3, listOf('.', '-'))
     }
 
     init {

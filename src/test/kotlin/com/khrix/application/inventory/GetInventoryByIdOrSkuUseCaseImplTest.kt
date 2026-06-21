@@ -3,19 +3,33 @@ package com.khrix.application.inventory
 import com.khrix.domain.inventory.repository.InventoryRepository
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import testutils.sampleInventoryItem
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import testutils.sampleInventoryItem
 
 class GetInventoryByIdOrSkuUseCaseImplTest {
     private val inventoryRepository = mockk<InventoryRepository>()
     private val impl = GetInventoryByIdOrSkuUseCaseImpl(inventoryRepository)
+    @BeforeTest
+    fun setUp() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
 
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
     @Test
     fun `internalExecute returns item when found`() {
-        runBlocking {
+        runTest {
             val item = sampleInventoryItem()
             coEvery { inventoryRepository.getByIdOrSku("1") } returns item
 
@@ -26,7 +40,7 @@ class GetInventoryByIdOrSkuUseCaseImplTest {
 
     @Test
     fun `internalExecute throws when not found`() {
-        runBlocking {
+        runTest {
             coEvery { inventoryRepository.getByIdOrSku("missing") } returns null
 
             val res = impl.execute("missing")

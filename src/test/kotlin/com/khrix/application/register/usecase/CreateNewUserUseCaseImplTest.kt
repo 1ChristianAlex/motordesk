@@ -1,20 +1,26 @@
 package com.khrix.application.register.usecase
 
 import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
-import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseCommand
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
 import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.user.security.PasswordHasher
-import kotlinx.coroutines.runBlocking
+import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import testutils.sampleAddress
 import testutils.sampleCompany
 import testutils.sampleUser
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class CreateNewUserUseCaseImplGeneratedTest {
 
@@ -31,33 +37,41 @@ class CreateNewUserUseCaseImplGeneratedTest {
         searchCompanyByCnpjUseCase,
         createNewCompanyUseCase
     )
+    @BeforeTest
+    fun setUp() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
 
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
     @Test
     fun `useCaseDescription returns expected string`() {
-        runBlocking {
+        runTest {
             assertEquals("Hash password and create new user", impl.useCaseDescription())
         }
     }
 
     @Test
     fun `internalExecute happy path creates user`() {
-        runBlocking {
-        val user = sampleUser()
-        val address = sampleAddress()
-        val company = sampleCompany()
+        runTest {
+            val user = sampleUser()
+            val address = sampleAddress()
+            val company = sampleCompany()
 
-        coEvery { passwordHasher.hash(any()) } returns "hashed"
-        coEvery { addressRepository.create(any()) } returns 10
-        coEvery { searchCompanyByCnpjUseCase.execute(any()) } returns Result.success(null)
-        coEvery { createNewCompanyUseCase.execute(any()) } returns Result.success(company)
-        coEvery { userRepository.create(any()) } returns 1
-        coEvery { userRepository.read(1) } returns user
+            coEvery { passwordHasher.hash(any()) } returns "hashed"
+            coEvery { addressRepository.create(any()) } returns 10
+            coEvery { searchCompanyByCnpjUseCase.execute(any()) } returns Result.success(null)
+            coEvery { createNewCompanyUseCase.execute(any()) } returns Result.success(company)
+            coEvery { userRepository.create(any()) } returns 1
+            coEvery { userRepository.read(1) } returns user
 
-        val command = com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand(
-            user = user,
-            address = address,
-            company = null
-        )
+            val command = CreateNewUserUseCaseCommand(
+                user = user,
+                address = address,
+                company = null
+            )
 
             val res = impl.execute(command)
 

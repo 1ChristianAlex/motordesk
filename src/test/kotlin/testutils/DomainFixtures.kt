@@ -2,24 +2,23 @@ package testutils
 
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.inventory.model.InventoryItem
-import com.khrix.domain.serviceorder.task.model.Task
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
+import com.khrix.domain.serviceorder.task.model.Task
 import com.khrix.domain.user.address.model.Address
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.model.User
-import com.khrix.domain.vehicle.model.FuelType
-import com.khrix.domain.vehicle.model.Vehicle
 import com.khrix.domain.valueobject.Price
+import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.domain.valueobject.user.CPF
 import com.khrix.domain.valueobject.user.Email
 import com.khrix.domain.valueobject.user.Name
 import com.khrix.domain.valueobject.user.Password
 import com.khrix.domain.valueobject.user.Phone
-import com.khrix.domain.valueobject.user.CPF as CPFVO
 import com.khrix.domain.valueobject.vehicle.Plate
 import com.khrix.domain.valueobject.vehicle.Year
-import com.khrix.domain.valueobject.company.CNPJ
+import com.khrix.domain.vehicle.model.FuelType
+import com.khrix.domain.vehicle.model.Vehicle
 import kotlinx.datetime.LocalDateTime
 import java.math.BigDecimal
 
@@ -61,7 +60,7 @@ fun sampleUser(
     firstName = Name("John"),
     lastName = Name("Doe"),
     email = Email("john.doe@example.com"),
-    password = Password("Passw0rd!"),
+    password = Password.Raw("Passw0rd!"),
     phone = Phone("+1234567890"),
     cpf = CPF("11144477735"),
     isActive = isActive,

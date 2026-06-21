@@ -48,7 +48,6 @@ class LoginTypesTest {
             CPF("114.154.800-36"),
             credentials.cpf
         )
-
         assertEquals(
             "password@123",
             credentials.password.value
