@@ -14,7 +14,7 @@ class UpdateServiceOrderUseCaseImpl(
     private val getInventoryByListIdOrSkuUseCase: GetInventoryByListIdOrSkuUseCase,
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
 ) : UpdateServiceOrderUseCase, BaseUseCaseImpl<UpdateServiceOrderCommand, Unit>() {
-    override suspend fun internalExecute(command: UpdateServiceOrderCommand): Unit {
+    override suspend fun internalExecute(command: UpdateServiceOrderCommand) {
         coroutineScope {
             val serviceOrder = serviceOrderRepository.read(command.serviceOrderId)
                 ?: throw IllegalArgumentException("Service order not found")

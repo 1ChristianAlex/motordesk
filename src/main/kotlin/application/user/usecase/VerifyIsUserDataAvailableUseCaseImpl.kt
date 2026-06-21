@@ -11,7 +11,7 @@ class VerifyIsUserDataAvailableUseCaseImpl(
     private val userRepository: UserRepository,
 ) : VerifyIsUserDataAvailableUseCase,
     BaseUseCaseImpl<VerifyIsUserDataAvailableUseCaseCommand, Unit>() {
-    override suspend fun internalExecute(command: VerifyIsUserDataAvailableUseCaseCommand): Unit {
+    override suspend fun internalExecute(command: VerifyIsUserDataAvailableUseCaseCommand) {
         return coroutineScope {
             val userWithEmail = async { userRepository.getByEmail(command.email) }
             val userWithCpf = async { userRepository.getByCpf(command.cpf) }

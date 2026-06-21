@@ -41,9 +41,7 @@ data class VehicleUpdateInputDto(
     val id: Int,
     val color: String?,
     val mileage: Int? = 0,
-) {
-
-}
+)
 
 
 @Serializable

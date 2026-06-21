@@ -8,7 +8,7 @@ import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderUseCase
 class DeleteServiceOrderUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,
 ) : DeleteServiceOrderUseCase, BaseUseCaseImpl<DeleteServiceOrderCommand, Unit>() {
-    override suspend fun internalExecute(command: DeleteServiceOrderCommand): Unit {
+    override suspend fun internalExecute(command: DeleteServiceOrderCommand) {
         val serviceOrder = serviceOrderRepository.read(command.serviceOrderId)
             ?: throw NoSuchElementException("Service order not found")
 

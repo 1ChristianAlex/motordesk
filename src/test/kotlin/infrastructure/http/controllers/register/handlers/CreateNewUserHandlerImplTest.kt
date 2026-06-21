@@ -73,7 +73,7 @@ class CreateNewUserHandlerImplTest {
         )
 
         // Act
-        val result = handler.handler(com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserRequest(clientRegisterDto))
+        val result = handler.handler(CreateNewUserRequest(clientRegisterDto))
 
         // Assert
         assertEquals(HttpStatusCode.Created, result.status)
@@ -115,7 +115,7 @@ class CreateNewUserHandlerImplTest {
         )
 
         // Act
-        val result = handler.handler(com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserRequest(clientRegisterDto))
+        val result = handler.handler(CreateNewUserRequest(clientRegisterDto))
 
         // Assert
         assertEquals(HttpStatusCode.BadRequest, result.status)
