@@ -1,6 +1,5 @@
 package com.khrix.domain.serviceorder.model
 
-import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.domain.core.validateWith
 import com.khrix.domain.inventory.model.InventoryItem
 import com.khrix.domain.serviceorder.task.model.Task
@@ -24,7 +23,7 @@ data class ServiceOrder(
 ) {
     var code: String = ""
         set(value) {
-            field = "#$value"
+            field = if (value.startsWith("#")) value else "#$value"
         }
 
     val expectedMinutes: Int
@@ -32,7 +31,7 @@ data class ServiceOrder(
             return tasks.fold(0) { acc, task -> acc + task.estimatedMinutes }
         }
 
-    private val validation = Validation.Companion<ServiceOrder> {
+    private fun validation() = Validation.Companion<ServiceOrder> {
         ServiceOrder::client  {
             constrain("Client must have CLIENT role") { it.role == Role.CLIENT }
             constrain("Client must be active") { it.isActive }
@@ -127,7 +126,10 @@ data class ServiceOrder(
         val oldIds = this.inventoryItems.map { it.id }
 
         if (isListDiff(newIds, oldIds)) {
-            return this.copy(inventoryItems = inventoryItems, status = ServiceOrderStatus.WAITING_APPROVAL)
+            return this.copy(
+                inventoryItems = inventoryItems,
+                status = ServiceOrderStatus.WAITING_APPROVAL
+            )
         }
         return this
     }
@@ -146,10 +148,13 @@ data class ServiceOrder(
         })
 
     init {
-        validateWith(validation)
+        validateWith(validation())
     }
 
     fun codeIds(): List<Int> {
-        return listOf(client.id, operator.id, vehicle.id, getCurrentUtcDateTime().year)
+        return mutableListOf(client.id, operator.id, vehicle.id).apply {
+            addAll(tasks.map { it.id })
+            addAll(inventoryItems.map { it.id })
+        }
     }
 }

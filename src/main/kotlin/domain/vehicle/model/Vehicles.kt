@@ -38,7 +38,7 @@ data class Vehicle(
     val createdAt: LocalDateTime? = null,
     val updatedAt: LocalDateTime? = null,
 ) {
-    private val validation = Validation.Companion<Vehicle> {
+    private fun validation() = Validation.Companion<Vehicle> {
         Vehicle::brand {
             constrain("Brand cannot be blank") { it.isNotBlank() }
         }
@@ -63,7 +63,7 @@ data class Vehicle(
     }
 
     init {
-        validateWith(validation)
+        validateWith(validation())
     }
 
     fun updateColor(color: String): Vehicle {

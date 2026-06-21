@@ -10,3 +10,9 @@ enum class TaskCategory {
     DIAGNOSTIC,
     GENERAL_REVIEW
 }
+
+enum class TaskProgressStatus {
+    NOT_STARTED,
+    IN_PROGRESS,
+    COMPLETE
+}

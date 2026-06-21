@@ -6,23 +6,35 @@ body:
   type: json
   content: "{\r
 
-    \    \"plate\": \"ABC3E23\",\r
+    \    \"clientId\": 1,\r
 
-    \    \"brand\": \"Toyota\",\r
+    \    \"operatorId\": 2,\r
 
-    \    \"model\": \"Corolla XEi\",\r
+    \    \"vehicleId\": 1,\r
 
-    \    \"color\": \"Prata\",\r
+    \    \"complaint\": \"Cliente chegou no momento de revisão por quilometragem\",\r
 
-    \    \"year\": 2022,\r
+    \    \"diagnosis\": \"Revisão e balanceamento\",\r
 
-    \    \"mileage\": 45800,\r
+    \    \"tasksIds\": [\r
 
-    \    \"chassis\": \"9BRBD48E0D2234567\",\r
+    \        1,\r
 
-    \    \"fuelType\": \"FLEX\",\r
+    \        2,\r
 
-    \    \"ownerId\": 1\r
+    \        9\r
+
+    \    ],\r
+
+    \    \"inventoryItemsIds\": [\r
+
+    \        2,\r
+
+    \        5,\r
+
+    \        6\r
+
+    \    ]\r
 
     }"
 auth:

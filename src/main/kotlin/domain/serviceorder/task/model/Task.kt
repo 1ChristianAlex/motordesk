@@ -14,9 +14,10 @@ data class Task(
     val estimatedMinutes: Int,
     val price: Price,
     val isActive: Boolean,
-    val category: TaskCategory
+    val category: TaskCategory,
+    val status: TaskProgressStatus
 ) {
-    private val validation = Validation.Companion<Task> {
+    private fun validation() = Validation.Companion<Task> {
         Task::name  {
             notBlank() hint "Task name cannot be empty"
             constrain("Task name must be at least 3 characters") { it.length >= 3 }
@@ -29,7 +30,7 @@ data class Task(
     }
 
     init {
-        validateWith(validation)
+        validateWith(validation())
     }
 
     fun changePrice(newPrice: Price): Task {

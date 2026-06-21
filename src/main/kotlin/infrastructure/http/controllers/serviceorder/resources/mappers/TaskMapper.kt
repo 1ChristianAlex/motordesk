@@ -12,5 +12,6 @@ fun Task.toOutputDto(): TaskOutputDto {
         price = this.price.value,
         isActive = this.isActive,
         category = this.category,
+        status = this.status,
     )
 }

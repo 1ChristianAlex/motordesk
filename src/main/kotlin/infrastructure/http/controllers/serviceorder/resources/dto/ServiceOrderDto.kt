@@ -27,6 +27,7 @@ data class ServiceOrderOutputDto(
     val vehicle: VehicleOutputDto,
     val status: ServiceOrderStatus,
     val complaint: String,
+    val code: String,
     val expectedMinutes: Int,
     @Serializable(with = DecimalAsStringSerializer::class)
     val totalPrice: BigDecimal,

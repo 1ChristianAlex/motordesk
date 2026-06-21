@@ -1,6 +1,7 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
+import com.khrix.domain.core.shortid.ShortId
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
@@ -13,6 +14,7 @@ class UpdateServiceOrderUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,
     private val getInventoryByListIdOrSkuUseCase: GetInventoryByListIdOrSkuUseCase,
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
+    private val shortId: ShortId
 ) : UpdateServiceOrderUseCase, BaseUseCaseImpl<UpdateServiceOrderCommand, Unit>() {
     override suspend fun internalExecute(command: UpdateServiceOrderCommand) {
         coroutineScope {
@@ -25,12 +27,16 @@ class UpdateServiceOrderUseCaseImpl(
             val newInventoryItems = async {
                 getInventoryByListIdOrSkuUseCase.execute(command.inventoryItemsIds.map { it.toString() }).getOrThrow()
             }
-                val newServiceOrder = serviceOrder
+            val newServiceOrder = serviceOrder
                 .updateStatus(command.status)
                 .updateComplaint(command.complaint)
                 .updateDiagnosis(command.diagnosis)
                 .updateTasks(newTasks.await())
-                .updateInventoryItems(newInventoryItems.await())
+                .updateInventoryItems(newInventoryItems.await()).apply {
+                    code = shortId.encode(codeIds())
+                }
+
+
 
             serviceOrderRepository.update(newServiceOrder.id, newServiceOrder)
         }

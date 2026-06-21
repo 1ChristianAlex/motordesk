@@ -18,7 +18,6 @@ class ServiceOrderController(
             manager {
                 post<ServiceOrderResource.Create> {
                     val body = getBody<ServiceOrderInputDto>()
-
                     call.send(createNewServiceOrder.handler(body))
                 }
             }

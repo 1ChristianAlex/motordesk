@@ -26,7 +26,7 @@ class CreateServiceOrderUseCaseImpl(
     private val shortId: ShortId
 ) : CreateServiceOrderUseCase, BaseUseCaseImpl<CreateServiceOrderCommand, ServiceOrder>() {
     override suspend fun internalExecute(command: CreateServiceOrderCommand): ServiceOrder {
-        return coroutineScope {
+        val result =  coroutineScope {
             val client = async { getUserUseCase.execute(command.clientId).getOrThrow() }
             val operator = async { getUserUseCase.execute(command.operatorId).getOrThrow() }.await()
             val vehicle = async { getVehicleByIdUseCase.execute(command.vehicleId).getOrThrow() }
@@ -49,12 +49,19 @@ class CreateServiceOrderUseCaseImpl(
                 code = shortId.encode(this.codeIds())
             }
 
+            val orderAlreadyExists = serviceOrderRepository.getByCode(serviceOrder.code)
+
+            if (orderAlreadyExists != null) {
+                throw Exception("Service Order matching the required params already exists")
+            }
             val order = serviceOrderRepository.createRead(serviceOrder)
 
             launch { createEmailQueueUseCase.execute(serviceOrder) }
 
             order
         }
+
+        return result
     }
 
     override suspend fun useCaseDescription(): String {

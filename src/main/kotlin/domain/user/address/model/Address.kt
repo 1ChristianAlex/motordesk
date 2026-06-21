@@ -20,7 +20,7 @@ data class Address(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 ) {
-    private val validation = Validation<Address> {
+    private fun validation() = Validation<Address> {
         Address::street {
             minLength(3) hint "Street must be at least 3 characters long"
             maxLength(100) hint "Street must not exceed 100 characters"
@@ -63,6 +63,6 @@ data class Address(
     }
 
     init {
-        validateWith(validation)
+        validateWith(validation())
     }
 }

@@ -43,9 +43,9 @@ private fun Application.appRoute() {
         })
     }
     install(StatusPages) {
-        exception<HandlerException.BadRequest> { call, cause ->
+        exception<HandlerException> { call, cause ->
             call.response.status(cause.statusCode)
-            call.respond(HttpResult(cause.message, cause.statusCode))
+            call.respond<HttpResult<Nothing>>(HandlerException.toHttpResultError(cause))
         }
     }
     install(Resources)

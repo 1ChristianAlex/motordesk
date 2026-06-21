@@ -15,6 +15,7 @@ interface ServiceOrderRepository :
     BaseCreateReturn<ServiceOrder> {
     suspend fun getByClientId(clientId: Int): List<ServiceOrder>
     suspend fun getOrderByVehicle(vehicleId: Int): List<ServiceOrder>
+    suspend fun getByCode(code: String): ServiceOrder?
 }
 
 
