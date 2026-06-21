@@ -11,7 +11,7 @@ import com.khrix.application.inventory.GetInventoryByListIdOrSkuUseCaseImpl
 import com.khrix.application.inventory.UpdateInventoryUseCaseImpl
 import com.khrix.application.login.usecase.LoginUserUseCaseImpl
 import com.khrix.application.register.usecase.CreateNewUserUseCaseImpl
-import com.khrix.application.register.usecase.VerifyIsEmailAvailableUseCaseImpl
+import com.khrix.application.user.usecase.VerifyIsUserDataAvailableUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.CreateTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.DeleteTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.GetTaskByIdUseCaseImpl
@@ -50,7 +50,7 @@ import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.user.usecase.LoginUserUseCase
 import com.khrix.domain.user.usecase.UpdateUserUseCase
-import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
+import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCase
 import com.khrix.domain.vehicle.usecase.CreateNewVehicleUseCase
 import com.khrix.domain.vehicle.usecase.DeleteVehicleByIdUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
@@ -62,7 +62,7 @@ import io.ktor.server.plugins.di.*
 fun Application.applicationDI() {
     dependencies {
         provide<CreateNewUserUseCase>(CreateNewUserUseCaseImpl::class)
-        provide<VerifyIsEmailAvailableUseCase>(VerifyIsEmailAvailableUseCaseImpl::class)
+        provide<VerifyIsUserDataAvailableUseCase>(VerifyIsUserDataAvailableUseCaseImpl::class)
         provide<SearchCompanyByCnpjUseCase>(SearchCompanyByCnpjUseCaseImpl::class)
         provide<CreateNewCompanyUseCase>(CreateNewCompanyUseCaseImpl::class)
         provide<LoginUserUseCase>(LoginUserUseCaseImpl::class)

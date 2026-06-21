@@ -1,6 +1,6 @@
 $kind: http-request
 name: Delete Vehicle
-url: http://127.0.0.1:8080/vehicles/delete/1
+url: http://127.0.0.1:8080/vehicles/delete/2
 method: DELETE
 body:
   type: json

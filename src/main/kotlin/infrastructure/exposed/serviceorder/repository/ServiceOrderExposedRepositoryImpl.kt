@@ -74,4 +74,10 @@ class ServiceOrderExposedRepositoryImpl(
             ServiceOrderEntity.find { ServiceOrdersTable.client eq clientId }.map { it.toModel() }
         }
     }
+
+    override suspend fun getOrderByVehicle(vehicleId: Int): List<ServiceOrder> {
+        return suspendedQuery {
+            ServiceOrderEntity.find { ServiceOrdersTable.vehicle eq vehicleId }.map { it.toModel() }
+        }
+    }
 }

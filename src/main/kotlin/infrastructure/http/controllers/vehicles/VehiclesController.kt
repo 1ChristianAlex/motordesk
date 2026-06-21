@@ -8,9 +8,11 @@ import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByO
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.resources.VehiclesResource
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleInputDto
+import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto
 import com.khrix.infrastructure.security.UserClaims
 import io.ktor.server.resources.*
 import io.ktor.server.resources.post
+import io.ktor.server.resources.put
 import io.ktor.server.routing.*
 import kotlinx.serialization.ExperimentalSerializationApi
 
@@ -35,8 +37,8 @@ class VehiclesController(
 
                     call.send(createNewVehicleHandler.handler(body))
                 }
-                post<VehiclesResource.Update> {
-                    val body = getBody<VehicleInputDto>()
+                put<VehiclesResource.Update> {
+                    val body = getBody<VehicleUpdateInputDto>()
                     call.send(updateVehicleHandler.handler(body))
                 }
                 delete<VehiclesResource.Delete> {

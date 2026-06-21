@@ -24,7 +24,7 @@ data class Task(
         }
         Task::estimatedMinutes {
             constrain("Estimated minutes must be a positive integer") { it > 0 }
-            constrain("Estimated minutes must be a multiple of 30") { it % 30 == 0 }
+            constrain("Estimated minutes must be a multiple of 15") { it % 15 == 0 }
         }
     }
 

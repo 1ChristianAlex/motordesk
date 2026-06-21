@@ -6,21 +6,23 @@ body:
   type: json
   content: "{\r
 
-    \  \"plate\": \"ABC1E23\",\r
+    \    \"plate\": \"ABC3E23\",\r
 
-    \  \"brand\": \"Toyota\",\r
+    \    \"brand\": \"Toyota\",\r
 
-    \  \"model\": \"Corolla XEi\",\r
+    \    \"model\": \"Corolla XEi\",\r
 
-    \  \"color\": \"Prata\",\r
+    \    \"color\": \"Prata\",\r
 
-    \  \"year\": 2022,\r
+    \    \"year\": 2022,\r
 
-    \  \"mileage\": 45800,\r
+    \    \"mileage\": 45800,\r
 
-    \  \"chassis\": \"9BRBD48E0D1234567\",\r
+    \    \"chassis\": \"9BRBD48E0D2234567\",\r
 
-    \  \"fuelType\": \"FLEX\"\r
+    \    \"fuelType\": \"FLEX\",\r
+
+    \    \"ownerId\": 1\r
 
     }"
 auth:

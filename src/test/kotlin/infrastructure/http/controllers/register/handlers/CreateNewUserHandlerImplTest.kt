@@ -3,7 +3,7 @@ package com.khrix.infrastructure.http.controllers.register.handlers
 import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
-import com.khrix.domain.user.usecase.VerifyIsEmailAvailableUseCase
+import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCase
 import com.khrix.infrastructure.http.controllers.register.resources.dto.AddressDto
 import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
 import com.khrix.infrastructure.http.controllers.register.resources.dto.CompanyDto
@@ -24,17 +24,17 @@ import kotlin.uuid.Uuid
 class CreateNewUserHandlerImplTest {
 
     private val createNewUserUseCase = mockk<CreateNewUserUseCase>()
-    private val verifyIsEmailAvailableUseCase: VerifyIsEmailAvailableUseCase = mockk()
+    private val verifyIsUserDataAvailableUseCase: VerifyIsUserDataAvailableUseCase = mockk()
     private val tokenService: TokenService = mockk()
     private val handler = CreateNewUserHandlerImpl(
         createNewUserUseCase = createNewUserUseCase,
-        verifyIsEmailAvailableUseCase = verifyIsEmailAvailableUseCase,
+        verifyIsUserDataAvailableUseCase = verifyIsUserDataAvailableUseCase,
         tokenService = tokenService
     )
 
     @BeforeTest
     fun setUp() {
-        coEvery { verifyIsEmailAvailableUseCase.execute(any()) } returns Result.success(true)
+        coEvery { verifyIsUserDataAvailableUseCase.execute(any()) } returns Result.success(true)
         coEvery { tokenService.generate(any()) } returns Uuid.generateV4().toString()
     }
 

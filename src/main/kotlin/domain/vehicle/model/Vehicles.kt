@@ -66,24 +66,16 @@ data class Vehicle(
         validateWith(validation)
     }
 
-    fun updateVehicle(vehicle: Vehicle): Vehicle {
-        if (vehicle.id != this.id) {
-            throw IllegalArgumentException("Cannot update vehicle with different ID")
-        }
-
-        if (vehicle.ownerId != this.ownerId) {
-            throw IllegalArgumentException("Cannot update vehicle with different owner")
-        }
-
-        return this.copy(
-            plate = vehicle.plate,
-            brand = vehicle.brand,
-            model = vehicle.model,
-            color = vehicle.color,
-            year = vehicle.year,
-            mileage = vehicle.mileage,
-            chassis = vehicle.chassis,
-            fuelType = vehicle.fuelType
-        )
+    fun updateColor(color: String): Vehicle {
+        return this.copy(color = color)
     }
+
+    fun updateMileage(mileage: Int): Vehicle {
+        if (this.mileage > mileage) {
+            throw IllegalArgumentException("Mileage cannot be lower than current mileage")
+        }
+
+        return this.copy(mileage = mileage)
+    }
+
 }

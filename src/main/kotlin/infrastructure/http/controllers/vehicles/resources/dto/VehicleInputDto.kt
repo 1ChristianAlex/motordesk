@@ -36,6 +36,15 @@ data class VehicleInputDto(
     }
 }
 
+@Serializable
+data class VehicleUpdateInputDto(
+    val id: Int,
+    val color: String?,
+    val mileage: Int? = 0,
+) {
+
+}
+
 
 @Serializable
 data class VehicleOutputDto(

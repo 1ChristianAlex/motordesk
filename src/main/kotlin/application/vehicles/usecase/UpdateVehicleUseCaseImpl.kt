@@ -13,7 +13,8 @@ class UpdateVehicleUseCaseImpl(
         val vehicleId = command.id
         val vehicle = vehiclesRepository.read(vehicleId) ?: throw Exception("Could not find vehicle with id $vehicleId")
 
-        val updated = vehicle.updateVehicle(command)
+        val updated = vehicle.updateColor(command.color)
+            .updateMileage(command.mileage)
 
         vehiclesRepository.update(vehicleId, updated)
     }

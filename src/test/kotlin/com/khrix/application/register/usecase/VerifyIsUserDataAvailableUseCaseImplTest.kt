@@ -1,5 +1,6 @@
 package com.khrix.application.register.usecase
 
+import com.khrix.application.user.usecase.VerifyIsUserDataAvailableUseCaseImpl
 import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.valueobject.user.Email
 import io.mockk.coEvery
@@ -9,9 +10,9 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class VerifyIsEmailAvailableUseCaseImplTest {
+class VerifyIsUserDataAvailableUseCaseImplTest {
     private val userRepository = mockk<UserRepository>()
-    private val impl = VerifyIsEmailAvailableUseCaseImpl(userRepository)
+    private val impl = VerifyIsUserDataAvailableUseCaseImpl(userRepository)
 
     @Test
     fun `useCaseDescription returns expected string`() = runBlocking {

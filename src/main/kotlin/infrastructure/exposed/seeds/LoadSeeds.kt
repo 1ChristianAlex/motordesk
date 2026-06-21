@@ -86,21 +86,21 @@ class LoadSeeds(
             category = TaskCategory.ELECTRICAL
             name = "Troca de Filtro de Ar"
             description = "Substituição do filtro de ar do motor"
-            estimatedMinutes = 20
+            estimatedMinutes = 15
             price = BigDecimal("29.90")
         }
         TaskEntity.new {
             category = TaskCategory.ELECTRICAL
             name = "Troca de Filtro de Cabine"
             description = "Substituição do filtro do ar-condicionado"
-            estimatedMinutes = 20
+            estimatedMinutes = 15
             price = BigDecimal("34.90")
         }
         TaskEntity.new {
             category = TaskCategory.ELECTRICAL
             name = "Alinhamento"
             description = "Alinhamento da direção e suspensão"
-            estimatedMinutes = 40
+            estimatedMinutes = 60
             price = BigDecimal("79.90")
         }
         TaskEntity.new {
@@ -135,7 +135,7 @@ class LoadSeeds(
             category = TaskCategory.ELECTRICAL
             name = "Troca de Bateria"
             description = "Substituição da bateria automotiva"
-            estimatedMinutes = 20
+            estimatedMinutes = 30
             price = BigDecimal("49.90")
         }
         TaskEntity.new {

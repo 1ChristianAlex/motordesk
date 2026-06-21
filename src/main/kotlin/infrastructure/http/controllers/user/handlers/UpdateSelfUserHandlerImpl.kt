@@ -3,11 +3,11 @@ package com.khrix.infrastructure.http.controllers.user.handlers
 import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.user.usecase.UpdateUserUseCase
+import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
+import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
-import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
-import com.khrix.infrastructure.http.controllers.core.HttpResult
 import io.ktor.http.*
 
 class UpdateSelfUserHandlerImpl(
@@ -23,7 +23,7 @@ class UpdateSelfUserHandlerImpl(
             throw HandlerException.UnauthenticatedOperation()
         }
 
-        val user = getUserUseCase.execute(body.id).getOrNull()!!
+        val user = getUserUseCase.execute(body.id).getOrThrow()
 
         val userUpdate = user.updateFull(
             addressId = body.addressId,
@@ -37,7 +37,7 @@ class UpdateSelfUserHandlerImpl(
             isActive = true
         )
 
-        updateUserUseCase.execute(userUpdate)
+        updateUserUseCase.execute(userUpdate).getOrThrow()
 
         val updatedUser = getUserUseCase.execute(user.id).getOrNull()!!
 
