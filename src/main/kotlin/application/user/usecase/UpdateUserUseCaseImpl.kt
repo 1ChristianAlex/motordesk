@@ -29,7 +29,7 @@ class UpdateUserUseCaseImpl(
             passwordHasher.hash(command.password.value)
         }
 
-        val updateUser = command.updatePassword(password, true)
+        val updateUser = command.updatePassword(password)
 
         userRepository.update(command.id, updateUser)
     }

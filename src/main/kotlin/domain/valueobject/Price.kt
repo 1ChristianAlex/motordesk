@@ -8,14 +8,15 @@ import java.math.BigDecimal
 
 
 @Serializable
-data class Price(@Serializable(with = DecimalAsStringSerializer::class) val value: BigDecimal) {
-    private val validation = Validation.Companion<Price> {
+@JvmInline
+value class Price(@Serializable(with = DecimalAsStringSerializer::class) val value: BigDecimal) {
+    private fun validation() = Validation.Companion<Price> {
         Price::value  {
             constrain("Price cannot be negative") { it >= BigDecimal.ZERO }
         }
     }
 
     init {
-       validateWith(validation)
+        validateWith(validation())
     }
 }

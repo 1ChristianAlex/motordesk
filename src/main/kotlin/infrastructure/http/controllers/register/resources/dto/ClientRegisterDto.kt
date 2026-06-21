@@ -1,8 +1,8 @@
 package com.khrix.infrastructure.http.controllers.register.resources.dto
 
-import com.khrix.domain.user.address.model.Address
 import com.khrix.domain.company.model.Company
 import com.khrix.domain.core.getCurrentUtcDateTime
+import com.khrix.domain.user.address.model.Address
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.model.User
 import com.khrix.domain.valueobject.company.CNPJ
@@ -54,7 +54,7 @@ data class CreateUserDto(
             firstName = Name(this.firstName),
             lastName = Name(this.lastName),
             email = Email(this.email),
-            password = Password(this.password),
+            password = Password.Raw(this.password),
             phone = Phone(this.phone),
             cpf = CPF(this.cpf),
             isActive = false,

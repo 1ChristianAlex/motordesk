@@ -13,7 +13,7 @@ sealed class LoginTypes(val password: Password) {
 
     companion object {
         fun create(userName: String, password: String): LoginTypes {
-            val passwordData = Password(password)
+            val passwordData = Password.Raw(password)
             val loginCredentials = runCatching {
                 EmailCredentials(Email(userName), passwordData)
             }.getOrElse {

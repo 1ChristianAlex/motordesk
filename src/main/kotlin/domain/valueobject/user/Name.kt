@@ -6,9 +6,10 @@ import io.konform.validation.constraints.maxLength
 import io.konform.validation.constraints.minLength
 import io.konform.validation.constraints.pattern
 
-data class Name(val value: String) {
+@JvmInline
+value class Name(val value: String) {
 
-    private val validation = Validation<Name> {
+    private fun validation() = Validation<Name> {
         Name::value {
             validate("trimmed", { value.trim() }) {
                 minLength(2) hint "Must be at least 2 characters long"
@@ -19,7 +20,7 @@ data class Name(val value: String) {
     }
 
     init {
-        validateWith(validation)
+        validateWith(validation())
     }
 }
 

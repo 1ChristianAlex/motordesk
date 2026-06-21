@@ -6,10 +6,10 @@ import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseCommand
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCaseCommand
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.user.security.PasswordHasher
 import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
+import com.khrix.domain.user.security.PasswordHasher
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import kotlinx.coroutines.async
@@ -50,7 +50,7 @@ class CreateNewUserUseCaseImpl(
                 } else null
             }
 
-            val userWithHashedPassword = command.user.updatePassword(hashedPass.await(), true)
+            val userWithHashedPassword = command.user.updatePassword(hashedPass.await())
                 .updateAddress(addressId.await()).updateCompany(userCompany.await()?.id)
 
             val userId = userRepository.create(userWithHashedPassword)

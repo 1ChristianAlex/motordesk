@@ -7,19 +7,20 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Year(val value: Int) {
+@JvmInline
+value class Year(val value: Int) {
 
-    private val MIN_YEAR = 1900
 
-    val validation = Validation.Companion<Year> {
+    private fun validation() = Validation.Companion<Year> {
+        val minYear = 1900
         Year::value  {
-            constrain("Year must be between $MIN_YEAR and the current year") {
-                it in MIN_YEAR..getCurrentUtcDateTime().year
+            constrain("Year must be between $minYear and the current year") {
+                it in minYear..getCurrentUtcDateTime().year
             }
         }
     }
 
     init {
-        validateWith(validation)
+        validateWith(validation())
     }
 }

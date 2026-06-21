@@ -5,10 +5,11 @@ import io.konform.validation.Validation
 import io.konform.validation.constraints.minLength
 import io.konform.validation.constraints.pattern
 
-data class Phone(val value: String) {
-    private val phoneRegex = "^\\+?[1-9]\\d{1,14}$".toRegex()
+@JvmInline
+value class Phone(val value: String) {
 
-    private val validation = Validation.Companion<Phone> {
+    private fun validation() = Validation.Companion<Phone> {
+        val phoneRegex = "^\\+?[1-9]\\d{1,14}$".toRegex()
         Phone::value  {
             validate("only numbers allowed", { value.replace("\\D".toRegex(), "").trim() }) {
                 minLength(5) hint "Phone must be at least 5 characters long"
@@ -20,6 +21,6 @@ data class Phone(val value: String) {
     fun normalize(): String = value.filter { it.isDigit() }
 
     init {
-        validateWith(validation)
+        validateWith(validation())
     }
 }

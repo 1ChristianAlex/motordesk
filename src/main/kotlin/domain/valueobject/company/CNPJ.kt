@@ -4,13 +4,16 @@ import com.khrix.domain.core.validateWith
 import io.konform.validation.Validation
 import io.konform.validation.constraints.pattern
 
-data class CNPJ(val value: String) {
-    private val expectedCnpjLength = 14
-    private val validation = Validation.Companion<CNPJ> {
+@JvmInline
+value class CNPJ(val value: String) {
+    private fun expectedCnpjLength() = 14
+
+    private fun validation() = Validation.Companion<CNPJ> {
         CNPJ::value {
             val cleaned = normalize()
             validate("trimmedCNPJ", { cleaned }) {
-                pattern("^\\d{$expectedCnpjLength}$") hint "CNPJ must contain exactly $expectedCnpjLength number digits"
+                val cnpjLength = expectedCnpjLength()
+                pattern("^\\d{$cnpjLength}$") hint "CNPJ must contain exactly ${cnpjLength}( number digits"
                 constrain("validCNPJ") { isValidCNPJ() } hint "Invalid CNPJ number"
             }
         }
@@ -21,7 +24,7 @@ data class CNPJ(val value: String) {
     private fun isValidCNPJ(): Boolean {
         with(normalize()) {
             try {
-                if (length != expectedCnpjLength) {
+                if (length != expectedCnpjLength()) {
                     return false
                 }
 
@@ -81,6 +84,6 @@ data class CNPJ(val value: String) {
     }
 
     init {
-        validateWith(validation)
+        validateWith(validation())
     }
 }

@@ -5,10 +5,11 @@ import io.konform.validation.Validation
 import io.konform.validation.constraints.minLength
 import io.konform.validation.constraints.pattern
 
-data class Email(val value: String) {
+@JvmInline
+value class Email(val value: String) {
 
-    private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
-    private val validEmail = Validation<Email> {
+    private fun validation() = Validation<Email> {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
         Email::value  {
             minLength(5) hint "Email must be at least 5 characters long"
             pattern(emailRegex) hint "Invalid email format"
@@ -16,6 +17,6 @@ data class Email(val value: String) {
     }
 
     init {
-      validateWith(validEmail)
+        validateWith(validation())
     }
 }

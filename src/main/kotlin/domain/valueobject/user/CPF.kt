@@ -4,8 +4,9 @@ import com.khrix.domain.core.validateWith
 import io.konform.validation.Validation
 import io.konform.validation.constraints.pattern
 
-data class CPF(val value: String) {
-    private val validation = Validation<CPF> {
+@JvmInline
+value class CPF(val value: String) {
+    fun validation() = Validation {
         CPF::value {
             val cleaned = normalize()
 
@@ -17,7 +18,7 @@ data class CPF(val value: String) {
     }
 
     init {
-       validateWith(validation)
+        validateWith(validation())
     }
 
     fun normalize(): String = value.filter { it.isDigit() }

@@ -17,7 +17,7 @@ suspend fun UserEntity.toModel(): User {
             firstName = Name(firstName),
             lastName = Name(lastName),
             email = Email(email),
-            password = Password(password),
+            password = Password.Hashed(password),
             phone = Phone(phone),
             cpf = CPF(cpf),
             isActive = isActive,
