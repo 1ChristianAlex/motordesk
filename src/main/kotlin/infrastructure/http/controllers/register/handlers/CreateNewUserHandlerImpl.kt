@@ -1,5 +1,6 @@
 package com.khrix.infrastructure.http.controllers.register.handlers
 
+import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
@@ -34,7 +35,9 @@ class CreateNewUserHandlerImpl(
             )
         ).getOrThrow()
 
-        val userOutputDto = user.toOutputDto()
+        val userOutputDto = user.run {
+            toOutputDto(this.role == Role.CLIENT)
+        }
         val token = tokenService.generate(user)
 
         return HttpResult(AuthenticateOutputDto(token, userOutputDto), HttpStatusCode.Created)

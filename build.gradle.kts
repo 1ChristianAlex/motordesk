@@ -36,6 +36,7 @@ dependencies {
     implementation(ktorLibs.server.compression)
     implementation(ktorLibs.server.contentNegotiation)
     implementation(ktorLibs.server.core)
+    implementation(ktorLibs.server.statusPages)
     implementation(ktorLibs.server.cors)
     implementation(ktorLibs.server.defaultHeaders)
     implementation(ktorLibs.server.di)

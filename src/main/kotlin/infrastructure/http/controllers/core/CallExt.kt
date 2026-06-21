@@ -7,7 +7,7 @@ import io.ktor.server.routing.*
 suspend inline fun <reified T : Any> RoutingContext.getBody(): T {
     return try {
         call.receive<T>()
-    } catch (error: Exception) {
-        throw HandlerException.BadRequest(error.cause ?: error)
+    } catch (_: Exception) {
+        throw HandlerException.BadRequest("Invalid request body")
     }
 }

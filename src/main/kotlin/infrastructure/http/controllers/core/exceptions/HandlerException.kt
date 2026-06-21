@@ -15,11 +15,17 @@ sealed class HandlerException(val statusCode: HttpStatusCode, override val messa
             "Invalid permission. You do not have the necessary permissions to perform this operation."
         )
 
-    class BadRequest(exception: Throwable) :
-        HandlerException(
+    class BadRequest : HandlerException {
+        constructor(exception: Throwable) : super(
             HttpStatusCode.BadRequest,
             exception.message ?: "Invalid request. Please check your input and try again."
         )
+
+        constructor(message: String) : super(
+            HttpStatusCode.BadRequest,
+            message
+        )
+    }
 
     companion object {
         fun <Body> toHttpResultError(handlerException: HandlerException): HttpResult<Body> {

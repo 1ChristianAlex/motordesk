@@ -64,6 +64,7 @@ class LoadSeeds(
             complaint = "This is a test"
             diagnosis = "There is a problem for sure"
             totalAmount = BigDecimal("10")
+            code = "#124HSoda"
         }
     }
 

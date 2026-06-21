@@ -2,9 +2,10 @@ package com.khrix.infrastructure.http
 
 import com.auth0.jwt.JWT
 import com.khrix.domain.user.model.Role
-import com.khrix.infrastructure.http.controllers.core.AuthNames
-import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 import com.khrix.infrastructure.http.controllers.core.AppController
+import com.khrix.infrastructure.http.controllers.core.AuthNames
+import com.khrix.infrastructure.http.controllers.core.HttpResult
+import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 import com.khrix.infrastructure.security.JwtConfig
 import com.khrix.infrastructure.security.UserClaims
 import io.ktor.http.*
@@ -20,6 +21,7 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.di.*
+import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -39,6 +41,12 @@ private fun Application.appRoute() {
             isLenient = true
             ignoreUnknownKeys = true
         })
+    }
+    install(StatusPages) {
+        exception<HandlerException.BadRequest> { call, cause ->
+            call.response.status(cause.statusCode)
+            call.respond(HttpResult(cause.message, cause.statusCode))
+        }
     }
     install(Resources)
     bindAuth()

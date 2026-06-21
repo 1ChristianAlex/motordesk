@@ -22,8 +22,8 @@ fun ServiceOrderInputDto.toCommand(): CreateServiceOrderCommand {
 fun ServiceOrder.toOutputDto(): ServiceOrderOutputDto {
     return ServiceOrderOutputDto(
         id = this.id,
-        client = this.client.toOutputDto(),
-        operator = this.operator.toOutputDto(),
+        client = this.client.toOutputDto(true),
+        operator = this.operator.toOutputDto(true),
         vehicle = this.vehicle.toOutputDto(),
         status = this.status,
         complaint = this.complaint,
