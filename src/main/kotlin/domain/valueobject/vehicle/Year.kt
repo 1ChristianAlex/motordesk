@@ -1,7 +1,7 @@
 package com.khrix.domain.valueobject.vehicle
 
 import com.khrix.domain.core.getCurrentUtcDateTime
-import com.khrix.domain.valueobject.toValidationError
+import com.khrix.domain.core.validateWith
 import io.konform.validation.Validation
 import kotlinx.serialization.Serializable
 
@@ -20,9 +20,6 @@ data class Year(val value: Int) {
     }
 
     init {
-        val validationResult = validation.validate(this)
-        if (validationResult.errors.isNotEmpty()) {
-            throw validationResult.toValidationError(this::class)
-        }
+        validateWith(validation)
     }
 }

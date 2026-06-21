@@ -1,6 +1,6 @@
 package com.khrix.domain.vehicle.model
 
-import com.khrix.domain.valueobject.toValidationError
+import com.khrix.domain.core.validateWith
 import com.khrix.domain.valueobject.vehicle.Plate
 import com.khrix.domain.valueobject.vehicle.Year
 import io.konform.validation.Validation
@@ -63,10 +63,7 @@ data class Vehicle(
     }
 
     init {
-        val validationResult = validation.validate(this)
-        if (validationResult.errors.isNotEmpty()) {
-            throw validationResult.toValidationError(this::class)
-        }
+        validateWith(validation)
     }
 
     fun updateVehicle(vehicle: Vehicle): Vehicle {

@@ -1,12 +1,12 @@
 package com.khrix.domain.valueobject.user
 
-import com.khrix.domain.valueobject.toValidationError
+import com.khrix.domain.core.validateWith
 import io.konform.validation.Validation
 import io.konform.validation.constraints.minLength
 
 data class Password(val value: String, val bypass: Boolean = false) {
 
-    val validation = Validation<Password> {
+    private val validation = Validation<Password> {
         Password::value  {
             minLength(8) hint "Password must be at least 8 characters long"
             constrain("Password need to have at least one special character") { checkSpecialChar(value) }
@@ -32,10 +32,7 @@ data class Password(val value: String, val bypass: Boolean = false) {
 
     init {
         if (!bypass) {
-            val validationResult = validation.validate(this)
-            if (validationResult.errors.isNotEmpty()) {
-                throw validationResult.toValidationError(this::class)
-            }
+            validateWith(validation)
         }
     }
 }

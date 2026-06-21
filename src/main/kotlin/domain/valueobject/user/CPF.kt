@@ -1,11 +1,11 @@
 package com.khrix.domain.valueobject.user
 
-import com.khrix.domain.valueobject.toValidationError
+import com.khrix.domain.core.validateWith
 import io.konform.validation.Validation
 import io.konform.validation.constraints.pattern
 
 data class CPF(val value: String) {
-    val validation = Validation<CPF> {
+    private val validation = Validation<CPF> {
         CPF::value {
             val cleaned = normalize()
 
@@ -17,10 +17,7 @@ data class CPF(val value: String) {
     }
 
     init {
-        val validationResult = validation.validate(this)
-        if (validationResult.errors.isNotEmpty()) {
-            throw validationResult.toValidationError(this::class)
-        }
+       validateWith(validation)
     }
 
     fun normalize(): String = value.filter { it.isDigit() }

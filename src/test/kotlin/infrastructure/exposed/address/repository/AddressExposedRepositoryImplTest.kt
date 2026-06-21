@@ -62,7 +62,7 @@ class AddressExposedRepositoryImplTest {
         assertEquals(input.number, created.number)
 
         // read
-        val read = repo.read(created.id!!)
+        val read = repo.read(created.id)
         assertEquals(created.id, read.id)
         assertEquals(created.city, read.city)
 

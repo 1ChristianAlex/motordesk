@@ -1,10 +1,10 @@
 package com.khrix.domain.serviceorder.model
 
+import com.khrix.domain.core.validateWith
 import com.khrix.domain.inventory.model.InventoryItem
 import com.khrix.domain.serviceorder.task.model.Task
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.model.User
-import com.khrix.domain.valueobject.toValidationError
 import com.khrix.domain.vehicle.model.Vehicle
 import io.konform.validation.Validation
 import io.konform.validation.constraints.notBlank
@@ -21,7 +21,7 @@ data class ServiceOrder(
     val tasks: List<Task>,
     val inventoryItems: List<InventoryItem> = listOf()
 ) {
-    val validation = Validation.Companion<ServiceOrder> {
+    private val validation = Validation.Companion<ServiceOrder> {
         ServiceOrder::client  {
             constrain("Client must have CLIENT role") { it.role == Role.CLIENT }
             constrain("Client must be active") { it.isActive }
@@ -135,9 +135,6 @@ data class ServiceOrder(
         })
 
     init {
-        val validationResult = validation.validate(this)
-        if (validationResult.errors.isNotEmpty()) {
-            throw validationResult.toValidationError(this::class)
-        }
+        validateWith(validation)
     }
 }

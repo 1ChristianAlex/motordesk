@@ -1,7 +1,7 @@
 package com.khrix.domain.serviceorder.task.model
 
+import com.khrix.domain.core.validateWith
 import com.khrix.domain.valueobject.Price
-import com.khrix.domain.valueobject.toValidationError
 import io.konform.validation.Validation
 import io.konform.validation.constraints.notBlank
 import kotlinx.serialization.Serializable
@@ -16,7 +16,7 @@ data class Task(
     val isActive: Boolean,
     val category: TaskCategory
 ) {
-    val validation = Validation.Companion<Task> {
+    private val validation = Validation.Companion<Task> {
         Task::name  {
             notBlank() hint "Task name cannot be empty"
             constrain("Task name must be at least 3 characters") { it.length >= 3 }
@@ -29,10 +29,7 @@ data class Task(
     }
 
     init {
-        val validationResult = validation.validate(this)
-        if (validationResult.errors.isNotEmpty()) {
-            throw validationResult.toValidationError(this::class)
-        }
+        validateWith(validation)
     }
 
     fun changePrice(newPrice: Price): Task {
