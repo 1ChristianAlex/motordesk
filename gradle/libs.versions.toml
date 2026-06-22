@@ -8,6 +8,8 @@ postgresql = "42.7.10"
 konform = "0.11.0"
 mockk = "1.14.9"
 sqids = "0.1.1"
+mongodb = "5.8.0"
+
 [libraries]
 exposed-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-r2dbc", version.ref = "exposed" }
 migration-core = { group = "org.jetbrains.exposed", name = "exposed-migration-core", version.ref = "exposed" }
@@ -24,6 +26,7 @@ exposed-jsonb = { group = "org.jetbrains.exposed", name = "exposed-json", versio
 argon2 = { module = "de.mkammerer:argon2-jvm", version = "2.11" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 sqids = { module = "org.sqids:sqids-kotlin", version.ref = "sqids" }
+mongodb = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
 
 [bundles]
 exposed = [

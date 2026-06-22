@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  db:
+  sql-database:
     image: postgres:15-alpine
     container_name: motordesk_db
     restart: unless-stopped

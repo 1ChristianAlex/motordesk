@@ -6,6 +6,7 @@ import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
+import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
@@ -23,10 +24,11 @@ class CreateServiceOrderUseCaseImpl(
     private val getVehicleByIdUseCase: GetVehicleByIdUseCase,
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
     private val createEmailQueueUseCase: CreateEmailQueueUseCase,
-    private val shortId: ShortId
+    private val shortId: ShortId,
+    private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository
 ) : CreateServiceOrderUseCase, BaseUseCaseImpl<CreateServiceOrderCommand, ServiceOrder>() {
     override suspend fun internalExecute(command: CreateServiceOrderCommand): ServiceOrder {
-        val result =  coroutineScope {
+        val result = coroutineScope {
             val client = async { getUserUseCase.execute(command.clientId).getOrThrow() }
             val operator = async { getUserUseCase.execute(command.operatorId).getOrThrow() }.await()
             val vehicle = async { getVehicleByIdUseCase.execute(command.vehicleId).getOrThrow() }
@@ -57,7 +59,7 @@ class CreateServiceOrderUseCaseImpl(
             val order = serviceOrderRepository.createRead(serviceOrder)
 
             launch { createEmailQueueUseCase.execute(serviceOrder) }
-
+            launch { serviceOrderHistoryRepository.create(serviceOrder) }
             order
         }
 

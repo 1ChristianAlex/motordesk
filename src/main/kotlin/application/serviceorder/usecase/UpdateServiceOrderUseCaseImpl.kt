@@ -3,18 +3,21 @@ package com.khrix.application.serviceorder.usecase
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.core.shortid.ShortId
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
+import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class UpdateServiceOrderUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,
     private val getInventoryByListIdOrSkuUseCase: GetInventoryByListIdOrSkuUseCase,
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
-    private val shortId: ShortId
+    private val shortId: ShortId,
+    private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository
 ) : UpdateServiceOrderUseCase, BaseUseCaseImpl<UpdateServiceOrderCommand, Unit>() {
     override suspend fun internalExecute(command: UpdateServiceOrderCommand) {
         coroutineScope {
@@ -39,6 +42,8 @@ class UpdateServiceOrderUseCaseImpl(
 
 
             serviceOrderRepository.update(newServiceOrder.id, newServiceOrder)
+
+            launch { serviceOrderHistoryRepository.create(newServiceOrder) }
         }
     }
 

@@ -21,7 +21,8 @@ allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
         compilerOptions {
             freeCompilerArgs.addAll(
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-Xannotation-default-target=param-property"
             )
         }
     }
@@ -48,6 +49,9 @@ dependencies {
 
     implementation(libs.argon2)
     implementation(libs.sqids)
+
+
+    implementation(libs.mongodb)
 
     implementation(libs.bundles.exposed)
 

@@ -1,5 +1,4 @@
 $kind: http-request
-name: Create Vehicle
 url: http://127.0.0.1:8080/service-order/create
 method: POST
 body:
