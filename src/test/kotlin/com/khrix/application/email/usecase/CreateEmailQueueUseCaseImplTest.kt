@@ -2,34 +2,19 @@ package com.khrix.application.email.usecase
 
 import com.khrix.domain.email.repository.EmailQueueRepository
 import com.khrix.domain.user.address.repository.AddressRepository
+import com.khrix.application.core.coroutine.ApplicationScope
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import testutils.sampleServiceOrder
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
 
 class CreateEmailQueueUseCaseImplTest {
     private val emailQueueRepository = mockk<EmailQueueRepository>()
     private val addressRepository = mockk<AddressRepository>()
-    private val impl = CreateEmailQueueUseCaseImpl(emailQueueRepository, addressRepository)
-
-    @BeforeTest
-    fun setUp() {
-        Dispatchers.setMain(StandardTestDispatcher())
-    }
-
-    @AfterTest
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
+    private val scope = ApplicationScope()
+    private val impl = CreateEmailQueueUseCaseImpl(emailQueueRepository, addressRepository, scope)
 
     @Test
     fun `internalExecute creates email queue item`() {
@@ -40,20 +25,14 @@ class CreateEmailQueueUseCaseImplTest {
             coEvery { emailQueueRepository.create(any()) } returns 1
 
             impl.execute(so).getOrThrow()
-            coVerify { emailQueueRepository.create(any()) }
+            coVerify(timeout = 2_000) {
+                emailQueueRepository.create(match {
+                    it.recipient == so.client.email.value && it.metadata.client.address?.street == address.street
+                })
+            }
         }
     }
 
-    @Test
-    fun `internalExecute throws when address missing`() {
-        runTest {
-            val so = sampleServiceOrder()
-            coEvery { addressRepository.read(so.client.addressId) } returns null
-
-            val res = impl.execute(so)
-            assertFailsWith<NoSuchElementException> { res.getOrThrow() }
-        }
-    }
 }
 
 

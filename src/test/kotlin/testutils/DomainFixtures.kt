@@ -5,6 +5,7 @@ import com.khrix.domain.inventory.model.InventoryItem
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.domain.serviceorder.task.model.Task
+import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
 import com.khrix.domain.user.address.model.Address
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.model.User
@@ -91,7 +92,8 @@ fun sampleTask(id: Int = 1): Task = Task(
     estimatedMinutes = 30,
     price = Price(BigDecimal("100.00")),
     isActive = true,
-    category = com.khrix.domain.serviceorder.task.model.TaskCategory.GENERAL_REVIEW
+    category = com.khrix.domain.serviceorder.task.model.TaskCategory.GENERAL_REVIEW,
+    status = TaskProgressStatus.NOT_STARTED
 )
 
 fun sampleInventoryItem(id: Int = 1): InventoryItem = InventoryItem(

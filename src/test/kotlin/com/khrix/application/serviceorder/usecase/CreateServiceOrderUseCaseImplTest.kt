@@ -3,6 +3,7 @@ package com.khrix.application.serviceorder.usecase
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
@@ -28,6 +29,7 @@ class CreateServiceOrderUseCaseImplTest {
     private val getVehicleByIdUseCase = mockk<GetVehicleByIdUseCase>()
     private val getTaskByListIdUseCase = mockk<GetTaskByListIdUseCase>()
     private val createEmailQueueUseCase = mockk<CreateEmailQueueUseCase>()
+    private val serviceOrderHistoryRepository = mockk<ServiceOrderHistoryRepository>()
 
     private val impl = CreateServiceOrderUseCaseImpl(
         serviceOrderRepository,
@@ -36,7 +38,8 @@ class CreateServiceOrderUseCaseImplTest {
         getVehicleByIdUseCase,
         getTaskByListIdUseCase,
         createEmailQueueUseCase,
-        shortId = SqIdsShortIdImpl()
+        shortId = SqIdsShortIdImpl(),
+        serviceOrderHistoryRepository = serviceOrderHistoryRepository
     )
     @BeforeTest
     fun setUp() {
@@ -66,13 +69,16 @@ class CreateServiceOrderUseCaseImplTest {
         coEvery { getTaskByListIdUseCase.execute(any()) } returns Result.success(sample.tasks)
         coEvery { getInventoryByListIdOrSkuUseCase.execute(any()) } returns Result.success(sample.inventoryItems)
         coEvery { serviceOrderRepository.createRead(any()) } returns sample
+        coEvery { serviceOrderRepository.getByCode(any()) } returns null
         coEvery { createEmailQueueUseCase.execute(any()) } returns Result.success(Unit)
+        coEvery { serviceOrderHistoryRepository.create(any()) } returns 1
 
         val res = impl.execute(command)
         val created = res.getOrThrow()
         assertEquals(sample, created)
         coVerify { serviceOrderRepository.createRead(any()) }
         coVerify { createEmailQueueUseCase.execute(any()) }
+        coVerify { serviceOrderHistoryRepository.create(any()) }
     }
 }
 

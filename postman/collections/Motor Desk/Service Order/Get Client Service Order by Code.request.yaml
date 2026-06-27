@@ -1,0 +1,12 @@
+$kind: http-request
+name: Get Client Service Order by Code
+url: http://127.0.0.1:8080/service-order/client/SO-001
+method: GET
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{clientToken}}"
+order: 580678430230227

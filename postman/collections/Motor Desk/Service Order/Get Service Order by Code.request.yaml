@@ -1,0 +1,12 @@
+$kind: http-request
+name: Get Service Order by Code
+url: http://127.0.0.1:8080/service-order/manager/SO-001
+method: GET
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{managerToken}}"
+order: 580678430230223

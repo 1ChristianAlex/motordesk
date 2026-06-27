@@ -1,19 +1,16 @@
 $kind: http-request
-url: http://127.0.0.1:8080/service-order/manager/create
-method: POST
+name: Update Service Order
+url: http://127.0.0.1:8080/service-order/manager/update
+method: PUT
 body:
   type: json
   content: "{\r
 
-    \    \"clientId\": 1,\r
-
-    \    \"operatorId\": 2,\r
-
-    \    \"vehicleId\": 1,\r
+    \    \"code\": \"SO-001\",\r
 
     \    \"complaint\": \"Cliente chegou no momento de revisão por quilometragem\",\r
 
-    \    \"diagnosis\": \"Revisão e balanceamento\",\r
+    \    \"diagnosis\": \"Revisão e balanceamento concluídos\",\r
 
     \    \"tasksIds\": [\r
 
@@ -33,11 +30,13 @@ body:
 
     \        6\r
 
-    \    ]\r
+    \    ],\r
+
+    \    \"status\": \"IN_PROGRESS\"\r
 
     }"
 auth:
   type: bearer
   credentials:
-    token: "{{managerToken}}"
-order: 580678430230222
+    token: "{{engineerToken}}"
+order: 580678430230225
