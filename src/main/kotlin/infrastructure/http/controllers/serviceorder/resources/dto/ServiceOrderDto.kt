@@ -36,6 +36,8 @@ data class UpdateServiceOrderInputDto(
     }
 }
 
+data class ClientServiceOrderItemInputDto(val clientId: Int, val code: String)
+
 @Serializable
 data class ServiceOrderOutputDto(
     val id: Int,

@@ -11,8 +11,12 @@ import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUser
 import com.khrix.infrastructure.http.controllers.serviceorder.ServiceOrderController
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderHandlerImpl
-import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServiceOrderHandler
-import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServiceOrderHandlerImpl
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServiceOrderItemHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServiceOrderItemHandlerImpl
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServicesOrderHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServicesOrderHandlerImpl
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetServiceOrderItemHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetServiceOrderItemHandlerImpl
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.UpdateServiceOrderHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.UpdateServiceOrderHandlerImpl
 import com.khrix.infrastructure.http.controllers.user.UserController
@@ -43,7 +47,9 @@ fun httpDI(dependencies: DependencyRegistry) {
         provide<UpdateVehicleHandler>(UpdateVehicleHandlerImpl::class)
         provide<CreateNewServiceOrderHandler>(CreateNewServiceOrderHandlerImpl::class)
         provide<UpdateServiceOrderHandler>(UpdateServiceOrderHandlerImpl::class)
-        provide<GetClientServiceOrderHandler>(GetClientServiceOrderHandlerImpl::class)
+        provide<GetClientServicesOrderHandler>(GetClientServicesOrderHandlerImpl::class)
+        provide<GetClientServiceOrderItemHandler>(GetClientServiceOrderItemHandlerImpl::class)
+        provide<GetServiceOrderItemHandler>(GetServiceOrderItemHandlerImpl::class)
         provide<List<AppController>> {
             listOf<AppController>(
                 RegisterController(resolve()),
@@ -58,7 +64,9 @@ fun httpDI(dependencies: DependencyRegistry) {
                 ServiceOrderController(
                     createNewServiceOrderHandler = resolve(),
                     updateServiceOrderHandler = resolve(),
-                    getClientServiceOrderHandler = resolve()
+                    getClientServicesOrderHandler = resolve(),
+                    getClientServiceOrderItemHandler = resolve(),
+                            getServiceOrderItemHandler = resolve()
                 )
             )
         }

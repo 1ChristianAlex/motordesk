@@ -4,21 +4,31 @@ import io.ktor.resources.*
 
 @Resource("/service-order")
 class ServiceOrderResource {
-    @Resource("create")
-    class Create(val parent: ServiceOrderResource = ServiceOrderResource())
+    @Resource("manager")
+    class Manager(val parent: ServiceOrderResource = ServiceOrderResource()) {
+        @Resource("create")
+        class Create(val parent: Manager = Manager())
+
+        @Resource("update")
+        class Update(val parent: Manager = Manager())
+
+        @Resource("delete/{code}")
+        class Delete(val parent: Manager = Manager(), val code: String)
+
+        @Resource("list")
+        class Owner(val parent: Manager = Manager())
+
+        @Resource("{code}")
+        class Code(val parent: Manager = Manager(), val code: String)
+
+    }
+
 
     @Resource("client")
-    class Client(val parent: ServiceOrderResource = ServiceOrderResource())
+    class Client(val parent: ServiceOrderResource = ServiceOrderResource()) {
 
-    @Resource("update")
-    class Update(val parent: ServiceOrderResource = ServiceOrderResource())
+        @Resource("{code}")
+        class Individual(val parent: Client = Client(), val code: String)
 
-    @Resource("delete/{code}")
-    class Delete(val parent: ServiceOrderResource = ServiceOrderResource(), val code: String)
-
-    @Resource("list")
-    class Owner(val parent: ServiceOrderResource = ServiceOrderResource())
-
-    @Resource("code")
-    class Code(val parent: ServiceOrderResource = ServiceOrderResource())
+    }
 }

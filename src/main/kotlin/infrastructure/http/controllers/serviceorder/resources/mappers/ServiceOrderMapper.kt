@@ -2,7 +2,9 @@ package com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers
 
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
+import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeCommand
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ClientServiceOrderItemInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto
@@ -48,3 +50,9 @@ fun ServiceOrder.toOutputDto(): ServiceOrderOutputDto {
     )
 }
 
+
+fun ClientServiceOrderItemInputDto.toCommand() =
+    GetClientServiceOrdersByCodeCommand(
+        code = this.code,
+        clientId
+    )

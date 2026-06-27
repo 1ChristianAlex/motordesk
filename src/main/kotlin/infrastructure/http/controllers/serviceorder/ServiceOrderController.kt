@@ -4,9 +4,12 @@ import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.infrastructure.http.controllers.core.AppController
 import com.khrix.infrastructure.http.controllers.core.getBody
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderHandler
-import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServiceOrderHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServiceOrderItemHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServicesOrderHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetServiceOrderItemHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.UpdateServiceOrderHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.ServiceOrderResource
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ClientServiceOrderItemInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto
 import com.khrix.infrastructure.security.UserClaims
@@ -18,7 +21,9 @@ import io.ktor.server.routing.*
 class ServiceOrderController(
     private val createNewServiceOrderHandler: CreateNewServiceOrderHandler,
     private val updateServiceOrderHandler: UpdateServiceOrderHandler,
-    private val getClientServiceOrderHandler: GetClientServiceOrderHandler
+    private val getClientServicesOrderHandler: GetClientServicesOrderHandler,
+    private val getClientServiceOrderItemHandler: GetClientServiceOrderItemHandler,
+    private val getServiceOrderItemHandler: GetServiceOrderItemHandler
 ) : AppController() {
 
     private suspend fun updateHandler(call: RoutingCall, body: UpdateServiceOrderInputDto) {
@@ -32,11 +37,15 @@ class ServiceOrderController(
     override fun map(routing: Routing) {
         with(routing) {
             manager {
-                post<ServiceOrderResource.Create> {
+                post<ServiceOrderResource.Manager.Create> {
                     val body = getBody<ServiceOrderInputDto>()
                     call.send(createNewServiceOrderHandler.handler(body))
                 }
-                delete<ServiceOrderResource.Delete> {
+
+                get<ServiceOrderResource.Manager.Code> {
+                    call.send(getServiceOrderItemHandler.handler(it.code))
+                }
+                delete<ServiceOrderResource.Manager.Delete> {
                     updateHandler(
                         call = call,
                         body = UpdateServiceOrderInputDto(
@@ -46,7 +55,7 @@ class ServiceOrderController(
                 }
             }
             engineer {
-                put<ServiceOrderResource.Update> {
+                put<ServiceOrderResource.Manager.Update> {
                     val body = getBody<UpdateServiceOrderInputDto>()
                     updateHandler(
                         call = call,
@@ -57,8 +66,15 @@ class ServiceOrderController(
             client {
                 get<ServiceOrderResource.Client> {
                     val claims = UserClaims.getClaims(call)
-
-                    call.send(getClientServiceOrderHandler.handler(claims.userId))
+                    call.send(getClientServicesOrderHandler.handler(claims.userId))
+                }
+                get<ServiceOrderResource.Client.Individual> {
+                    val claims = UserClaims.getClaims(call)
+                    call.send(
+                        getClientServiceOrderItemHandler.handler(
+                            ClientServiceOrderItemInputDto(claims.userId, it.code)
+                        )
+                    )
                 }
             }
         }
