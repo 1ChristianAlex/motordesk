@@ -20,6 +20,12 @@ abstract class AppController {
         this.authenticate(AuthNames.AUTH_JWT_MANAGER, build = build)
     }
 
+    fun Route.engineer(
+        build: Route.() -> Unit
+    ) {
+        this.authenticate(AuthNames.AUTH_JWT_ENGINEER, build = build)
+    }
+
     fun Route.client(
         build: Route.() -> Unit
     ) {

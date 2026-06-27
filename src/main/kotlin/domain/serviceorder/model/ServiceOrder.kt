@@ -64,9 +64,13 @@ data class ServiceOrder(
 
     fun updateStatus(
         status: ServiceOrderStatus?,
+        operatorRole: Role,
     ): ServiceOrder {
         if (status === this.status) {
             return this
+        }
+        if (ServiceOrderStatus.IN_DIAGNOSIS.checkRole(operatorRole)) {
+            throw IllegalArgumentException("Role $operatorRole can not handle this status")
         }
         return this.copy(status = status ?: this.status)
     }

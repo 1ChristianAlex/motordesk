@@ -10,12 +10,12 @@ class ServiceOrderResource {
     @Resource("update")
     class Update(val parent: ServiceOrderResource = ServiceOrderResource())
 
-    @Resource("delete/{id}")
-    class Delete(val parent: ServiceOrderResource = ServiceOrderResource(), val id: String)
+    @Resource("delete/{code}")
+    class Delete(val parent: ServiceOrderResource = ServiceOrderResource(), val code: String)
 
     @Resource("list")
     class Owner(val parent: ServiceOrderResource = ServiceOrderResource())
 
-    @Resource("byId")
-    class ById(val parent: ServiceOrderResource = ServiceOrderResource())
+    @Resource("code")
+    class Code(val parent: ServiceOrderResource = ServiceOrderResource())
 }

@@ -2,8 +2,10 @@ package com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers
 
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
+import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.mappers.toOutputDto
 
@@ -18,6 +20,16 @@ fun ServiceOrderInputDto.toCommand(): CreateServiceOrderCommand {
         inventoryItemsIds = this.inventoryItemsIds
     )
 }
+
+fun UpdateServiceOrderInputDto.toCommand() = UpdateServiceOrderCommand(
+    code = this.code,
+    complaint = this.complaint,
+    diagnosis = this.diagnosis,
+    tasksIds = this.tasksIds,
+    inventoryItemsIds = this.inventoryItemsIds,
+    status = this.status,
+    operatorRole = this.operatorRole
+)
 
 fun ServiceOrder.toOutputDto(): ServiceOrderOutputDto {
     return ServiceOrderOutputDto(
@@ -35,3 +47,4 @@ fun ServiceOrder.toOutputDto(): ServiceOrderOutputDto {
         code = this.code
     )
 }
+

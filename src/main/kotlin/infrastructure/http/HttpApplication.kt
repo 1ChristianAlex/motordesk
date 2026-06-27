@@ -64,21 +64,31 @@ private fun Application.bindRoutes() {
 
 private fun Application.bindAuth() {
     val jwtConfig: JwtConfig by dependencies
-    install(Authentication) {
-        jwt(AuthNames.AUTHENTICATE) {
-            clientJwtConfig(jwtConfig)
-        }
-        jwt(AuthNames.AUTH_JWT_MANAGER) {
-            clientJwtConfig(jwtConfig)
+
+    fun JWTAuthenticationProvider.Config.jwtConfigApply(allowedRoles: List<Role> = emptyList()) {
+        clientJwtConfig(jwtConfig)
+
+        if (allowedRoles.isNotEmpty()) {
             validate { credential ->
                 val userClaims = UserClaims.getClaims(credential.payload)
-
-                if ((userClaims.role == Role.MANAGER || userClaims.role == Role.ADMIN) && userClaims.userId > 0) {
+                if (userClaims.role in allowedRoles && userClaims.userId > 0) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null
                 }
             }
+        }
+    }
+
+    install(Authentication) {
+        jwt(AuthNames.AUTHENTICATE) {
+            jwtConfigApply()
+        }
+        jwt(AuthNames.AUTH_JWT_MANAGER) {
+            jwtConfigApply(listOf(Role.MANAGER, Role.ADMIN))
+        }
+        jwt(AuthNames.AUTH_JWT_ENGINEER) {
+            jwtConfigApply(listOf(Role.ENGINEER, Role.MANAGER, Role.ADMIN))
         }
     }
 }
@@ -100,7 +110,7 @@ private fun JWTAuthenticationProvider.Config.clientJwtConfig(jwtConfig: JwtConfi
     validate { credential ->
         val userClaims = UserClaims.getClaims(credential.payload)
 
-        if (userClaims.userId > 0) {
+        if (userClaims.userId > 0 && userClaims.role in Role.entries.toTypedArray()) {
             JWTPrincipal(credential.payload)
         } else {
             null

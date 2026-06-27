@@ -9,9 +9,9 @@ import com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers.
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers.toOutputDto
 import io.ktor.http.*
 
-class CreateNewServiceOrderImpl(
+class CreateNewServiceOrderHandlerImpl(
     private val createNewServiceOrderUseCase: CreateServiceOrderUseCase
-) : CreateNewServiceOrder,
+) : CreateNewServiceOrderHandler,
     BaseHTTPHandler<ServiceOrderInputDto, ServiceOrderOutputDto>() {
     override suspend fun handle(body: ServiceOrderInputDto): HttpResult<ServiceOrderOutputDto> {
         val servicerOrder = createNewServiceOrderUseCase.execute(body.toCommand()).getOrThrow()

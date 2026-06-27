@@ -12,7 +12,6 @@ class UpdateServiceOrderTaskUseCaseImpl(
         serviceOrderRepository.updateServiceOrderTask(command.serviceOrderId, command.taskId, command.status)
     }
 
-
     override suspend fun useCaseDescription(): String {
         return "Update tasks from service order"
     }

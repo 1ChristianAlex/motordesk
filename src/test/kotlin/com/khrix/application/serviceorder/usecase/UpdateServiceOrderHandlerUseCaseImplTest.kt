@@ -16,7 +16,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-class UpdateServiceOrderUseCaseImplTest {
+class UpdateServiceOrderHandlerUseCaseImplTest {
     private val serviceOrderRepository = mockk<ServiceOrderRepository>()
     private val getInventoryByListIdOrSkuUseCase = mockk<GetInventoryByListIdOrSkuUseCase>()
     private val getTaskByListIdUseCase = mockk<GetTaskByListIdUseCase>()
@@ -39,12 +39,12 @@ class UpdateServiceOrderUseCaseImplTest {
     fun `internalExecute updates service order`() = runTest {
         val existing = sampleServiceOrder()
         val command = com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand(
-            serviceOrderId = existing.id,
+            code = existing.id,
             complaint = "New complaint updated",
             diagnosis = existing.diagnosis,
             tasksIds = existing.tasks.map { it.id },
             inventoryItemsIds = existing.inventoryItems.map { it.id },
-            status = existing.status
+            status = existing.status,
         )
 
         coEvery { serviceOrderRepository.read(existing.id) } returns existing

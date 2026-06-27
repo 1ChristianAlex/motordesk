@@ -1,5 +1,7 @@
 package com.khrix.domain.serviceorder.model
 
+import com.khrix.domain.user.model.Role
+
 enum class ServiceOrderStatus {
     CREATED,
     RECEIVED,
@@ -9,6 +11,26 @@ enum class ServiceOrderStatus {
     IN_PROGRESS,
     FINISHED,
     DELIVERED,
-    CANCELLED,
+    CANCELLED;
+
+    private fun getAllowStatusByRole(role: Role): List<ServiceOrderStatus> {
+        return when (role) {
+            Role.ADMIN,
+            Role.MANAGER -> entries
+
+            Role.ENGINEER -> listOf(
+                IN_DIAGNOSIS,
+                IN_PROGRESS,
+                FINISHED,
+                DELIVERED,
+            )
+
+            else -> listOf()
+        }
+    }
+
+    fun checkRole(role: Role): Boolean {
+        return this in getAllowStatusByRole(role)
+    }
 }
 

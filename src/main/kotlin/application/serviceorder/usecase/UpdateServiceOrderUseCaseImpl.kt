@@ -24,7 +24,7 @@ class UpdateServiceOrderUseCaseImpl(
 ) : UpdateServiceOrderUseCase, BaseUseCaseImpl<UpdateServiceOrderCommand, Unit>() {
     override suspend fun internalExecute(command: UpdateServiceOrderCommand) {
         coroutineScope {
-            val serviceOrder = serviceOrderRepository.read(command.serviceOrderId)
+            val serviceOrder = serviceOrderRepository.getByCode(command.code)
                 ?: throw IllegalArgumentException("Service order not found")
 
             val newTasks = async {
@@ -35,7 +35,7 @@ class UpdateServiceOrderUseCaseImpl(
             }
 
             val newServiceOrder = serviceOrder
-                .updateStatus(command.status)
+                .updateStatus(command.status, command.operatorRole)
                 .updateComplaint(command.complaint)
                 .updateDiagnosis(command.diagnosis)
                 .updateTasks(newTasks.await())

@@ -9,8 +9,10 @@ import com.khrix.infrastructure.http.controllers.register.RegisterController
 import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserHandler
 import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserHandlerImpl
 import com.khrix.infrastructure.http.controllers.serviceorder.ServiceOrderController
-import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrder
-import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderImpl
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderHandlerImpl
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.UpdateServiceOrderHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.UpdateServiceOrderHandlerImpl
 import com.khrix.infrastructure.http.controllers.user.UserController
 import com.khrix.infrastructure.http.controllers.user.handlers.GetSelfUserHandler
 import com.khrix.infrastructure.http.controllers.user.handlers.GetSelfUserHandlerImpl
@@ -37,7 +39,8 @@ fun httpDI(dependencies: DependencyRegistry) {
         provide<DeleteVehicleHandler>(DeleteVehicleHandlerImpl::class)
         provide<GetVehicleByOwnerHandler>(GetVehicleByOwnerHandlerImpl::class)
         provide<UpdateVehicleHandler>(UpdateVehicleHandlerImpl::class)
-        provide<CreateNewServiceOrder>(CreateNewServiceOrderImpl::class)
+        provide<CreateNewServiceOrderHandler>(CreateNewServiceOrderHandlerImpl::class)
+        provide<UpdateServiceOrderHandler>(UpdateServiceOrderHandlerImpl::class)
         provide<List<AppController>> {
             listOf<AppController>(
                 RegisterController(resolve()),
@@ -50,7 +53,8 @@ fun httpDI(dependencies: DependencyRegistry) {
                     getVehicleByOwnerHandler = resolve()
                 ),
                 ServiceOrderController(
-                    createNewServiceOrder = resolve()
+                    createNewServiceOrderHandler = resolve(),
+                    updateServiceOrderHandler = resolve()
                 )
             )
         }

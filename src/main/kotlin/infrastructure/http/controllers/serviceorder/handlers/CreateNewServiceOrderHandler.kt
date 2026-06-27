@@ -5,4 +5,4 @@ import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.Serv
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
 
 
-interface CreateNewServiceOrder : HTTPHandler<ServiceOrderInputDto, ServiceOrderOutputDto>
+interface CreateNewServiceOrderHandler : HTTPHandler<ServiceOrderInputDto, ServiceOrderOutputDto>
