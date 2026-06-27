@@ -52,20 +52,6 @@ class ServiceOrderMongoRepositoryImpl(
         }.toList()
     }
 
-    override suspend fun update(
-        id: Int,
-        data: ServiceOrder
-    ) {
-
-        collection.replaceOne(
-            eq(
-                "serviceOrder.id",
-                id
-            ),
-            ServiceOrderHistory.fromModel(data, ObjectId())
-        )
-    }
-
     override suspend fun create(
         data: ServiceOrder
     ): Int {
@@ -75,17 +61,5 @@ class ServiceOrderMongoRepositoryImpl(
         )
 
         return data.id
-    }
-
-    override suspend fun delete(
-        id: Int
-    ) {
-
-        collection.deleteOne(
-            eq(
-                "serviceOrder.id",
-                id
-            )
-        )
     }
 }

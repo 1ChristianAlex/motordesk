@@ -6,6 +6,7 @@ import com.khrix.domain.core.BaseDelete
 import com.khrix.domain.core.BaseRead
 import com.khrix.domain.core.BaseUpdate
 import com.khrix.domain.serviceorder.model.ServiceOrder
+import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
 
 interface ServiceOrderRepository :
     BaseRead<ServiceOrder>,
@@ -16,6 +17,7 @@ interface ServiceOrderRepository :
     suspend fun getByClientId(clientId: Int): List<ServiceOrder>
     suspend fun getOrderByVehicle(vehicleId: Int): List<ServiceOrder>
     suspend fun getByCode(code: String): ServiceOrder?
+    suspend fun updateServiceOrderTask(id: Int, taskId: Int, taskStatus: TaskProgressStatus)
 }
 
 

@@ -14,4 +14,8 @@ object ServiceOrderPartsTable : Table(
         reference("partId", InventoryTable)
 
     override val primaryKey = PrimaryKey(serviceOrder, part)
+
+    init {
+        index(true, serviceOrder, part)
+    }
 }

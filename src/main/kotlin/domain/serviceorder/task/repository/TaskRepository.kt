@@ -14,6 +14,7 @@ interface TaskRepository :
     BaseDelete,
     BaseCreateReturn<Task> {
     suspend fun getTasks(ids: List<Int>): List<Task>
+    suspend fun getTasksFromServiceOrder(serviceOrderId: Int): List<Task>
 }
 
 

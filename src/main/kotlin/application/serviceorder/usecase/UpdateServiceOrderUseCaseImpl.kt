@@ -2,7 +2,9 @@ package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.core.shortid.ShortId
+import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
+import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
@@ -17,7 +19,8 @@ class UpdateServiceOrderUseCaseImpl(
     private val getInventoryByListIdOrSkuUseCase: GetInventoryByListIdOrSkuUseCase,
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
     private val shortId: ShortId,
-    private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository
+    private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository,
+    private val createEmailQueueUseCase: CreateEmailQueueUseCase,
 ) : UpdateServiceOrderUseCase, BaseUseCaseImpl<UpdateServiceOrderCommand, Unit>() {
     override suspend fun internalExecute(command: UpdateServiceOrderCommand) {
         coroutineScope {
@@ -30,6 +33,7 @@ class UpdateServiceOrderUseCaseImpl(
             val newInventoryItems = async {
                 getInventoryByListIdOrSkuUseCase.execute(command.inventoryItemsIds.map { it.toString() }).getOrThrow()
             }
+
             val newServiceOrder = serviceOrder
                 .updateStatus(command.status)
                 .updateComplaint(command.complaint)
@@ -39,12 +43,24 @@ class UpdateServiceOrderUseCaseImpl(
                     code = shortId.encode(codeIds())
                 }
 
-
-
             serviceOrderRepository.update(newServiceOrder.id, newServiceOrder)
+
+            if (needToSendEmail(serviceOrder, newServiceOrder)) {
+                launch { createEmailQueueUseCase.execute(newServiceOrder) }
+            }
 
             launch { serviceOrderHistoryRepository.create(newServiceOrder) }
         }
+    }
+
+    private fun needToSendEmail(oldServiceOrder: ServiceOrder, newServiceOrder: ServiceOrder): Boolean {
+        val isTotalPriceDiff = oldServiceOrder.totalPrice != newServiceOrder.totalPrice
+        val isTasksDiff = oldServiceOrder.tasks.map { it.id }.sorted() != newServiceOrder.tasks.map { it.id }.sorted()
+        val isPartsDiff =
+            oldServiceOrder.inventoryItems.map { it.id }.sorted() != newServiceOrder.inventoryItems.map { it.id }
+                .sorted()
+
+        return isTotalPriceDiff || isTasksDiff || isPartsDiff
     }
 
     override suspend fun useCaseDescription(): String {

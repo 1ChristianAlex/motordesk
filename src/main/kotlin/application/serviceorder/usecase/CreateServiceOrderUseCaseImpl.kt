@@ -28,7 +28,7 @@ class CreateServiceOrderUseCaseImpl(
     private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository
 ) : CreateServiceOrderUseCase, BaseUseCaseImpl<CreateServiceOrderCommand, ServiceOrder>() {
     override suspend fun internalExecute(command: CreateServiceOrderCommand): ServiceOrder {
-        val result = coroutineScope {
+        return coroutineScope {
             val client = async { getUserUseCase.execute(command.clientId).getOrThrow() }
             val operator = async { getUserUseCase.execute(command.operatorId).getOrThrow() }.await()
             val vehicle = async { getVehicleByIdUseCase.execute(command.vehicleId).getOrThrow() }
@@ -62,8 +62,6 @@ class CreateServiceOrderUseCaseImpl(
             launch { serviceOrderHistoryRepository.create(serviceOrder) }
             order
         }
-
-        return result
     }
 
     override suspend fun useCaseDescription(): String {

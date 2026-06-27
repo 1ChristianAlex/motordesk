@@ -15,4 +15,8 @@ object ServiceOrderTasksTable : Table(
     val status = enumerationByName<TaskProgressStatus>("status", 50).default(TaskProgressStatus.NOT_STARTED)
 
     override val primaryKey = PrimaryKey(serviceOrder, task)
+
+    init {
+        index(true, serviceOrder, task)
+    }
 }

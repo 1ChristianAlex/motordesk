@@ -2,6 +2,7 @@ package com.khrix.application
 
 import com.khrix.application.company.usecase.CreateNewCompanyUseCaseImpl
 import com.khrix.application.company.usecase.SearchCompanyByCnpjUseCaseImpl
+import com.khrix.application.core.coroutine.ApplicationScope
 import com.khrix.application.email.usecase.CreateEmailQueueUseCaseImpl
 import com.khrix.application.inventory.CreateInventoryUseCaseImpl
 import com.khrix.application.inventory.DecrementItemInventoryUseCaseImpl
@@ -11,7 +12,6 @@ import com.khrix.application.inventory.GetInventoryByListIdOrSkuUseCaseImpl
 import com.khrix.application.inventory.UpdateInventoryUseCaseImpl
 import com.khrix.application.login.usecase.LoginUserUseCaseImpl
 import com.khrix.application.register.usecase.CreateNewUserUseCaseImpl
-import com.khrix.application.user.usecase.VerifyIsUserDataAvailableUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.CreateTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.DeleteTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.GetTaskByIdUseCaseImpl
@@ -20,9 +20,11 @@ import com.khrix.application.serviceorder.task.usecase.UpdateTaskUseCaseImpl
 import com.khrix.application.serviceorder.usecase.CreateServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.DeleteServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.GetServiceOrdersByClientIdUseCaseImpl
+import com.khrix.application.serviceorder.usecase.UpdateServiceOrderTaskUseCaseImpl
 import com.khrix.application.serviceorder.usecase.UpdateServiceOrderUseCaseImpl
 import com.khrix.application.user.usecase.GetUserUseCaseImpl
 import com.khrix.application.user.usecase.UpdateUserUseCaseImpl
+import com.khrix.application.user.usecase.VerifyIsUserDataAvailableUseCaseImpl
 import com.khrix.application.vehicles.usecase.CreateNewVehicleUseCaseImpl
 import com.khrix.application.vehicles.usecase.DeleteVehicleByIdUseCaseImpl
 import com.khrix.application.vehicles.usecase.GetVehicleByIdUseCaseImpl
@@ -45,6 +47,7 @@ import com.khrix.domain.serviceorder.task.usecase.UpdateTaskUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByClientIdUseCase
+import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderTaskUseCase
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.GetUserUseCase
@@ -60,7 +63,11 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.di.*
 
 fun Application.applicationDI() {
+    val scope = ApplicationScope()
     dependencies {
+        provide("applicationScope") {
+            scope
+        }
         provide<CreateNewUserUseCase>(CreateNewUserUseCaseImpl::class)
         provide<VerifyIsUserDataAvailableUseCase>(VerifyIsUserDataAvailableUseCaseImpl::class)
         provide<SearchCompanyByCnpjUseCase>(SearchCompanyByCnpjUseCaseImpl::class)
@@ -89,5 +96,12 @@ fun Application.applicationDI() {
         provide<DeleteServiceOrderUseCase>(DeleteServiceOrderUseCaseImpl::class)
         provide<GetServiceOrdersByClientIdUseCase>(GetServiceOrdersByClientIdUseCaseImpl::class)
         provide<UpdateServiceOrderUseCase>(UpdateServiceOrderUseCaseImpl::class)
+        provide<UpdateServiceOrderTaskUseCase>(UpdateServiceOrderTaskUseCaseImpl::class)
+    }
+
+    monitor.subscribe(
+        ApplicationStopping
+    ) {
+        scope.shutdown()
     }
 }

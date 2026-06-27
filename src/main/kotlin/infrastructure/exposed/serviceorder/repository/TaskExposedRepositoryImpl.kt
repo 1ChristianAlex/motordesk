@@ -3,6 +3,7 @@ package com.khrix.infrastructure.exposed.serviceorder.repository
 import com.khrix.domain.serviceorder.task.model.Task
 import com.khrix.domain.serviceorder.task.repository.TaskRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
+import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderEntity
 import com.khrix.infrastructure.exposed.serviceorder.database.TaskEntity
 import com.khrix.infrastructure.exposed.serviceorder.database.TaskTable
 import com.khrix.infrastructure.exposed.serviceorder.mapper.toModel
@@ -63,6 +64,12 @@ class TaskExposedRepositoryImpl(
     override suspend fun getTasks(ids: List<Int>): List<Task> {
         return suspendedQuery {
             TaskEntity.find { TaskTable.id inList ids }.map { it.toModel() }
+        }
+    }
+
+    override suspend fun getTasksFromServiceOrder(serviceOrderId: Int): List<Task> {
+        return suspendedQuery {
+            ServiceOrderEntity.findById(serviceOrderId)?.tasks?.map { it.toModel() } ?: emptyList()
         }
     }
 }

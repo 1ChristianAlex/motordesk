@@ -3,16 +3,20 @@ package com.khrix.infrastructure.exposed.serviceorder.repository
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.inventory.database.InventoryEntity
 import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderEntity
+import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderTasksTable
 import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrdersTable
 import com.khrix.infrastructure.exposed.serviceorder.database.TaskEntity
 import com.khrix.infrastructure.exposed.serviceorder.mapper.toModel
 import com.khrix.infrastructure.exposed.user.database.UserEntity
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
+import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.update
 
 class ServiceOrderExposedRepositoryImpl(
     database: Database,
@@ -85,6 +89,18 @@ class ServiceOrderExposedRepositoryImpl(
     override suspend fun getByCode(code: String): ServiceOrder? {
         return suspendedQuery {
             ServiceOrderEntity.find { ServiceOrdersTable.code eq code }.map { it.toModel() }.firstOrNull()
+        }
+    }
+
+    override suspend fun updateServiceOrderTask(
+        id: Int,
+        taskId: Int,
+        taskStatus: TaskProgressStatus
+    ) {
+        return suspendedQuery {
+            ServiceOrderTasksTable.update({ (ServiceOrderTasksTable.task eq taskId) and (ServiceOrderTasksTable.serviceOrder eq id) }) {
+                it[ServiceOrderTasksTable.status] = taskStatus
+            }
         }
     }
 }
