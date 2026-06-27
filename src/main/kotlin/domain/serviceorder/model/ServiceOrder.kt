@@ -156,9 +156,6 @@ data class ServiceOrder(
     }
 
     fun codeIds(): List<Int> {
-        return mutableListOf(client.id, operator.id, vehicle.id).apply {
-            addAll(tasks.map { it.id })
-            addAll(inventoryItems.map { it.id })
-        }
+        return listOf(id, client.id, operator.id, vehicle.id) + tasks.map { it.id } + inventoryItems.map { it.id }
     }
 }

@@ -7,6 +7,9 @@ class ServiceOrderResource {
     @Resource("create")
     class Create(val parent: ServiceOrderResource = ServiceOrderResource())
 
+    @Resource("client")
+    class Client(val parent: ServiceOrderResource = ServiceOrderResource())
+
     @Resource("update")
     class Update(val parent: ServiceOrderResource = ServiceOrderResource())
 
