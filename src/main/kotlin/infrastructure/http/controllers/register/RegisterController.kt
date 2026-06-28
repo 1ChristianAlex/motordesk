@@ -9,25 +9,24 @@ import com.khrix.infrastructure.http.controllers.register.resources.RegisterReso
 import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
 import io.ktor.server.resources.post
 import io.ktor.server.routing.*
-import kotlinx.serialization.ExperimentalSerializationApi
+import io.ktor.server.routing.openapi.*
 
 class RegisterController(
     private val createNewUserHandler: CreateNewUserHandler
 ) : AppController() {
-    @OptIn(ExperimentalSerializationApi::class)
     override fun map(routing: Routing) {
         with(routing) {
             post<RegisterResource> {
                 val body = getBody<ClientRegisterDto>()
                 call.send(createNewUserHandler.handler(CreateNewUserRequest(body)))
-            }
+            }.describe(createNewUserHandler::description)
             manager {
                 post<RegisterResource> {
                     val body = getBody<ClientRegisterDto>()
                     val request = CreateNewUserRequest(body)
                     request.updateRole(Role.MANAGER)
                     call.send(createNewUserHandler.handler(request))
-                }
+                }.describe(createNewUserHandler::description)
             }
         }
     }

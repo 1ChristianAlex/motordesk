@@ -12,7 +12,7 @@ class ServiceOrderResource {
         @Resource("update")
         class Update(val parent: Manager = Manager())
 
-        @Resource("delete/{code}")
+        @Resource("{code}/delete")
         class Delete(val parent: Manager = Manager(), val code: String)
 
         @Resource("list")

@@ -9,7 +9,6 @@ import com.khrix.infrastructure.redis.event.RedisEventConsumerImpl
 import io.ktor.events.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.di.*
-import kotlinx.coroutines.launch
 
 fun redisLettuceDi(dependencies: DependencyRegistry, monitor: Events) {
     with(dependencies) {
@@ -19,10 +18,10 @@ fun redisLettuceDi(dependencies: DependencyRegistry, monitor: Events) {
 
         provide(EventConsumerBootstrap::class)
 
-        launch {
-            val eventConsumer: EventConsumerBootstrap by dependencies
-            eventConsumer.initialize()
-        }
+
+        val eventConsumer: EventConsumerBootstrap by dependencies
+        eventConsumer.initialize()
+
         monitor.subscribe(ApplicationStopping) {
             val redisConnection: RedisConnection by dependencies
             redisConnection.close()

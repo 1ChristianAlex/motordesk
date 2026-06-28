@@ -15,10 +15,25 @@ fun Application.appInfrastructure() {
     dependencies {
         provide<Boolean>(name = "isDevelopment") { isDevelopment }
     }
+
+    val scope = InfraScope()
+
+    dependencies {
+        provide("infraScope") {
+            scope
+        }
+    }
+
+    monitor.subscribe(
+        ApplicationStopping
+    ) {
+        scope.shutdown()
+    }
+
     sqIdsDI(dependencies)
     appDatabase(dependencies)
     appMongoDb(dependencies, monitor)
     redisLettuceDi(dependencies, monitor)
     securityDI(dependencies)
-    httpDI(dependencies)
+    httpDI(dependencies, monitor)
 }

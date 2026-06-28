@@ -17,6 +17,7 @@ import io.ktor.server.resources.delete
 import io.ktor.server.resources.get
 import io.ktor.server.resources.post
 import io.ktor.server.routing.*
+import io.ktor.server.routing.openapi.*
 
 class ServiceOrderController(
     private val createNewServiceOrderHandler: CreateNewServiceOrderHandler,
@@ -40,11 +41,11 @@ class ServiceOrderController(
                 post<ServiceOrderResource.Manager.Create> {
                     val body = getBody<ServiceOrderInputDto>()
                     call.send(createNewServiceOrderHandler.handler(body))
-                }
+                }.describe(createNewServiceOrderHandler::description)
 
                 get<ServiceOrderResource.Manager.Code> {
                     call.send(getServiceOrderItemHandler.handler(it.code))
-                }
+                }.describe(getServiceOrderItemHandler::description)
                 delete<ServiceOrderResource.Manager.Delete> {
                     updateHandler(
                         call = call,
@@ -52,7 +53,7 @@ class ServiceOrderController(
                             code = it.code, status = ServiceOrderStatus.CANCELLED
                         )
                     )
-                }
+                }.describe(updateServiceOrderHandler::description)
             }
             engineer {
                 put<ServiceOrderResource.Manager.Update> {
@@ -61,13 +62,13 @@ class ServiceOrderController(
                         call = call,
                         body = body
                     )
-                }
+                }.describe(updateServiceOrderHandler::description)
             }
             client {
                 get<ServiceOrderResource.Client> {
                     val claims = UserClaims.getClaims(call)
                     call.send(getClientServicesOrderHandler.handler(claims.userId))
-                }
+                }.describe(getClientServicesOrderHandler::description)
                 get<ServiceOrderResource.Client.Individual> {
                     val claims = UserClaims.getClaims(call)
                     call.send(
@@ -75,7 +76,7 @@ class ServiceOrderController(
                             ClientServiceOrderItemInputDto(claims.userId, it.code)
                         )
                     )
-                }
+                }.describe(getClientServiceOrderItemHandler::description)
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.khrix.application.email.usecase
 
-import com.khrix.application.core.coroutine.ApplicationScope
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.model.EmailStatus
@@ -11,12 +10,13 @@ import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.user.address.repository.AddressRepository
 import io.ktor.server.plugins.di.annotations.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class CreateEmailQueueUseCaseImpl(
     private val emailQueueRepository: EmailQueueRepository,
     private val addressRepository: AddressRepository,
-    @Named("applicationScope") private val scope: ApplicationScope,
+    @Named("applicationScope") private val scope: CoroutineScope,
     private val eventPublisher: EventPublisher
 ) : CreateEmailQueueUseCase, BaseUseCaseImpl<ServiceOrder, Unit>() {
     override suspend fun internalExecute(command: ServiceOrder) {

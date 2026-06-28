@@ -14,7 +14,7 @@ import io.ktor.server.resources.*
 import io.ktor.server.resources.post
 import io.ktor.server.resources.put
 import io.ktor.server.routing.*
-import kotlinx.serialization.ExperimentalSerializationApi
+import io.ktor.server.routing.openapi.*
 
 class VehiclesController(
     private val createNewVehicleHandler: CreateNewVehicleHandler,
@@ -22,28 +22,27 @@ class VehiclesController(
     private val deleteVehicleHandler: DeleteVehicleHandler,
     private val getVehicleByOwnerHandler: GetVehicleByOwnerHandler
 ) : AppController() {
-    @OptIn(ExperimentalSerializationApi::class)
     override fun map(routing: Routing) {
         with(routing) {
             client {
                 get<VehiclesResource.Owner> {
                     val claims = UserClaims.getClaims(call)
                     call.send(getVehicleByOwnerHandler.handler(claims.userId))
-                }
+                }.describe(getVehicleByOwnerHandler::description)
             }
             manager {
                 post<VehiclesResource.Create> {
                     val body = getBody<VehicleInputDto>()
 
                     call.send(createNewVehicleHandler.handler(body))
-                }
+                }.describe(createNewVehicleHandler::description)
                 put<VehiclesResource.Update> {
                     val body = getBody<VehicleUpdateInputDto>()
                     call.send(updateVehicleHandler.handler(body))
-                }
+                }.describe(updateVehicleHandler::description)
                 delete<VehiclesResource.Delete> {
                     call.send(deleteVehicleHandler.handler(it.id.toInt()))
-                }
+                }.describe(deleteVehicleHandler::description)
             }
         }
     }

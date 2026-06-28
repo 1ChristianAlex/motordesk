@@ -9,8 +9,10 @@ import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCaseCommand
 import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
 import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
+import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
 import io.ktor.http.*
+import io.ktor.openapi.*
 
 class CreateNewUserHandlerImpl(
     private val createNewUserUseCase: CreateNewUserUseCase,
@@ -41,5 +43,24 @@ class CreateNewUserHandlerImpl(
         val token = tokenService.generate(user)
 
         return HttpResult(AuthenticateOutputDto(token, userOutputDto), HttpStatusCode.Created)
+    }
+
+    override fun description(
+        configure: Operation.Builder,
+    ) {
+        configure.summary = "Create new user"
+        configure.description =
+            "Client can create a new account - You can only create a high role account if you are manager or ADM"
+        configure.requestBody {
+            schema = jsonSchema<ClientRegisterDto>()
+        }
+        configure.responses {
+            HttpStatusCode.Created {
+                schema = jsonSchema<HttpResult<AuthenticateOutputDto>>()
+            }
+            HttpStatusCode.BadRequest {
+                schema = jsonSchema<HttpResult<Nothing>>()
+            }
+        }
     }
 }

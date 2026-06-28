@@ -22,6 +22,7 @@ allprojects {
         compilerOptions {
             freeCompilerArgs.addAll(
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-opt-in=io.ktor.utils.io.ExperimentalKtorApi",
                 "-Xannotation-default-target=param-property"
             )
         }
@@ -43,6 +44,11 @@ dependencies {
     implementation(ktorLibs.server.di)
     implementation(ktorLibs.server.requestValidation)
     implementation(ktorLibs.server.resources)
+
+    implementation(ktorLibs.server.swagger)
+    implementation(ktorLibs.server.openapi)
+    implementation(ktorLibs.server.routingOpenapi)
+
 
     implementation(libs.logback.classic)
     implementation(libs.konform)

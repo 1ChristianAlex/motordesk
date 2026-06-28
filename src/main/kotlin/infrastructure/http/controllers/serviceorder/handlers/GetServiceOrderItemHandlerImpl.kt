@@ -6,6 +6,7 @@ import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers.toOutputDto
 import io.ktor.http.*
+import io.ktor.openapi.*
 
 class GetServiceOrderItemHandlerImpl(
     private val getServiceOrdersByCodeUseCase: GetServiceOrdersByCodeUseCase
@@ -17,5 +18,21 @@ class GetServiceOrderItemHandlerImpl(
         ).getOrThrow()
 
         return HttpResult(servicerOrder.toOutputDto(), HttpStatusCode.OK)
+    }
+
+    override fun description(
+        configure: Operation.Builder,
+    ) {
+        configure.summary = "Manager - Get a service order item"
+        configure.description = "Get any service order from any client"
+
+        configure.responses {
+            HttpStatusCode.OK {
+                schema = jsonSchema<HttpResult<ServiceOrderOutputDto>>()
+            }
+            HttpStatusCode.BadRequest {
+                schema = jsonSchema<HttpResult<Nothing>>()
+            }
+        }
     }
 }

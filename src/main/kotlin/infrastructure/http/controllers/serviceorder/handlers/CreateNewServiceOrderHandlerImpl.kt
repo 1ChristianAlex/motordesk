@@ -8,6 +8,7 @@ import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.Serv
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers.toCommand
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers.toOutputDto
 import io.ktor.http.*
+import io.ktor.openapi.*
 
 class CreateNewServiceOrderHandlerImpl(
     private val createNewServiceOrderUseCase: CreateServiceOrderUseCase
@@ -17,5 +18,23 @@ class CreateNewServiceOrderHandlerImpl(
         val servicerOrder = createNewServiceOrderUseCase.execute(body.toCommand()).getOrThrow()
 
         return HttpResult(servicerOrder.toOutputDto(), HttpStatusCode.Created)
+    }
+
+    override fun description(
+        configure: Operation.Builder,
+    ) {
+        configure.summary = "Create new service order"
+        configure.description = "Only manager - Create new service order to a given client"
+        configure.requestBody {
+            schema = jsonSchema<ServiceOrderInputDto>()
+        }
+        configure.responses {
+            HttpStatusCode.Created {
+                schema = jsonSchema<HttpResult<ServiceOrderOutputDto>>()
+            }
+            HttpStatusCode.BadRequest {
+                schema = jsonSchema<HttpResult<Nothing>>()
+            }
+        }
     }
 }

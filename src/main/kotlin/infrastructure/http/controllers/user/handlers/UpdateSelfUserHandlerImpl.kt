@@ -9,6 +9,7 @@ import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
 import io.ktor.http.*
+import io.ktor.openapi.*
 
 class UpdateSelfUserHandlerImpl(
     private val updateUserUseCase: UpdateUserUseCase,
@@ -45,5 +46,24 @@ class UpdateSelfUserHandlerImpl(
         val token = tokenService.generate(user)
 
         return HttpResult(AuthenticateOutputDto(token, userOutputDto), HttpStatusCode.Accepted)
+    }
+
+
+    override fun description(
+        configure: Operation.Builder,
+    ) {
+        configure.summary = "Client - Update client info"
+
+        configure.requestBody {
+            schema = jsonSchema<UpdateSelfUserHandlerBody>()
+        }
+        configure.responses {
+            HttpStatusCode.Accepted {
+                schema = jsonSchema<HttpResult<AuthenticateOutputDto>>()
+            }
+            HttpStatusCode.BadRequest {
+                schema = jsonSchema<HttpResult<Nothing>>()
+            }
+        }
     }
 }

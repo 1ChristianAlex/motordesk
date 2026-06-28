@@ -33,9 +33,10 @@ import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByO
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByOwnerHandlerImpl
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandlerImpl
+import io.ktor.events.*
 import io.ktor.server.plugins.di.*
 
-fun httpDI(dependencies: DependencyRegistry) {
+fun httpDI(dependencies: DependencyRegistry, monitor: Events) {
     with(dependencies) {
         provide<CreateNewUserHandler>(CreateNewUserHandlerImpl::class)
         provide<LoginHandler>(LoginHandlerImpl::class)
@@ -66,7 +67,7 @@ fun httpDI(dependencies: DependencyRegistry) {
                     updateServiceOrderHandler = resolve(),
                     getClientServicesOrderHandler = resolve(),
                     getClientServiceOrderItemHandler = resolve(),
-                            getServiceOrderItemHandler = resolve()
+                    getServiceOrderItemHandler = resolve()
                 )
             )
         }

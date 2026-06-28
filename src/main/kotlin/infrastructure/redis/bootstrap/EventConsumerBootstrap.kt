@@ -1,12 +1,18 @@
 package com.khrix.infrastructure.redis.bootstrap
 
 import com.khrix.domain.email.publisher.EventConsumer
+import io.ktor.server.plugins.di.annotations.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class EventConsumerBootstrap(
-    private val eventConsumer: EventConsumer
+    private val eventConsumer: EventConsumer,
+    @Named("infraScope") private val applicationScope: CoroutineScope
 ) {
 
-    suspend fun initialize() {
-        eventConsumer.start()
+    fun initialize() {
+        applicationScope.launch {
+            eventConsumer.start()
+        }
     }
 }

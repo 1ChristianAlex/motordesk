@@ -6,6 +6,7 @@ import com.khrix.domain.email.publisher.EventKeys
 import com.khrix.infrastructure.redis.connection.RedisConnection
 import io.lettuce.core.Consumer
 import io.lettuce.core.ExperimentalLettuceCoroutinesApi
+import io.lettuce.core.XGroupCreateArgs
 import io.lettuce.core.XReadArgs
 import kotlinx.serialization.json.Json
 import java.time.Duration
@@ -22,9 +23,10 @@ class RedisEventConsumerImpl(
                     EventKeys.EVENT_NAME,
                     "0"
                 ),
-                EventKeys.EVENT_GROUP
+                EventKeys.EVENT_GROUP,
+                XGroupCreateArgs.Builder.mkstream()
             )
-        }
+        }.getOrNull()
     }
 
     override suspend fun start() {
