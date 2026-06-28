@@ -5,6 +5,7 @@ import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.model.EmailStatus
 import com.khrix.domain.email.model.ServiceOrderEmailMetadata
+import com.khrix.domain.email.publisher.EventPublisher
 import com.khrix.domain.email.repository.EmailQueueRepository
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
@@ -15,14 +16,15 @@ import kotlinx.coroutines.launch
 class CreateEmailQueueUseCaseImpl(
     private val emailQueueRepository: EmailQueueRepository,
     private val addressRepository: AddressRepository,
-    @Named("applicationScope") private val scope: ApplicationScope
+    @Named("applicationScope") private val scope: ApplicationScope,
+    private val eventPublisher: EventPublisher
 ) : CreateEmailQueueUseCase, BaseUseCaseImpl<ServiceOrder, Unit>() {
     override suspend fun internalExecute(command: ServiceOrder) {
         scope.launch {
             val clientAddress =
                 addressRepository.read(command.client.addressId) ?: throw NoSuchElementException("Address is null")
 
-            emailQueueRepository.create(
+            val result = emailQueueRepository.createRead(
                 EmailQueueItem(
                     id = 0,
                     recipient = command.client.email.value,
@@ -33,14 +35,16 @@ class CreateEmailQueueUseCaseImpl(
                     ),
                     status = EmailStatus.PENDING,
                     attempts = 0,
-                    errorMessage = null
+                    errorMessage = null,
+                    orderCode = command.code
                 )
             )
+
+            eventPublisher.publish(result)
         }
     }
 
     override suspend fun useCaseDescription(): String {
         return "Create an email queue item for a service order"
     }
-
 }

@@ -25,6 +25,8 @@ object EmailQueueTable : BaseTable("emailQueue") {
     val attempts = integer("attempts").default(0)
 
     val errorMessage = text("errorMessage").nullable()
+
+    val code = varchar("code", 25)
 }
 
 class EmailQueueEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -36,4 +38,5 @@ class EmailQueueEntity(id: EntityID<Int>) : IntEntity(id) {
     var status by EmailQueueTable.status
     var attempts by EmailQueueTable.attempts
     var errorMessage by EmailQueueTable.errorMessage
+    var code by EmailQueueTable.code
 }

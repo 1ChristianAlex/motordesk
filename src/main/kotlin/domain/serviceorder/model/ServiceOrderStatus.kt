@@ -4,7 +4,7 @@ import com.khrix.domain.user.model.Role
 
 enum class ServiceOrderStatus {
     CREATED,
-    RECEIVED,
+    QUEUED,
     WAITING_APPROVAL,
     REJECT_BY_CLIENT,
     IN_DIAGNOSIS,

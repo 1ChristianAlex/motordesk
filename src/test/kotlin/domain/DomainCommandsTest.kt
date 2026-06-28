@@ -67,7 +67,7 @@ class GetClientServiceOrdersByCodeCommandTest {
 
 class UpdateServiceOrderCommandTest {
     @Test fun `retains operator authorization context`() {
-        val command = UpdateServiceOrderCommand("#code", null, status = ServiceOrderStatus.RECEIVED, operatorRole = Role.MANAGER)
+        val command = UpdateServiceOrderCommand("#code", null, status = ServiceOrderStatus.QUEUED, operatorRole = Role.MANAGER)
         assertEquals(Role.MANAGER, command.operatorRole)
     }
 }

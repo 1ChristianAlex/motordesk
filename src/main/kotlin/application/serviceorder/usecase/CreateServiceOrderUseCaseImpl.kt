@@ -60,6 +60,7 @@ class CreateServiceOrderUseCaseImpl(
 
             launch { createEmailQueueUseCase.execute(serviceOrder) }
             launch { serviceOrderHistoryRepository.create(serviceOrder) }
+
             order
         }
     }

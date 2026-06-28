@@ -53,6 +53,8 @@ dependencies {
 
     implementation(libs.mongodb)
 
+    implementation(libs.lettuce)
+
     implementation(libs.bundles.exposed)
 
     testImplementation(kotlin("test"))

@@ -15,7 +15,7 @@ import org.jetbrains.exposed.v1.jdbc.update
 class EmailQueueExposedQueueRepositoryImpl(
     database: Database,
 ) : BaseExposedRepository<EmailQueueEntity, EmailQueueItem>(database), EmailQueueRepository {
-    override suspend fun create(data: EmailQueueItem): Int {
+    override suspend fun createRead(data: EmailQueueItem): EmailQueueItem {
         return suspendedQuery {
             EmailQueueEntity.new {
                 recipient = data.recipient
@@ -24,7 +24,7 @@ class EmailQueueExposedQueueRepositoryImpl(
                 status = data.status
                 attempts = data.attempts
                 errorMessage = data.errorMessage
-            }.id.value
+            }.toModel()
         }
     }
 

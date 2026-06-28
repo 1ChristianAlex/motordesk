@@ -16,8 +16,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
 
   mongodb:
     image: mongo:8
@@ -29,8 +29,8 @@ services:
       MONGO_INITDB_DATABASE: motordesk
     ports:
       - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
+#    volumes:
+#      - mongodb_data:/data/db
 
   redis:
     image: redis:8-alpine
@@ -42,15 +42,30 @@ services:
       - redis-server
       - --appendonly
       - "yes"
-    volumes:
-      - redis_data:/data
+      - --requirepass
+      - motordesk_pass
+      - --user
+      - motordesk
+      - "on"
+      - ">motordesk_pass"
+      - "~*"
+      - "+@all"
+#    volumes:
+#      - redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "-a",
+          "motordesk_pass",
+          "ping"
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-volumes:
-  postgres_data:
-  mongodb_data:
-  redis_data:
+#volumes:
+#  postgres_data:
+#  mongodb_data:
+#  redis_data:

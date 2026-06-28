@@ -11,5 +11,6 @@ fun EmailQueueEntity.toModel(): EmailQueueItem = EmailQueueItem(
     status = status,
     attempts = attempts,
     errorMessage = errorMessage,
+    orderCode = code
 )
 

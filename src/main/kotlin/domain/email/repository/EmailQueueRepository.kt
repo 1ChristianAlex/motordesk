@@ -1,12 +1,12 @@
 package com.khrix.domain.email.repository
 
-import com.khrix.domain.core.BaseCreate
+import com.khrix.domain.core.BaseCreateReturn
 import com.khrix.domain.core.BaseRead
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.model.EmailStatus
 
 interface EmailQueueRepository :
-    BaseCreate<EmailQueueItem>,
+    BaseCreateReturn<EmailQueueItem>,
     BaseRead<EmailQueueItem> {
     suspend fun incrementAttempt(id: Int)
     suspend fun setErrorMessage(id: Int, errorMessage: String)
