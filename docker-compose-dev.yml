@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  sql-database:
+    image: postgres:15-alpine
+    container_name: motordesk_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: motordesk
+      POSTGRES_PASSWORD: motordesk_pass
+      POSTGRES_DB: motordesk
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  #    volumes:
+  #      - postgres_data:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:8
+    container_name: motordesk_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: motordesk
+      MONGO_INITDB_ROOT_PASSWORD: motordesk_pass
+      MONGO_INITDB_DATABASE: motordesk
+    ports:
+      - "27017:27017"
+  #    volumes:
+  #      - mongodb_data:/data/db
+
+  redis:
+    image: redis:8-alpine
+    container_name: motordesk_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --requirepass
+      - motordesk_pass
+      - --user
+      - motordesk
+      - "on"
+      - ">motordesk_pass"
+      - "~*"
+      - "+@all"
+    #    volumes:
+    #      - redis_data:/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "-a",
+          "motordesk_pass",
+          "ping"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+#volumes:
+#  postgres_data:
+#  mongodb_data:
+#  redis_data:

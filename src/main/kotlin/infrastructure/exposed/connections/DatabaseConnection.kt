@@ -17,7 +17,7 @@ import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-abstract class DatabaseConnection(private val isDevelopment: Boolean, private val loadSeeds: LoadSeeds) {
+abstract class DatabaseConnection(private val loadSeeds: LoadSeeds) {
     abstract val database: Database
 
     private val tableList = listOf(
@@ -34,20 +34,15 @@ abstract class DatabaseConnection(private val isDevelopment: Boolean, private va
     ).toTypedArray()
 
     fun JdbcTransaction.beforeLoad() {
-        if (isDevelopment) {
-            addLogger(StdOutSqlLogger)
-            SchemaUtils.drop(
-                *tableList
-            )
-        }
+        addLogger(StdOutSqlLogger)
+        SchemaUtils.drop(
+            *tableList
+        )
     }
 
     fun JdbcTransaction.afterLoad() {
-        if (isDevelopment) {
-            loadSeeds.loadSeeds(this.db)
-        }
+        loadSeeds.loadSeeds(this.db)
     }
-
 
     fun getConnection(): Database {
         return database.apply {

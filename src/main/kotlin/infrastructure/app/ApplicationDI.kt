@@ -22,6 +22,9 @@ fun Application.appInfrastructure() {
         provide("infraScope") {
             scope
         }
+        provide<InfraCredentials> {
+            if (isDevelopment) InfraCredentialsDevImpl() else InfraCredentialsEnvImpl()
+        }
     }
 
     monitor.subscribe(

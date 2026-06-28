@@ -21,7 +21,7 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.math.BigDecimal
 
 class LoadSeeds(
-    private val passwordHasher: PasswordHasher
+    private val passwordHasher: PasswordHasher,
 ) {
     fun loadSeeds(database: Database) {
         transaction(database) {
