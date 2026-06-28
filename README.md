@@ -104,40 +104,21 @@ Business diagrams are available under `docs/storytelling/`:
 - Docker
 - Docker Compose
 
-### Start infrastructure
+### Run on your machine
 
 ``` bash
-docker compose up -d
+docker compose -f docker-compose-dev.yml up -d
 ```
-
-Services:
-
-- PostgreSQL (5432)
-- MongoDB (27017)
-- Redis (6379)
-
-### Configure secrets
-
-``` bash
-cp src/main/resources/secrets.properties.example src/main/resources/secrets.properties
-```
-
-### Run
 
 ``` bash
 ./gradlew run
 ```
 
-Windows:
+### Run a product-like build using docker
 
 ``` bash
-gradlew.bat run
+docker compose -f docker-compose.yml up -d
 ```
-
-## Development
-
-During development the database is recreated on startup and seed data is
-loaded automatically.
 
 ### Seed users
 
