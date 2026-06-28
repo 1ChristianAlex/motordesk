@@ -16,12 +16,11 @@ data class MongoConfig(
 
 data class RedisConfig(
     val host: String,
-    val username: String,
     val password: String,
     val port: String
 ) {
     val connectionString: String
-        get() = "redis://${username}:${password}@${host}:${port}"
+        get() = "redis://${password}@${host}:${port}"
 }
 
 data class ExposedConfig(

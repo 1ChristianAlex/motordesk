@@ -18,7 +18,6 @@ class InfraCredentialsDevImpl : InfraCredentials {
     override val redisConfig: RedisConfig
         get() = RedisConfig(
             host = properties.getProperty("redis.host"),
-            username = properties.getProperty("redis.user"),
             password = properties.getProperty("redis.password"),
             port = properties.getProperty("redis.port"),
         )

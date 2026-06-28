@@ -15,7 +15,7 @@ kotlin {
     jvmToolchain(25)
 }
 ktor {
-    development = true
+    development = System.getenv("IS_DEV_MODE").toBoolean() ?: true
 }
 allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
