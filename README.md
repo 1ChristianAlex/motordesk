@@ -11,7 +11,6 @@
 ![OpenAPI](https://img.shields.io/badge/OpenAPI-3.x-6BA539?logo=openapiinitiative&logoColor=white)
 ![DDD](https://img.shields.io/badge/Architecture-DDD-blueviolet) ![Clean
 Architecture](https://img.shields.io/badge/Clean-Architecture-success)
-![Hexagonal](https://img.shields.io/badge/Hexagonal-Architecture-orange)
 
 Backend API for automotive repair shop management built with **Kotlin**
 and **Ktor 3**. Motor Desk manages Service Orders, customers, vehicles,
