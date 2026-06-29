@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
     alias(libs.plugins.kotlin.serialization)
+    jacoco
     alias(libs.plugins.sonarqube)
 }
 
@@ -22,6 +23,10 @@ sonar {
         property("sonar.projectKey", "Motor-Desk")
         property("sonar.host.url", "http://localhost:9000/")
         property("sonar.login", "sqp_943eefb8f3466db57709d156f335f3776d96e8e1")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml",
+        )
     }
 }
 allprojects {
@@ -84,4 +89,18 @@ tasks.register<JavaExec>("runDev") {
     args = runTask.args ?: emptyList()
 
     jvmArgs = (runTask.jvmArgs ?: emptyList()) + "-Dio.ktor.development=true"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(false)
+        csv.required.set(false)
+    }
+}
+
+tasks.named("sonar") {
+    dependsOn(tasks.test)
+    dependsOn(tasks.jacocoTestReport)
 }

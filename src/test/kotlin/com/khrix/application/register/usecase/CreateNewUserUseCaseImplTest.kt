@@ -6,6 +6,9 @@ import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.domain.user.repository.UserRepository
 import com.khrix.domain.user.security.PasswordHasher
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
+import com.khrix.testutils.sampleAddress
+import com.khrix.testutils.sampleCompany
+import com.khrix.testutils.sampleUser
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -14,29 +17,27 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import testutils.sampleAddress
-import testutils.sampleCompany
-import testutils.sampleUser
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CreateNewUserUseCaseImplGeneratedTest {
-
     private val userRepository = mockk<UserRepository>()
     private val passwordHasher = mockk<PasswordHasher>()
     private val addressRepository = mockk<AddressRepository>()
     private val searchCompanyByCnpjUseCase = mockk<SearchCompanyByCnpjUseCase>()
     private val createNewCompanyUseCase = mockk<CreateNewCompanyUseCase>()
 
-    private val impl = CreateNewUserUseCaseImpl(
-        userRepository,
-        passwordHasher,
-        addressRepository,
-        searchCompanyByCnpjUseCase,
-        createNewCompanyUseCase
-    )
+    private val impl =
+        CreateNewUserUseCaseImpl(
+            userRepository,
+            passwordHasher,
+            addressRepository,
+            searchCompanyByCnpjUseCase,
+            createNewCompanyUseCase,
+        )
+
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
@@ -46,6 +47,7 @@ class CreateNewUserUseCaseImplGeneratedTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
     @Test
     fun `useCaseDescription returns expected string`() {
         runTest {
@@ -67,11 +69,12 @@ class CreateNewUserUseCaseImplGeneratedTest {
             coEvery { userRepository.create(any()) } returns 1
             coEvery { userRepository.read(1) } returns user
 
-            val command = CreateNewUserUseCaseCommand(
-                user = user,
-                address = address,
-                company = null
-            )
+            val command =
+                CreateNewUserUseCaseCommand(
+                    user = user,
+                    address = address,
+                    company = null,
+                )
 
             val res = impl.execute(command)
 
@@ -84,4 +87,3 @@ class CreateNewUserUseCaseImplGeneratedTest {
         }
     }
 }
-

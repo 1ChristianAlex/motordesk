@@ -6,6 +6,7 @@ import com.khrix.domain.user.security.PasswordHasher
 import com.khrix.domain.user.usecase.InvalidCredentialsException
 import com.khrix.domain.valueobject.user.Email
 import com.khrix.domain.valueobject.user.Password
+import com.khrix.testutils.sampleUser
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -14,7 +15,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import testutils.sampleUser
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -25,6 +25,7 @@ class LoginUserUseCaseImplGeneratedTest {
     private val userRepository = mockk<UserRepository>()
     private val passwordHasher = mockk<PasswordHasher>()
     private val impl = LoginUserUseCaseImpl(userRepository, passwordHasher)
+
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
@@ -34,14 +35,16 @@ class LoginUserUseCaseImplGeneratedTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
     @Test
     fun `internalExecute throws when user not found`() {
         runTest {
             val email = Email("testman@email.com")
-            val cmd = LoginTypes.EmailCredentials(
-                email = email,
-                password = Password.Raw("Passw0rd!")
-            )
+            val cmd =
+                LoginTypes.EmailCredentials(
+                    email = email,
+                    password = Password.Raw("Passw0rd!"),
+                )
             coEvery { userRepository.getByEmail(email) } returns null
 
             assertFailsWith<InvalidCredentialsException> {
@@ -66,4 +69,3 @@ class LoginUserUseCaseImplGeneratedTest {
         }
     }
 }
-

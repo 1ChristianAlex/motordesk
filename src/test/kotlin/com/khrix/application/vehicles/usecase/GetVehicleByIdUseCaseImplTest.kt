@@ -1,6 +1,7 @@
 package com.khrix.application.vehicles.usecase
 
 import com.khrix.domain.vehicle.repository.VehiclesRepository
+import com.khrix.testutils.sampleVehicle
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -8,7 +9,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import testutils.sampleVehicle
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -18,6 +18,7 @@ import kotlin.test.assertFailsWith
 class GetVehicleByIdUseCaseImplTest {
     private val vehiclesRepository = mockk<VehiclesRepository>()
     private val impl = GetVehicleByIdUseCaseImpl(vehiclesRepository)
+
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
@@ -27,6 +28,7 @@ class GetVehicleByIdUseCaseImplTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
     @Test
     fun `internalExecute returns vehicle when found`() {
         runTest {
@@ -47,5 +49,3 @@ class GetVehicleByIdUseCaseImplTest {
         }
     }
 }
-
-

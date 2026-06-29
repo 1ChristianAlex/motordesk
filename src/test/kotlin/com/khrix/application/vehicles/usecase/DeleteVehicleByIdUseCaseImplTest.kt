@@ -2,6 +2,7 @@ package com.khrix.application.vehicles.usecase
 
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.vehicle.repository.VehiclesRepository
+import com.khrix.testutils.sampleVehicle
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -19,6 +20,7 @@ class DeleteVehicleByIdUseCaseImplTest {
     private val serviceOrderRepository = mockk<ServiceOrderRepository>()
     private val vehiclesRepository = mockk<VehiclesRepository>()
     private val impl = DeleteVehicleByIdUseCaseImpl(vehiclesRepository, serviceOrderRepository)
+
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
@@ -28,6 +30,7 @@ class DeleteVehicleByIdUseCaseImplTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
     @Test
     fun `internalExecute throws when vehicle not exists`() {
         runTest {
@@ -41,7 +44,7 @@ class DeleteVehicleByIdUseCaseImplTest {
     @Test
     fun `internalExecute deletes when exists`() {
         runTest {
-            val vehicle = testutils.sampleVehicle()
+            val vehicle = sampleVehicle()
             coEvery { serviceOrderRepository.getOrderByVehicle(vehicle.id) } returns listOf()
             coEvery { vehiclesRepository.read(vehicle.id) } returns vehicle
             coEvery { vehiclesRepository.delete(vehicle.id) } returns Unit
@@ -51,5 +54,3 @@ class DeleteVehicleByIdUseCaseImplTest {
         }
     }
 }
-
-

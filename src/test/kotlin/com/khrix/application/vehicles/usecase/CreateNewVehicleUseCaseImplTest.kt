@@ -1,6 +1,7 @@
 package com.khrix.application.vehicles.usecase
 
 import com.khrix.domain.vehicle.repository.VehiclesRepository
+import com.khrix.testutils.sampleVehicle
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -9,15 +10,16 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import testutils.sampleVehicle
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class CreateNewVehicleUseCaseImplTest {
     private val vehiclesRepository = mockk<VehiclesRepository>()
     private val impl = CreateNewVehicleUseCaseImpl(vehiclesRepository)
+
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
@@ -27,6 +29,7 @@ class CreateNewVehicleUseCaseImplTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
     @Test
     fun `internalExecute throws when existing vehicle found`() {
         runTest {
@@ -47,10 +50,8 @@ class CreateNewVehicleUseCaseImplTest {
 
             val res = impl.execute(vehicle)
             val created = res.getOrThrow()
-            kotlin.test.assertEquals(vehicle, created)
+            assertEquals(vehicle, created)
             coVerify { vehiclesRepository.createRead(vehicle) }
         }
     }
 }
-
-

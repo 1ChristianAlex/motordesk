@@ -3,6 +3,11 @@ package com.khrix.infrastructure.http.controllers.user.handlers
 import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.user.usecase.UpdateUserUseCase
+import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.Email
+import com.khrix.domain.valueobject.user.Name
+import com.khrix.domain.valueobject.user.Password
+import com.khrix.domain.valueobject.user.Phone
 import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
 import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
@@ -29,15 +34,15 @@ class UpdateSelfUserHandlerImpl(
         val user = getUserUseCase.execute(body.id).getOrThrow()
 
         val userUpdate =
-            user.updateFull(
-                addressId = body.addressId,
-                companyId = body.companyId,
-                firstName = body.firstName,
-                lastName = body.lastName,
-                email = body.email,
-                password = body.password,
-                phone = body.phone,
-                cpf = body.cpf,
+            user.copy(
+                addressId = body.addressId ?: user.addressId,
+                companyId = body.companyId ?: user.companyId,
+                firstName = Name(body.firstName ?: user.firstName.value),
+                lastName = Name(body.lastName ?: user.lastName.value),
+                email = Email(body.email ?: user.email.value),
+                password = Password.Raw(body.password ?: user.password.value),
+                phone = Phone(body.phone ?: user.phone.value),
+                cpf = CPF(body.cpf ?: user.cpf.value),
                 isActive = true,
             )
 

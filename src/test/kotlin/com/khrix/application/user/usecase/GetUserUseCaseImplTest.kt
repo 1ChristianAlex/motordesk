@@ -1,6 +1,8 @@
 package com.khrix.application.user.usecase
 
 import com.khrix.domain.user.repository.UserRepository
+import com.khrix.domain.user.usecase.UserNotFoundException
+import com.khrix.testutils.sampleUser
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -8,7 +10,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import testutils.sampleUser
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -18,6 +19,7 @@ import kotlin.test.assertFailsWith
 class GetUserUseCaseImplTest {
     private val userRepository = mockk<UserRepository>()
     private val impl = GetUserUseCaseImpl(userRepository)
+
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
@@ -27,6 +29,7 @@ class GetUserUseCaseImplTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
     @Test
     fun `internalExecute returns user when found`() {
         runTest {
@@ -43,9 +46,7 @@ class GetUserUseCaseImplTest {
         runTest {
             coEvery { userRepository.read(2) } returns null
             val res = impl.execute(2)
-            assertFailsWith<com.khrix.domain.user.usecase.UserNotFoundException> { res.getOrThrow() }
+            assertFailsWith<UserNotFoundException> { res.getOrThrow() }
         }
     }
 }
-
-

@@ -4,7 +4,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
 
-fun main(args: Array<String>) {
+fun main() {
     embeddedServer(
         factory = CIO,
         port = 8080,

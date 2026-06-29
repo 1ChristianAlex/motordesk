@@ -110,7 +110,7 @@ private fun JWTAuthenticationProvider.Config.clientJwtConfig(jwtConfig: JwtConfi
             .withIssuer(jwtConfig.issuer)
             .build(),
     )
-    challenge { defaultScheme, realm ->
+    challenge { _, _ ->
         val httpResult = HandlerException.toHttpResultError<Nothing>(HandlerException.UnauthenticatedOperation())
         call.response.status(httpResult.status)
         call.respond(httpResult)
@@ -134,7 +134,7 @@ private fun Application.logging() {
 
 private fun Application.httpHeaders() {
     install(CachingHeaders) {
-        options { call, outgoingContent ->
+        options { _, outgoingContent ->
             when (outgoingContent.contentType?.withoutParameters()) {
                 ContentType.Text.CSS -> CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 24 * 60 * 60))
                 else -> null
@@ -147,11 +147,10 @@ private fun Application.httpHeaders() {
         allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Patch)
         allowHeader(HttpHeaders.Authorization)
-        allowHeader("MyCustomHeader")
-        anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
+        anyHost()
     }
     install(Compression)
     install(DefaultHeaders) {
-        header("X-Engine", "Ktor") // will send this header with each response
+        header("X-Engine", "Ktor")
     }
 }

@@ -1,5 +1,6 @@
 package com.khrix.application.serviceorder.usecase
 
+import com.khrix.application.serviceorder.usecase.UpdateServiceOrderTaskUseCaseImpl
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderTaskCommand
@@ -14,10 +15,11 @@ class UpdateServiceOrderTaskUseCaseImplTest {
     private val useCase = UpdateServiceOrderTaskUseCaseImpl(repository)
 
     @Test
-    fun `updates task progress in repository`() = runTest {
-        val command = UpdateServiceOrderTaskCommand(TaskProgressStatus.IN_PROGRESS, 4, 7)
-        coJustRun { repository.updateServiceOrderTask(4, 7, TaskProgressStatus.IN_PROGRESS) }
-        useCase.execute(command).getOrThrow()
-        coVerify(exactly = 1) { repository.updateServiceOrderTask(4, 7, TaskProgressStatus.IN_PROGRESS) }
-    }
+    fun `updates task progress in repository`() =
+        runTest {
+            val command = UpdateServiceOrderTaskCommand(TaskProgressStatus.IN_PROGRESS, 4, 7)
+            coJustRun { repository.updateServiceOrderTask(4, 7, TaskProgressStatus.IN_PROGRESS) }
+            useCase.execute(command).getOrThrow()
+            coVerify(exactly = 1) { repository.updateServiceOrderTask(4, 7, TaskProgressStatus.IN_PROGRESS) }
+        }
 }
