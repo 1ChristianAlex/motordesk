@@ -1,0 +1,14 @@
+$kind: http-request
+description: Get any service order from any client
+url: "{{baseUrl}}/service-order/manager/:code"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  code: string
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/Manager - Get a service order item.resources/examples
+order: 2000

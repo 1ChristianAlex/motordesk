@@ -1,0 +1,28 @@
+$kind: http-request
+description: Create a new vehicle to be used on a service order
+url: "{{baseUrl}}/vehicles/create"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "plate": "string",
+      "brand": "string",
+      "model": "string",
+      "color": "string",
+      "year": 8062,
+      "chassis": "string",
+      "fuelType": "GASOLINE",
+      "ownerId": 9236,
+      "id": 2579,
+      "mileage": 8700
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/Manager - Create a new vehicle.resources/examples
+order: 1000

@@ -10,7 +10,8 @@ import com.khrix.domain.core.getCurrentUtcDateTime
 
 class CreateNewCompanyUseCaseImpl(
     private val companyRepository: CompanyRepository,
-) : CreateNewCompanyUseCase, BaseUseCaseImpl<CreateNewCompanyUseCaseCommand, Company>() {
+) : BaseUseCaseImpl<CreateNewCompanyUseCaseCommand, Company>(),
+    CreateNewCompanyUseCase {
     override suspend fun internalExecute(command: CreateNewCompanyUseCaseCommand): Company {
         val companyExists = companyRepository.findByCnpj(command.cnpj) != null
 
@@ -19,20 +20,20 @@ class CreateNewCompanyUseCaseImpl(
         }
 
         val now = getCurrentUtcDateTime()
-        val company = companyRepository.createRead(
-            Company(
-                id = 0,
-                name = command.name,
-                cnpj = command.cnpj,
-                createdAt = now,
-                updatedAt = now,
+        val company =
+            companyRepository.createRead(
+                Company(
+                    id = 0,
+                    name = command.name,
+                    cnpj = command.cnpj,
+                    createdAt = now,
+                    updatedAt = now,
+                    userId = command.userId,
+                ),
             )
-        )
 
         return company
     }
 
-    override suspend fun useCaseDescription(): String {
-        return "Create new company"
-    }
+    override suspend fun useCaseDescription(): String = "Create new company"
 }

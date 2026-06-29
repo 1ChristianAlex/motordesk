@@ -6,8 +6,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class NameTest {
-    @Test fun `accepts a valid name`() = assertEquals("Chris", Name("Chris").value)
-    @Test fun `rejects a one character name`() {
+    @Test
+    fun `accepts a valid name`() = assertEquals("Chris", Name("Chris").value)
+
+    @Test
+    fun `rejects a one character name`() {
         assertFailsWith<ValidationErrorResult> { Name("C") }
     }
 }

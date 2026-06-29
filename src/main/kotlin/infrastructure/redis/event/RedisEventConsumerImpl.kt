@@ -15,16 +15,15 @@ import java.time.Duration
 class RedisEventConsumerImpl(
     private val redis: RedisConnection,
 ) : EventConsumer {
-
     private suspend fun createConsumerGroup() {
         runCatching {
             redis.commands.xgroupCreate(
                 XReadArgs.StreamOffset.from(
                     EventKeys.EVENT_NAME,
-                    "0"
+                    "0",
                 ),
                 EventKeys.EVENT_GROUP,
-                XGroupCreateArgs.Builder.mkstream()
+                XGroupCreateArgs.Builder.mkstream(),
             )
         }.getOrNull()
     }
@@ -36,32 +35,31 @@ class RedisEventConsumerImpl(
                 redis.commands.xreadgroup(
                     Consumer.from(
                         EventKeys.EVENT_GROUP,
-                        "worker-1"
+                        "worker-1",
                     ),
                     XReadArgs.Builder
                         .block(Duration.ofSeconds(5)),
                     XReadArgs.StreamOffset.lastConsumed(
                         EventKeys.EVENT_NAME,
-                    )
+                    ),
                 )
 
             messages.collect { stream ->
                 stream.body.forEach { message ->
                     val event =
                         Json.decodeFromString<EmailQueueItem>(
-                            message.value
+                            message.value,
                         )
 
                     println(
-                        "Enviar e-mail para ${event.recipient}"
-                    )
-
-                    redis.commands.xack(
-                        EventKeys.EVENT_NAME,
-                        EventKeys.EVENT_GROUP,
-                        message.key
+                        "Enviar e-mail para ${event.recipient}",
                     )
                 }
+                redis.commands.xack(
+                    EventKeys.EVENT_NAME,
+                    EventKeys.EVENT_GROUP,
+                    stream.id,
+                )
             }
         }
     }

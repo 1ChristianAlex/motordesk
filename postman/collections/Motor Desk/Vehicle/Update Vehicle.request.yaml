@@ -6,7 +6,7 @@ body:
   type: json
   content: "{\r
 
-    \  \"color\": \"Preto\",\r
+    \  \"color\": \"Branco\",\r
 
     \  \"mileage\": 45800,\r
 
@@ -16,5 +16,5 @@ body:
 auth:
   type: bearer
   credentials:
-    token: "{{token}}"
+    token: "{{managerToken}}"
 order: 2000

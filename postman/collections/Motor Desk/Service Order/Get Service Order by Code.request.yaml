@@ -1,6 +1,6 @@
 $kind: http-request
 name: Get Service Order by Code
-url: http://127.0.0.1:8080/service-order/manager/SO-001
+url: http://127.0.0.1:8080/service-order/manager/#124HSoda
 method: GET
 body:
   type: json

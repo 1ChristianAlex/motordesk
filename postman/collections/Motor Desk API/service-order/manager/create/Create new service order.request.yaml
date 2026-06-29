@@ -1,0 +1,31 @@
+$kind: http-request
+description: Only manager - Create new service order to a given client
+url: "{{baseUrl}}/service-order/manager/create"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "clientId": 3635,
+      "operatorId": 4844,
+      "vehicleId": 411,
+      "complaint": "string",
+      "tasksIds": [
+        29,
+        8006
+      ],
+      "diagnosis": null,
+      "inventoryItemsIds": [
+        6340,
+        9892
+      ]
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/Create new service order.resources/examples
+order: 1000

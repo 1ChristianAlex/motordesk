@@ -21,9 +21,8 @@ class CreateNewUserUseCaseImpl(
     private val addressRepository: AddressRepository,
     private val searchCompanyByCnpjUseCase: SearchCompanyByCnpjUseCase,
     private val createNewCompanyUseCase: CreateNewCompanyUseCase,
-) : CreateNewUserUseCase,
-    BaseUseCaseImpl<CreateNewUserUseCaseCommand, User>() {
-
+) : BaseUseCaseImpl<CreateNewUserUseCaseCommand, User>(),
+    CreateNewUserUseCase {
     private suspend fun getOrCreateCompany(company: Company): Company {
         val companyExists =
             searchCompanyByCnpjUseCase.execute(SearchCompanyByCnpjUseCaseCommand(company.cnpj)).getOrNull()
@@ -33,35 +32,39 @@ class CreateNewUserUseCaseImpl(
         }
 
         val newCompany =
-            createNewCompanyUseCase.execute(
-                CreateNewCompanyUseCaseCommand(cnpj = company.cnpj, name = company.name)
-            ).getOrThrow()
+            createNewCompanyUseCase
+                .execute(
+                    CreateNewCompanyUseCaseCommand(
+                        cnpj = company.cnpj,
+                        name = company.name,
+                        userId = company.userId,
+                    ),
+                ).getOrThrow()
 
         return newCompany
     }
 
-    override suspend fun internalExecute(command: CreateNewUserUseCaseCommand): User {
-        return coroutineScope {
+    override suspend fun internalExecute(command: CreateNewUserUseCaseCommand): User =
+        coroutineScope {
             val hashedPass = async { passwordHasher.hash(command.user.password.value) }
             val addressId = async { addressRepository.create(command.address) }
-            val userCompany = async {
-                if (command.company != null) {
-                    getOrCreateCompany(command.company)
-                } else null
-            }
 
-            val userWithHashedPassword = command.user.updatePassword(hashedPass.await())
-                .updateAddress(addressId.await()).updateCompany(userCompany.await()?.id)
+            val userWithHashedPassword =
+                command.user
+                    .updatePassword(hashedPass.await())
+                    .updateAddress(addressId.await())
 
             val userId = userRepository.create(userWithHashedPassword)
 
             val user = userRepository.read(userId) ?: throw NoSuchElementException("User not found after creation")
 
-            user
+            if (command.company != null) {
+                val company = getOrCreateCompany(command.company.copy(userId = userId))
+                user.updateCompany(company.id)
+            } else {
+                user
+            }
         }
-    }
 
-    override suspend fun useCaseDescription(): String {
-        return "Hash password and create new user"
-    }
+    override suspend fun useCaseDescription(): String = "Hash password and create new user"
 }

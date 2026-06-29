@@ -1,0 +1,12 @@
+$kind: http-request
+description: Get self client info
+url: "{{baseUrl}}/self/update"
+method: PUT
+headers:
+  Accept: application/json
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/Client - Get self client info.resources/examples
+order: 1000

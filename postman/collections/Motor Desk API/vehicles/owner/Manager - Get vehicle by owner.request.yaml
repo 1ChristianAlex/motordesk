@@ -1,0 +1,12 @@
+$kind: http-request
+description: Get vehicle given a client data
+url: "{{baseUrl}}/vehicles/owner"
+method: GET
+headers:
+  Accept: application/json
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/Manager - Get vehicle by owner.resources/examples
+order: 1000

@@ -11,5 +11,5 @@ data class EmailQueueItem(
     val metadata: ServiceOrderEmailMetadata,
     val status: EmailStatus,
     val attempts: Int,
-    val errorMessage: String?
+    val errorMessage: String?,
 )

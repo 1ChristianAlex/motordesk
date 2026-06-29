@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/vehicles/update"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "id": 5880,
+      "color": "string",
+      "mileage": 5599
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/Manager - Update vehicle.resources/examples
+order: 1000

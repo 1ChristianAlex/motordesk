@@ -14,25 +14,26 @@ import org.jetbrains.exposed.v1.jdbc.update
 
 class EmailQueueExposedQueueRepositoryImpl(
     database: Database,
-) : BaseExposedRepository<EmailQueueEntity, EmailQueueItem>(database), EmailQueueRepository {
-    override suspend fun createRead(data: EmailQueueItem): EmailQueueItem {
-        return suspendedQuery {
-            EmailQueueEntity.new {
-                recipient = data.recipient
-                subject = data.subject
-                metadata = data.metadata
-                status = data.status
-                attempts = data.attempts
-                errorMessage = data.errorMessage
-            }.toModel()
+) : BaseExposedRepository<EmailQueueEntity, EmailQueueItem>(database),
+    EmailQueueRepository {
+    override suspend fun createRead(data: EmailQueueItem): EmailQueueItem =
+        suspendedQuery {
+            EmailQueueEntity
+                .new {
+                    recipient = data.recipient
+                    subject = data.subject
+                    metadata = data.metadata
+                    status = data.status
+                    attempts = data.attempts
+                    errorMessage = data.errorMessage
+                    code = data.orderCode
+                }.toModel()
         }
-    }
 
-    override suspend fun read(id: Int): EmailQueueItem? {
-        return suspendedQuery {
+    override suspend fun read(id: Int): EmailQueueItem? =
+        suspendedQuery {
             EmailQueueEntity.findById(id)?.toModel()
         }
-    }
 
     override suspend fun incrementAttempt(id: Int) {
         suspendedQuery {
@@ -42,7 +43,10 @@ class EmailQueueExposedQueueRepositoryImpl(
         }
     }
 
-    override suspend fun setErrorMessage(id: Int, errorMessage: String) {
+    override suspend fun setErrorMessage(
+        id: Int,
+        errorMessage: String,
+    ) {
         suspendedQuery {
             EmailQueueEntity.findByIdAndUpdate(id) {
                 it.errorMessage = errorMessage
@@ -50,7 +54,10 @@ class EmailQueueExposedQueueRepositoryImpl(
         }
     }
 
-    override suspend fun changeStatus(id: Int, status: EmailStatus) {
+    override suspend fun changeStatus(
+        id: Int,
+        status: EmailStatus,
+    ) {
         suspendedQuery {
             EmailQueueEntity.findByIdAndUpdate(id) {
                 it.status = status

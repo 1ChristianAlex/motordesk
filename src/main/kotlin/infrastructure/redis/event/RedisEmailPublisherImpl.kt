@@ -8,13 +8,14 @@ import io.lettuce.core.ExperimentalLettuceCoroutinesApi
 import kotlinx.serialization.json.Json
 
 class RedisEmailPublisherImpl(
-    private val redis: RedisConnection
+    private val redis: RedisConnection,
 ) : EventPublisher {
     @OptIn(ExperimentalLettuceCoroutinesApi::class)
     override suspend fun publish(event: EmailQueueItem) {
         redis.commands.xadd(
             EventKeys.EVENT_NAME,
-            Json.encodeToString(event)
+            "payload",
+            Json.encodeToString(event),
         )
     }
 }

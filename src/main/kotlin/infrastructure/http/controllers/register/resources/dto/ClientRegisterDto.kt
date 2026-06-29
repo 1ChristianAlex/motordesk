@@ -7,6 +7,7 @@ import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.model.User
 import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.CompanyName
 import com.khrix.domain.valueobject.user.Email
 import com.khrix.domain.valueobject.user.Name
 import com.khrix.domain.valueobject.user.Password
@@ -30,9 +31,10 @@ data class CompanyDto(
         return Company(
             id = 0,
             cnpj = CNPJ(this.cnpj),
-            name = Name(this.name),
+            name = CompanyName(this.name),
             createdAt = now,
-            updatedAt = now
+            updatedAt = now,
+            userId = 0,
         )
     }
 }
@@ -61,7 +63,7 @@ data class CreateUserDto(
             createdAt = now,
             updatedAt = now,
             companyId = null,
-            role = Role.CLIENT
+            role = Role.CLIENT,
         )
     }
 }
@@ -90,8 +92,7 @@ data class AddressDto(
             country = this.country,
             zipCode = this.zipCode,
             createdAt = now,
-            updatedAt = now
+            updatedAt = now,
         )
     }
 }
-
