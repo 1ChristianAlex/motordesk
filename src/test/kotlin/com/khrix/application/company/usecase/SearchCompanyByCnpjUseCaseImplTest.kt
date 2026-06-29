@@ -4,7 +4,7 @@ import com.khrix.domain.company.model.Company
 import com.khrix.domain.company.repository.CompanyRepository
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCaseCommand
 import com.khrix.domain.valueobject.company.CNPJ
-import com.khrix.domain.valueobject.user.Name
+import com.khrix.domain.valueobject.user.CompanyName
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -45,10 +45,11 @@ class SearchCompanyByCnpjUseCaseImplTest {
             val company =
                 Company(
                     id = 1,
-                    name = Name("Company"),
+                    name = CompanyName("Company"),
                     cnpj = cnpj,
                     createdAt = LocalDateTime(2020, 1, 1, 0, 0),
                     updatedAt = LocalDateTime(2020, 1, 1, 0, 0),
+                    userId = 0,
                 )
             coEvery { companyRepository.findByCnpj(cnpj) } returns company
 

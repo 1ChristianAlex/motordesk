@@ -18,8 +18,8 @@ import com.khrix.domain.user.usecase.UserNotFoundException
 import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCaseCommand
 import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.CompanyName
 import com.khrix.domain.valueobject.user.Email
-import com.khrix.domain.valueobject.user.Name
 import com.khrix.testutils.sampleAddress
 import com.khrix.testutils.sampleCompany
 import com.khrix.testutils.sampleUser
@@ -30,7 +30,7 @@ import kotlin.test.assertIs
 class CreateNewCompanyUseCaseCommandTest {
     @Test
     fun `retains company input`() {
-        val command = CreateNewCompanyUseCaseCommand(Name("Company"), CNPJ("12345678000195"))
+        val command = CreateNewCompanyUseCaseCommand(CompanyName("Company"), CNPJ("12345678000195"), userId = 0)
         assertEquals("Company", command.name.value)
     }
 }

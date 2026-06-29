@@ -22,7 +22,7 @@ sonar {
     properties {
         property("sonar.projectKey", "Motor-Desk")
         property("sonar.host.url", "http://localhost:9000/")
-        property("sonar.login", "sqp_943eefb8f3466db57709d156f335f3776d96e8e1")
+        property("sonar.login", "sqp_95237eb6af760c30254b3ebd934a2e6fa90254a6")
         property(
             "sonar.coverage.jacoco.xmlReportPaths",
             "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml",

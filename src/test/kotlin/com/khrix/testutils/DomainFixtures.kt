@@ -12,6 +12,7 @@ import com.khrix.domain.user.model.User
 import com.khrix.domain.valueobject.Price
 import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.domain.valueobject.user.CPF
+import com.khrix.domain.valueobject.user.CompanyName
 import com.khrix.domain.valueobject.user.Email
 import com.khrix.domain.valueobject.user.Name
 import com.khrix.domain.valueobject.user.Password
@@ -45,10 +46,11 @@ fun sampleAddress(id: Int = 1): Address =
 fun sampleCompany(id: Int = 1): Company =
     Company(
         id = id,
-        name = Name("Company"),
+        name = CompanyName("Company"),
         cnpj = CNPJ("12345678000195"),
         createdAt = now(),
         updatedAt = now(),
+        userId = 0,
     )
 
 fun sampleUser(
