@@ -27,8 +27,10 @@ sonar {
             "sonar.coverage.jacoco.xmlReportPaths",
             "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml",
         )
+        property("sonar.exclusions", "**/infrastructure/**, **/*Dto.kt, **/config/*")
     }
 }
+
 allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
         compilerOptions {
