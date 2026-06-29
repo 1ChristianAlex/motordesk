@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (Technical Debt)
+Opened (Technical Debt)
 
 ---
 
