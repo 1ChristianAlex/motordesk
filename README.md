@@ -100,7 +100,7 @@ Business diagrams are available under `docs/storytelling/`:
 
 ### Prerequisites
 
-- JDK 25
+- JDK 21
 - Docker
 - Docker Compose
 
@@ -112,6 +112,12 @@ docker compose -f docker-compose-dev.yml up -d
 
 ``` bash
 ./gradlew runDev
+```
+
+#### Code analyses (only works with docker-compose-dev.yml)
+
+``` bash
+./gradlew sonar
 ```
 
 ### Run a product-like build using docker

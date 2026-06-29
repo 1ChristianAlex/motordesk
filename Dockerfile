@@ -3,7 +3,7 @@
 ###############################
 # Build Stage
 ###############################
-FROM gradle:9.6.0-jdk25 AS builder
+FROM gradle:9.6.0-jdk21 AS builder
 
 WORKDIR /home/gradle/project
 
@@ -27,7 +27,7 @@ RUN ./gradlew installDist --no-daemon
 ###############################
 # Runtime Stage
 ###############################
-FROM eclipse-temurin:25-jre
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 

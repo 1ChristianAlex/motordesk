@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.sonarqube)
 }
 
 group = "com.khrix"
@@ -12,9 +13,16 @@ application {
 }
 
 kotlin {
-    jvmToolchain(25)
+    jvmToolchain(21)
 }
 ktor {
+}
+sonar {
+    properties {
+        property("sonar.projectKey", "Motor-Desk")
+        property("sonar.host.url", "http://localhost:9000/")
+        property("sonar.login", "sqp_943eefb8f3466db57709d156f335f3776d96e8e1")
+    }
 }
 allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {

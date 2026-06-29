@@ -64,7 +64,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
 #volumes:
 #  postgres_data:
 #  mongodb_data:
