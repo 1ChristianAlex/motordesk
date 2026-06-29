@@ -39,6 +39,10 @@ notifications.
 - [ADR-002 - MongoDB
   History](docs/ADR/ADR-002-MongoDB-Service-Order-History.md)
 
+## Technical-Debt
+
+- [TD-001-Serializable-in-Domain.md](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
+
 ## Project Structure
 
 ``` text
@@ -49,6 +53,7 @@ src/main/kotlin
 
 docs
 ├── ADR
+├── Technical-Debt
 ├── Ubiquitous Language.md
 ├── storytelling
 └── index.html
