@@ -15,7 +15,6 @@ kotlin {
     jvmToolchain(25)
 }
 ktor {
-    development = (System.getenv("IS_DEV_MODE") ?: "true").toBoolean()
 }
 allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
@@ -65,4 +64,16 @@ dependencies {
     testImplementation(ktorLibs.server.testHost)
     testImplementation(libs.mockk)
     testImplementation("io.ktor:ktor-server-test-host-jvm:3.4.0")
+}
+
+tasks.register<JavaExec>("runDev") {
+    group = "application"
+    description = "Runs the application with development configuration."
+    val runTask = tasks.named<JavaExec>("run").get()
+
+    classpath = runTask.classpath
+    mainClass.set(runTask.mainClass)
+    args = runTask.args ?: emptyList()
+
+    jvmArgs = (runTask.jvmArgs ?: emptyList()) + "-Dio.ktor.development=true"
 }

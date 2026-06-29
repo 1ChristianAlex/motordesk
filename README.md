@@ -111,7 +111,7 @@ docker compose -f docker-compose-dev.yml up -d
 ```
 
 ``` bash
-./gradlew run
+./gradlew runDev
 ```
 
 ### Run a product-like build using docker
@@ -138,7 +138,7 @@ Administrator
 
 Command Description
   ------------------------- ----------------------
-`./gradlew run`           Run application
+`./gradlew runDev`        Run application
 `./gradlew test`          Execute tests
 `./gradlew build`         Full build
 `./gradlew buildFatJar`   Build executable JAR

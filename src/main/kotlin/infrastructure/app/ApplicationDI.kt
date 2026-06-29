@@ -10,6 +10,14 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.plugins.di.dependencies
 
+private fun getLazyInfraCredentials(isDevelopment: Boolean): InfraCredentials {
+    val result by lazy {
+        if (isDevelopment) InfraCredentialsDevImpl() else InfraCredentialsEnvImpl()
+    }
+
+    return result
+}
+
 fun Application.appInfrastructure() {
     val isDevelopment = developmentMode
 
@@ -24,7 +32,7 @@ fun Application.appInfrastructure() {
             scope
         }
         provide<InfraCredentials> {
-            if (isDevelopment) InfraCredentialsDevImpl() else InfraCredentialsEnvImpl()
+            getLazyInfraCredentials(isDevelopment)
         }
     }
 
