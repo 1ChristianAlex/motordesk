@@ -77,15 +77,11 @@ API --> Redis
 API --> Swagger["Swagger UI"]
 ```
 
-### Asynchronous Email Flow
+### Service Order Flow
 
-``` mermaid
-sequenceDiagram
-API->>PostgreSQL: Persist EmailQueue
-API->>Redis: Publish Event
-Worker->>Redis: Consume Event
-Worker->>Worker: Send Email
-```
+![img_1.png](docs/service-order-flow.png)
+
+More about flows can be found on `docs/storytelling/`**
 
 ## Business Flows
 
