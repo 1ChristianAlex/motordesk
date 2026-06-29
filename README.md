@@ -18,20 +18,6 @@ and **Ktor 3**. Motor Desk manages Service Orders, customers, vehicles,
 tasks, inventory items, budget approvals and asynchronous email
 notifications.
 
-## Table of Contents
-
-- Technologies
-- Ubiquitous Language
-- Architecture
-- Business Flows
-- API Documentation
-- Swagger UI Preview
-- Running the Project
-- Development
-- Useful Gradle Tasks
-- Project Structure
-- Additional Documentation
-
 ## Technologies
 
 - Kotlin
@@ -41,11 +27,35 @@ notifications.
 - Redis Streams (asynchronous email queue)
 - JWT Authentication
 - Docker Compose
+- Sonar
 - OpenAPI + Swagger UI
 
 ## Ubiquitous Language
 
 - [Ubiquitous Language](docs/Ubiquitous%20Language.md)
+
+## Architecture Decision Records
+
+- [ADR-001 - Redis Streams](docs/ADR/ADR-001-Redis-Streams.md)
+- [ADR-002 - MongoDB
+  History](docs/ADR/ADR-002-MongoDB-Service-Order-History.md)
+
+## Project Structure
+
+``` text
+src/main/kotlin
+├── domain
+├── application
+└── infrastructure
+
+docs
+├── ADR
+├── Ubiquitous Language.md
+├── storytelling
+└── index.html
+
+postman
+```
 
 ## Architecture
 
@@ -96,6 +106,12 @@ Business diagrams are available under `docs/storytelling/`:
 
 ![Swagger UI](docs/swaggerUI.png)
 
+### Sonar UI Preview
+
+![Sonar UI](docs/sonar-preview.png)
+
+Cove coverage is only on top of domain and application modules** 
+
 ## Running the Project
 
 ### Prerequisites
@@ -126,6 +142,10 @@ docker compose -f docker-compose-dev.yml up -d
 docker compose -f docker-compose.yml up -d
 ```
 
+### Postman Collection
+
+Postman collection can be loaded up from this repo
+
 ### Seed users
 
 Role Login Password
@@ -143,37 +163,12 @@ Administrator
 ## Useful Gradle Tasks
 
 Command Description
-  ------------------------- ----------------------
+  ----------------------- ----------------------
 `./gradlew runDev`        Run application
 `./gradlew test`          Execute tests
+`./gradlew sonar`         Execute tests, coverage and upload to local sonar
 `./gradlew build`         Full build
 `./gradlew buildFatJar`   Build executable JAR
-
-## Project Structure
-
-``` text
-src/main/kotlin
-├── domain
-├── application
-└── infrastructure
-
-docs
-├── ADR
-├── Ubiquitous Language.md
-├── storytelling
-├── swaggerUI.png
-└── index.html
-
-postman
-```
-
-## Additional Documentation
-
-### Architecture Decision Records
-
-- [ADR-001 - Redis Streams](docs/ADR/ADR-001-Redis-Streams.md)
-- [ADR-002 - MongoDB
-  History](docs/ADR/ADR-002-MongoDB-Service-Order-History.md)
 
 ### Other Resources
 
