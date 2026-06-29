@@ -1,4 +1,4 @@
-# ADR-001 - Using Redis Streams for Asynchronous Notification Processing
+# ADR-002 - Using Redis Streams for Asynchronous Notification Processing
 
 ## Status
 
