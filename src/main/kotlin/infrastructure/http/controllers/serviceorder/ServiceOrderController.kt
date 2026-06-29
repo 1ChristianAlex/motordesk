@@ -16,18 +16,22 @@ import com.khrix.infrastructure.security.UserClaims
 import io.ktor.server.resources.delete
 import io.ktor.server.resources.get
 import io.ktor.server.resources.post
-import io.ktor.server.routing.*
-import io.ktor.server.routing.openapi.*
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.RoutingCall
+import io.ktor.server.routing.openapi.describe
+import io.ktor.server.routing.put
 
 class ServiceOrderController(
     private val createNewServiceOrderHandler: CreateNewServiceOrderHandler,
     private val updateServiceOrderHandler: UpdateServiceOrderHandler,
     private val getClientServicesOrderHandler: GetClientServicesOrderHandler,
     private val getClientServiceOrderItemHandler: GetClientServiceOrderItemHandler,
-    private val getServiceOrderItemHandler: GetServiceOrderItemHandler
+    private val getServiceOrderItemHandler: GetServiceOrderItemHandler,
 ) : AppController() {
-
-    private suspend fun updateHandler(call: RoutingCall, body: UpdateServiceOrderInputDto) {
+    private suspend fun updateHandler(
+        call: RoutingCall,
+        body: UpdateServiceOrderInputDto,
+    ) {
         val claims = UserClaims.getClaims(call)
         body.apply {
             setOperatorRole(claims.role)
@@ -49,9 +53,11 @@ class ServiceOrderController(
                 delete<ServiceOrderResource.Manager.Delete> {
                     updateHandler(
                         call = call,
-                        body = UpdateServiceOrderInputDto(
-                            code = it.code, status = ServiceOrderStatus.CANCELLED
-                        )
+                        body =
+                            UpdateServiceOrderInputDto(
+                                code = it.code,
+                                status = ServiceOrderStatus.CANCELLED,
+                            ),
                     )
                 }.describe(updateServiceOrderHandler::description)
             }
@@ -60,7 +66,7 @@ class ServiceOrderController(
                     val body = getBody<UpdateServiceOrderInputDto>()
                     updateHandler(
                         call = call,
-                        body = body
+                        body = body,
                     )
                 }.describe(updateServiceOrderHandler::description)
             }
@@ -73,8 +79,8 @@ class ServiceOrderController(
                     val claims = UserClaims.getClaims(call)
                     call.send(
                         getClientServiceOrderItemHandler.handler(
-                            ClientServiceOrderItemInputDto(claims.userId, it.code)
-                        )
+                            ClientServiceOrderItemInputDto(claims.userId, it.code),
+                        ),
                     )
                 }.describe(getClientServiceOrderItemHandler::description)
             }

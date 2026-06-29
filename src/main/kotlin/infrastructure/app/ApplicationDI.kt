@@ -6,8 +6,9 @@ import com.khrix.infrastructure.mongodb.appMongoDb
 import com.khrix.infrastructure.redis.redisLettuceDi
 import com.khrix.infrastructure.security.securityDI
 import com.khrix.infrastructure.sqids.sqIdsDI
-import io.ktor.server.application.*
-import io.ktor.server.plugins.di.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationStopping
+import io.ktor.server.plugins.di.dependencies
 
 fun Application.appInfrastructure() {
     val isDevelopment = developmentMode
@@ -28,7 +29,7 @@ fun Application.appInfrastructure() {
     }
 
     monitor.subscribe(
-        ApplicationStopping
+        ApplicationStopping,
     ) {
         scope.shutdown()
     }
@@ -38,5 +39,5 @@ fun Application.appInfrastructure() {
     appMongoDb(dependencies, monitor)
     redisLettuceDi(dependencies, monitor)
     securityDI(dependencies)
-    httpDI(dependencies, monitor)
+    httpDI(dependencies)
 }

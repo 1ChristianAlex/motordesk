@@ -9,7 +9,7 @@ import com.khrix.domain.email.repository.EmailQueueRepository
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.user.address.repository.AddressRepository
-import io.ktor.server.plugins.di.annotations.*
+import io.ktor.server.plugins.di.annotations.Named
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -17,34 +17,35 @@ class CreateEmailQueueUseCaseImpl(
     private val emailQueueRepository: EmailQueueRepository,
     private val addressRepository: AddressRepository,
     @Named("applicationScope") private val scope: CoroutineScope,
-    private val eventPublisher: EventPublisher
-) : CreateEmailQueueUseCase, BaseUseCaseImpl<ServiceOrder, Unit>() {
+    private val eventPublisher: EventPublisher,
+) : BaseUseCaseImpl<ServiceOrder, Unit>(),
+    CreateEmailQueueUseCase {
     override suspend fun internalExecute(command: ServiceOrder) {
         scope.launch {
             val clientAddress =
                 addressRepository.read(command.client.addressId) ?: throw NoSuchElementException("Address is null")
 
-            val result = emailQueueRepository.createRead(
-                EmailQueueItem(
-                    id = 0,
-                    recipient = command.client.email.value,
-                    subject = "Service Order Created",
-                    metadata = ServiceOrderEmailMetadata(
-                        serviceOrder = command,
-                        clientAddress = clientAddress
+            val result =
+                emailQueueRepository.createRead(
+                    EmailQueueItem(
+                        id = 0,
+                        recipient = command.client.email.value,
+                        subject = "Service Order Created",
+                        metadata =
+                            ServiceOrderEmailMetadata(
+                                serviceOrder = command,
+                                clientAddress = clientAddress,
+                            ),
+                        status = EmailStatus.PENDING,
+                        attempts = 0,
+                        errorMessage = null,
+                        orderCode = command.code,
                     ),
-                    status = EmailStatus.PENDING,
-                    attempts = 0,
-                    errorMessage = null,
-                    orderCode = command.code
                 )
-            )
 
             eventPublisher.publish(result)
         }
     }
 
-    override suspend fun useCaseDescription(): String {
-        return "Create an email queue item for a service order"
-    }
+    override suspend fun useCaseDescription(): String = "Create an email queue item for a service order"
 }

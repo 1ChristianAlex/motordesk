@@ -19,7 +19,8 @@ import com.khrix.infrastructure.exposed.serviceorder.repository.ServiceOrderExpo
 import com.khrix.infrastructure.exposed.serviceorder.repository.TaskExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.user.repository.UserExposedRepositoryImpl
 import com.khrix.infrastructure.exposed.vehicles.repository.VehiclesExposedRepositoryImpl
-import io.ktor.server.plugins.di.*
+import io.ktor.server.plugins.di.DependencyRegistry
+import io.ktor.server.plugins.di.resolve
 import org.jetbrains.exposed.v1.jdbc.Database
 
 fun appDatabase(dependencies: DependencyRegistry) {

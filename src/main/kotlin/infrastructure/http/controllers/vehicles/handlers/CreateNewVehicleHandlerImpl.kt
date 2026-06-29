@@ -6,12 +6,14 @@ import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleInputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.mappers.toOutputDto
-import io.ktor.http.*
-import io.ktor.openapi.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.openapi.Operation
+import io.ktor.openapi.jsonSchema
 
 class CreateNewVehicleHandlerImpl(
-    private val createNewVehicleUseCase: CreateNewVehicleUseCase
-) : CreateNewVehicleHandler, BaseHTTPHandler<VehicleInputDto, VehicleOutputDto>() {
+    private val createNewVehicleUseCase: CreateNewVehicleUseCase,
+) : BaseHTTPHandler<VehicleInputDto, VehicleOutputDto>(),
+    CreateNewVehicleHandler {
     override suspend fun handle(body: VehicleInputDto): HttpResult<VehicleOutputDto> {
         val vehicleData = body.toModel()
 
@@ -19,9 +21,7 @@ class CreateNewVehicleHandlerImpl(
         return HttpResult(newVehicle.toOutputDto(), HttpStatusCode.Accepted)
     }
 
-    override fun description(
-        configure: Operation.Builder,
-    ) {
+    override fun description(configure: Operation.Builder) {
         configure.summary = "Manager - Create a new vehicle"
         configure.description = "Create a new vehicle to be used on a service order"
 

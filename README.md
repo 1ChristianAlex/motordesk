@@ -85,7 +85,7 @@ Business diagrams are available under `docs/storytelling/`:
 - [Login / Registration](docs/storytelling/Login.drawio)
 - [Service Order](docs/storytelling/Service%20Order.drawio)
 - [Vehicle Registration](docs/storytelling/Vehicle%20registration.drawio)
-- [Forgot Password (planned)](docs/storytelling/Forgot Password.drawio)
+- [Forgot Password (planned)](docs/storytelling/Forgot%20Password.drawio)
 
 ## API Documentation
 

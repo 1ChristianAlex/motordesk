@@ -5,21 +5,21 @@ import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
 import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.mappers.toOutputDto
-import io.ktor.http.*
-import io.ktor.openapi.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.openapi.Operation
+import io.ktor.openapi.jsonSchema
 
 class GetVehicleByOwnerHandlerImpl(
-    private val getVehicleByOwnerIdUseCase: GetVehicleByOwnerIdUseCase
-) : GetVehicleByOwnerHandler, BaseHTTPHandler<Int, List<VehicleOutputDto>>() {
+    private val getVehicleByOwnerIdUseCase: GetVehicleByOwnerIdUseCase,
+) : BaseHTTPHandler<Int, List<VehicleOutputDto>>(),
+    GetVehicleByOwnerHandler {
     override suspend fun handle(body: Int): HttpResult<List<VehicleOutputDto>> {
         val vehicles = getVehicleByOwnerIdUseCase.execute(body).getOrThrow()
 
         return HttpResult(vehicles.map { it.toOutputDto() }, HttpStatusCode.Accepted)
     }
 
-    override fun description(
-        configure: Operation.Builder,
-    ) {
+    override fun description(configure: Operation.Builder) {
         configure.summary = "Manager - Get vehicle by owner"
         configure.description = "Get vehicle given a client data"
 

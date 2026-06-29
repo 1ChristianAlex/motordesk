@@ -2,7 +2,7 @@ package com.khrix.infrastructure.security
 
 import com.auth0.jwt.algorithms.Algorithm
 import com.khrix.infrastructure.app.loadProperties
-import java.util.*
+import java.util.Properties
 
 class JwtConfig {
     private val properties: Properties by lazy {

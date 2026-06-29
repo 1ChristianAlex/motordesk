@@ -8,15 +8,15 @@ import com.khrix.infrastructure.http.controllers.user.handlers.UpdateSelfUserHan
 import com.khrix.infrastructure.http.controllers.user.resources.UserResource
 import com.khrix.infrastructure.http.controllers.user.resources.dto.UserInputDto
 import com.khrix.infrastructure.security.UserClaims
-import io.ktor.server.resources.*
+import io.ktor.server.resources.get
 import io.ktor.server.resources.put
-import io.ktor.server.routing.*
-import io.ktor.server.routing.openapi.*
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.openapi.describe
 import kotlinx.serialization.ExperimentalSerializationApi
 
 class UserController(
     private val updateSelfUserHandler: UpdateSelfUserHandler,
-    private val getSelfUserHandler: GetSelfUserHandler
+    private val getSelfUserHandler: GetSelfUserHandler,
 ) : AppController() {
     @OptIn(ExperimentalSerializationApi::class)
     override fun map(routing: Routing) {

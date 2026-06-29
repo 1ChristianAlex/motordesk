@@ -1,8 +1,8 @@
 package com.khrix
 
-import io.ktor.server.application.*
-import io.ktor.server.cio.*
-import io.ktor.server.engine.*
+import io.ktor.server.application.Application
+import io.ktor.server.cio.CIO
+import io.ktor.server.engine.embeddedServer
 
 fun main(args: Array<String>) {
     embeddedServer(

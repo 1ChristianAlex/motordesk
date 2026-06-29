@@ -8,23 +8,29 @@ import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
 import com.khrix.infrastructure.security.JwtConfig
 import com.khrix.infrastructure.security.UserClaims
-import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import io.ktor.server.plugins.cachingheaders.*
-import io.ktor.server.plugins.calllogging.*
-import io.ktor.server.plugins.compression.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.cors.routing.*
-import io.ktor.server.plugins.defaultheaders.*
-import io.ktor.server.plugins.di.*
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.resources.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.CacheControl
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.content.CachingOptions
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.jwt.JWTAuthenticationProvider
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.jwt.jwt
+import io.ktor.server.plugins.cachingheaders.CachingHeaders
+import io.ktor.server.plugins.calllogging.CallLogging
+import io.ktor.server.plugins.compression.Compression
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.cors.routing.CORS
+import io.ktor.server.plugins.defaultheaders.DefaultHeaders
+import io.ktor.server.plugins.di.dependencies
+import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.resources.Resources
+import io.ktor.server.response.respond
+import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
 
@@ -36,11 +42,13 @@ fun Application.httpApplication() {
 
 private fun Application.appRoute() {
     install(ContentNegotiation) {
-        json(Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        })
+        json(
+            Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            },
+        )
     }
     install(StatusPages) {
         exception<HandlerException> { call, cause ->
@@ -100,7 +108,7 @@ private fun JWTAuthenticationProvider.Config.clientJwtConfig(jwtConfig: JwtConfi
             .require(jwtConfig.algorithm)
             .withAudience(jwtConfig.audience)
             .withIssuer(jwtConfig.issuer)
-            .build()
+            .build(),
     )
     challenge { defaultScheme, realm ->
         val httpResult = HandlerException.toHttpResultError<Nothing>(HandlerException.UnauthenticatedOperation())

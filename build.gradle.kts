@@ -15,7 +15,7 @@ kotlin {
     jvmToolchain(25)
 }
 ktor {
-    development = System.getenv("IS_DEV_MODE").toBoolean() ?: true
+    development = (System.getenv("IS_DEV_MODE") ?: "true").toBoolean()
 }
 allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
@@ -23,7 +23,7 @@ allprojects {
             freeCompilerArgs.addAll(
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-opt-in=io.ktor.utils.io.ExperimentalKtorApi",
-                "-Xannotation-default-target=param-property"
+                "-Xannotation-default-target=param-property",
             )
         }
     }
@@ -49,13 +49,11 @@ dependencies {
     implementation(ktorLibs.server.openapi)
     implementation(ktorLibs.server.routingOpenapi)
 
-
     implementation(libs.logback.classic)
     implementation(libs.konform)
 
     implementation(libs.argon2)
     implementation(libs.sqids)
-
 
     implementation(libs.mongodb)
 

@@ -6,11 +6,11 @@ import com.khrix.infrastructure.http.controllers.login.handlers.LoginHandler
 import com.khrix.infrastructure.http.controllers.login.resources.LoginResource
 import com.khrix.infrastructure.http.controllers.login.resources.dto.LoginInputDto
 import io.ktor.server.resources.post
-import io.ktor.server.routing.*
-import io.ktor.server.routing.openapi.*
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.openapi.describe
 
 class LoginController(
-    private val loginHandler: LoginHandler
+    private val loginHandler: LoginHandler,
 ) : AppController() {
     override fun map(routing: Routing) {
         with(routing) {

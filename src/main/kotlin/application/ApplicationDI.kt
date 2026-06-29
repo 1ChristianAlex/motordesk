@@ -65,8 +65,9 @@ import com.khrix.domain.vehicle.usecase.DeleteVehicleByIdUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByOwnerIdUseCase
 import com.khrix.domain.vehicle.usecase.UpdateVehicleUseCase
-import io.ktor.server.application.*
-import io.ktor.server.plugins.di.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationStopping
+import io.ktor.server.plugins.di.dependencies
 
 fun Application.applicationDI() {
     val scope = ApplicationScope()
@@ -109,7 +110,7 @@ fun Application.applicationDI() {
     }
 
     monitor.subscribe(
-        ApplicationStopping
+        ApplicationStopping,
     ) {
         scope.shutdown()
     }

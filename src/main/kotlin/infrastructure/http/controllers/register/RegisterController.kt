@@ -8,11 +8,11 @@ import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUser
 import com.khrix.infrastructure.http.controllers.register.resources.RegisterResource
 import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
 import io.ktor.server.resources.post
-import io.ktor.server.routing.*
-import io.ktor.server.routing.openapi.*
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.openapi.describe
 
 class RegisterController(
-    private val createNewUserHandler: CreateNewUserHandler
+    private val createNewUserHandler: CreateNewUserHandler,
 ) : AppController() {
     override fun map(routing: Routing) {
         with(routing) {

@@ -3,7 +3,7 @@
 ###############################
 # Build Stage
 ###############################
-FROM gradle:9.1.0-jdk25 AS builder
+FROM gradle:9.6.0-jdk25 AS builder
 
 WORKDIR /home/gradle/project
 

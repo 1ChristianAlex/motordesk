@@ -5,11 +5,14 @@ import com.khrix.domain.serviceorder.repository.ServiceOrderTaskHistoryRepositor
 import com.khrix.infrastructure.mongodb.connection.MongoConnection
 import com.khrix.infrastructure.mongodb.serviceorder.repository.ServiceOrderMongoRepositoryImpl
 import com.khrix.infrastructure.mongodb.serviceorder.repository.ServiceOrderTaskMongoRepositoryImpl
-import io.ktor.events.*
-import io.ktor.server.application.*
-import io.ktor.server.plugins.di.*
+import io.ktor.events.Events
+import io.ktor.server.application.ApplicationStopping
+import io.ktor.server.plugins.di.DependencyRegistry
 
-fun appMongoDb(dependencies: DependencyRegistry, monitor: Events) {
+fun appMongoDb(
+    dependencies: DependencyRegistry,
+    monitor: Events,
+) {
     with(dependencies) {
         provide(MongoConnection::class)
         provide<ServiceOrderHistoryRepository>(ServiceOrderMongoRepositoryImpl::class)

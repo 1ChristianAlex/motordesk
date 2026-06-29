@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.http.serializers
 
-import io.ktor.http.*
+import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -12,7 +12,10 @@ object HttpStatusCodeSerializer : KSerializer<HttpStatusCode> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("HttpStatusCode", PrimitiveKind.INT)
 
-    override fun serialize(encoder: Encoder, value: HttpStatusCode) {
+    override fun serialize(
+        encoder: Encoder,
+        value: HttpStatusCode,
+    ) {
         encoder.encodeInt(value.value)
     }
 
@@ -21,4 +24,3 @@ object HttpStatusCodeSerializer : KSerializer<HttpStatusCode> {
         return HttpStatusCode.fromValue(code)
     }
 }
-

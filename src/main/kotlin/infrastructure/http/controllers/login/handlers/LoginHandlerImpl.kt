@@ -8,20 +8,24 @@ import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.infrastructure.http.controllers.login.resources.dto.LoginInputDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
-import io.ktor.http.*
-import io.ktor.openapi.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.openapi.Operation
+import io.ktor.openapi.jsonSchema
 
 class LoginHandlerImpl(
     private val loginUserUseCase: LoginUserUseCase,
-    private val tokenService: TokenService
-) : LoginHandler, BaseHTTPHandler<LoginInputDto, AuthenticateOutputDto>() {
+    private val tokenService: TokenService,
+) : BaseHTTPHandler<LoginInputDto, AuthenticateOutputDto>(),
+    LoginHandler {
     override suspend fun handle(body: LoginInputDto): HttpResult<AuthenticateOutputDto> {
-        val user = loginUserUseCase.execute(
-            LoginTypes.create(
-                userName = body.userName,
-                password = body.password
-            )
-        ).getOrThrow()
+        val user =
+            loginUserUseCase
+                .execute(
+                    LoginTypes.create(
+                        userName = body.userName,
+                        password = body.password,
+                    ),
+                ).getOrThrow()
 
         val userOutputDto = user.toOutputDto()
         val token = tokenService.generate(user)
@@ -29,9 +33,7 @@ class LoginHandlerImpl(
         return HttpResult(AuthenticateOutputDto(token, userOutputDto), HttpStatusCode.Accepted)
     }
 
-    override fun description(
-        configure: Operation.Builder,
-    ) {
+    override fun description(configure: Operation.Builder) {
         configure.summary = "Login"
         configure.description = "You can login using email, cpf or cnpj"
         configure.requestBody {

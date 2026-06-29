@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.app
 
-import java.util.*
+import java.util.Properties
 
 class InfraCredentialsDevImpl : InfraCredentials {
     private val properties: Properties by lazy {
@@ -8,24 +8,27 @@ class InfraCredentialsDevImpl : InfraCredentials {
     }
 
     override val mongoConfig: MongoConfig
-        get() = MongoConfig(
-            url = properties.getProperty("mongo.url"),
-            username = properties.getProperty("mongo.user"),
-            password = properties.getProperty("mongo.password"),
-            database = properties.getProperty("mongo.database"),
-        )
+        get() =
+            MongoConfig(
+                url = properties.getProperty("mongo.url"),
+                username = properties.getProperty("mongo.user"),
+                password = properties.getProperty("mongo.password"),
+                database = properties.getProperty("mongo.database"),
+            )
 
     override val redisConfig: RedisConfig
-        get() = RedisConfig(
-            host = properties.getProperty("redis.host"),
-            password = properties.getProperty("redis.password"),
-            port = properties.getProperty("redis.port"),
-        )
+        get() =
+            RedisConfig(
+                host = properties.getProperty("redis.host"),
+                password = properties.getProperty("redis.password"),
+                port = properties.getProperty("redis.port"),
+            )
     override val exposedConfig: ExposedConfig
-        get() = ExposedConfig(
-            url = properties.getProperty("db.url"),
-            driver = properties.getProperty("db.driver"),
-            user = properties.getProperty("db.user"),
-            password = properties.getProperty("db.password")
-        )
+        get() =
+            ExposedConfig(
+                url = properties.getProperty("db.url"),
+                driver = properties.getProperty("db.driver"),
+                user = properties.getProperty("db.user"),
+                password = properties.getProperty("db.password"),
+            )
 }

@@ -10,17 +10,18 @@ import com.khrix.infrastructure.http.controllers.vehicles.resources.VehiclesReso
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleInputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto
 import com.khrix.infrastructure.security.UserClaims
-import io.ktor.server.resources.*
+import io.ktor.server.resources.delete
+import io.ktor.server.resources.get
 import io.ktor.server.resources.post
 import io.ktor.server.resources.put
-import io.ktor.server.routing.*
-import io.ktor.server.routing.openapi.*
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.openapi.describe
 
 class VehiclesController(
     private val createNewVehicleHandler: CreateNewVehicleHandler,
     private val updateVehicleHandler: UpdateVehicleHandler,
     private val deleteVehicleHandler: DeleteVehicleHandler,
-    private val getVehicleByOwnerHandler: GetVehicleByOwnerHandler
+    private val getVehicleByOwnerHandler: GetVehicleByOwnerHandler,
 ) : AppController() {
     override fun map(routing: Routing) {
         with(routing) {
