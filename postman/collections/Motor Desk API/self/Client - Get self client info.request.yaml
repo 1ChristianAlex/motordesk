@@ -1,4 +1,5 @@
 $kind: http-request
+name: Client - Get self client info
 description: Get self client info
 url: "{{baseUrl}}/self"
 method: GET
@@ -7,6 +8,6 @@ headers:
 auth:
   type: bearer
   credentials:
-    token: "{{bearerToken}}"
+    token: "{{clientToken}}"
 examples: ./.resources/Client - Get self client info.resources/examples
 order: 2000

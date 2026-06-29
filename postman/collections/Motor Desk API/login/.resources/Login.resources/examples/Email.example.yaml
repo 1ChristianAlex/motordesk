@@ -1,0 +1,43 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/login"
+  method: POST
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "userName": "christian.alexsander@email.com",
+          "password": "test@123!"
+      }
+response:
+  statusCode: 202
+  statusText: Accepted
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "data": {
+          "token": "string",
+          "user": {
+            "id": 4002,
+            "addressId": 4214,
+            "firstName": "string",
+            "lastName": "string",
+            "email": "string",
+            "phone": "string",
+            "cpf": "string",
+            "isActive": true,
+            "createdAt": "string",
+            "updatedAt": "string",
+            "companyId": 1861
+          }
+        },
+        "status": 6903,
+        "errors": null
+      }
+order: 1000

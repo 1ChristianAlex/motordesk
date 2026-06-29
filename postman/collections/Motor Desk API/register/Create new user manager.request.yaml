@@ -1,7 +1,7 @@
 $kind: http-request
-name: Create new user
+name: Create new user manager
 description: Client can create a new account - You can only create a high role account if you are manager or ADM
-url: "{{baseUrl}}/register/client"
+url: "{{baseUrl}}/register/manager"
 method: POST
 headers:
   Content-Type: application/json
@@ -12,11 +12,11 @@ body:
     {
       "user": {
         "firstName": "Lucas",
-        "lastName": "Silva",
-        "email": "lucas.silva@example.com",
+        "lastName": "Santos",
+        "email": "lucas.santos@example.com",
         "phone": "+5531999998888",
-        "password": "test@bdrasil2026",
-        "cpf": "54151385010"
+        "password": "test@bdssrasil2026",
+        "cpf": "66978440000"
       },
       "address": {
         "street": "Avenida Afonso Pena",
@@ -28,10 +28,11 @@ body:
         "zipCode": "30130005",
         "complement": "Bloco A, Ap 402"
       },
-      "company": {
-        "cnpj": "33575077000149",
-        "name": "TechSolutions Inovacao LTDA"
-      }
+      "company": null
     }
-examples: ./.resources/Create new user.resources/examples
-order: 2000
+auth:
+  type: bearer
+  credentials:
+    token: "{{managerToken}}"
+examples: .resources/Create new user manager.resources/examples
+order: 1600

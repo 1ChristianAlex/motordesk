@@ -9,8 +9,8 @@ request:
     type: json
     content: |-
       {
-        "userName": "string",
-        "password": "string"
+       "userName":"22855604000152",
+       "password":"test@123!"
       }
 response:
   statusCode: 400

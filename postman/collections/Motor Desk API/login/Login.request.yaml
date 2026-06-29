@@ -1,4 +1,5 @@
 $kind: http-request
+name: Login
 description: You can login using email, cpf or cnpj
 url: "{{baseUrl}}/login"
 method: POST
@@ -9,8 +10,8 @@ body:
   type: json
   content: |-
     {
-      "userName": "string",
-      "password": "string"
+     "userName":"21641780096",
+     "password":"test@123!"
     }
 examples: ./.resources/Login.resources/examples
 order: 1000

@@ -70,14 +70,14 @@ data class ServiceOrder(
         if (status === this.status) {
             return this
         }
-        if (ServiceOrderStatus.IN_DIAGNOSIS.checkRole(operatorRole)) {
+        if (status?.checkRole(operatorRole) != true) {
             throw IllegalArgumentException("Role $operatorRole can not handle this status")
         }
-        return this.copy(status = status ?: this.status)
+        return this.copy(status = status)
     }
 
     fun updateComplaint(complaint: String?): ServiceOrder {
-        if (complaint == this.complaint) {
+        if (complaint == this.complaint || complaint == null) {
             return this
         }
         val statusListNotAllow =
@@ -95,7 +95,7 @@ data class ServiceOrder(
     }
 
     fun updateDiagnosis(diagnosis: String? = null): ServiceOrder {
-        if (diagnosis == this.diagnosis) {
+        if (diagnosis == this.diagnosis || diagnosis == null) {
             return this
         }
 
@@ -111,6 +111,9 @@ data class ServiceOrder(
     ): Boolean = newList.sorted() != oldList.sorted()
 
     fun updateTasks(tasks: List<Task>): ServiceOrder {
+        if (tasks.isEmpty()) {
+            return this
+        }
         val newIds = tasks.map { it.id }
         val oldIds = this.tasks.map { it.id }
 
@@ -122,6 +125,9 @@ data class ServiceOrder(
 
     fun updateInventoryItems(inventoryItems: List<InventoryItem> = listOf()): ServiceOrder {
         val newIds = inventoryItems.map { it.id }
+        if (inventoryItems.isEmpty()) {
+            return this
+        }
         val oldIds = this.inventoryItems.map { it.id }
 
         if (isListDiff(newIds, oldIds)) {

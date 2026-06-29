@@ -1,4 +1,5 @@
 $kind: http-request
+name: Manager - Update vehicle
 url: "{{baseUrl}}/vehicles/update"
 method: PUT
 headers:
@@ -8,13 +9,13 @@ body:
   type: json
   content: |-
     {
-      "id": 5880,
-      "color": "string",
-      "mileage": 5599
+      "id": 1,
+      "color": "RED",
+      "mileage": 56663
     }
 auth:
   type: bearer
   credentials:
-    token: "{{bearerToken}}"
+    token: "{{managerToken}}"
 examples: ./.resources/Manager - Update vehicle.resources/examples
 order: 1000

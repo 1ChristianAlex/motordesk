@@ -11,31 +11,34 @@ import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCaseCommand
 class UpdateUserUseCaseImpl(
     private val userRepository: UserRepository,
     private val passwordHasher: PasswordHasher,
-    private val verifyIsUserDataAvailableUseCase: VerifyIsUserDataAvailableUseCase
-) : UpdateUserUseCase,
-    BaseUseCaseImpl<User, Unit>() {
+    private val verifyIsUserDataAvailableUseCase: VerifyIsUserDataAvailableUseCase,
+) : BaseUseCaseImpl<User, Unit>(),
+    UpdateUserUseCase {
     override suspend fun internalExecute(command: User) {
-        verifyIsUserDataAvailableUseCase.execute(
-            VerifyIsUserDataAvailableUseCaseCommand(
-                email = command.email,
-                cpf = command.cpf
-            )
-        ).getOrThrow()
+        val oldUser = userRepository.read(command.id)
+
+        if (oldUser?.email != command.email || oldUser.cpf != command.cpf) {
+            verifyIsUserDataAvailableUseCase
+                .execute(
+                    VerifyIsUserDataAvailableUseCaseCommand(
+                        email = command.email,
+                        cpf = command.cpf,
+                    ),
+                ).getOrThrow()
+        }
 
         val passwordIsArgon = passwordHasher.isHashedPassword(command.password.value)
-        val password = if (passwordIsArgon) {
-            command.password.value
-        } else {
-            passwordHasher.hash(command.password.value)
-        }
+        val password =
+            if (passwordIsArgon) {
+                command.password.value
+            } else {
+                passwordHasher.hash(command.password.value)
+            }
 
         val updateUser = command.updatePassword(password)
 
         userRepository.update(command.id, updateUser)
     }
 
-
-    override suspend fun useCaseDescription(): String {
-        return "Update user data with new info"
-    }
+    override suspend fun useCaseDescription(): String = "Update user data with new info"
 }

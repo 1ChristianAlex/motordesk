@@ -50,6 +50,7 @@ class ServiceOrderController(
                 get<ServiceOrderResource.Manager.Code> {
                     call.send(getServiceOrderItemHandler.handler(it.code))
                 }.describe(getServiceOrderItemHandler::description)
+
                 delete<ServiceOrderResource.Manager.Delete> {
                     updateHandler(
                         call = call,
@@ -59,7 +60,7 @@ class ServiceOrderController(
                                 status = ServiceOrderStatus.CANCELLED,
                             ),
                     )
-                }.describe(updateServiceOrderHandler::description)
+                }
             }
             engineer {
                 put<ServiceOrderResource.Manager.Update> {

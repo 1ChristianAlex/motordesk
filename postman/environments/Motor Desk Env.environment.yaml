@@ -1,12 +1,10 @@
 name: Motor Desk Env
 values:
-  - key: token
-    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJcImt0b3ItdXNlcnNcIiIsImlzcyI6Ilwia3Rvci1hcGlcIiIsImZpcnN0TmFtZSI6IkNocmlzdGlhbiIsImxhc3ROYW1lIjoiQWxleHNhbmRlciIsImVtYWlsIjoiY2hyaXN0aWFuLmFsZXhAZW1haWwuY29tIiwiY3BmIjoiMjE2NDE3ODAwOTYiLCJ1c2VySWQiOjIsInJvbGUiOiJBRE1JTiIsImV4cCI6MTc4MDc5MDQwMH0.wVt0VEYL194KBHSo_pZhGqj6K20QgMuTQAS0L_b2fxw
   - key: clientToken
     value: ''
   - key: engineerToken
     value: ''
   - key: managerToken
-    secret: true
+    value: ''
   - key: baseUrl
     value: ''

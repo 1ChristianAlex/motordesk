@@ -12,6 +12,7 @@ import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
 import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
+import com.khrix.infrastructure.http.controllers.user.resources.dto.UserInputDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
@@ -60,7 +61,7 @@ class UpdateSelfUserHandlerImpl(
         configure.summary = "Client - Update client info"
 
         configure.requestBody {
-            schema = jsonSchema<UpdateSelfUserHandlerBody>()
+            schema = jsonSchema<UserInputDto>()
         }
         configure.responses {
             HttpStatusCode.Accepted {

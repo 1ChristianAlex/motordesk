@@ -30,7 +30,7 @@ class UserController(
                     val body = getBody<UserInputDto>()
                     val claims = UserClaims.getClaims(call)
                     call.send(updateSelfUserHandler.handler(UpdateSelfUserHandlerBody(body, claims)))
-                }.describe(getSelfUserHandler::description)
+                }.describe(updateSelfUserHandler::description)
             }
         }
     }

@@ -7,6 +7,6 @@ headers:
 auth:
   type: bearer
   credentials:
-    token: "{{bearerToken}}"
-examples: ./.resources/Manager - Get vehicle by owner.resources/examples
+    token: "{{clientToken}}"
+examples: .resources/Get vehicle by owner token.resources/examples
 order: 1000

@@ -20,7 +20,7 @@ class GetVehicleByOwnerHandlerImpl(
     }
 
     override fun description(configure: Operation.Builder) {
-        configure.summary = "Manager - Get vehicle by owner"
+        configure.summary = "Get vehicle by owner using the token"
         configure.description = "Get vehicle given a client data"
 
         configure.responses {

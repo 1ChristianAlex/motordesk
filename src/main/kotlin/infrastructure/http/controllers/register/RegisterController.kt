@@ -16,12 +16,12 @@ class RegisterController(
 ) : AppController() {
     override fun map(routing: Routing) {
         with(routing) {
-            post<RegisterResource> {
+            post<RegisterResource.Client> {
                 val body = getBody<ClientRegisterDto>()
                 call.send(createNewUserHandler.handler(CreateNewUserRequest(body)))
             }.describe(createNewUserHandler::description)
             manager {
-                post<RegisterResource> {
+                post<RegisterResource.Manager> {
                     val body = getBody<ClientRegisterDto>()
                     val request = CreateNewUserRequest(body)
                     request.updateRole(Role.MANAGER)

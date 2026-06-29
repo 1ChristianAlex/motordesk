@@ -47,6 +47,7 @@ data class CreateUserDto(
     val phone: String,
     val password: String,
     val cpf: String,
+    var role: Role = Role.CLIENT,
 ) {
     fun toDomain(): User {
         val now = getCurrentUtcDateTime()
@@ -63,7 +64,7 @@ data class CreateUserDto(
             createdAt = now,
             updatedAt = now,
             companyId = null,
-            role = Role.CLIENT,
+            role = role,
         )
     }
 }

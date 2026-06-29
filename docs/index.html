@@ -726,7 +726,10 @@
         "email" : { },
         "phone" : { },
         "password" : { },
-        "cpf" : { }
+        "cpf" : { },
+        "role" : {
+          "enum" : [ "ADMIN", "CLIENT", "MANAGER", "ENGINEER" ]
+        }
       }
     },
     "address" : {
@@ -916,6 +919,21 @@
     }
   }
 };
+            defs["UserInputDto"] = {
+  "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserInputDto",
+  "required" : [ "id" ],
+  "properties" : {
+    "id" : { },
+    "addressId" : { },
+    "companyId" : { },
+    "firstName" : { },
+    "lastName" : { },
+    "email" : { },
+    "password" : { },
+    "phone" : { },
+    "cpf" : { }
+  }
+};
             defs["UserOutputDto"] = {
   "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto",
   "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
@@ -1006,8 +1024,11 @@
                     <li data-group="Default" data-name="put" class="">
                       <a href="#api-Default-put">put</a>
                     </li>
-                    <li data-group="Default" data-name="registerPost" class="">
-                      <a href="#api-Default-registerPost">registerPost</a>
+                    <li data-group="Default" data-name="registerClientPost" class="">
+                      <a href="#api-Default-registerClientPost">registerClientPost</a>
+                    </li>
+                    <li data-group="Default" data-name="registerManagerPost" class="">
+                      <a href="#api-Default-registerManagerPost">registerManagerPost</a>
                     </li>
                     <li data-group="Default" data-name="selfGet" class="">
                       <a href="#api-Default-selfGet">selfGet</a>
@@ -2032,10 +2053,10 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Default-registerPost">
-                      <article id="api-Default-registerPost-0" data-group="User" data-name="registerPost" data-version="0">
+                    <div id="api-Default-registerClientPost">
+                      <article id="api-Default-registerClientPost-0" data-group="User" data-name="registerClientPost" data-version="0">
                         <div class="pull-left">
-                          <h1>registerPost</h1>
+                          <h1>registerClientPost</h1>
                           <p>Create new user</p>
                         </div>
                         <div class="pull-right"></div>
@@ -2044,32 +2065,32 @@ except ApiException as e:
                         <p class="marked">Client can create a new account - You can only create a high role account if you are manager or ADM</p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/register</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/register/client</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-registerPost-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-registerPost-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-registerPost-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-registerPost-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-registerPost-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-registerPost-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-registerPost-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-registerPost-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-registerPost-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-registerPost-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-registerPost-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Default-registerClientPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-registerClientPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-registerClientPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-registerClientPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-registerClientPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-registerClientPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-registerClientPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-registerClientPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-registerClientPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-registerClientPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-registerClientPost-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-registerPost-0-curl">
+                          <div class="tab-pane active" id="examples-Default-registerClientPost-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"//register"</code></pre>
+"//register/client"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Default-registerPost-0-java">
+                          <div class="tab-pane" id="examples-Default-registerClientPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -2085,17 +2106,17 @@ public class DefaultApiExample {
         DefaultApi apiInstance = new DefaultApi();
         ClientRegisterDto body = ; // ClientRegisterDto | 
         try {
-            Object result = apiInstance.registerPost(body);
+            Object result = apiInstance.registerClientPost(body);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#registerPost");
+            System.err.println("Exception when calling DefaultApi#registerClientPost");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Default-registerPost-0-android">
+                          <div class="tab-pane" id="examples-Default-registerClientPost-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
 
 public class DefaultApiExample {
@@ -2104,26 +2125,26 @@ public class DefaultApiExample {
         DefaultApi apiInstance = new DefaultApi();
         ClientRegisterDto body = ; // ClientRegisterDto | 
         try {
-            Object result = apiInstance.registerPost(body);
+            Object result = apiInstance.registerClientPost(body);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#registerPost");
+            System.err.println("Exception when calling DefaultApi#registerClientPost");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Default-registerPost-0-groovy">
+  <div class="tab-pane" id="examples-Default-registerClientPost-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Default-registerPost-0-objc">
+                            <div class="tab-pane" id="examples-Default-registerClientPost-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">ClientRegisterDto *body = ; //  (optional)
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
 // Create new user
-[apiInstance registerPostWith:body
+[apiInstance registerClientPostWith:body
               completionHandler: ^(Object output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2135,7 +2156,7 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-registerPost-0-javascript">
+                            <div class="tab-pane" id="examples-Default-registerClientPost-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var MotorDeskApi = require('motor_desk_api');
 
 var api = new MotorDeskApi.DefaultApi()
@@ -2149,14 +2170,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.registerPost(opts, callback);
+api.registerClientPost(opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Default-registerPost-0-angular">
+                            <!--<div class="tab-pane" id="examples-Default-registerClientPost-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Default-registerPost-0-csharp">
+                            <div class="tab-pane" id="examples-Default-registerClientPost-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2165,7 +2186,7 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class registerPostExample
+    public class registerClientPostExample
     {
         public void main()
         {
@@ -2176,12 +2197,12 @@ namespace Example
             try
             {
                 // Create new user
-                Object result = apiInstance.registerPost(body);
+                Object result = apiInstance.registerClientPost(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling DefaultApi.registerPost: " + e.Message );
+                Debug.Print("Exception when calling DefaultApi.registerClientPost: " + e.Message );
             }
         }
     }
@@ -2189,7 +2210,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-registerPost-0-php">
+                            <div class="tab-pane" id="examples-Default-registerClientPost-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -2197,15 +2218,15 @@ $api_instance = new Swagger\Client\ApiDefaultApi();
 $body = ; // ClientRegisterDto | 
 
 try {
-    $result = $api_instance->registerPost($body);
+    $result = $api_instance->registerClientPost($body);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->registerPost: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling DefaultApi->registerClientPost: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-registerPost-0-perl">
+                            <div class="tab-pane" id="examples-Default-registerClientPost-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
@@ -2214,15 +2235,15 @@ my $api_instance = WWW::SwaggerClient::DefaultApi->new();
 my $body = WWW::SwaggerClient::Object::ClientRegisterDto->new(); # ClientRegisterDto | 
 
 eval { 
-    my $result = $api_instance->registerPost(body => $body);
+    my $result = $api_instance->registerClientPost(body => $body);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling DefaultApi->registerPost: $@\n";
+    warn "Exception when calling DefaultApi->registerClientPost: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-registerPost-0-python">
+                            <div class="tab-pane" id="examples-Default-registerClientPost-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2235,10 +2256,10 @@ body =  # ClientRegisterDto |  (optional)
 
 try: 
     # Create new user
-    api_response = api_instance.register_post(body=body)
+    api_response = api_instance.register_client_post(body=body)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling DefaultApi->registerPost: %s\n" % e)</code></pre>
+    print("Exception when calling DefaultApi->registerClientPost: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -2279,12 +2300,12 @@ except ApiException as e:
                                   }
                                 
                                   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-                                  var result = $('#d2e199_registerPost_body');
+                                  var result = $('#d2e199_registerClientPost_body');
                                   result.empty();
                                   result.append(view.render());
                                 });
                                 </script>
-                                <div id="d2e199_registerPost_body"></div>
+                                <div id="d2e199_registerClientPost_body"></div>
                                 </td>
                                 </tr>
                             </table>
@@ -2296,14 +2317,14 @@ except ApiException as e:
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-registerPost-201-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-registerClientPost-201-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-registerPost-201-schema">
-                                  <div id='responses-registerPost-201-schema-201' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-registerClientPost-201-schema">
+                                  <div id='responses-registerClientPost-201-schema-201' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -2340,14 +2361,14 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-registerPost-201-schema-data').val(stringify(schema));
-                                        var result = $('#responses-registerPost-201-schema-201');
+                                        $('#responses-registerClientPost-201-schema-data').val(stringify(schema));
+                                        var result = $('#responses-registerClientPost-201-schema-201');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-registerPost-201-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-registerClientPost-201-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -2355,14 +2376,14 @@ except ApiException as e:
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-registerPost-400-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-registerClientPost-400-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-registerPost-400-schema">
-                                  <div id='responses-registerPost-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-registerClientPost-400-schema">
+                                  <div id='responses-registerClientPost-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -2399,14 +2420,405 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-registerPost-400-schema-data').val(stringify(schema));
-                                        var result = $('#responses-registerPost-400-schema-400');
+                                        $('#responses-registerClientPost-400-schema-data').val(stringify(schema));
+                                        var result = $('#responses-registerClientPost-400-schema-400');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-registerPost-400-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-registerClientPost-400-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-registerManagerPost">
+                      <article id="api-Default-registerManagerPost-0" data-group="User" data-name="registerManagerPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>registerManagerPost</h1>
+                          <p>Create new user</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Client can create a new account - You can only create a high role account if you are manager or ADM</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/register/manager</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-registerManagerPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-registerManagerPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-registerManagerPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-registerManagerPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-registerManagerPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-registerManagerPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-registerManagerPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-registerManagerPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-registerManagerPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-registerManagerPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-registerManagerPost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-registerManagerPost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Accept: application/json"\
+-H "Content-Type: application/json"\
+"//register/manager"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-registerManagerPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        ClientRegisterDto body = ; // ClientRegisterDto | 
+        try {
+            Object result = apiInstance.registerManagerPost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#registerManagerPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-registerManagerPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        ClientRegisterDto body = ; // ClientRegisterDto | 
+        try {
+            Object result = apiInstance.registerManagerPost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#registerManagerPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-registerManagerPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-registerManagerPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+ClientRegisterDto *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Create new user
+[apiInstance registerManagerPostWith:body
+              completionHandler: ^(Object output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-registerManagerPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var MotorDeskApi = require('motor_desk_api');
+var defaultClient = MotorDeskApi.ApiClient.instance;
+
+
+var api = new MotorDeskApi.DefaultApi()
+var opts = { 
+  'body':  // {{ClientRegisterDto}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.registerManagerPost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-registerManagerPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-registerManagerPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class registerManagerPostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new ClientRegisterDto(); // ClientRegisterDto |  (optional) 
+
+            try
+            {
+                // Create new user
+                Object result = apiInstance.registerManagerPost(body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.registerManagerPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-registerManagerPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // ClientRegisterDto | 
+
+try {
+    $result = $api_instance->registerManagerPost($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->registerManagerPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-registerManagerPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::ClientRegisterDto->new(); # ClientRegisterDto | 
+
+eval { 
+    my $result = $api_instance->registerManagerPost(body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->registerManagerPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-registerManagerPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # ClientRegisterDto |  (optional)
+
+try: 
+    # Create new user
+    api_response = api_instance.register_manager_post(body=body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->registerManagerPost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ClientRegisterDto"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_registerManagerPost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_registerManagerPost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 201 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-registerManagerPost-201-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-registerManagerPost-201-schema">
+                                  <div id='responses-registerManagerPost-201-schema-201' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "properties" : {
+          "data" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/AuthenticateOutputDto"
+            }, { } ]
+          },
+          "status" : { },
+          "errors" : {
+            "items" : { }
+          }
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-registerManagerPost-201-schema-data').val(stringify(schema));
+                                        var result = $('#responses-registerManagerPost-201-schema-201');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-registerManagerPost-201-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 400 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-registerManagerPost-400-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-registerManagerPost-400-schema">
+                                  <div id='responses-registerManagerPost-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "properties" : {
+          "data" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/Nothing"
+            }, { } ]
+          },
+          "status" : { },
+          "errors" : {
+            "items" : { }
+          }
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-registerManagerPost-400-schema-data').val(stringify(schema));
+                                        var result = $('#responses-registerManagerPost-400-schema-400');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-registerManagerPost-400-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -2755,12 +3167,12 @@ except ApiException as e:
                       <article id="api-Default-selfUpdatePut-0" data-group="User" data-name="selfUpdatePut" data-version="0">
                         <div class="pull-left">
                           <h1>selfUpdatePut</h1>
-                          <p>Client - Get self client info</p>
+                          <p>Client - Update client info</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get self client info</p>
+                        <p class="marked"></p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/self/update</span></code></pre>
@@ -2786,6 +3198,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT\
  -H "Authorization: Bearer [[accessToken]]"\
 -H "Accept: application/json"\
+-H "Content-Type: application/json"\
 "//self/update"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-selfUpdatePut-0-java">
@@ -2804,8 +3217,9 @@ public class DefaultApiExample {
 
 
         DefaultApi apiInstance = new DefaultApi();
+        UserInputDto body = ; // UserInputDto | 
         try {
-            Object result = apiInstance.selfUpdatePut();
+            Object result = apiInstance.selfUpdatePut(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#selfUpdatePut");
@@ -2822,8 +3236,9 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
+        UserInputDto body = ; // UserInputDto | 
         try {
-            Object result = apiInstance.selfUpdatePut();
+            Object result = apiInstance.selfUpdatePut(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#selfUpdatePut");
@@ -2838,12 +3253,13 @@ public class DefaultApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Default-selfUpdatePut-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+UserInputDto *body = ; //  (optional)
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Client - Get self client info
-[apiInstance selfUpdatePutWithCompletionHandler: 
-              ^(Object output, NSError* error) {
+// Client - Update client info
+[apiInstance selfUpdatePutWith:body
+              completionHandler: ^(Object output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2860,6 +3276,9 @@ var defaultClient = MotorDeskApi.ApiClient.instance;
 
 
 var api = new MotorDeskApi.DefaultApi()
+var opts = { 
+  'body':  // {{UserInputDto}} 
+};
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -2867,7 +3286,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.selfUpdatePut(callback);
+api.selfUpdatePut(opts, callback);
 </code></pre>
                             </div>
 
@@ -2890,11 +3309,12 @@ namespace Example
 
 
             var apiInstance = new DefaultApi();
+            var body = new UserInputDto(); // UserInputDto |  (optional) 
 
             try
             {
-                // Client - Get self client info
-                Object result = apiInstance.selfUpdatePut();
+                // Client - Update client info
+                Object result = apiInstance.selfUpdatePut(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -2913,9 +3333,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // UserInputDto | 
 
 try {
-    $result = $api_instance->selfUpdatePut();
+    $result = $api_instance->selfUpdatePut($body);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->selfUpdatePut: ', $e->getMessage(), PHP_EOL;
@@ -2930,9 +3351,10 @@ use WWW::SwaggerClient::DefaultApi;
 
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::UserInputDto->new(); # UserInputDto | 
 
 eval { 
-    my $result = $api_instance->selfUpdatePut();
+    my $result = $api_instance->selfUpdatePut(body => $body);
     print Dumper($result);
 };
 if ($@) {
@@ -2950,10 +3372,11 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
+body =  # UserInputDto |  (optional)
 
 try: 
-    # Client - Get self client info
-    api_response = api_instance.self_update_put()
+    # Client - Update client info
+    api_response = api_instance.self_update_put(body=body)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->selfUpdatePut: %s\n" % e)</code></pre>
@@ -2964,22 +3387,64 @@ except ApiException as e:
 
 
 
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UserInputDto"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_selfUpdatePut_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_selfUpdatePut_body"></div>
+                                </td>
+                                </tr>
+                            </table>
 
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 -  </h3>
+                            <h3> Status: 202 -  </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-selfUpdatePut-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-selfUpdatePut-202-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-selfUpdatePut-200-schema">
-                                  <div id='responses-selfUpdatePut-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-selfUpdatePut-202-schema">
+                                  <div id='responses-selfUpdatePut-202-schema-202' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -2990,7 +3455,7 @@ except ApiException as e:
         "properties" : {
           "data" : {
             "oneOf" : [ {
-              "$ref" : "#/components/schemas/UserOutputDto"
+              "$ref" : "#/components/schemas/AuthenticateOutputDto"
             }, { } ]
           },
           "status" : { },
@@ -3016,14 +3481,14 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-selfUpdatePut-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-selfUpdatePut-200-schema-200');
+                                        $('#responses-selfUpdatePut-202-schema-data').val(stringify(schema));
+                                        var result = $('#responses-selfUpdatePut-202-schema-202');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-selfUpdatePut-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-selfUpdatePut-202-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -3804,12 +4269,12 @@ except ApiException as e:
                       <article id="api-Default-serviceOrderManagerCodeDeleteDelete-0" data-group="User" data-name="serviceOrderManagerCodeDeleteDelete" data-version="0">
                         <div class="pull-left">
                           <h1>serviceOrderManagerCodeDeleteDelete</h1>
-                          <p>Manager - Update service order</p>
+                          <p></p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Update service order</p>
+                        <p class="marked"></p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/service-order/manager/{code}/delete</span></code></pre>
@@ -3834,8 +4299,6 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-Default-serviceOrderManagerCodeDeleteDelete-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X DELETE\
  -H "Authorization: Bearer [[accessToken]]"\
--H "Accept: application/json"\
--H "Content-Type: application/json"\
 "//service-order/manager/{code}/delete"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-serviceOrderManagerCodeDeleteDelete-0-java">
@@ -3855,10 +4318,8 @@ public class DefaultApiExample {
 
         DefaultApi apiInstance = new DefaultApi();
          code = ; //  | 
-        UpdateServiceOrderInputDto body = ; // UpdateServiceOrderInputDto | 
         try {
-            Object result = apiInstance.serviceOrderManagerCodeDeleteDelete(code, body);
-            System.out.println(result);
+            apiInstance.serviceOrderManagerCodeDeleteDelete(code);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#serviceOrderManagerCodeDeleteDelete");
             e.printStackTrace();
@@ -3875,10 +4336,8 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
          code = ; //  | 
-        UpdateServiceOrderInputDto body = ; // UpdateServiceOrderInputDto | 
         try {
-            Object result = apiInstance.serviceOrderManagerCodeDeleteDelete(code, body);
-            System.out.println(result);
+            apiInstance.serviceOrderManagerCodeDeleteDelete(code);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#serviceOrderManagerCodeDeleteDelete");
             e.printStackTrace();
@@ -3893,17 +4352,11 @@ public class DefaultApiExample {
                             <div class="tab-pane" id="examples-Default-serviceOrderManagerCodeDeleteDelete-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
  *code = ; // 
-UpdateServiceOrderInputDto *body = ; //  (optional)
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Manager - Update service order
 [apiInstance serviceOrderManagerCodeDeleteDeleteWith:code
-    body:body
-              completionHandler: ^(Object output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
+              completionHandler: ^(NSError* error) {
                             if (error) {
                                 NSLog(@"Error: %@", error);
                             }
@@ -3918,17 +4371,15 @@ var defaultClient = MotorDeskApi.ApiClient.instance;
 
 var api = new MotorDeskApi.DefaultApi()
 var code = ; // {{}} 
-var opts = { 
-  'body':  // {{UpdateServiceOrderInputDto}} 
-};
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully. Returned data: ' + data);
+    console.log('API called successfully.');
   }
 };
-api.serviceOrderManagerCodeDeleteDelete(code, opts, callback);
+api.serviceOrderManagerCodeDeleteDelete(code, callback);
 </code></pre>
                             </div>
 
@@ -3952,13 +4403,10 @@ namespace Example
 
             var apiInstance = new DefaultApi();
             var code = new (); //  | 
-            var body = new UpdateServiceOrderInputDto(); // UpdateServiceOrderInputDto |  (optional) 
 
             try
             {
-                // Manager - Update service order
-                Object result = apiInstance.serviceOrderManagerCodeDeleteDelete(code, body);
-                Debug.WriteLine(result);
+                apiInstance.serviceOrderManagerCodeDeleteDelete(code);
             }
             catch (Exception e)
             {
@@ -3977,11 +4425,9 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
 $code = ; //  | 
-$body = ; // UpdateServiceOrderInputDto | 
 
 try {
-    $result = $api_instance->serviceOrderManagerCodeDeleteDelete($code, $body);
-    print_r($result);
+    $api_instance->serviceOrderManagerCodeDeleteDelete($code);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->serviceOrderManagerCodeDeleteDelete: ', $e->getMessage(), PHP_EOL;
 }
@@ -3996,11 +4442,9 @@ use WWW::SwaggerClient::DefaultApi;
 
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
 my $code = ; #  | 
-my $body = WWW::SwaggerClient::Object::UpdateServiceOrderInputDto->new(); # UpdateServiceOrderInputDto | 
 
 eval { 
-    my $result = $api_instance->serviceOrderManagerCodeDeleteDelete(code => $code, body => $body);
-    print Dumper($result);
+    $api_instance->serviceOrderManagerCodeDeleteDelete(code => $code);
 };
 if ($@) {
     warn "Exception when calling DefaultApi->serviceOrderManagerCodeDeleteDelete: $@\n";
@@ -4018,12 +4462,9 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
 code =  #  | 
-body =  # UpdateServiceOrderInputDto |  (optional)
 
 try: 
-    # Manager - Update service order
-    api_response = api_instance.service_order_manager_code_delete_delete(code, body=body)
-    pprint(api_response)
+    api_instance.service_order_manager_code_delete_delete(code)
 except ApiException as e:
     print("Exception when calling DefaultApi->serviceOrderManagerCodeDeleteDelete: %s\n" % e)</code></pre>
                             </div>
@@ -4059,170 +4500,10 @@ except ApiException as e:
                             </table>
 
 
-                            <div class="methodsubtabletitle">Body parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">body </td>
-                                <td>
-                                
-                                
-                                <script>
-                                $(document).ready(function() {
-                                  var schemaWrapper = {
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/UpdateServiceOrderInputDto"
-      }
-    }
-  }
-};
-                                  var schema = schemaWrapper.content["application/json"].schema;
-                                  if (schema.$ref != null) {
-                                    schema = defsParser.$refs.get(schema.$ref);
-                                  } else {
-                                    schemaWrapper.components = {};
-                                    schemaWrapper.components.schemas = Object.assign({}, defs);
-                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                      console.log(err);
-                                    });
-                                  }
-                                
-                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-                                  var result = $('#d2e199_serviceOrderManagerCodeDeleteDelete_body');
-                                  result.empty();
-                                  result.append(view.render());
-                                });
-                                </script>
-                                <div id="d2e199_serviceOrderManagerCodeDeleteDelete_body"></div>
-                                </td>
-                                </tr>
-                            </table>
 
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 -  </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-serviceOrderManagerCodeDeleteDelete-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-serviceOrderManagerCodeDeleteDelete-200-schema">
-                                  <div id='responses-serviceOrderManagerCodeDeleteDelete-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "properties" : {
-          "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderOutputDto"
-            }, { } ]
-          },
-          "status" : { },
-          "errors" : {
-            "items" : { }
-          }
-        },
-        "x-content-type" : "application/json"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-serviceOrderManagerCodeDeleteDelete-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-serviceOrderManagerCodeDeleteDelete-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-serviceOrderManagerCodeDeleteDelete-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                            <h3> Status: 400 -  </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-serviceOrderManagerCodeDeleteDelete-400-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-serviceOrderManagerCodeDeleteDelete-400-schema">
-                                  <div id='responses-serviceOrderManagerCodeDeleteDelete-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "properties" : {
-          "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
-          },
-          "status" : { },
-          "errors" : {
-            "items" : { }
-          }
-        },
-        "x-content-type" : "application/json"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-serviceOrderManagerCodeDeleteDelete-400-schema-data').val(stringify(schema));
-                                        var result = $('#responses-serviceOrderManagerCodeDeleteDelete-400-schema-400');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-serviceOrderManagerCodeDeleteDelete-400-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
                         </article>
                       </div>
                       <hr>
@@ -5758,7 +6039,7 @@ except ApiException as e:
                       <article id="api-Default-vehiclesOwnerGet-0" data-group="User" data-name="vehiclesOwnerGet" data-version="0">
                         <div class="pull-left">
                           <h1>vehiclesOwnerGet</h1>
-                          <p>Manager - Get vehicle by owner</p>
+                          <p>Get vehicle by owner using the token</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
@@ -5844,7 +6125,7 @@ public class DefaultApiExample {
 
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Manager - Get vehicle by owner
+// Get vehicle by owner using the token
 [apiInstance vehiclesOwnerGetWithCompletionHandler: 
               ^(Object output, NSError* error) {
                             if (output) {
@@ -5896,7 +6177,7 @@ namespace Example
 
             try
             {
-                // Manager - Get vehicle by owner
+                // Get vehicle by owner using the token
                 Object result = apiInstance.vehiclesOwnerGet();
                 Debug.WriteLine(result);
             }
@@ -5955,7 +6236,7 @@ from pprint import pprint
 api_instance = swagger_client.DefaultApi()
 
 try: 
-    # Manager - Get vehicle by owner
+    # Get vehicle by owner using the token
     api_response = api_instance.vehicles_owner_get()
     pprint(api_response)
 except ApiException as e:
