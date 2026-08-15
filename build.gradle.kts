@@ -48,6 +48,8 @@ dependencies {
     // Coroutines
     implementation(libs.bundles.coroutines)
 
+    implementation(libs.kotlinx.html)
+
     // Ktor
     implementation(ktorLibs.serialization.kotlinx.json)
     implementation(ktorLibs.server.auth)

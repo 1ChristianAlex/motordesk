@@ -16,7 +16,7 @@ class EmailQueueExposedQueueRepositoryImpl(
     database: Database,
 ) : BaseExposedRepository<EmailQueueEntity, EmailQueueItem>(database),
     EmailQueueRepository {
-    override suspend fun createRead(data: EmailQueueItem): EmailQueueItem =
+    override suspend fun create(data: EmailQueueItem): Int =
         suspendedQuery {
             EmailQueueEntity
                 .new {
@@ -27,7 +27,7 @@ class EmailQueueExposedQueueRepositoryImpl(
                     attempts = data.attempts
                     errorMessage = data.errorMessage
                     code = data.orderCode
-                }.toModel()
+                }.id.value
         }
 
     override suspend fun read(id: Int): EmailQueueItem? =
@@ -35,13 +35,17 @@ class EmailQueueExposedQueueRepositoryImpl(
             EmailQueueEntity.findById(id)?.toModel()
         }
 
-    override suspend fun incrementAttempt(id: Int) {
+    override suspend fun registerAttempt(
+        id: Int,
+        status: EmailStatus,
+    ): EmailQueueItem =
         suspendedQuery {
             EmailQueueTable.update({ EmailQueueTable.id eq id }) {
                 it[EmailQueueTable.attempts] = EmailQueueTable.attempts + 1
+                it[EmailQueueTable.status] = status
             }
+            EmailQueueEntity.findById(id)!!.toModel()
         }
-    }
 
     override suspend fun setErrorMessage(
         id: Int,
@@ -50,17 +54,7 @@ class EmailQueueExposedQueueRepositoryImpl(
         suspendedQuery {
             EmailQueueEntity.findByIdAndUpdate(id) {
                 it.errorMessage = errorMessage
-            }
-        }
-    }
-
-    override suspend fun changeStatus(
-        id: Int,
-        status: EmailStatus,
-    ) {
-        suspendedQuery {
-            EmailQueueEntity.findByIdAndUpdate(id) {
-                it.status = status
+                it.status = EmailStatus.FAILED
             }
         }
     }

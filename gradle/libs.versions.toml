@@ -31,6 +31,7 @@ migration-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-migration-r
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mongodb = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version = "0.11.0" }
 sqids = { module = "org.sqids:sqids-kotlin", version.ref = "sqids" }
 
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }

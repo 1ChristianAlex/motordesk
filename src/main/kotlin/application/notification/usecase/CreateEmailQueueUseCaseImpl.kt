@@ -4,6 +4,7 @@ import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.model.EmailStatus
 import com.khrix.domain.email.model.ServiceOrderEmailMetadata
+import com.khrix.domain.email.publisher.EventKeys
 import com.khrix.domain.email.publisher.EventPublisher
 import com.khrix.domain.email.repository.EmailQueueRepository
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
@@ -26,7 +27,7 @@ class CreateEmailQueueUseCaseImpl(
                 addressRepository.read(command.client.addressId) ?: throw NoSuchElementException("Address is null")
 
             val result =
-                emailQueueRepository.createRead(
+                emailQueueRepository.create(
                     EmailQueueItem(
                         id = 0,
                         recipient = command.client.email.value,
@@ -43,7 +44,7 @@ class CreateEmailQueueUseCaseImpl(
                     ),
                 )
 
-            eventPublisher.publish(result)
+            eventPublisher.publish(EventKeys.APPROVAL_EVENT_NAME, result)
         }
     }
 

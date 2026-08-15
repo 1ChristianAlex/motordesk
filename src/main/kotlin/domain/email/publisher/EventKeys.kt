@@ -1,6 +1,11 @@
 package com.khrix.domain.email.publisher
 
-object EventKeys {
-    const val EVENT_NAME = "service-order-email"
-    const val EVENT_GROUP = "email-workers"
+enum class EventKeys(
+    val value: String,
+) {
+    EVENT_TYPE("email"),
+    EVENT_GROUP("email-workers"),
+
+    APPROVAL_EVENT_NAME("APPROVAL_EVENT_NAME"),
+    UPDATE_EVENT_NAME("UPDATE_EVENT_NAME"),
 }
