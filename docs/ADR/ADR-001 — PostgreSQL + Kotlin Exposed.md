@@ -176,23 +176,9 @@ Rejected in favor of Kotlin Exposed.
 
 ## Architecture
 
-```text
-Presentation
-        │
-        ▼
-Application
-        │
-        ▼
-Domain
-        │
-        ▼
-Repositories
-        │
-        ▼
-Kotlin Exposed
-        │
-        ▼
-PostgreSQL
+```mermaid
+flowchart TB
+    Presentation["Presentation"] --> Application["Application"] --> Domain["Domain"] --> Repositories["Repositories"] --> Exposed["Kotlin Exposed"] --> PostgreSQL["PostgreSQL"]
 ```
 
 ---

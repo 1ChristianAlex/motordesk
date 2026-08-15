@@ -3,21 +3,18 @@ package com.khrix.infrastructure.azure
 import com.azure.communication.email.EmailAsyncClient
 import com.azure.communication.email.EmailClientBuilder
 import com.azure.core.credential.AzureKeyCredential
-import com.khrix.infrastructure.app.loadProperties
-import java.util.Properties
+import com.khrix.infrastructure.app.InfraCredentials
 
-object AzureCredentialConnection {
-    private val properties: Properties by lazy {
-        loadProperties()
-    }
+class AzureCredentialConnection(
+    infraCredentials: InfraCredentials,
+) {
+    private val azureConfig = infraCredentials.azureConfig
 
-    private val azureKeyCredential = AzureKeyCredential(properties.getProperty("azure.communication.access-key"))
+    private val azureKeyCredential = AzureKeyCredential(azureConfig.accessKey)
 
-    fun createAzureConnection(): EmailAsyncClient {
-        val endpoint = properties.getProperty("azure.communication.endpoint")
-        return EmailClientBuilder()
-            .endpoint(endpoint)
+    fun createAzureConnection(): EmailAsyncClient =
+        EmailClientBuilder()
+            .endpoint(azureConfig.accessKey)
             .credential(azureKeyCredential)
             .buildAsyncClient()
-    }
 }

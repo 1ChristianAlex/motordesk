@@ -26,4 +26,6 @@ class InfraCredentialsEnvImpl : InfraCredentials {
             user = requireEnv("DATABASE_USER"),
             password = requireEnv("DATABASE_PASSWORD"),
         )
+    override val azureConfig: AzureConfig
+        get() = TODO("Not yet implemented")
 }

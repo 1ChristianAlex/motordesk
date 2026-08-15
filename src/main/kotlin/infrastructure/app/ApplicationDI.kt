@@ -26,7 +26,7 @@ fun Application.appInfrastructure() {
         provide<Boolean>(name = "isDevelopment") { isDevelopment }
     }
 
-    val scope = InfraScope()
+    val scope = InfraCoroutineScope()
 
     dependencies {
         provide("infraScope") {

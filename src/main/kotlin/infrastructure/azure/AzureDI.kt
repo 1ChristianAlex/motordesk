@@ -6,10 +6,7 @@ import io.ktor.server.plugins.di.DependencyRegistry
 
 fun azureDI(dependencies: DependencyRegistry) {
     with(dependencies) {
-        provide<EmailSender> {
-            AzureEmailSender(
-                emailAsyncClient = AzureCredentialConnection.createAzureConnection(),
-            )
-        }
+        provide(AzureCredentialConnection::class)
+        provide<EmailSender>(AzureEmailSender::class)
     }
 }

@@ -2,20 +2,19 @@ package com.khrix.infrastructure.security
 
 import com.auth0.jwt.algorithms.Algorithm
 import com.khrix.infrastructure.app.loadProperties
-import java.util.Properties
 
 class JwtConfig {
-    private val properties: Properties by lazy {
+    private val properties by lazy {
         loadProperties()
     }
 
-    val issuer = properties.getProperty("jwt.issuer")
+    val issuer = properties.jwtIssuer
 
-    val audience = properties.getProperty("jwt.audience")
+    val audience = properties.jwtAudience
 
-    val realm = properties.getProperty("jwt.realm")
+    val realm = properties.jwtRealm
 
-    private val secret = properties.getProperty("jwt.secret")
+    private val secret = properties.jwtSecret
 
     val algorithm = Algorithm.HMAC256(secret)
 }
