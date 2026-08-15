@@ -3,8 +3,6 @@ package com.khrix.application
 import com.khrix.application.company.usecase.CreateNewCompanyUseCaseImpl
 import com.khrix.application.company.usecase.SearchCompanyByCnpjUseCaseImpl
 import com.khrix.application.core.coroutine.ApplicationScope
-import com.khrix.application.email.usecase.CreateEmailQueueUseCaseImpl
-import com.khrix.application.email.usecase.UpdateEmailQueueUseCaseImpl
 import com.khrix.application.inventory.CreateInventoryUseCaseImpl
 import com.khrix.application.inventory.DecrementItemInventoryUseCaseImpl
 import com.khrix.application.inventory.DeleteInventoryUseCaseImpl
@@ -12,6 +10,8 @@ import com.khrix.application.inventory.GetInventoryByIdOrSkuUseCaseImpl
 import com.khrix.application.inventory.GetInventoryByListIdOrSkuUseCaseImpl
 import com.khrix.application.inventory.UpdateInventoryUseCaseImpl
 import com.khrix.application.login.usecase.LoginUserUseCaseImpl
+import com.khrix.application.notification.usecase.CreateEmailQueueUseCaseImpl
+import com.khrix.application.notification.usecase.UpdateEmailQueueUseCaseImpl
 import com.khrix.application.register.usecase.CreateNewUserUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.CreateTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.DeleteTaskUseCaseImpl

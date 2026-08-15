@@ -1,5 +1,6 @@
 package com.khrix.infrastructure.app
 
+import com.khrix.infrastructure.azure.azureDI
 import com.khrix.infrastructure.exposed.appDatabase
 import com.khrix.infrastructure.http.httpDI
 import com.khrix.infrastructure.mongodb.appMongoDb
@@ -42,6 +43,7 @@ fun Application.appInfrastructure() {
         scope.shutdown()
     }
 
+    azureDI(dependencies)
     sqIdsDI(dependencies)
     appDatabase(dependencies)
     appMongoDb(dependencies, monitor)

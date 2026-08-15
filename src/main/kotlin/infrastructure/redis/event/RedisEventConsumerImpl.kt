@@ -1,5 +1,7 @@
 package com.khrix.infrastructure.redis.event
 
+import com.khrix.application.notification.EmailSender
+import com.khrix.application.notification.toEmailMessageBody
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.publisher.EventConsumer
 import com.khrix.domain.email.publisher.EventKeys
@@ -14,6 +16,7 @@ import java.time.Duration
 @OptIn(ExperimentalLettuceCoroutinesApi::class)
 class RedisEventConsumerImpl(
     private val redis: RedisConnection,
+    private val emailSender: EmailSender,
 ) : EventConsumer {
     private suspend fun createConsumerGroup() {
         runCatching {
@@ -51,9 +54,7 @@ class RedisEventConsumerImpl(
                             message.value,
                         )
 
-                    println(
-                        "Enviar e-mail para ${event.recipient}",
-                    )
+                    emailSender.send(event.toEmailMessageBody())
                 }
                 redis.commands.xack(
                     EventKeys.EVENT_NAME,

@@ -43,6 +43,7 @@ allprojects {
     }
 }
 dependencies {
+    // Ktor
     implementation(ktorLibs.serialization.kotlinx.json)
     implementation(ktorLibs.server.auth)
     implementation(ktorLibs.server.auth.jwt)
@@ -59,22 +60,30 @@ dependencies {
     implementation(ktorLibs.server.requestValidation)
     implementation(ktorLibs.server.resources)
 
+//  Ktor docs
     implementation(ktorLibs.server.swagger)
     implementation(ktorLibs.server.openapi)
     implementation(ktorLibs.server.routingOpenapi)
 
+    // Data Validation
     implementation(libs.logback.classic)
     implementation(libs.konform)
 
+//  Encript
     implementation(libs.argon2)
     implementation(libs.sqids)
 
-    implementation(libs.mongodb)
-
+//  Redis
     implementation(libs.lettuce)
 
+//  Database
+    implementation(libs.mongodb)
     implementation(libs.bundles.exposed)
 
+//    Azure
+    implementation(libs.azure.email)
+
+//    Test
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
     testImplementation(libs.mockk)
