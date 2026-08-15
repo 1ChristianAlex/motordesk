@@ -13,8 +13,12 @@ class AzureCredentialConnection(
     private val azureKeyCredential = AzureKeyCredential(azureConfig.accessKey)
 
     fun createAzureConnection(): EmailAsyncClient =
-        EmailClientBuilder()
-            .endpoint(azureConfig.accessKey)
-            .credential(azureKeyCredential)
-            .buildAsyncClient()
+        try {
+            EmailClientBuilder()
+                .endpoint(azureConfig.accessKey)
+                .credential(azureKeyCredential)
+                .buildAsyncClient()
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to create Azure Email client: ${e.message}", e)
+        }
 }

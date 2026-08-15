@@ -28,4 +28,6 @@ class InfraCredentialsEnvImpl : InfraCredentials {
         )
     override val azureConfig: AzureConfig
         get() = TODO("Not yet implemented")
+    override val jwtConfig: JwtConfig
+        get() = TODO("Not yet implemented")
 }

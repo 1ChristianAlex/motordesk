@@ -8,8 +8,9 @@ data class EmailMessageBody(
     val toRecipients: List<Email>,
     val subject: String,
     val body: String,
-    val senderAddress: Email = Email("donotreply@motordesk.azurecomm.net"),
-)
+) {
+    val senderAddress: Email = Email("donotreply@motordesk.azurecomm.net")
+}
 
 fun ServiceOrderEmailMetadata.toHtml(): String =
     buildString {

@@ -2,9 +2,12 @@ package com.khrix.infrastructure.azure.email
 
 import com.azure.communication.email.models.EmailAddress
 import com.azure.communication.email.models.EmailMessage
+import com.azure.communication.email.models.EmailSendResult
+import com.azure.core.util.polling.PollerFlux
 import com.khrix.application.notification.EmailMessageBody
 import com.khrix.application.notification.EmailSender
 import com.khrix.infrastructure.azure.AzureCredentialConnection
+import kotlinx.coroutines.reactor.awaitSingle
 
 class AzureEmailSender(
     credentialConnection: AzureCredentialConnection,
@@ -21,5 +24,10 @@ class AzureEmailSender(
                     setBodyHtml(bodyPlainText)
                 }
             }
+
+        emailAsyncClient.beginSend(emailMessage).awaitResult()
     }
+
+    private suspend fun PollerFlux<EmailSendResult, EmailSendResult>.awaitResult(): EmailSendResult =
+        last().flatMap { it.getFinalResult() }.awaitSingle()
 }

@@ -1,11 +1,17 @@
 package com.khrix.infrastructure.app
 
+import com.khrix.BuildKonfig
 import java.util.Properties
 
 class InfraCredentialsDevImpl : InfraCredentials {
     private val properties: Properties by lazy {
-        loadProperties()
+        Properties().apply {
+            object {}.javaClass.classLoader.getResourceAsStream(BuildKonfig.PROPERTIES_FILE)?.use {
+                load(it)
+            }
+        }
     }
+
     override val mongoConfig by lazy {
         MongoConfig(
             url = properties.getProperty("mongo.url"),
@@ -33,6 +39,14 @@ class InfraCredentialsDevImpl : InfraCredentials {
         AzureConfig(
             accessKey = properties.getProperty("azure.accessKey"),
             communicationEndpoint = properties.getProperty("azure.communicationEndpoint"),
+        )
+    }
+    override val jwtConfig: JwtConfig by lazy {
+        JwtConfig(
+            issuer = properties.getProperty("jwt.issuer"),
+            audience = properties.getProperty("jwt.audience"),
+            realm = properties.getProperty("jwt.realm"),
+            secret = properties.getProperty("jwt.secret"),
         )
     }
 }

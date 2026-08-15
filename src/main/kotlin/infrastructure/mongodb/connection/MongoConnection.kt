@@ -8,10 +8,19 @@ class MongoConnection(
     private val infraCredentials: InfraCredentials,
 ) {
     private val client: MongoClient by lazy {
-        MongoClient.create(infraCredentials.mongoConfig.connectionString)
+        try {
+            MongoClient.create(infraCredentials.mongoConfig.connectionString)
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to create MongoDB client: ${e.message}", e)
+        }
     }
 
-    val database: MongoDatabase = client.getDatabase(infraCredentials.mongoConfig.database)
+    val database: MongoDatabase =
+        try {
+            client.getDatabase(infraCredentials.mongoConfig.database)
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to get MongoDB database: ${e.message}", e)
+        }
 
     fun close() {
         client.close()

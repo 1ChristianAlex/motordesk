@@ -2,11 +2,12 @@ package com.khrix.infrastructure.http
 
 import com.auth0.jwt.JWT
 import com.khrix.domain.user.model.Role
+import com.khrix.infrastructure.app.InfraCredentials
+import com.khrix.infrastructure.app.JwtConfig
 import com.khrix.infrastructure.http.controllers.core.AppController
 import com.khrix.infrastructure.http.controllers.core.AuthNames
 import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.core.exceptions.HandlerException
-import com.khrix.infrastructure.security.JwtConfig
 import com.khrix.infrastructure.security.UserClaims
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
@@ -71,10 +72,10 @@ private fun Application.bindRoutes() {
 }
 
 private fun Application.bindAuth() {
-    val jwtConfig: JwtConfig by dependencies
+    val infraCredentials: InfraCredentials by dependencies
 
     fun JWTAuthenticationProvider.Config.jwtConfigApply(allowedRoles: List<Role> = emptyList()) {
-        clientJwtConfig(jwtConfig)
+        clientJwtConfig(infraCredentials.jwtConfig)
 
         if (allowedRoles.isNotEmpty()) {
             validate { credential ->

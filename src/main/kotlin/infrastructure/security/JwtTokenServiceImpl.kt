@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.security.TokenService
+import com.khrix.infrastructure.app.JwtConfig
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn

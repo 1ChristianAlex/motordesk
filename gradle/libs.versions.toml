@@ -3,6 +3,7 @@ azure-email = "1.2.0-beta.1"
 exposed = "1.4.0"
 konform = "0.11.1"
 kotlin = "2.4.20-RC"
+coroutine = "1.11.0"
 lettuce = "7.6.0.RELEASE"
 logback = "1.5.37"
 mockk = "1.14.11"
@@ -32,7 +33,16 @@ mongodb = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref 
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 sqids = { module = "org.sqids:sqids-kotlin", version.ref = "sqids" }
 
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
+coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "coroutine" }
+coroutines-reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactive", version.ref = "coroutine" }
+
 [bundles]
+coroutines = [
+    "coroutines-core",
+    "coroutines-reactor",
+    "coroutines-reactive"
+]
 exposed = [
     "exposed-core",
     "exposed-dao",

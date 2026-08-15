@@ -6,7 +6,6 @@ import io.ktor.server.plugins.di.DependencyRegistry
 
 fun securityDI(dependencies: DependencyRegistry) {
     with(dependencies) {
-        provide(JwtConfig::class)
         provide<TokenService>(JwtTokenServiceImpl::class)
         provide<PasswordHasher>(PasswordHasherArgonImpl::class)
     }

@@ -45,6 +45,9 @@ sonar {
 }
 
 dependencies {
+    // Coroutines
+    implementation(libs.bundles.coroutines)
+
     // Ktor
     implementation(ktorLibs.serialization.kotlinx.json)
     implementation(ktorLibs.server.auth)
