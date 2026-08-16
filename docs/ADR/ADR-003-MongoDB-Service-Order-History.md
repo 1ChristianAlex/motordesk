@@ -34,21 +34,9 @@ PostgreSQL remains the system of record for transactional data.
 
 ## Architecture
 
-``` text
-Service Order Update
-        |
-        v
- PostgreSQL
-(Current State)
-        |
-        v
-ServiceOrderHistoryRepository
-        |
-        v
- MongoDB Collection
-        |
-        v
- Service Order Snapshot
+```mermaid
+flowchart TB
+    ServiceOrderUpdate["Service Order Update"] --> PostgreSQL["PostgreSQL<br/>(Current State)"] --> ServiceOrderHistoryRepository["ServiceOrderHistoryRepository"] --> MongoDBCollection["MongoDB Collection"] --> ServiceOrderSnapshot["Service Order Snapshot"]
 ```
 
 ## Document Structure

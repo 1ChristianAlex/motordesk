@@ -1,0 +1,62 @@
+info:
+  name: Client - Get services orders
+  type: http
+  seq: 5
+  tags:
+    - service-order
+    - client
+
+http:
+  method: GET
+  url: "{{baseUrl}}/service-order/client"
+  auth:
+    type: bearer
+    token: "{{clientToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: "200"
+    request:
+      url: "{{baseUrl}}/service-order/client"
+      method: GET
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": null,
+            "status": 7091,
+            "errors": null
+          }
+  - name: 400 Response
+    description: "400"
+    request:
+      url: "{{baseUrl}}/service-order/client"
+      method: GET
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {},
+            "status": 9036,
+            "errors": null
+          }
+
+docs: Get all service order from self

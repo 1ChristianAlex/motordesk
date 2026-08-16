@@ -20,14 +20,17 @@ import org.jetbrains.exposed.v1.jdbc.update
 
 class ServiceOrderExposedRepositoryImpl(
     database: Database,
-) : BaseExposedRepository<ServiceOrderEntity, ServiceOrder>(database), ServiceOrderRepository {
-    override suspend fun read(id: Int): ServiceOrder? {
-        return suspendedQuery {
+) : BaseExposedRepository<ServiceOrderEntity, ServiceOrder>(database),
+    ServiceOrderRepository {
+    override suspend fun read(id: Int): ServiceOrder? =
+        suspendedQuery {
             ServiceOrderEntity.findById(id)?.toModel()
         }
-    }
 
-    override suspend fun update(id: Int, data: ServiceOrder) {
+    override suspend fun update(
+        id: Int,
+        data: ServiceOrder,
+    ) {
         suspendedQuery {
             ServiceOrderEntity.findByIdAndUpdate(id) {
                 it.client = UserEntity[data.client.id]
@@ -43,24 +46,26 @@ class ServiceOrderExposedRepositoryImpl(
         }
     }
 
-    override suspend fun create(data: ServiceOrder): Int {
-        return createServiceOrder(data).id.value
-    }
+    override suspend fun create(data: ServiceOrder): Int = createServiceOrder(data).id.value
 
-    private suspend fun createServiceOrder(data: ServiceOrder) = suspendedQuery {
-        ServiceOrderEntity.new {
-            client = UserEntity[data.client.id]
-            operator = UserEntity[data.operator.id]
-            tasks = TaskEntity.forIds(data.tasks.map { task -> task.id })
-            parts = InventoryEntity.forIds(data.inventoryItems.map { part -> part.id })
-            vehicle = VehicleEntity[data.vehicle.id]
-            status = data.status
-            complaint = data.complaint
-            diagnosis = data.diagnosis
-            totalAmount = data.totalPrice
-            code = data.code
+    private suspend fun createServiceOrder(data: ServiceOrder) =
+        suspendedQuery {
+            val order =
+                ServiceOrderEntity.new {
+                    client = UserEntity[data.client.id]
+                    operator = UserEntity[data.operator.id]
+                    tasks = TaskEntity.forIds(data.tasks.map { task -> task.id })
+                    parts = InventoryEntity.forIds(data.inventoryItems.map { part -> part.id })
+                    vehicle = VehicleEntity[data.vehicle.id]
+                    status = data.status
+                    complaint = data.complaint
+                    diagnosis = data.diagnosis
+                    totalAmount = data.totalPrice
+                    code = data.code
+                }
+
+            order
         }
-    }
 
     override suspend fun delete(id: Int) {
         suspendedQuery {
@@ -70,37 +75,32 @@ class ServiceOrderExposedRepositoryImpl(
         }
     }
 
-    override suspend fun createRead(data: ServiceOrder): ServiceOrder {
-        return createServiceOrder(data).toModel()
-    }
+    override suspend fun createRead(data: ServiceOrder): ServiceOrder = createServiceOrder(data).toModel()
 
-    override suspend fun getByClientId(clientId: Int): List<ServiceOrder> {
-        return suspendedQuery {
+    override suspend fun getByClientId(clientId: Int): List<ServiceOrder> =
+        suspendedQuery {
             ServiceOrderEntity.find { ServiceOrdersTable.client eq clientId }.map { it.toModel() }
         }
-    }
 
-    override suspend fun getOrderByVehicle(vehicleId: Int): List<ServiceOrder> {
-        return suspendedQuery {
+    override suspend fun getOrderByVehicle(vehicleId: Int): List<ServiceOrder> =
+        suspendedQuery {
             ServiceOrderEntity.find { ServiceOrdersTable.vehicle eq vehicleId }.map { it.toModel() }
         }
-    }
 
-    override suspend fun getByCode(code: String): ServiceOrder? {
-        return suspendedQuery {
+    override suspend fun getByCode(code: String): ServiceOrder? =
+        suspendedQuery {
             ServiceOrderEntity.find { ServiceOrdersTable.code eq code }.map { it.toModel() }.firstOrNull()
         }
-    }
 
     override suspend fun updateServiceOrderTask(
         id: Int,
         taskId: Int,
-        taskStatus: TaskProgressStatus
-    ) {
-        return suspendedQuery {
-            ServiceOrderTasksTable.update({ (ServiceOrderTasksTable.task eq taskId) and (ServiceOrderTasksTable.serviceOrder eq id) }) {
-                it[ServiceOrderTasksTable.status] = taskStatus
-            }
+        taskStatus: TaskProgressStatus,
+    ) = suspendedQuery {
+        ServiceOrderTasksTable.update({
+            (ServiceOrderTasksTable.task eq taskId) and (ServiceOrderTasksTable.serviceOrder eq id)
+        }) {
+            it[ServiceOrderTasksTable.status] = taskStatus
         }
     }
 }

@@ -42,40 +42,37 @@ coroutine API.
 
 ## Architecture
 
-``` text
-CreateServiceOrder
-        |
-        v
- EventPublisher
-        |
-        v
-RedisStreamPublisher
-        |
-        v
- Redis Streams
-        |
-   +----+----+
-   |         |
- Email    Future
-Worker   Consumers
+```mermaid
+flowchart TB
+    CreateServiceOrder["CreateServiceOrder"] --> EventPublisher["EventPublisher"] --> RedisStreamPublisher["RedisStreamPublisher"] --> RedisStreams["Redis Streams"]
+    RedisStreams --> EmailWorker["Email Worker"]
+    RedisStreams --> FutureConsumers["Future Consumers"]
 ```
 
 ## Adopted Structure
 
-``` text
-application/
-└── event/
-    ├── EventPublisher
-    └── EmailRequestedEvent
+```mermaid
+flowchart TB
+    subgraph Application["application"]
+        EventDir["event/"]
+        EventPublisher["EventPublisher"]
+        EmailRequestedEvent["EmailRequestedEvent"]
+        EventDir --> EventPublisher
+        EventDir --> EmailRequestedEvent
+    end
 
-infrastructure/
-├── redis/
-│   ├── RedisConnection
-│   ├── RedisStreamPublisher
-│   ├── RedisEmailConsumer
-│   └── RedisBootstrap
-└── email/
-    └── SmtpEmailSender
+    subgraph Infrastructure["infrastructure"]
+        subgraph Redis["redis/"]
+            RedisConnection["RedisConnection"]
+            RedisStreamPublisher["RedisStreamPublisher"]
+            RedisEmailConsumer["RedisEmailConsumer"]
+            RedisBootstrap["RedisBootstrap"]
+        end
+
+        subgraph Email["email/"]
+            SmtpEmailSender["SmtpEmailSender"]
+        end
+    end
 ```
 
 ## Flow

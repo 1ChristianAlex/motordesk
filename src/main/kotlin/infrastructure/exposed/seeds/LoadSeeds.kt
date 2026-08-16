@@ -2,7 +2,7 @@ package com.khrix.infrastructure.exposed.seeds
 
 import com.khrix.domain.serviceorder.task.model.TaskCategory
 import com.khrix.domain.user.model.Role
-import com.khrix.domain.user.security.PasswordHasher
+import com.khrix.domain.user.security.SecurityHasher
 import com.khrix.domain.vehicle.model.FuelType
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
 import com.khrix.infrastructure.exposed.company.database.CompanyEntity
@@ -21,7 +21,7 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.math.BigDecimal
 
 class LoadSeeds(
-    private val passwordHasher: PasswordHasher,
+    private val securityHasher: SecurityHasher,
 ) {
     fun loadSeeds(database: Database) {
         transaction(database) {
@@ -283,28 +283,30 @@ class LoadSeeds(
     }
 
     private fun createCompanyUser() {
-        val addressData = AddressEntity.new {
-            street = "Rua das Flores"
-            number = "123"
-            complement = "Apto 2B"
-            neighborhood = "Centro"
-            city = "São Paulo"
-            state = "SP"
-            country = "Brazil"
-            zipCode = "01310100"
-        }
-        val userData = UserEntity.new {
-            firstName = "Christian"
-            lastName = "Alexsander"
-            email = "christian.alex@email.com"
-            password = passwordHasher.hash("test@123!")
-            phone = "4737339296"
-            cpf = "21641780096"
-            isActive = true
-            isEmailValid = true
-            address = addressData
-            role = Role.ADMIN
-        }
+        val addressData =
+            AddressEntity.new {
+                street = "Rua das Flores"
+                number = "123"
+                complement = "Apto 2B"
+                neighborhood = "Centro"
+                city = "São Paulo"
+                state = "SP"
+                country = "Brazil"
+                zipCode = "01310100"
+            }
+        val userData =
+            UserEntity.new {
+                firstName = "Christian"
+                lastName = "Alexsander"
+                email = "christian.alex@email.com"
+                password = securityHasher.hash("test@123!")
+                phone = "4737339296"
+                cpf = "21641780096"
+                isActive = true
+                isEmailValid = true
+                address = addressData
+                role = Role.ADMIN
+            }
         CompanyEntity.new {
             name = "Fake Company"
             cnpj = "22855604000152"
@@ -313,22 +315,23 @@ class LoadSeeds(
     }
 
     private fun createDefaultUser() {
-        val addressData = AddressEntity.new {
-            street = "Rua das Flores"
-            number = "123"
-            complement = "Apto 4B"
-            neighborhood = "Centro"
-            city = "São Paulo"
-            state = "SP"
-            country = "Brazil"
-            zipCode = "01310100"
-        }
+        val addressData =
+            AddressEntity.new {
+                street = "Rua das Flores"
+                number = "123"
+                complement = "Apto 4B"
+                neighborhood = "Centro"
+                city = "São Paulo"
+                state = "SP"
+                country = "Brazil"
+                zipCode = "01310100"
+            }
 
         UserEntity.new {
             firstName = "Chris"
             lastName = "Alexsander"
-            email = "christian.alexsander@email.com"
-            password = passwordHasher.hash("test@123!")
+            email = "gamamik261@hutdot.com"
+            password = securityHasher.hash("test@123!")
             phone = "4737339296"
             cpf = "84783736081"
             isActive = true
@@ -337,5 +340,3 @@ class LoadSeeds(
         }
     }
 }
-
-

@@ -8,8 +8,6 @@ cloudResources:
   collections:
     ../postman/collections/Motor Desk API: 282f1943-306c-45ad-90ab-9b8df16d33bb
 
-# All resources in the `postman/` folder are automatically registered in Local View.
-# Point to additional files outside the `postman/` folder to register them individually. Example:
-#localResources:
-#  collections:
-#    - ../tests/E2E Test Collection/
+localResources:
+  specs:
+    - ../postman/specs/motordesk-openapi-export/motordesk-openapi-export.yaml

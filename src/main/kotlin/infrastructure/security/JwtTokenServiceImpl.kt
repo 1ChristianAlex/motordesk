@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.khrix.domain.core.getCurrentUtcDateTime
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.security.TokenService
+import com.khrix.infrastructure.app.InfraConfig
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -13,13 +14,13 @@ import java.util.Date
 import kotlin.time.toJavaInstant
 
 class JwtTokenServiceImpl(
-    private val jwtConfig: JwtConfig,
+    private val infraConfig: InfraConfig,
 ) : TokenService {
     override fun generate(user: User): String {
         val expiration = getCurrentUtcDateTime().date.plus(1, DateTimeUnit.DAY)
         val javaInstant = expiration.atStartOfDayIn(TimeZone.UTC).toJavaInstant()
         val claims = UserClaims.toClaims(user)
-
+        val jwtConfig = infraConfig.jwtConfig
         val token =
             JWT
                 .create()

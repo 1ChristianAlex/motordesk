@@ -4,6 +4,7 @@ import com.khrix.application.company.usecase.CreateNewCompanyUseCaseImpl
 import com.khrix.application.company.usecase.SearchCompanyByCnpjUseCaseImpl
 import com.khrix.application.core.coroutine.ApplicationScope
 import com.khrix.application.email.usecase.CreateEmailQueueUseCaseImpl
+import com.khrix.application.email.usecase.SendEmailUseCaseImpl
 import com.khrix.application.email.usecase.UpdateEmailQueueUseCaseImpl
 import com.khrix.application.inventory.CreateInventoryUseCaseImpl
 import com.khrix.application.inventory.DecrementItemInventoryUseCaseImpl
@@ -36,6 +37,7 @@ import com.khrix.application.vehicles.usecase.UpdateVehicleUseCaseImpl
 import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
+import com.khrix.domain.email.usecase.SendEmailUseCase
 import com.khrix.domain.email.usecase.UpdateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.CreateInventoryUseCase
 import com.khrix.domain.inventory.usecase.DecrementItemInventoryUseCase
@@ -107,6 +109,7 @@ fun Application.applicationDI() {
         provide<GetServiceOrdersByCodeUseCase>(GetServiceOrdersByCodeUseCaseImpl::class)
         provide<GetClientServiceOrdersByCodeUseCase>(GetClientServiceOrdersByCodeUseCaseImpl::class)
         provide<UpdateEmailQueueUseCase>(UpdateEmailQueueUseCaseImpl::class)
+        provide<SendEmailUseCase>(SendEmailUseCaseImpl::class)
     }
 
     monitor.subscribe(

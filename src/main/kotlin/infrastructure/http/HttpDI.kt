@@ -1,5 +1,6 @@
 package com.khrix.infrastructure.http
 
+import com.khrix.application.serviceorder.ApprovalLinkGenerator
 import com.khrix.infrastructure.http.controllers.core.AppController
 import com.khrix.infrastructure.http.controllers.login.LoginController
 import com.khrix.infrastructure.http.controllers.login.handlers.LoginHandler
@@ -32,10 +33,12 @@ import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByO
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.GetVehicleByOwnerHandlerImpl
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandler
 import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicleHandlerImpl
+import com.khrix.infrastructure.http.helper.ApprovalLinkGeneratorKtorImpl
 import io.ktor.server.plugins.di.DependencyRegistry
 
 fun httpDI(dependencies: DependencyRegistry) {
     with(dependencies) {
+        provide<ApprovalLinkGenerator>(ApprovalLinkGeneratorKtorImpl::class)
         provide<CreateNewUserHandler>(CreateNewUserHandlerImpl::class)
         provide<LoginHandler>(LoginHandlerImpl::class)
         provide<GetSelfUserHandler>(GetSelfUserHandlerImpl::class)
@@ -50,7 +53,7 @@ fun httpDI(dependencies: DependencyRegistry) {
         provide<GetClientServiceOrderItemHandler>(GetClientServiceOrderItemHandlerImpl::class)
         provide<GetServiceOrderItemHandler>(GetServiceOrderItemHandlerImpl::class)
         provide<List<AppController>> {
-            listOf<AppController>(
+            listOf(
                 RegisterController(resolve()),
                 LoginController(resolve()),
                 UserController(resolve(), resolve()),
