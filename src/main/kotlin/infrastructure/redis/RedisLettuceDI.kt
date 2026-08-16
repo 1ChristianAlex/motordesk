@@ -7,6 +7,7 @@ import com.khrix.infrastructure.redis.connection.RedisConnection
 import com.khrix.infrastructure.redis.event.RedisEmailPublisherImpl
 import com.khrix.infrastructure.redis.event.RedisEventConsumerImpl
 import com.khrix.infrastructure.redis.event.handler.HandleEmailApprovalEvent
+import com.khrix.infrastructure.redis.event.handler.HandleEmailUpdateEvent
 import com.khrix.infrastructure.redis.event.handler.RedisConsumerHandler
 import io.ktor.events.Events
 import io.ktor.server.application.ApplicationStopping
@@ -19,7 +20,10 @@ fun redisLettuceDi(
     with(dependencies) {
         provide(RedisConnection::class)
         provide("consumerHandlerList") {
-            listOf<RedisConsumerHandler>(HandleEmailApprovalEvent(resolve(), resolve()))
+            listOf<RedisConsumerHandler>(
+                HandleEmailUpdateEvent(resolve(), resolve()),
+                HandleEmailApprovalEvent(resolve(), resolve()),
+            )
         }
         provide<EventPublisher>(RedisEmailPublisherImpl::class)
         provide<EventConsumer>(RedisEventConsumerImpl::class)

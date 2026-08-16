@@ -5,8 +5,10 @@ import com.khrix.domain.serviceorder.repository.ServiceOrderApprovalRepository
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
 import com.khrix.infrastructure.exposed.serviceorder.database.OrderApprovalEntity
+import com.khrix.infrastructure.exposed.serviceorder.database.OrderApprovalTable
 import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderEntity
 import com.khrix.infrastructure.exposed.serviceorder.mapper.toModel
+import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database
 
 class ServiceOrderApprovalExposedRepositoryImpl(
@@ -38,7 +40,6 @@ class ServiceOrderApprovalExposedRepositoryImpl(
                 it.tokenHash = data.tokenHash
                 it.expiresAt = data.expiresAt
                 it.usedAt = data.usedAt
-                it.revokedAt = data.revokedAt
             }
         }
     }
@@ -52,8 +53,12 @@ class ServiceOrderApprovalExposedRepositoryImpl(
                     tokenHash = data.tokenHash
                     expiresAt = data.expiresAt
                     usedAt = data.usedAt
-                    revokedAt = data.revokedAt
                 }.toModel()
         }
     }
+
+    override suspend fun getByToken(token: String): ServiceOrderApprovalToken? =
+        suspendedQuery {
+            OrderApprovalEntity.find { OrderApprovalTable.tokenHash eq token }.map { it.toModel() }.firstOrNull()
+        }
 }

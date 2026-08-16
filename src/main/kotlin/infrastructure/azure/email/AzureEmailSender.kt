@@ -8,18 +8,25 @@ import com.khrix.application.email.EmailMessageBody
 import com.khrix.application.email.EmailSender
 import com.khrix.infrastructure.azure.AzureCredentialConnection
 import kotlinx.coroutines.reactor.awaitSingle
+import org.slf4j.LoggerFactory
 
 class AzureEmailSender(
     credentialConnection: AzureCredentialConnection,
 ) : EmailSender {
     private val emailAsyncClient = credentialConnection.createAzureConnection()
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     override suspend fun send(message: EmailMessageBody) {
         val emailMessage =
             EmailMessage().apply {
                 message.run {
                     setSenderAddress(senderAddress.value)
-                    setToRecipients(toRecipients.map { EmailAddress(it.value) })
+                    setToRecipients(
+                        toRecipients.map {
+                            logger.info("Sending email to " + it.value)
+                            EmailAddress(it.value)
+                        },
+                    )
                     setSubject(subject)
                     setBodyHtml(body)
                 }

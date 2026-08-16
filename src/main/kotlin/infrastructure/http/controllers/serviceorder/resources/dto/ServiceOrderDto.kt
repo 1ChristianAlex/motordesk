@@ -16,7 +16,7 @@ data class ServiceOrderInputDto(
     val complaint: String,
     val diagnosis: String? = null,
     val tasksIds: List<Int>,
-    val inventoryItemsIds: List<Int> = listOf()
+    val inventoryItemsIds: List<Int> = listOf(),
 )
 
 @Serializable
@@ -36,7 +36,10 @@ data class UpdateServiceOrderInputDto(
     }
 }
 
-data class ClientServiceOrderItemInputDto(val clientId: Int, val code: String)
+data class ClientServiceOrderItemInputDto(
+    val clientId: Int,
+    val code: String,
+)
 
 @Serializable
 data class ServiceOrderOutputDto(
@@ -52,5 +55,11 @@ data class ServiceOrderOutputDto(
     val totalPrice: BigDecimal,
     val diagnosis: String? = null,
     val tasks: List<TaskOutputDto>,
-    val inventoryItems: List<InventoryItemOutputDto> = listOf()
+    val inventoryItems: List<InventoryItemOutputDto> = listOf(),
+)
+
+@Serializable
+data class ApprovesServiceOrderInputDto(
+    val token: String,
+    val code: String,
 )

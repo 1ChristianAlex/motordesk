@@ -10,9 +10,11 @@ data class ServiceOrderApprovalToken(
     val serviceOrderCode: String,
     val tokenHash: String,
     val expiresAt: Instant,
-    val usedAt: Instant?,
-    val revokedAt: Instant?,
+    val _usedAt: Instant?,
 ) {
+    var usedAt = _usedAt
+        private set
+
     companion object {
         private const val SALT_HASH = "SALT_THIS_THING"
 
@@ -33,6 +35,11 @@ data class ServiceOrderApprovalToken(
         generateTokenHash(securityHasher, serviceOrderCode),
         generateExpiresAt(),
         null,
-        null,
     )
+
+    fun isAvailableToApprove(): Boolean = Clock.System.now() < expiresAt
+
+    fun setUsed() {
+        usedAt = Clock.System.now()
+    }
 }

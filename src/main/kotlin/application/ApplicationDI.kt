@@ -4,7 +4,8 @@ import com.khrix.application.company.usecase.CreateNewCompanyUseCaseImpl
 import com.khrix.application.company.usecase.SearchCompanyByCnpjUseCaseImpl
 import com.khrix.application.core.coroutine.ApplicationScope
 import com.khrix.application.email.usecase.CreateEmailQueueUseCaseImpl
-import com.khrix.application.email.usecase.SendEmailUseCaseImpl
+import com.khrix.application.email.usecase.SendEmailApprovalUseCaseImpl
+import com.khrix.application.email.usecase.SendEmailUpdateUseCaseImpl
 import com.khrix.application.email.usecase.UpdateEmailQueueUseCaseImpl
 import com.khrix.application.inventory.CreateInventoryUseCaseImpl
 import com.khrix.application.inventory.DecrementItemInventoryUseCaseImpl
@@ -19,6 +20,7 @@ import com.khrix.application.serviceorder.task.usecase.DeleteTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.GetTaskByIdUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.GetTaskByListIdUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.UpdateTaskUseCaseImpl
+import com.khrix.application.serviceorder.usecase.ApprovesServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.CreateServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.DeleteServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.GetClientServiceOrdersByCodeUseCaseImpl
@@ -37,7 +39,8 @@ import com.khrix.application.vehicles.usecase.UpdateVehicleUseCaseImpl
 import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
 import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
-import com.khrix.domain.email.usecase.SendEmailUseCase
+import com.khrix.domain.email.usecase.SendEmailApprovalUseCase
+import com.khrix.domain.email.usecase.SendEmailUpdateUseCase
 import com.khrix.domain.email.usecase.UpdateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.CreateInventoryUseCase
 import com.khrix.domain.inventory.usecase.DecrementItemInventoryUseCase
@@ -50,6 +53,7 @@ import com.khrix.domain.serviceorder.task.usecase.DeleteTaskUseCase
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByIdUseCase
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.task.usecase.UpdateTaskUseCase
+import com.khrix.domain.serviceorder.usecase.ApprovesServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeUseCase
@@ -109,7 +113,9 @@ fun Application.applicationDI() {
         provide<GetServiceOrdersByCodeUseCase>(GetServiceOrdersByCodeUseCaseImpl::class)
         provide<GetClientServiceOrdersByCodeUseCase>(GetClientServiceOrdersByCodeUseCaseImpl::class)
         provide<UpdateEmailQueueUseCase>(UpdateEmailQueueUseCaseImpl::class)
-        provide<SendEmailUseCase>(SendEmailUseCaseImpl::class)
+        provide<SendEmailApprovalUseCase>(SendEmailApprovalUseCaseImpl::class)
+        provide<ApprovesServiceOrderUseCase>(ApprovesServiceOrderUseCaseImpl::class)
+        provide<SendEmailUpdateUseCase>(SendEmailUpdateUseCaseImpl::class)
     }
 
     monitor.subscribe(

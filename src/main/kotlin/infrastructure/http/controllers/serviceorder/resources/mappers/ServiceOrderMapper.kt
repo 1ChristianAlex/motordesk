@@ -1,9 +1,11 @@
 package com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers
 
 import com.khrix.domain.serviceorder.model.ServiceOrder
+import com.khrix.domain.serviceorder.usecase.ApprovesServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeCommand
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ApprovesServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ClientServiceOrderItemInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
@@ -11,30 +13,30 @@ import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.Upda
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.mappers.toOutputDto
 
-fun ServiceOrderInputDto.toCommand(): CreateServiceOrderCommand {
-    return CreateServiceOrderCommand(
+fun ServiceOrderInputDto.toCommand(): CreateServiceOrderCommand =
+    CreateServiceOrderCommand(
         clientId = this.clientId,
         operatorId = this.operatorId,
         vehicleId = this.vehicleId,
         complaint = this.complaint,
         diagnosis = this.diagnosis,
         tasksIds = this.tasksIds,
-        inventoryItemsIds = this.inventoryItemsIds
+        inventoryItemsIds = this.inventoryItemsIds,
     )
-}
 
-fun UpdateServiceOrderInputDto.toCommand() = UpdateServiceOrderCommand(
-    code = this.code,
-    complaint = this.complaint,
-    diagnosis = this.diagnosis,
-    tasksIds = this.tasksIds,
-    inventoryItemsIds = this.inventoryItemsIds,
-    status = this.status,
-    operatorRole = this.operatorRole
-)
+fun UpdateServiceOrderInputDto.toCommand() =
+    UpdateServiceOrderCommand(
+        code = this.code,
+        complaint = this.complaint,
+        diagnosis = this.diagnosis,
+        tasksIds = this.tasksIds,
+        inventoryItemsIds = this.inventoryItemsIds,
+        status = this.status,
+        operatorRole = this.operatorRole,
+    )
 
-fun ServiceOrder.toOutputDto(): ServiceOrderOutputDto {
-    return ServiceOrderOutputDto(
+fun ServiceOrder.toOutputDto(): ServiceOrderOutputDto =
+    ServiceOrderOutputDto(
         id = this.id,
         client = this.client.toOutputDto(true),
         operator = this.operator.toOutputDto(true),
@@ -46,13 +48,13 @@ fun ServiceOrder.toOutputDto(): ServiceOrderOutputDto {
         inventoryItems = this.inventoryItems.map { it.toOutputDto() },
         expectedMinutes = this.expectedMinutes,
         totalPrice = this.totalPrice,
-        code = this.code
+        code = this.code,
     )
-}
-
 
 fun ClientServiceOrderItemInputDto.toCommand() =
     GetClientServiceOrdersByCodeCommand(
         code = this.code,
-        clientId
+        clientId,
     )
+
+fun ApprovesServiceOrderInputDto.toCommand() = ApprovesServiceOrderCommand(token, code)

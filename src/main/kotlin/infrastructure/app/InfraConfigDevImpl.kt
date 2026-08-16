@@ -51,7 +51,7 @@ class InfraConfigDevImpl : InfraConfig {
     }
     override val serverConfig by lazy {
         ServerConfig(
-            host = properties.getProperty("http.host") ?: "0.0.0.0",
+            host = properties.getProperty("http.host") ?: "127.0.0.1",
             port = properties.getProperty("http.port")?.toInt() ?: 8080,
             protocol =
                 properties.getProperty("http.protocol")?.let {
