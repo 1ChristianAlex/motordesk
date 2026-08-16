@@ -1,27 +1,59 @@
 package com.khrix.infrastructure.exposed.serviceorder.repository
 
-import com.khrix.domain.serviceorder.model.ServiceOrder
+import com.khrix.domain.serviceorder.model.ServiceOrderApprovalToken
 import com.khrix.domain.serviceorder.repository.ServiceOrderApprovalRepository
+import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.infrastructure.exposed.BaseExposedRepository
+import com.khrix.infrastructure.exposed.serviceorder.database.OrderApprovalEntity
 import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderEntity
+import com.khrix.infrastructure.exposed.serviceorder.mapper.toModel
 import org.jetbrains.exposed.v1.jdbc.Database
 
-class ServiceOrderApprovalRepositoryImpl(
+class ServiceOrderApprovalExposedRepositoryImpl(
     database: Database,
-) : BaseExposedRepository<ServiceOrderEntity, ServiceOrder>(database),
+    private val serviceOrderRepository: ServiceOrderRepository,
+) : BaseExposedRepository<ServiceOrderEntity, ServiceOrderApprovalToken>(database),
     ServiceOrderApprovalRepository {
-    override suspend fun read(id: Int): ServiceOrder? {
-        TODO("Not yet implemented")
+    private suspend fun getServiceOrder(serviceOrderCode: String): ServiceOrderEntity {
+        val serviceOrder = serviceOrderRepository.getByCode(serviceOrderCode)!!.id
+
+        return suspendedQuery {
+            ServiceOrderEntity[serviceOrder]
+        }
     }
+
+    override suspend fun read(id: Int): ServiceOrderApprovalToken? =
+        suspendedQuery {
+            OrderApprovalEntity.findById(id)?.toModel()
+        }
 
     override suspend fun update(
         id: Int,
-        data: ServiceOrder,
+        data: ServiceOrderApprovalToken,
     ) {
-        TODO("Not yet implemented")
+        val serviceOrderEntity = getServiceOrder(data.serviceOrderCode)
+        suspendedQuery {
+            OrderApprovalEntity.findByIdAndUpdate(id) {
+                it.serviceOrder = serviceOrderEntity
+                it.tokenHash = data.tokenHash
+                it.expiresAt = data.expiresAt
+                it.usedAt = data.usedAt
+                it.revokedAt = data.revokedAt
+            }
+        }
     }
 
-    override suspend fun create(data: ServiceOrder): Int {
-        TODO("Not yet implemented")
+    override suspend fun createRead(data: ServiceOrderApprovalToken): ServiceOrderApprovalToken {
+        val serviceOrderEntity = getServiceOrder(data.serviceOrderCode)
+        return suspendedQuery {
+            OrderApprovalEntity
+                .new {
+                    serviceOrder = serviceOrderEntity
+                    tokenHash = data.tokenHash
+                    expiresAt = data.expiresAt
+                    usedAt = data.usedAt
+                    revokedAt = data.revokedAt
+                }.toModel()
+        }
     }
 }

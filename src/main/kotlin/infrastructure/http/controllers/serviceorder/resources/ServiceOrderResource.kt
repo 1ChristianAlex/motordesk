@@ -44,6 +44,12 @@ class ServiceOrderResource {
         class Individual(
             val parent: Client = Client(),
             val code: String,
-        )
+        ) {
+            @Resource("approval")
+            class Approval(
+                val parent: Individual,
+                val token: String,
+            )
+        }
     }
 }

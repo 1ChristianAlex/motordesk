@@ -4,16 +4,15 @@ import com.khrix.infrastructure.azure.azureDI
 import com.khrix.infrastructure.exposed.appDatabase
 import com.khrix.infrastructure.http.httpDI
 import com.khrix.infrastructure.mongodb.appMongoDb
-import com.khrix.infrastructure.redis.redisLettuceDi
 import com.khrix.infrastructure.security.securityDI
 import com.khrix.infrastructure.sqids.sqIdsDI
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.plugins.di.dependencies
 
-private fun getLazyInfraCredentials(isDevelopment: Boolean): InfraCredentials {
+private fun getLazyInfraCredentials(isDevelopment: Boolean): InfraConfig {
     val result by lazy {
-        if (isDevelopment) InfraCredentialsDevImpl() else InfraCredentialsEnvImpl()
+        if (isDevelopment) InfraConfigDevImpl() else InfraConfigEnvImpl()
     }
 
     return result
@@ -29,10 +28,13 @@ fun Application.appInfrastructure() {
     val scope = InfraCoroutineScope()
 
     dependencies {
+        provide<Application>("ktorApplication") {
+            this@appInfrastructure
+        }
         provide("infraScope") {
             scope
         }
-        provide<InfraCredentials> {
+        provide<InfraConfig> {
             getLazyInfraCredentials(isDevelopment)
         }
     }
@@ -47,7 +49,6 @@ fun Application.appInfrastructure() {
     sqIdsDI(dependencies)
     appDatabase(dependencies)
     appMongoDb(dependencies, monitor)
-    redisLettuceDi(dependencies, monitor)
     securityDI(dependencies)
     httpDI(dependencies)
 }

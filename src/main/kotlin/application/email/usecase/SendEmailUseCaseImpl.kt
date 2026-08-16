@@ -1,52 +1,56 @@
 package com.khrix.application.email.usecase
 
+import com.khrix.application.email.EmailSender
+import com.khrix.application.email.toApprovalEmail
+import com.khrix.application.serviceorder.ApprovalLinkGenerator
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.model.EmailStatus
-import com.khrix.domain.email.model.ServiceOrderEmailMetadata
-import com.khrix.domain.email.publisher.EventKeys
-import com.khrix.domain.email.publisher.EventPublisher
 import com.khrix.domain.email.repository.EmailQueueRepository
-import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
-import com.khrix.domain.serviceorder.model.ServiceOrder
-import com.khrix.domain.user.address.repository.AddressRepository
-import io.ktor.server.plugins.di.annotations.Named
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import com.khrix.domain.email.usecase.SendEmailUseCase
+import com.khrix.domain.email.usecase.SendEmailUseCaseError
+import com.khrix.domain.serviceorder.model.ServiceOrderApprovalToken
+import com.khrix.domain.serviceorder.repository.ServiceOrderApprovalRepository
+import com.khrix.domain.user.security.SecurityHasher
 
-class CreateEmailQueueUseCaseImpl(
+class SendEmailUseCaseImpl(
+    private val emailSender: EmailSender,
     private val emailQueueRepository: EmailQueueRepository,
-    private val addressRepository: AddressRepository,
-    @Named("applicationScope") private val scope: CoroutineScope,
-    private val eventPublisher: EventPublisher,
-) : BaseUseCaseImpl<ServiceOrder, Unit>(),
-    CreateEmailQueueUseCase {
-    override suspend fun internalExecute(command: ServiceOrder) {
-        scope.launch {
-            val clientAddress =
-                addressRepository.read(command.client.addressId) ?: throw NoSuchElementException("Address is null")
+    private val serviceOrderApprovalRepository: ServiceOrderApprovalRepository,
+    private val securityHasher: SecurityHasher,
+    private val approvalLinkGenerator: ApprovalLinkGenerator,
+) : BaseUseCaseImpl<Int, Unit>(),
+    SendEmailUseCase {
+    override suspend fun internalExecute(command: Int) {
+        var emailItem =
+            emailQueueRepository.read(command)
+                ?: throw SendEmailUseCaseError.NotFound()
+        try {
+            if (emailItem.shouldBeSend()) {
+                val token =
+                    serviceOrderApprovalRepository.createRead(
+                        ServiceOrderApprovalToken(
+                            emailItem.orderCode,
+                            securityHasher,
+                        ),
+                    )
 
-            val result =
-                emailQueueRepository.create(
-                    EmailQueueItem(
-                        id = 0,
-                        recipient = command.client.email.value,
-                        subject = "Service Order Created",
-                        metadata =
-                            ServiceOrderEmailMetadata(
-                                serviceOrder = command,
-                                clientAddress = clientAddress,
-                            ),
-                        status = EmailStatus.PENDING,
-                        attempts = 0,
-                        errorMessage = null,
-                        orderCode = command.code,
+                emailSender.send(
+                    emailItem.toApprovalEmail(
+                        approvalLinkGenerator.generate(token.tokenHash, emailItem.orderCode),
+                        false,
                     ),
                 )
-
-            eventPublisher.publish(EventKeys.APPROVAL_EVENT_NAME, result)
+                emailItem = emailQueueRepository.registerAttempt(emailItem.id, EmailStatus.SENT)
+            }
+        } catch (ex: Exception) {
+            emailQueueRepository.setErrorMessage(emailItem.id, ex.message ?: "Failed to send email")
+            if (emailItem.canRetry()) {
+                throw SendEmailUseCaseError.Retry()
+            } else {
+                throw SendEmailUseCaseError.NoMoreRetriesAvailable()
+            }
         }
     }
 
-    override suspend fun useCaseDescription(): String = "Create an email queue item for a service order"
+    override suspend fun useCaseDescription(): String = "Send email for a given email queue item"
 }

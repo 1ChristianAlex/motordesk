@@ -1,6 +1,6 @@
-package com.khrix.application.notification
+package com.khrix.application.email
 
-import com.khrix.application.notification.model.EmailTemplating
+import com.khrix.application.email.model.EmailTemplating
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.valueobject.user.Email
 

@@ -9,7 +9,7 @@ import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.domain.user.model.User
 import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.user.security.PasswordHasher
+import com.khrix.domain.user.security.SecurityHasher
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import kotlinx.coroutines.async
@@ -17,7 +17,7 @@ import kotlinx.coroutines.coroutineScope
 
 class CreateNewUserUseCaseImpl(
     private val userRepository: UserRepository,
-    private val passwordHasher: PasswordHasher,
+    private val securityHasher: SecurityHasher,
     private val addressRepository: AddressRepository,
     private val searchCompanyByCnpjUseCase: SearchCompanyByCnpjUseCase,
     private val createNewCompanyUseCase: CreateNewCompanyUseCase,
@@ -46,7 +46,7 @@ class CreateNewUserUseCaseImpl(
 
     override suspend fun internalExecute(command: CreateNewUserUseCaseCommand): User =
         coroutineScope {
-            val hashedPass = async { passwordHasher.hash(command.user.password.value) }
+            val hashedPass = async { securityHasher.hash(command.user.password.value) }
             val addressId = async { addressRepository.create(command.address) }
 
             val userWithHashedPassword =

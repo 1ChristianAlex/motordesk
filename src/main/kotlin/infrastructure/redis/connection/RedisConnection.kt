@@ -1,17 +1,17 @@
 package com.khrix.infrastructure.redis.connection
 
-import com.khrix.infrastructure.app.InfraCredentials
+import com.khrix.infrastructure.app.InfraConfig
 import io.lettuce.core.ExperimentalLettuceCoroutinesApi
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.coroutines
 import io.lettuce.core.api.coroutines.RedisCoroutinesCommands
 
 class RedisConnection(
-    infraCredentials: InfraCredentials,
+    infraConfig: InfraConfig,
 ) {
     private val redisClient: RedisClient =
         try {
-            RedisClient.create(infraCredentials.redisConfig.connectionString)
+            RedisClient.create(infraConfig.redisConfig.connectionString)
         } catch (e: Exception) {
             throw RuntimeException("Failed to create Redis client: ${e.message}", e)
         }

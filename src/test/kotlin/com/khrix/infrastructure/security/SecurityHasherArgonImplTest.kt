@@ -5,8 +5,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
-class PasswordHasherArgonImplTest {
-    private val hasher = PasswordHasherArgonImpl()
+class SecurityHasherArgonImplTest {
+    private val hasher = SecurityHasherArgonImpl()
 
     @Test
     fun `should hash a password and return non-empty string`() {

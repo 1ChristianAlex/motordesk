@@ -25,31 +25,36 @@ class CreateServiceOrderUseCaseImpl(
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
     private val createEmailQueueUseCase: CreateEmailQueueUseCase,
     private val shortId: ShortId,
-    private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository
-) : CreateServiceOrderUseCase, BaseUseCaseImpl<CreateServiceOrderCommand, ServiceOrder>() {
-    override suspend fun internalExecute(command: CreateServiceOrderCommand): ServiceOrder {
-        return coroutineScope {
+    private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository,
+) : BaseUseCaseImpl<CreateServiceOrderCommand, ServiceOrder>(),
+    CreateServiceOrderUseCase {
+    override suspend fun internalExecute(command: CreateServiceOrderCommand): ServiceOrder =
+        coroutineScope {
             val client = async { getUserUseCase.execute(command.clientId).getOrThrow() }
             val operator = async { getUserUseCase.execute(command.operatorId).getOrThrow() }.await()
             val vehicle = async { getVehicleByIdUseCase.execute(command.vehicleId).getOrThrow() }
             val tasks = async { getTaskByListIdUseCase.execute(command.tasksIds).getOrThrow() }
-            val inventoryItems = async {
-                getInventoryByListIdOrSkuUseCase.execute(command.inventoryItemsIds.map { it.toString() }).getOrThrow()
-            }
+            val inventoryItems =
+                async {
+                    getInventoryByListIdOrSkuUseCase
+                        .execute(command.inventoryItemsIds.map { it.toString() })
+                        .getOrThrow()
+                }
 
-            val serviceOrder = ServiceOrder(
-                client = client.await(),
-                operator = operator,
-                vehicle = vehicle.await(),
-                complaint = command.complaint,
-                diagnosis = command.diagnosis,
-                tasks = tasks.await(),
-                inventoryItems = inventoryItems.await(),
-                status = ServiceOrderStatus.CREATED,
-                id = 0,
-            ).apply {
-                code = shortId.encode(this.codeIds())
-            }
+            val serviceOrder =
+                ServiceOrder(
+                    client = client.await(),
+                    operator = operator,
+                    vehicle = vehicle.await(),
+                    complaint = command.complaint,
+                    diagnosis = command.diagnosis,
+                    tasks = tasks.await(),
+                    inventoryItems = inventoryItems.await(),
+                    status = ServiceOrderStatus.CREATED,
+                    id = 0,
+                ).apply {
+                    code = shortId.encode(this.codeIds())
+                }
 
             val orderAlreadyExists = serviceOrderRepository.getByCode(serviceOrder.code)
 
@@ -63,9 +68,6 @@ class CreateServiceOrderUseCaseImpl(
 
             order
         }
-    }
 
-    override suspend fun useCaseDescription(): String {
-        return "Create a new service order"
-    }
+    override suspend fun useCaseDescription(): String = "Create a new service order"
 }

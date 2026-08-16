@@ -3,12 +3,12 @@ package com.khrix.infrastructure.azure
 import com.azure.communication.email.EmailAsyncClient
 import com.azure.communication.email.EmailClientBuilder
 import com.azure.core.credential.AzureKeyCredential
-import com.khrix.infrastructure.app.InfraCredentials
+import com.khrix.infrastructure.app.InfraConfig
 
 class AzureCredentialConnection(
-    infraCredentials: InfraCredentials,
+    infraConfig: InfraConfig,
 ) {
-    private val azureConfig = infraCredentials.azureConfig
+    private val azureConfig = infraConfig.azureConfig
 
     private val azureKeyCredential = AzureKeyCredential(azureConfig.accessKey)
 

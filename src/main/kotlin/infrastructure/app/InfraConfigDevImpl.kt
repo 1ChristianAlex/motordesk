@@ -1,9 +1,10 @@
 package com.khrix.infrastructure.app
 
 import com.khrix.BuildKonfig
+import io.ktor.http.URLProtocol
 import java.util.Properties
 
-class InfraCredentialsDevImpl : InfraCredentials {
+class InfraConfigDevImpl : InfraConfig {
     private val properties: Properties by lazy {
         Properties().apply {
             object {}.javaClass.classLoader.getResourceAsStream(BuildKonfig.PROPERTIES_FILE)?.use {
@@ -11,7 +12,6 @@ class InfraCredentialsDevImpl : InfraCredentials {
             }
         }
     }
-
     override val mongoConfig by lazy {
         MongoConfig(
             url = properties.getProperty("mongo.url"),
@@ -37,8 +37,8 @@ class InfraCredentialsDevImpl : InfraCredentials {
     }
     override val azureConfig by lazy {
         AzureConfig(
-            accessKey = properties.getProperty("azure.accessKey"),
-            communicationEndpoint = properties.getProperty("azure.communicationEndpoint"),
+            accessKey = properties.getProperty("azure.communication.access-key"),
+            communicationEndpoint = properties.getProperty("azure.communication.endpoint"),
         )
     }
     override val jwtConfig: JwtConfig by lazy {
@@ -47,6 +47,16 @@ class InfraCredentialsDevImpl : InfraCredentials {
             audience = properties.getProperty("jwt.audience"),
             realm = properties.getProperty("jwt.realm"),
             secret = properties.getProperty("jwt.secret"),
+        )
+    }
+    override val serverConfig by lazy {
+        ServerConfig(
+            host = properties.getProperty("http.host") ?: "0.0.0.0",
+            port = properties.getProperty("http.port")?.toInt() ?: 8080,
+            protocol =
+                properties.getProperty("http.protocol")?.let {
+                    URLProtocol.createOrDefault(it)
+                } ?: URLProtocol.HTTP,
         )
     }
 }

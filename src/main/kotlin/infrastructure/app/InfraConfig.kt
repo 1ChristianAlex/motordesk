@@ -1,6 +1,7 @@
 package com.khrix.infrastructure.app
 
 import com.auth0.jwt.algorithms.Algorithm
+import io.ktor.http.URLProtocol
 
 data class MongoConfig(
     val url: String,
@@ -45,10 +46,17 @@ data class JwtConfig(
     val algorithm: Algorithm = Algorithm.HMAC256(secret)
 }
 
-interface InfraCredentials {
+data class ServerConfig(
+    val host: String,
+    val port: Int?,
+    val protocol: URLProtocol,
+)
+
+interface InfraConfig {
     val mongoConfig: MongoConfig
     val redisConfig: RedisConfig
     val exposedConfig: ExposedConfig
     val azureConfig: AzureConfig
     val jwtConfig: JwtConfig
+    val serverConfig: ServerConfig
 }

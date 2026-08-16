@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.app
 
-class InfraCredentialsEnvImpl : InfraCredentials {
+class InfraConfigEnvImpl : InfraConfig {
     private fun requireEnv(name: String): String =
         System.getenv(name)
             ?: throw Exception("Environment variable '$name' is required")
@@ -29,5 +29,7 @@ class InfraCredentialsEnvImpl : InfraCredentials {
     override val azureConfig: AzureConfig
         get() = TODO("Not yet implemented")
     override val jwtConfig: JwtConfig
+        get() = TODO("Not yet implemented")
+    override val serverConfig: ServerConfig
         get() = TODO("Not yet implemented")
 }

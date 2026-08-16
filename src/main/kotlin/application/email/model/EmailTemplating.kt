@@ -1,4 +1,4 @@
-package com.khrix.application.notification.model
+package com.khrix.application.email.model
 
 import com.khrix.domain.email.model.ServiceOrderEmailMetadata
 import kotlinx.html.a
@@ -141,7 +141,7 @@ sealed class EmailTemplating {
                                                 p {
                                                     style =
                                                         "margin:0; padding:16px; background-color:#fafafa; color:#52525b; line-height:1.6;"
-                                                    +data.diagnosis!!
+                                                    +data.diagnosis
                                                 }
                                             }
                                         }

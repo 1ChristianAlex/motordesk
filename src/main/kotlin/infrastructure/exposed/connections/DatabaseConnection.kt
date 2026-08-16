@@ -5,6 +5,7 @@ import com.khrix.infrastructure.exposed.company.database.CompanyTable
 import com.khrix.infrastructure.exposed.email.database.EmailQueueTable
 import com.khrix.infrastructure.exposed.inventory.database.InventoryTable
 import com.khrix.infrastructure.exposed.seeds.LoadSeeds
+import com.khrix.infrastructure.exposed.serviceorder.database.OrderApprovalTable
 import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderPartsTable
 import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrderTasksTable
 import com.khrix.infrastructure.exposed.serviceorder.database.ServiceOrdersTable
@@ -33,6 +34,7 @@ abstract class DatabaseConnection(
             ServiceOrdersTable,
             ServiceOrderPartsTable,
             ServiceOrderTasksTable,
+            OrderApprovalTable,
             EmailQueueTable,
         ).toTypedArray()
 
