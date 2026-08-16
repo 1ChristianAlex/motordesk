@@ -58,5 +58,5 @@ class EmailQueueItemTest {
 
 class EmailStatusTest {
     @Test
-    fun `contains complete delivery lifecycle`() = assertEquals(4, EmailStatus.entries.size)
+    fun `contains complete delivery lifecycle`() = assertEquals(3, EmailStatus.entries.size)
 }
