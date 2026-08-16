@@ -11,6 +11,7 @@ Review tests for behavioral coverage and architectural boundaries.
 Prefer observable behavior over implementation details.
 
 For new functionality consider:
+
 - happy path;
 - validation failures;
 - authorization failures;
@@ -30,12 +31,14 @@ Make dependencies on PostgreSQL, MongoDB, Redis, Ktor HTTP, or external adapters
 
 ## Email
 
-For email functionality test message mapping, successful delivery, provider failure, retry count, maximum retry behavior, terminal failure, worker processing, and persistence state transitions.
+For email functionality test message mapping, successful delivery, provider failure, retry count, maximum retry
+behavior, terminal failure, worker processing, and persistence state transitions.
 
 Do not require a real Azure Communication Services account for ordinary unit tests.
 
 ## Security
 
-For tokenized approval flows test valid, invalid, expired, revoked, already-used, wrong-purpose tokens, and authorization/state validation.
+For tokenized approval flows test valid, invalid, expired, revoked, already-used, wrong-purpose tokens, and
+authorization/state validation.
 
 Never put real credentials or production secrets in tests.

@@ -9,4 +9,3 @@ data class SearchCompanyByCnpjUseCaseCommand(
 )
 
 interface SearchCompanyByCnpjUseCase : BaseUseCase<SearchCompanyByCnpjUseCaseCommand, Company?>
-

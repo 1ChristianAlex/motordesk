@@ -8,4 +8,3 @@ data class DecrementItemInventoryCommand(
 )
 
 interface DecrementItemInventoryUseCase : BaseUseCase<DecrementItemInventoryCommand, Unit>
-

@@ -19,6 +19,6 @@ fun User.toOutputDto(mask: Boolean = false): UserOutputDto {
         createdAt = this.createdAt,
         updatedAt = this.updatedAt,
         companyId = this.companyId,
-        addressId = this.addressId
+        addressId = this.addressId,
     )
 }

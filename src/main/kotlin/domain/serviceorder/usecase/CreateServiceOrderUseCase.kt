@@ -10,8 +10,7 @@ data class CreateServiceOrderCommand(
     val complaint: String,
     val diagnosis: String? = null,
     val tasksIds: List<Int>,
-    val inventoryItemsIds: List<Int> = listOf()
+    val inventoryItemsIds: List<Int> = listOf(),
 )
 
 interface CreateServiceOrderUseCase : BaseUseCase<CreateServiceOrderCommand, ServiceOrder>
-

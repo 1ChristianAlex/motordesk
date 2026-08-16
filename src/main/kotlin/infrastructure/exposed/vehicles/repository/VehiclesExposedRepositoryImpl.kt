@@ -13,14 +13,17 @@ import org.jetbrains.exposed.v1.jdbc.Database
 
 class VehiclesExposedRepositoryImpl(
     database: Database,
-) : BaseExposedRepository<VehicleEntity, Vehicle>(database), VehiclesRepository {
-    override suspend fun read(id: Int): Vehicle? {
-        return suspendedQuery {
+) : BaseExposedRepository<VehicleEntity, Vehicle>(database),
+    VehiclesRepository {
+    override suspend fun read(id: Int): Vehicle? =
+        suspendedQuery {
             VehicleEntity.findById(id)?.toModel()
         }
-    }
 
-    override suspend fun update(id: Int, data: Vehicle) {
+    override suspend fun update(
+        id: Int,
+        data: Vehicle,
+    ) {
         suspendedQuery {
             VehicleEntity.findByIdAndUpdate(id) {
                 it.plate = data.plate.value
@@ -39,8 +42,8 @@ class VehiclesExposedRepositoryImpl(
         suspendedQuery { VehicleEntity[id].delete() }
     }
 
-    private fun createNewVehicle(data: Vehicle): VehicleEntity {
-        return VehicleEntity.new {
+    private fun createNewVehicle(data: Vehicle): VehicleEntity =
+        VehicleEntity.new {
             plate = data.plate.value
             brand = data.brand
             model = data.model
@@ -51,25 +54,22 @@ class VehiclesExposedRepositoryImpl(
             fuelType = data.fuelType
             owner = UserEntity[data.ownerId]
         }
-    }
 
-    override suspend fun createRead(data: Vehicle): Vehicle {
-        return suspendedQuery { createNewVehicle(data).toModel() }
-    }
+    override suspend fun createRead(data: Vehicle): Vehicle = suspendedQuery { createNewVehicle(data).toModel() }
 
-    override suspend fun getVehicleByOwnerId(id: Int): List<Vehicle> {
-        return suspendedQuery {
+    override suspend fun getVehicleByOwnerId(id: Int): List<Vehicle> =
+        suspendedQuery {
             VehicleEntity.find { VehicleTable.owner eq id }.map { it.toModel() }
         }
-    }
 
     override suspend fun getByPlateOrChassis(
         plate: String,
-        chassis: String
-    ): Vehicle? {
-        return suspendedQuery {
-            VehicleEntity.find { (VehicleTable.plate eq plate) or (VehicleTable.chassis eq chassis) }.firstOrNull()
+        chassis: String,
+    ): Vehicle? =
+        suspendedQuery {
+            VehicleEntity
+                .find { (VehicleTable.plate eq plate) or (VehicleTable.chassis eq chassis) }
+                .firstOrNull()
                 ?.toModel()
         }
-    }
 }

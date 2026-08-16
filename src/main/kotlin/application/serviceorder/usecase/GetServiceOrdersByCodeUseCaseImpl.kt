@@ -7,14 +7,13 @@ import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByCodeUseCase
 
 class GetServiceOrdersByCodeUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,
-) : GetServiceOrdersByCodeUseCase, BaseUseCaseImpl<String, ServiceOrder>() {
+) : BaseUseCaseImpl<String, ServiceOrder>(),
+    GetServiceOrdersByCodeUseCase {
     override suspend fun internalExecute(command: String): ServiceOrder {
         val serviceOrder = serviceOrderRepository.getByCode(command)
 
         return serviceOrder ?: throw NoSuchElementException()
     }
 
-    override suspend fun useCaseDescription(): String {
-        return "Get service order using code"
-    }
+    override suspend fun useCaseDescription(): String = "Get service order using code"
 }

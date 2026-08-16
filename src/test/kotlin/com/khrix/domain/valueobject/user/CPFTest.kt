@@ -1,6 +1,5 @@
 package com.khrix.domain.valueobject.user
 
-import com.khrix.domain.valueobject.user.CPF
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

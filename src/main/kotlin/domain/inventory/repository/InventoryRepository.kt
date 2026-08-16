@@ -11,10 +11,17 @@ interface InventoryRepository :
     BaseCreate<InventoryItem>,
     BaseCreateReturn<InventoryItem>,
     BaseDelete {
-    suspend fun decrementItemQuantity(inventoryId: Int, quantityDecrement: Int)
-    suspend fun incrementItemQuantity(inventoryId: Int, quantityIncrement: Int)
+    suspend fun decrementItemQuantity(
+        inventoryId: Int,
+        quantityDecrement: Int,
+    )
+
+    suspend fun incrementItemQuantity(
+        inventoryId: Int,
+        quantityIncrement: Int,
+    )
+
     suspend fun getByIdOrSku(inventoryId: String): InventoryItem?
+
     suspend fun getByIdOrSku(inventoryId: List<String>): List<InventoryItem>
 }
-
-

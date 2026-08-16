@@ -15,9 +15,14 @@ interface ServiceOrderRepository :
     BaseDelete,
     BaseCreateReturn<ServiceOrder> {
     suspend fun getByClientId(clientId: Int): List<ServiceOrder>
+
     suspend fun getOrderByVehicle(vehicleId: Int): List<ServiceOrder>
+
     suspend fun getByCode(code: String): ServiceOrder?
-    suspend fun updateServiceOrderTask(id: Int, taskId: Int, taskStatus: TaskProgressStatus): Int
+
+    suspend fun updateServiceOrderTask(
+        id: Int,
+        taskId: Int,
+        taskStatus: TaskProgressStatus,
+    ): Int
 }
-
-

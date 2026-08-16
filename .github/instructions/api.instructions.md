@@ -17,17 +17,20 @@ Do not put SQL, Redis commands, Azure SDK calls, or complex business rules insid
 
 ## Ktor Resources
 
-The project uses Ktor Resources for type-safe routing and reverse URL generation. Keep `@Resource` and URL-building concerns in the HTTP/infrastructure boundary. Do not introduce Ktor Resources into domain models.
+The project uses Ktor Resources for type-safe routing and reverse URL generation. Keep `@Resource` and URL-building
+concerns in the HTTP/infrastructure boundary. Do not introduce Ktor Resources into domain models.
 
 ## API Contracts
 
-Check HTTP method, path, parameters, request/response bodies, status codes, validation, authentication, authorization, and error responses.
+Check HTTP method, path, parameters, request/response bodies, status codes, validation, authentication, authorization,
+and error responses.
 
 Check whether OpenAPI documentation must be updated.
 
 ## Security-sensitive URLs
 
 For tokenized Service Order approval:
+
 - do not expose unnecessary internal identifiers;
 - use unpredictable tokens;
 - validate expiration and status;

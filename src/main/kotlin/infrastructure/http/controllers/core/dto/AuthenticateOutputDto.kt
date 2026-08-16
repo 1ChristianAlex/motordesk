@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AuthenticateOutputDto(
     val token: String,
-    val user: UserOutputDto
+    val user: UserOutputDto,
 )

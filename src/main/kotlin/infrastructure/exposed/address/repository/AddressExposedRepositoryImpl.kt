@@ -9,20 +9,22 @@ import org.jetbrains.exposed.v1.jdbc.Database
 
 class AddressExposedRepositoryImpl(
     database: Database,
-) : BaseExposedRepository<AddressEntity, Address>(database), AddressRepository {
-    override suspend fun createRead(data: Address): Address {
-        return suspendedQuery {
+) : BaseExposedRepository<AddressEntity, Address>(database),
+    AddressRepository {
+    override suspend fun createRead(data: Address): Address =
+        suspendedQuery {
             createNewAddress(data).toModel()
         }
-    }
 
-    override suspend fun read(id: Int): Address {
-        return suspendedQuery {
+    override suspend fun read(id: Int): Address =
+        suspendedQuery {
             AddressEntity[id].toModel()
         }
-    }
 
-    override suspend fun update(id: Int, data: Address) {
+    override suspend fun update(
+        id: Int,
+        data: Address,
+    ) {
         suspendedQuery {
             AddressEntity.findByIdAndUpdate(id) {
                 it.street = data.street
@@ -41,20 +43,20 @@ class AddressExposedRepositoryImpl(
         suspendedQuery { AddressEntity[id].delete() }
     }
 
-    override suspend fun create(data: Address): Int {
-        return suspendedQuery {
+    override suspend fun create(data: Address): Int =
+        suspendedQuery {
             createNewAddress(data).id.value
         }
-    }
 
-    private fun createNewAddress(data: Address) = AddressEntity.new {
-        street = data.street
-        number = data.number
-        complement = data.complement
-        neighborhood = data.neighborhood
-        city = data.city
-        state = data.state
-        country = data.country
-        zipCode = data.zipCode
-    }
+    private fun createNewAddress(data: Address) =
+        AddressEntity.new {
+            street = data.street
+            number = data.number
+            complement = data.complement
+            neighborhood = data.neighborhood
+            city = data.city
+            state = data.state
+            country = data.country
+            zipCode = data.zipCode
+        }
 }

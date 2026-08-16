@@ -3,8 +3,8 @@ package com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers
 import com.khrix.domain.inventory.model.InventoryItem
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto
 
-fun InventoryItem.toOutputDto(): InventoryItemOutputDto {
-    return InventoryItemOutputDto(
+fun InventoryItem.toOutputDto(): InventoryItemOutputDto =
+    InventoryItemOutputDto(
         id = this.id,
         sku = this.sku,
         name = this.name,
@@ -14,4 +14,3 @@ fun InventoryItem.toOutputDto(): InventoryItemOutputDto {
         unitPrice = this.unitPrice,
         isActive = this.isActive,
     )
-}

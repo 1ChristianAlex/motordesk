@@ -16,8 +16,12 @@ import org.jetbrains.exposed.v1.jdbc.update
 
 class InventoryExposedRepositoryImpl(
     database: Database,
-) : BaseExposedRepository<InventoryEntity, InventoryItem>(database), InventoryRepository {
-    override suspend fun update(id: Int, data: InventoryItem) {
+) : BaseExposedRepository<InventoryEntity, InventoryItem>(database),
+    InventoryRepository {
+    override suspend fun update(
+        id: Int,
+        data: InventoryItem,
+    ) {
         suspendedQuery {
             val inventory = InventoryEntity[id]
 
@@ -39,21 +43,20 @@ class InventoryExposedRepositoryImpl(
         }
     }
 
-    override suspend fun create(data: InventoryItem): Int {
-        return createTask(data).id.value
-    }
+    override suspend fun create(data: InventoryItem): Int = createTask(data).id.value
 
-    private suspend fun createTask(data: InventoryItem) = suspendedQuery {
-        InventoryEntity.new {
-            sku = data.sku
-            name = data.name
-            description = data.description
-            quantity = data.quantity
-            minimumQuantity = data.minimumQuantity
-            unitPrice = data.unitPrice.value
-            isActive = data.isActive
+    private suspend fun createTask(data: InventoryItem) =
+        suspendedQuery {
+            InventoryEntity.new {
+                sku = data.sku
+                name = data.name
+                description = data.description
+                quantity = data.quantity
+                minimumQuantity = data.minimumQuantity
+                unitPrice = data.unitPrice.value
+                isActive = data.isActive
+            }
         }
-    }
 
     override suspend fun delete(id: Int) {
         suspendedQuery {
@@ -63,7 +66,10 @@ class InventoryExposedRepositoryImpl(
         }
     }
 
-    override suspend fun decrementItemQuantity(inventoryId: Int, quantityDecrement: Int) {
+    override suspend fun decrementItemQuantity(
+        inventoryId: Int,
+        quantityDecrement: Int,
+    ) {
         suspendedQuery {
             InventoryTable.update({ InventoryTable.id eq inventoryId }) {
                 it[InventoryTable.quantity] = InventoryTable.quantity - quantityDecrement
@@ -71,7 +77,10 @@ class InventoryExposedRepositoryImpl(
         }
     }
 
-    override suspend fun incrementItemQuantity(inventoryId: Int, quantityIncrement: Int) {
+    override suspend fun incrementItemQuantity(
+        inventoryId: Int,
+        quantityIncrement: Int,
+    ) {
         suspendedQuery {
             InventoryTable.update({ InventoryTable.id eq inventoryId }) {
                 it[InventoryTable.quantity] = InventoryTable.quantity + quantityIncrement
@@ -79,22 +88,22 @@ class InventoryExposedRepositoryImpl(
         }
     }
 
-    override suspend fun getByIdOrSku(inventoryId: String): InventoryItem? {
-        return suspendedQuery {
-            InventoryEntity.find { InventoryTable.id eq inventoryId.toInt() or (InventoryTable.sku eq inventoryId) }
+    override suspend fun getByIdOrSku(inventoryId: String): InventoryItem? =
+        suspendedQuery {
+            InventoryEntity
+                .find { InventoryTable.id eq inventoryId.toInt() or (InventoryTable.sku eq inventoryId) }
                 .firstOrNull()
                 ?.toModel()
         }
-    }
 
-    override suspend fun getByIdOrSku(inventoryId: List<String>): List<InventoryItem> {
-        return suspendedQuery {
-            InventoryEntity.find { InventoryTable.id inList inventoryId.mapNotNull { it.toIntOrNull() } or (InventoryTable.sku inList inventoryId) }
-                .map { it.toModel() }
+    override suspend fun getByIdOrSku(inventoryId: List<String>): List<InventoryItem> =
+        suspendedQuery {
+            InventoryEntity
+                .find {
+                    InventoryTable.id inList inventoryId.mapNotNull { it.toIntOrNull() } or
+                        (InventoryTable.sku inList inventoryId)
+                }.map { it.toModel() }
         }
-    }
 
-    override suspend fun createRead(data: InventoryItem): InventoryItem {
-        return createTask(data).toModel()
-    }
+    override suspend fun createRead(data: InventoryItem): InventoryItem = createTask(data).toModel()
 }

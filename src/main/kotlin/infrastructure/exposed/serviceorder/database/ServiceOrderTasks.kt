@@ -4,7 +4,7 @@ import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
 import org.jetbrains.exposed.v1.core.Table
 
 object ServiceOrderTasksTable : Table(
-    "serviceOrderTasks"
+    "serviceOrderTasks",
 ) {
     val serviceOrder =
         reference("serviceOrderId", ServiceOrdersTable)

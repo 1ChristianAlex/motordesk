@@ -3,8 +3,8 @@ package com.khrix.infrastructure.http.controllers.vehicles.resources.mappers
 import com.khrix.domain.vehicle.model.Vehicle
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto
 
-fun Vehicle.toOutputDto(): VehicleOutputDto {
-    return VehicleOutputDto(
+fun Vehicle.toOutputDto(): VehicleOutputDto =
+    VehicleOutputDto(
         id = id,
         userId = ownerId,
         plate = plate.value,
@@ -18,4 +18,3 @@ fun Vehicle.toOutputDto(): VehicleOutputDto {
         createdAt = createdAt!!,
         updatedAt = updatedAt!!,
     )
-}

@@ -8,13 +8,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @JvmInline
-value class Plate(val value: String) {
-    private fun validation() = Validation.Companion<Plate> {
-        Plate::value  {
-            notBlank() hint "Vehicle plate cannot be empty"
-            pattern("^\\w{3}\\d\\w\\d{2}$".toRegex()) hint "Vehicle plate is not valid"
+value class Plate(
+    val value: String,
+) {
+    private fun validation() =
+        Validation.Companion<Plate> {
+            Plate::value {
+                notBlank() hint "Vehicle plate cannot be empty"
+                pattern("^\\w{3}\\d\\w\\d{2}$".toRegex()) hint "Vehicle plate is not valid"
+            }
         }
-    }
 
     init {
         validateWith(validation())

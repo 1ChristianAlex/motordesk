@@ -7,12 +7,11 @@ import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderTaskUseCase
 
 class UpdateServiceOrderTaskUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,
-) : UpdateServiceOrderTaskUseCase, BaseUseCaseImpl<UpdateServiceOrderTaskCommand, Unit>() {
+) : BaseUseCaseImpl<UpdateServiceOrderTaskCommand, Unit>(),
+    UpdateServiceOrderTaskUseCase {
     override suspend fun internalExecute(command: UpdateServiceOrderTaskCommand) {
         serviceOrderRepository.updateServiceOrderTask(command.serviceOrderId, command.taskId, command.status)
     }
 
-    override suspend fun useCaseDescription(): String {
-        return "Update tasks from service order"
-    }
+    override suspend fun useCaseDescription(): String = "Update tasks from service order"
 }

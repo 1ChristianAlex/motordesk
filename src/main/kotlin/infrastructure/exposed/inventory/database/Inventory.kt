@@ -6,7 +6,6 @@ import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object InventoryTable : BaseTable("inventory") {
-
     val sku = varchar("sku", 50).uniqueIndex()
 
     val name = varchar("name", 150)
@@ -22,8 +21,9 @@ object InventoryTable : BaseTable("inventory") {
     val isActive = bool("isActive").default(true)
 }
 
-class InventoryEntity(id: EntityID<Int>) : IntEntity(id) {
-
+class InventoryEntity(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<InventoryEntity>(InventoryTable)
 
     var sku by InventoryTable.sku

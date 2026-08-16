@@ -6,15 +6,12 @@ import com.khrix.domain.vehicle.repository.VehiclesRepository
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
 
 class GetVehicleByIdUseCaseImpl(
-    private val vehiclesRepository: VehiclesRepository
-) : GetVehicleByIdUseCase,
-    BaseUseCaseImpl<Int, Vehicle>() {
-    override suspend fun internalExecute(command: Int): Vehicle {
-        return vehiclesRepository.read(command)
+    private val vehiclesRepository: VehiclesRepository,
+) : BaseUseCaseImpl<Int, Vehicle>(),
+    GetVehicleByIdUseCase {
+    override suspend fun internalExecute(command: Int): Vehicle =
+        vehiclesRepository.read(command)
             ?: throw NoSuchElementException("Vehicle with id $command does not exist")
-    }
 
-    override suspend fun useCaseDescription(): String {
-        return "Get vehicle by id"
-    }
+    override suspend fun useCaseDescription(): String = "Get vehicle by id"
 }

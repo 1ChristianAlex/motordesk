@@ -15,29 +15,26 @@ data class Task(
     val price: Price,
     val isActive: Boolean,
     val category: TaskCategory,
-    val status: TaskProgressStatus
+    val status: TaskProgressStatus,
 ) {
-    private fun validation() = Validation.Companion<Task> {
-        Task::name  {
-            notBlank() hint "Task name cannot be empty"
-            constrain("Task name must be at least 3 characters") { it.length >= 3 }
-            constrain("Task name must be at most 150 characters") { it.length <= 150 }
+    private fun validation() =
+        Validation.Companion<Task> {
+            Task::name {
+                notBlank() hint "Task name cannot be empty"
+                constrain("Task name must be at least 3 characters") { it.length >= 3 }
+                constrain("Task name must be at most 150 characters") { it.length <= 150 }
+            }
+            Task::estimatedMinutes {
+                constrain("Estimated minutes must be a positive integer") { it > 0 }
+                constrain("Estimated minutes must be a multiple of 15") { it % 15 == 0 }
+            }
         }
-        Task::estimatedMinutes {
-            constrain("Estimated minutes must be a positive integer") { it > 0 }
-            constrain("Estimated minutes must be a multiple of 15") { it % 15 == 0 }
-        }
-    }
 
     init {
         validateWith(validation())
     }
 
-    fun changePrice(newPrice: Price): Task {
-        return this.copy(price = newPrice)
-    }
+    fun changePrice(newPrice: Price): Task = this.copy(price = newPrice)
 
-    fun changeEstimatedMinutes(newEstimatedMinutes: Int): Task {
-        return this.copy(estimatedMinutes = newEstimatedMinutes)
-    }
+    fun changeEstimatedMinutes(newEstimatedMinutes: Int): Task = this.copy(estimatedMinutes = newEstimatedMinutes)
 }

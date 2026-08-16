@@ -20,8 +20,8 @@ data class VehicleInputDto(
     val fuelType: FuelType,
     val ownerId: Int,
 ) {
-    fun toModel(): Vehicle {
-        return Vehicle(
+    fun toModel(): Vehicle =
+        Vehicle(
             id = id,
             ownerId = ownerId,
             plate = Plate(plate),
@@ -33,7 +33,6 @@ data class VehicleInputDto(
             chassis = chassis,
             fuelType = fuelType,
         )
-    }
 }
 
 @Serializable
@@ -42,7 +41,6 @@ data class VehicleUpdateInputDto(
     val color: String?,
     val mileage: Int? = 0,
 )
-
 
 @Serializable
 data class VehicleOutputDto(

@@ -11,9 +11,8 @@ class SqIdsShortIdImpl : ShortId {
         }
     }
 
-    override fun decode(value: String): List<Long> {
-        return Sqids().run {
+    override fun decode(value: String): List<Long> =
+        Sqids().run {
             decode(value)
         }
-    }
 }

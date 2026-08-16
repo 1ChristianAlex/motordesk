@@ -7,12 +7,9 @@ import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 
 class GetInventoryByListIdOrSkuUseCaseImpl(
     private val inventoryRepository: InventoryRepository,
-) : GetInventoryByListIdOrSkuUseCase, BaseUseCaseImpl<List<String>, List<InventoryItem>>() {
-    override suspend fun internalExecute(command: List<String>): List<InventoryItem> {
-        return inventoryRepository.getByIdOrSku(command)
-    }
+) : BaseUseCaseImpl<List<String>, List<InventoryItem>>(),
+    GetInventoryByListIdOrSkuUseCase {
+    override suspend fun internalExecute(command: List<String>): List<InventoryItem> = inventoryRepository.getByIdOrSku(command)
 
-    override suspend fun useCaseDescription(): String {
-        return "Update an existing inventory item"
-    }
+    override suspend fun useCaseDescription(): String = "Update an existing inventory item"
 }

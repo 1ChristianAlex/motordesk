@@ -13,7 +13,9 @@ object CompanyTable : BaseTable("company") {
     val user = reference("userId", UsersTable).uniqueIndex()
 }
 
-class CompanyEntity(id: EntityID<Int>) : IntEntity(id) {
+class CompanyEntity(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<CompanyEntity>(CompanyTable)
 
     var name by CompanyTable.name

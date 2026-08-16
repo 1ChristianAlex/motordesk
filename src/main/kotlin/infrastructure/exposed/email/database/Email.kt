@@ -10,7 +10,6 @@ import org.jetbrains.exposed.v1.dao.IntEntityClass
 import org.jetbrains.exposed.v1.json.jsonb
 
 object EmailQueueTable : BaseTable("emailQueue") {
-
     val recipient = varchar("recipient", 255)
 
     val subject = varchar("subject", 255)
@@ -18,9 +17,11 @@ object EmailQueueTable : BaseTable("emailQueue") {
     val metadata =
         jsonb<ServiceOrderEmailMetadata>("metadata", Json.Default)
 
-    val status = enumeration(
-        "status", EmailStatus::class
-    ).default(EmailStatus.PENDING)
+    val status =
+        enumeration(
+            "status",
+            EmailStatus::class,
+        ).default(EmailStatus.PENDING)
 
     val attempts = integer("attempts").default(0)
 
@@ -29,7 +30,9 @@ object EmailQueueTable : BaseTable("emailQueue") {
     val code = varchar("code", 25)
 }
 
-class EmailQueueEntity(id: EntityID<Int>) : IntEntity(id) {
+class EmailQueueEntity(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<EmailQueueEntity>(EmailQueueTable)
 
     var recipient by EmailQueueTable.recipient

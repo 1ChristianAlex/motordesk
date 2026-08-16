@@ -8,14 +8,12 @@ import com.khrix.domain.user.usecase.UserNotFoundException
 
 class GetUserUseCaseImpl(
     private val userRepository: UserRepository,
-) : GetUserUseCase, BaseUseCaseImpl<Int, User>() {
-    override suspend fun internalExecute(command: Int): User {
-        return userRepository.read(
-            command
+) : BaseUseCaseImpl<Int, User>(),
+    GetUserUseCase {
+    override suspend fun internalExecute(command: Int): User =
+        userRepository.read(
+            command,
         ) ?: throw UserNotFoundException(command)
-    }
 
-    override suspend fun useCaseDescription(): String {
-        return "Retriever user info searching by id"
-    }
+    override suspend fun useCaseDescription(): String = "Retriever user info searching by id"
 }

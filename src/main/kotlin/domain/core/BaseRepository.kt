@@ -7,7 +7,6 @@ interface BaseRepository<Model> :
     BaseUpdate<Model>,
     BaseDelete
 
-
 interface BaseCreateReturn<Model> {
     suspend fun createRead(data: Model): Model
 }
@@ -21,7 +20,10 @@ interface BaseRead<Model> {
 }
 
 interface BaseUpdate<Model> {
-    suspend fun update(id: Int, data: Model)
+    suspend fun update(
+        id: Int,
+        data: Model,
+    )
 }
 
 interface BaseDelete {

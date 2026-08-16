@@ -6,25 +6,24 @@ import io.konform.validation.Validation
 import io.konform.validation.constraints.pattern
 
 @JvmInline
-value class CPF(val value: String) {
-    fun validation() = Validation {
-        CPF::value {
-            val cleaned = normalize()
+value class CPF(
+    val value: String,
+) {
+    fun validation() =
+        Validation {
+            CPF::value {
+                val cleaned = normalize()
 
-            validate("trimmedCPF", { cleaned }) {
-                pattern("^\\d{11}$") hint "CPF must contain exactly 11 number digits"
-                constrain("validCPF") { isValidCPF(cleaned) } hint "Invalid CPF number"
+                validate("trimmedCPF", { cleaned }) {
+                    pattern("^\\d{11}$") hint "CPF must contain exactly 11 number digits"
+                    constrain("validCPF") { isValidCPF(cleaned) } hint "Invalid CPF number"
+                }
             }
         }
-    }
 
-    fun format(): String {
-        return normalize().replace("(\\d{3})(\\d{3})(\\d{3})(\\d{2})".toRegex(), "$1.$2.$3-$4")
-    }
+    fun format(): String = normalize().replace("(\\d{3})(\\d{3})(\\d{3})(\\d{2})".toRegex(), "$1.$2.$3-$4")
 
-    fun mask(): String {
-        return maskString(format(), 3, listOf('.', '-'))
-    }
+    fun mask(): String = maskString(format(), 3, listOf('.', '-'))
 
     init {
         validateWith(validation())

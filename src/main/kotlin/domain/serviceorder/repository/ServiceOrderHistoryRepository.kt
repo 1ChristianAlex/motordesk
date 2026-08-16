@@ -7,4 +7,3 @@ import com.khrix.domain.serviceorder.model.ServiceOrder
 interface ServiceOrderHistoryRepository :
     BaseRead<List<ServiceOrder>>,
     BaseCreate<ServiceOrder>
-

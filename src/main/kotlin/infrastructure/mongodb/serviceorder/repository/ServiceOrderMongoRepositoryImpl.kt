@@ -13,51 +13,49 @@ import org.bson.types.ObjectId
 
 class ServiceOrderMongoRepositoryImpl(
     private val mongoConnection: MongoConnection,
-    private val serviceOrderRepository: ServiceOrderRepository
+    private val serviceOrderRepository: ServiceOrderRepository,
 ) : ServiceOrderHistoryRepository {
     private val collection by lazy {
         mongoConnection.database
             .getCollection<ServiceOrderHistory>(
-                "service_order_history"
+                "service_order_history",
             )
     }
 
-    override suspend fun read(
-        id: Int
-    ): List<ServiceOrder> {
-        val projectionFields = Projections.fields(
-            Projections.include(
-                ServiceOrderHistory::status.name,
-                ServiceOrderHistory::complaint.name,
-                ServiceOrderHistory::diagnosis.name,
-            ),
-            Projections.excludeId()
-        )
+    override suspend fun read(id: Int): List<ServiceOrder> {
+        val projectionFields =
+            Projections.fields(
+                Projections.include(
+                    ServiceOrderHistory::status.name,
+                    ServiceOrderHistory::complaint.name,
+                    ServiceOrderHistory::diagnosis.name,
+                ),
+                Projections.excludeId(),
+            )
         val sqlServiceOrder = serviceOrderRepository.read(id) ?: throw Exception()
 
-        val documents = collection
-            .find(
-                eq(
-                    ServiceOrderHistory::serviceOrderId.name,
-                    id
-                )
-            ).projection(projectionFields)
+        val documents =
+            collection
+                .find(
+                    eq(
+                        ServiceOrderHistory::serviceOrderId.name,
+                        id,
+                    ),
+                ).projection(projectionFields)
 
-        return documents.map {
-            sqlServiceOrder.copy(
-                status = it.status,
-                complaint = it.complaint,
-                diagnosis = it.diagnosis,
-            )
-        }.toList()
+        return documents
+            .map {
+                sqlServiceOrder.copy(
+                    status = it.status,
+                    complaint = it.complaint,
+                    diagnosis = it.diagnosis,
+                )
+            }.toList()
     }
 
-    override suspend fun create(
-        data: ServiceOrder
-    ): Int {
-
+    override suspend fun create(data: ServiceOrder): Int {
         collection.insertOne(
-            ServiceOrderHistory.fromModel(data, ObjectId())
+            ServiceOrderHistory.fromModel(data, ObjectId()),
         )
 
         return data.id
