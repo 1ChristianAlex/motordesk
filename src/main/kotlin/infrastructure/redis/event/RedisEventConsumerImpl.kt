@@ -1,9 +1,10 @@
 package com.khrix.infrastructure.redis.event
 
 import com.khrix.domain.email.publisher.EventConsumer
-import com.khrix.domain.email.publisher.EventKeys
+import com.khrix.infrastructure.redis.event.RedisEventKeys
 import com.khrix.infrastructure.redis.connection.RedisConnection
-import com.khrix.infrastructure.redis.event.handler.HandleConsumerEvent
+import com.khrix.infrastructure.redis.event.handler.RedisConsumerHandler
+import io.ktor.server.plugins.di.annotations.Named
 import io.lettuce.core.Consumer
 import io.lettuce.core.ExperimentalLettuceCoroutinesApi
 import io.lettuce.core.XGroupCreateArgs
@@ -19,16 +20,16 @@ import java.time.Duration
 @OptIn(ExperimentalLettuceCoroutinesApi::class)
 class RedisEventConsumerImpl(
     private val redis: RedisConnection,
-    private val consumerHandlers: List<HandleConsumerEvent<Any>>,
+    @Named("consumerHandlerList") private val consumerHandlers: List<RedisConsumerHandler>,
 ) : EventConsumer {
     private suspend fun createConsumerGroup() {
         runCatching {
             redis.commands.xgroupCreate(
                 XReadArgs.StreamOffset.from(
-                    EventKeys.EVENT_TYPE.value,
+                    RedisEventKeys.EVENT_TYPE.value,
                     "0",
                 ),
-                EventKeys.EVENT_GROUP.value,
+                RedisEventKeys.EVENT_GROUP.value,
                 XGroupCreateArgs.Builder.mkstream(),
             )
         }.getOrNull()
@@ -40,13 +41,13 @@ class RedisEventConsumerImpl(
             val messages =
                 redis.commands.xreadgroup(
                     Consumer.from(
-                        EventKeys.EVENT_GROUP.value,
+                        RedisEventKeys.EVENT_GROUP.value,
                         "worker-1",
                     ),
                     XReadArgs.Builder
                         .block(Duration.ofSeconds(5)),
                     XReadArgs.StreamOffset.lastConsumed(
-                        EventKeys.EVENT_TYPE.value,
+                        RedisEventKeys.EVENT_TYPE.value,
                     ),
                 )
 
@@ -67,8 +68,8 @@ class RedisEventConsumerImpl(
                 }
 
                 redis.commands.xack(
-                    EventKeys.EVENT_TYPE.value,
-                    EventKeys.EVENT_GROUP.value,
+                    RedisEventKeys.EVENT_TYPE.value,
+                    RedisEventKeys.EVENT_GROUP.value,
                     stream.id,
                 )
             }

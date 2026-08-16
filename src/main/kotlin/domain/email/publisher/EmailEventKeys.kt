@@ -1,11 +1,8 @@
 package com.khrix.domain.email.publisher
 
-enum class EventKeys(
+enum class EmailEventKeys(
     val value: String,
 ) {
-    EVENT_TYPE("email"),
-    EVENT_GROUP("email-workers"),
-
     APPROVAL_EVENT_NAME("APPROVAL_EVENT_NAME"),
     UPDATE_EVENT_NAME("UPDATE_EVENT_NAME"),
 }

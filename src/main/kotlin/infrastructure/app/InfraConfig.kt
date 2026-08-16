@@ -42,7 +42,7 @@ data class JwtConfig(
     val realm: String,
     private val secret: String,
 ) {
-    val algorithm = Algorithm.HMAC256(secret)
+    val algorithm: Algorithm = Algorithm.HMAC256(secret)
 }
 
 interface InfraCredentials {

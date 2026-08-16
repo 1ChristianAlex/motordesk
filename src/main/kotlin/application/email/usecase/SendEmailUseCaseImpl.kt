@@ -1,4 +1,4 @@
-package com.khrix.application.notification.usecase
+package com.khrix.application.email.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.email.model.EmailQueueItem
