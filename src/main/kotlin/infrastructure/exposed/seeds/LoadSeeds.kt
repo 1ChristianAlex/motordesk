@@ -330,7 +330,7 @@ class LoadSeeds(
         UserEntity.new {
             firstName = "Chris"
             lastName = "Alexsander"
-            email = "christian.alexsander@email.com"
+            email = "gamamik261@hutdot.com"
             password = securityHasher.hash("test@123!")
             phone = "4737339296"
             cpf = "84783736081"

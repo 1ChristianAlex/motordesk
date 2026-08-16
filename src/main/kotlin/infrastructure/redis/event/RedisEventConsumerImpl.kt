@@ -1,7 +1,6 @@
 package com.khrix.infrastructure.redis.event
 
 import com.khrix.domain.email.publisher.EventConsumer
-import com.khrix.infrastructure.redis.event.RedisEventKeys
 import com.khrix.infrastructure.redis.connection.RedisConnection
 import com.khrix.infrastructure.redis.event.handler.RedisConsumerHandler
 import io.ktor.server.plugins.di.annotations.Named
@@ -64,7 +63,7 @@ class RedisEventConsumerImpl(
                                 }
 
                             asyncHandler.awaitAll()
-                        }.join()
+                        }
                 }
 
                 redis.commands.xack(

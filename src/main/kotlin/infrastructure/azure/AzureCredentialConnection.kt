@@ -15,7 +15,7 @@ class AzureCredentialConnection(
     fun createAzureConnection(): EmailAsyncClient =
         try {
             EmailClientBuilder()
-                .endpoint(azureConfig.accessKey)
+                .endpoint(azureConfig.communicationEndpoint)
                 .credential(azureKeyCredential)
                 .buildAsyncClient()
         } catch (e: Exception) {

@@ -1,0 +1,121 @@
+info:
+  name: Client - Get self client info
+  type: http
+  seq: 1
+  tags:
+    - self
+    - update
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/self/update"
+  body:
+    type: json
+    data: |-
+      {
+        "id": 1,
+        "addressId": null,
+        "companyId": null,
+        "firstName": null,
+        "lastName": "Brasil",
+        "email": null,
+        "password": null,
+        "phone": null,
+        "cpf": null
+      }
+  auth:
+    type: bearer
+    token: "{{clientToken}}"
+
+runtime:
+  variables:
+    - name: token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJrdG9yLXVzZXJzIiwiaXNzIjoia3Rvci1hcGkiLCJmaXJzdE5hbWUiOiJDaHJpc3RpYW4iLCJsYXN0TmFtZSI6IkFsZXhzYW5kZXIiLCJlbWFpbCI6ImNocmlzdGlhbi5hbGV4QGVtYWlsLmNvbSIsImNwZiI6IjIxNjQxNzgwMDk2IiwidXNlcklkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE3ODY5MjQ4MDB9.7AoZf-8I-bXQf1TLUlL535qsyF1Jlg0cZnbX3vbhCuo
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: "200"
+    request:
+      url: "{{baseUrl}}/self/update"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 2,
+            "addressId": null,
+            "companyId": null,
+            "firstName": null,
+            "lastName": "Brasil",
+            "email": null,
+            "password": null,
+            "phone": null,
+            "cpf": null
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {
+              "id": 8768,
+              "addressId": 6834,
+              "firstName": "string",
+              "lastName": "string",
+              "email": "string",
+              "phone": "string",
+              "cpf": "string",
+              "isActive": false,
+              "createdAt": "string",
+              "updatedAt": "string",
+              "companyId": 3689
+            },
+            "status": 9652,
+            "errors": null
+          }
+  - name: 400 Response
+    description: "400"
+    request:
+      url: "{{baseUrl}}/self/update"
+      method: PUT
+      body:
+        type: json
+        data: |-
+          {
+            "id": 2,
+            "addressId": null,
+            "companyId": null,
+            "firstName": null,
+            "lastName": "Brasil",
+            "email": null,
+            "password": null,
+            "phone": null,
+            "cpf": null
+          }
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {},
+            "status": 9036,
+            "errors": null
+          }
+
+docs: Get self client info

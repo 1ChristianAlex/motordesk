@@ -34,13 +34,13 @@ class SendEmailUseCaseImpl(
                         ),
                     )
 
+                emailItem = emailQueueRepository.registerAttempt(emailItem.id, EmailStatus.SENT)
                 emailSender.send(
                     emailItem.toApprovalEmail(
                         approvalLinkGenerator.generate(token.tokenHash, emailItem.orderCode),
-                        false,
+                        true,
                     ),
                 )
-                emailItem = emailQueueRepository.registerAttempt(emailItem.id, EmailStatus.SENT)
             }
         } catch (ex: Exception) {
             emailQueueRepository.setErrorMessage(emailItem.id, ex.message ?: "Failed to send email")

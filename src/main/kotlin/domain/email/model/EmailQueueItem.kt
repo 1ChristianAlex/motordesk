@@ -17,5 +17,5 @@ data class EmailQueueItem(
 
     fun shouldBeSend(): Boolean = status != EmailStatus.SENT
 
-    fun canRetry(): Boolean = attempts < maxAttempt
+    fun canRetry(): Boolean = attempts <= maxAttempt
 }

@@ -15,6 +15,7 @@ class RedisEmailPublisherImpl(
     ) {
         redis.commands.xadd(
             RedisEventKeys.EVENT_TYPE.value,
+            "package",
             RedisDataEventHandler.wrapEvent(eventKeys, data),
         )
     }

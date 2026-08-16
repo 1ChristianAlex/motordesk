@@ -18,10 +18,10 @@ class AzureEmailSender(
         val emailMessage =
             EmailMessage().apply {
                 message.run {
-                    setSenderAddress("<${senderAddress.value}>")
+                    setSenderAddress(senderAddress.value)
                     setToRecipients(toRecipients.map { EmailAddress(it.value) })
                     setSubject(subject)
-                    setBodyHtml(bodyPlainText)
+                    setBodyHtml(body)
                 }
             }
 
