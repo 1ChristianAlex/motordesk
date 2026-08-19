@@ -33,9 +33,15 @@ asynchronous email notifications.
 
 ## Architecture Decision Records
 
-- [ADR-001 - PostgreSQL as the Primary Relational Database](docs/ADR/ADR-001%20—%20PostgreSQL%20+%20Kotlin%20Exposed.md)
-- [ADR-002 - Using Redis Streams for Asynchronous Notification Processing](docs/ADR/ADR-002-Redis-Streams.md)
-- [ADR-003 - Using MongoDB for Service Order Update History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
+- [ADR-001 - PostgreSQL + Kotlin Exposed](docs/ADR/ADR-001%20%E2%80%94%20PostgreSQL%20+%20Kotlin%20Exposed.md)
+- [ADR-002 - Redis Streams](docs/ADR/ADR-002-Redis-Streams.md)
+- [ADR-003 - MongoDB Service Order History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
+- [ADR-004 - Azure Communication Services Email](docs/ADR/ADR-004-Azure-Communication-Services-Email.md)
+
+## Diagrams
+
+- [Send Email Sequence](docs/diagrams/send-email-sequence.md)
+- [Email Sending with Azure](docs/diagrams/email-sending-azure.md)
 
 ## Technical-Debt
 
@@ -171,6 +177,8 @@ Command Description
 ### Other Resources
 
 - Ubiquitous Language: `docs/Ubiquitous Language.md`
+- Architecture decisions: `docs/ADR/`
+- Diagrams: `docs/diagrams/`
 - Storytelling diagrams: `docs/storytelling/`
 - Static OpenAPI: `docs/index.html`
 - Swagger UI screenshot: `docs/swaggerUI.png`
