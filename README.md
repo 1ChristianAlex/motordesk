@@ -56,7 +56,7 @@ docs
 ├── storytelling
 └── index.html
 
-postman
+bruno
 ```
 
 ## Architecture
@@ -140,9 +140,9 @@ docker compose -f docker-compose-dev.yml up -d
 docker compose -f docker-compose.yml up -d
 ```
 
-### Postman Collection
+### Bruno Collection
 
-Postman collection can be loaded up from this repo
+Bruno collection can be loaded up from this repo
 
 ### Seed users
 
@@ -174,4 +174,4 @@ Command Description
 - Storytelling diagrams: `docs/storytelling/`
 - Static OpenAPI: `docs/index.html`
 - Swagger UI screenshot: `docs/swaggerUI.png`
-- Postman collection: `postman/`
+- Bruno collection: `bruno/`

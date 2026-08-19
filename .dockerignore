@@ -7,5 +7,6 @@ out
 **/*.iml
 docs
 postman
+bruno
 README.md
 docker-compose.yml
