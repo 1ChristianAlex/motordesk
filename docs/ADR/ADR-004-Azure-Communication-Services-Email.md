@@ -344,7 +344,7 @@ This ADR defines which external provider is used for email delivery.
 - `docs/Ubiquitous Language.md` — domain vocabulary.
 - `docs/storytelling/` — business flows.
 - `docs/index.html` — OpenAPI documentation.
-- `postman/` — manual testing collection.
+- `bruno/` — manual testing collection.
 - Microsoft Azure for Students — Azure resources for students.
 
 ## Summary

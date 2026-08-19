@@ -168,18 +168,18 @@ When changing an HTTP endpoint:
 3. update OpenAPI-related documentation if necessary;
 4. verify Swagger when practical.
 
-### 3.6 Postman
+### 3.6 Bruno
 
-`postman/`
+`bruno/`
 
-Use the Postman collection for manual API testing and for understanding existing endpoint usage.
+Use the Bruno collection for manual API testing and for understanding existing endpoint usage.
 
 If an endpoint contract changes, consider whether the corresponding collection needs to be updated.
 
 ### 3.7 Project Delivery Documentation
 
 The repository also contains project delivery documentation describing the implemented scope and the relationship
-between the README, ADRs, storytelling, OpenAPI and Postman documentation.
+between the README, ADRs, storytelling, OpenAPI and Bruno documentation.
 
 Use it as supporting documentation, not as a replacement for source code or ADRs.
 
@@ -483,7 +483,7 @@ When modifying an endpoint, verify:
 - use case;
 - error mapping;
 - OpenAPI documentation;
-- Postman collection when applicable.
+- Bruno collection when applicable.
 
 ---
 
@@ -575,7 +575,7 @@ When making a change, decide whether it affects:
 | Business flow           | `docs/storytelling/`                  |
 | Architectural decision  | `docs/ADR/`                           |
 | API contract            | OpenAPI / Swagger                     |
-| Manual API test         | `postman/`                            |
+| Manual API test         | `bruno/`                              |
 | High-level architecture | `README.md`                           |
 | Email architecture      | Email ADR + README/flow documentation |
 
@@ -743,7 +743,7 @@ Motor Desk
 │   ├── Ubiquitous Language.md
 │   └── index.html
 │
-├── postman/
+├── bruno/
 └── README.md
 ```
 
@@ -768,7 +768,7 @@ README.md
        ├── docs/index.html
        │      └── Static OpenAPI
        │
-       └── postman/
+       └── bruno/
               └── Manual API testing
 ```
 

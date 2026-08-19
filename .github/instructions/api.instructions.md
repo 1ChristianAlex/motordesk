@@ -40,4 +40,4 @@ For tokenized Service Order approval:
 
 ## Documentation
 
-For API changes, consider `docs/index.html`, Swagger/OpenAPI configuration, `postman/`, and `README.md`.
+For API changes, consider `docs/index.html`, Swagger/OpenAPI configuration, `bruno/`, and `README.md`.

@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.redis.event
 
-import com.khrix.domain.email.publisher.EmailEventKeys
+import com.khrix.application.email.publisher.EmailEventKeys
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

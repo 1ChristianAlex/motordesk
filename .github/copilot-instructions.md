@@ -21,7 +21,7 @@ Relevant documentation:
 - `docs/ADR/` — architectural decisions.
 - `docs/storytelling/` — business flows.
 - `docs/index.html` — static OpenAPI documentation.
-- `postman/` — manual API testing.
+- `bruno/` — manual API testing.
 
 Before reviewing a non-trivial change, inspect the relevant documentation.
 
@@ -103,7 +103,7 @@ flowchart LR
 
 Do not put business rules, SQL, Redis commands, or Azure SDK calls directly in routes.
 
-When an API contract changes, check OpenAPI/Swagger, Postman, and related documentation.
+When an API contract changes, check OpenAPI/Swagger, Bruno, and related documentation.
 
 ## Security
 
@@ -128,7 +128,7 @@ When a PR changes:
 - business flow → `docs/storytelling/`
 - architecture → `docs/ADR/`
 - API contract → OpenAPI / Swagger
-- manual API usage → `postman/`
+- manual API usage → `bruno/`
 - high-level architecture → `README.md`
 
 Do not duplicate detailed documentation inside this file.

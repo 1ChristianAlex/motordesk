@@ -15,6 +15,9 @@ import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.security.SecurityHasher
+import io.ktor.server.plugins.di.annotations.Named
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class SendEmailApprovalUseCaseImpl(
     private val emailSender: EmailSender,
@@ -23,6 +26,7 @@ class SendEmailApprovalUseCaseImpl(
     private val securityHasher: SecurityHasher,
     private val approvalLinkGenerator: ApprovalLinkGenerator,
     private val updateServiceOrderUseCase: UpdateServiceOrderUseCase,
+    @Named("applicationScope") private val scope: CoroutineScope,
 ) : BaseUseCaseImpl<Int, Unit>(),
     SendEmailApprovalUseCase {
     override suspend fun internalExecute(command: Int) {
@@ -46,14 +50,16 @@ class SendEmailApprovalUseCaseImpl(
                         true,
                     ),
                 )
-                updateServiceOrderUseCase.execute(
-                    UpdateServiceOrderCommand(
-                        code = emailItem.orderCode,
-                        operatorRole = Role.MANAGER,
-                        status = ServiceOrderStatus.WAITING_APPROVAL,
-                        complaint = null,
-                    ),
-                )
+                scope.launch {
+                    updateServiceOrderUseCase.execute(
+                        UpdateServiceOrderCommand(
+                            code = emailItem.orderCode,
+                            operatorRole = Role.MANAGER,
+                            status = ServiceOrderStatus.WAITING_APPROVAL,
+                            complaint = null,
+                        ),
+                    )
+                }
             }
         } catch (ex: Exception) {
             emailQueueRepository.setErrorMessage(emailItem.id, ex.message ?: "Failed to send email")

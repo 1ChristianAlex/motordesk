@@ -1,7 +1,0 @@
-$kind: http-request
-name: /openapi/:**
-url: "{{baseUrl}}/openapi/:**"
-method: GET
-pathVariables:
-  "**": ""
-order: 1000

@@ -1,6 +1,6 @@
 package com.khrix.infrastructure.redis.event
 
-import com.khrix.domain.email.publisher.EmailEventKeys
+import com.khrix.application.email.publisher.EmailEventKeys
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
