@@ -12,7 +12,6 @@ object OrderApprovalTable : BaseTable("orderApprovals") {
 
     val expiresAt = timestamp("expiresAt")
     val usedAt = timestamp("usedAt").nullable()
-    val revokedAt = timestamp("revokedAt").nullable()
 }
 
 class OrderApprovalEntity(
@@ -28,7 +27,6 @@ class OrderApprovalEntity(
 
     var expiresAt by OrderApprovalTable.expiresAt
     var usedAt by OrderApprovalTable.usedAt
-    var revokedAt by OrderApprovalTable.revokedAt
 
     var createdAt by OrderApprovalTable.createdAt
     var updatedAt by OrderApprovalTable.updatedAt

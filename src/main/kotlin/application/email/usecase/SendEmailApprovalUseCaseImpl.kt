@@ -6,20 +6,25 @@ import com.khrix.application.serviceorder.ApprovalLinkGenerator
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.email.model.EmailStatus
 import com.khrix.domain.email.repository.EmailQueueRepository
-import com.khrix.domain.email.usecase.SendEmailUseCase
+import com.khrix.domain.email.usecase.SendEmailApprovalUseCase
 import com.khrix.domain.email.usecase.SendEmailUseCaseError
 import com.khrix.domain.serviceorder.model.ServiceOrderApprovalToken
+import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.domain.serviceorder.repository.ServiceOrderApprovalRepository
+import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
+import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.security.SecurityHasher
 
-class SendEmailUseCaseImpl(
+class SendEmailApprovalUseCaseImpl(
     private val emailSender: EmailSender,
     private val emailQueueRepository: EmailQueueRepository,
     private val serviceOrderApprovalRepository: ServiceOrderApprovalRepository,
     private val securityHasher: SecurityHasher,
     private val approvalLinkGenerator: ApprovalLinkGenerator,
+    private val updateServiceOrderUseCase: UpdateServiceOrderUseCase,
 ) : BaseUseCaseImpl<Int, Unit>(),
-    SendEmailUseCase {
+    SendEmailApprovalUseCase {
     override suspend fun internalExecute(command: Int) {
         var emailItem =
             emailQueueRepository.read(command)
@@ -39,6 +44,14 @@ class SendEmailUseCaseImpl(
                     emailItem.toApprovalEmail(
                         approvalLinkGenerator.generate(token.tokenHash, emailItem.orderCode),
                         true,
+                    ),
+                )
+                updateServiceOrderUseCase.execute(
+                    UpdateServiceOrderCommand(
+                        code = emailItem.orderCode,
+                        operatorRole = Role.MANAGER,
+                        status = ServiceOrderStatus.WAITING_APPROVAL,
+                        complaint = null,
                     ),
                 )
             }

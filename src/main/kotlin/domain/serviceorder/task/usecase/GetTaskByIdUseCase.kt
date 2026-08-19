@@ -4,4 +4,3 @@ import com.khrix.domain.core.BaseUseCase
 import com.khrix.domain.serviceorder.task.model.Task
 
 interface GetTaskByIdUseCase : BaseUseCase<Int, Task>
-

@@ -12,32 +12,34 @@ import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
 object ServiceOrdersTable : BaseTable("serviceOrders") {
-
     val client = reference("clientId", UsersTable)
 
     val operator = reference("operatorId", UsersTable)
 
     val vehicle = reference("vehicleId", VehicleTable)
 
-    val status = enumerationByName<ServiceOrderStatus>(
-        "status",
-        25
-    ).default(ServiceOrderStatus.CREATED)
+    val status =
+        enumerationByName<ServiceOrderStatus>(
+            "status",
+            25,
+        ).default(ServiceOrderStatus.CREATED)
 
     val complaint = text("complaint")
 
     val diagnosis = text("diagnosis").nullable()
 
-    val totalAmount = decimal("totalAmount", 12, 2)
-        .default(java.math.BigDecimal.ZERO)
+    val totalAmount =
+        decimal("totalAmount", 12, 2)
+            .default(java.math.BigDecimal.ZERO)
 
     val code = varchar("code", 25).uniqueIndex()
 }
 
-class ServiceOrderEntity(id: EntityID<Int>) : IntEntity(id) {
-
+class ServiceOrderEntity(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<ServiceOrderEntity>(
-        ServiceOrdersTable
+        ServiceOrdersTable,
     )
 
     var client by UserEntity referencedOn ServiceOrdersTable.client

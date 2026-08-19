@@ -3,12 +3,14 @@ package com.khrix.infrastructure.http.controllers.serviceorder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.infrastructure.http.controllers.core.AppController
 import com.khrix.infrastructure.http.controllers.core.getBody
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.ApprovesServiceOrderHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServiceOrderItemHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServicesOrderHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetServiceOrderItemHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.UpdateServiceOrderHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.ServiceOrderResource
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ApprovesServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ClientServiceOrderItemInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto
@@ -27,6 +29,7 @@ class ServiceOrderController(
     private val getClientServicesOrderHandler: GetClientServicesOrderHandler,
     private val getClientServiceOrderItemHandler: GetClientServiceOrderItemHandler,
     private val getServiceOrderItemHandler: GetServiceOrderItemHandler,
+    private val approvesServiceOrderHandler: ApprovesServiceOrderHandler,
 ) : AppController() {
     private suspend fun updateHandler(
         call: RoutingCall,
@@ -85,6 +88,11 @@ class ServiceOrderController(
                     )
                 }.describe(getClientServiceOrderItemHandler::description)
             }
+            get<ServiceOrderResource.Client.Individual.Approval> {
+                call.send(
+                    approvesServiceOrderHandler.handler(ApprovesServiceOrderInputDto(it.token, it.parent.code)),
+                )
+            }.describe(approvesServiceOrderHandler::description)
         }
     }
 }

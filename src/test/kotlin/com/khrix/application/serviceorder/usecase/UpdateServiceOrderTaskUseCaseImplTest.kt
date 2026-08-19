@@ -1,6 +1,5 @@
 package com.khrix.application.serviceorder.usecase
 
-import com.khrix.application.serviceorder.usecase.UpdateServiceOrderTaskUseCaseImpl
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderTaskCommand

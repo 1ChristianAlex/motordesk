@@ -17,8 +17,12 @@ import org.jetbrains.exposed.v1.jdbc.Database
 
 class UserExposedRepositoryImpl(
     database: Database,
-) : BaseExposedRepository<UserEntity, User>(database), UserRepository {
-    override suspend fun update(id: Int, data: User) {
+) : BaseExposedRepository<UserEntity, User>(database),
+    UserRepository {
+    override suspend fun update(
+        id: Int,
+        data: User,
+    ) {
         suspendedQuery {
             UserEntity.findByIdAndUpdate(id) {
                 it.firstName = data.firstName.value
@@ -38,54 +42,47 @@ class UserExposedRepositoryImpl(
         suspendedQuery { UserEntity[id].delete() }
     }
 
-    override suspend fun read(id: Int): User {
-        return suspendedQuery {
+    override suspend fun read(id: Int): User =
+        suspendedQuery {
             UserEntity[id].toModel()
         }
-    }
 
-    override suspend fun createRead(data: User): User {
-        return suspendedQuery { createCleanUser(data).toModel() }
-    }
+    override suspend fun createRead(data: User): User = suspendedQuery { createCleanUser(data).toModel() }
 
-    override suspend fun create(data: User): Int {
-        return suspendedQuery { createCleanUser(data).id.value }
-    }
+    override suspend fun create(data: User): Int = suspendedQuery { createCleanUser(data).id.value }
 
     private fun createCleanUser(data: User): UserEntity {
-        val user = UserEntity.new {
-            firstName = data.firstName.value
-            lastName = data.lastName.value
-            email = data.email.value
-            password = data.password.value
-            phone = data.phone.normalize()
-            cpf = data.cpf.normalize()
-            isActive = true
-            isEmailValid = false
-            address = if (data.addressId > 0) AddressEntity[data.addressId] else null
-            role = data.role
-        }
+        val user =
+            UserEntity.new {
+                firstName = data.firstName.value
+                lastName = data.lastName.value
+                email = data.email.value
+                password = data.password.value
+                phone = data.phone.normalize()
+                cpf = data.cpf.normalize()
+                isActive = true
+                isEmailValid = false
+                address = if (data.addressId > 0) AddressEntity[data.addressId] else null
+                role = data.role
+            }
 
         return user
     }
 
-    override suspend fun getByEmail(email: Email): User? {
-        return suspendedQuery {
+    override suspend fun getByEmail(email: Email): User? =
+        suspendedQuery {
             UserEntity.find { UsersTable.email eq email.value }.firstOrNull()?.toModel()
         }
-    }
 
-    override suspend fun getByCpf(cpf: CPF): User? {
-        return suspendedQuery {
+    override suspend fun getByCpf(cpf: CPF): User? =
+        suspendedQuery {
             UserEntity.find { UsersTable.cpf eq cpf.normalize() }.firstOrNull()?.toModel()
         }
-    }
 
-    override suspend fun getByCnpj(cnpf: CNPJ): User? {
-        return suspendedQuery {
+    override suspend fun getByCnpj(cnpf: CNPJ): User? =
+        suspendedQuery {
             val company = CompanyEntity.find { CompanyTable.cnpj eq cnpf.normalize() }.firstOrNull()
 
             company?.user?.toModel()
         }
-    }
 }

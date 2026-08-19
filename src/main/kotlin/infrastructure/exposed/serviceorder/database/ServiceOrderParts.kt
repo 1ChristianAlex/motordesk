@@ -4,9 +4,8 @@ import com.khrix.infrastructure.exposed.inventory.database.InventoryTable
 import org.jetbrains.exposed.v1.core.Table
 
 object ServiceOrderPartsTable : Table(
-    "serviceOrderParts"
+    "serviceOrderParts",
 ) {
-
     val serviceOrder =
         reference("serviceOrderId", ServiceOrdersTable)
 

@@ -13,16 +13,18 @@ data class ServiceOrderTaskHistory(
     val taskId: Int,
     val status: TaskProgressStatus,
     val serviceOrderId: Int,
-    val createdAt: Instant = Clock.System.now()
+    val createdAt: Instant = Clock.System.now(),
 ) {
     companion object {
-        fun fromModel(serviceOrderTask: ServiceOrderTask, id: ObjectId): ServiceOrderTaskHistory {
-            return ServiceOrderTaskHistory(
+        fun fromModel(
+            serviceOrderTask: ServiceOrderTask,
+            id: ObjectId,
+        ): ServiceOrderTaskHistory =
+            ServiceOrderTaskHistory(
                 status = serviceOrderTask.status,
                 serviceOrderId = serviceOrderTask.serviceOrderId,
                 taskId = serviceOrderTask.taskId,
-                id = id
+                id = id,
             )
-        }
     }
 }

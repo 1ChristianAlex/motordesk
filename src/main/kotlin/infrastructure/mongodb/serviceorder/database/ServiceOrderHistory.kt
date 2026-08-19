@@ -13,19 +13,19 @@ data class ServiceOrderHistory(
     val status: ServiceOrderStatus,
     val complaint: String,
     val diagnosis: String? = null,
-    val createdAt: Instant = Instant.now()
+    val createdAt: Instant = Instant.now(),
 ) {
     companion object {
-        fun fromModel(serviceOrder: ServiceOrder, id: ObjectId): ServiceOrderHistory {
-            return ServiceOrderHistory(
+        fun fromModel(
+            serviceOrder: ServiceOrder,
+            id: ObjectId,
+        ): ServiceOrderHistory =
+            ServiceOrderHistory(
                 id = id,
                 status = serviceOrder.status,
                 complaint = serviceOrder.complaint,
                 diagnosis = serviceOrder.diagnosis,
-                serviceOrderId = serviceOrder.id
+                serviceOrderId = serviceOrder.id,
             )
-        }
     }
 }
-
-

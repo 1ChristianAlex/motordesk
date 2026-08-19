@@ -44,7 +44,10 @@ class DecrementItemInventoryUseCaseImplTest {
             val cmd = DecrementItemInventoryCommand(itemId = 1, quantity = 5)
 
             coEvery { inventoryRepository.decrementItemQuantity(cmd.itemId, cmd.quantity) } returns Unit
-            coEvery { inventoryRepository.getByIdOrSku(cmd.itemId.toString()) } returns sampleInventoryItem().copy(quantity = 0)
+            coEvery { inventoryRepository.getByIdOrSku(cmd.itemId.toString()) } returns
+                sampleInventoryItem().copy(
+                    quantity = 0,
+                )
             coEvery { inventoryRepository.delete(cmd.itemId) } returns Unit
 
             impl.execute(cmd).getOrThrow()

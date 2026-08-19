@@ -7,12 +7,9 @@ import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 
 class GetTaskByListIdUseCaseImpl(
     private val taskRepository: TaskRepository,
-) : GetTaskByListIdUseCase, BaseUseCaseImpl<List<Int>, List<Task>>() {
-    override suspend fun internalExecute(command: List<Int>): List<Task> {
-        return taskRepository.getTasks(command)
-    }
+) : BaseUseCaseImpl<List<Int>, List<Task>>(),
+    GetTaskByListIdUseCase {
+    override suspend fun internalExecute(command: List<Int>): List<Task> = taskRepository.getTasks(command)
 
-    override suspend fun useCaseDescription(): String {
-        return "Create a new task for a service order"
-    }
+    override suspend fun useCaseDescription(): String = "Create a new task for a service order"
 }

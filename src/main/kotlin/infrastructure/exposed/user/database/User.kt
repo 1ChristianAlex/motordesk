@@ -1,6 +1,5 @@
 package com.khrix.infrastructure.exposed.user.database
 
-
 import com.khrix.domain.user.model.Role
 import com.khrix.infrastructure.exposed.BaseTable
 import com.khrix.infrastructure.exposed.address.database.AddressEntity
@@ -28,7 +27,9 @@ object UsersTable : BaseTable("users") {
     val isEmailValid = bool("isEmailValid").default(false)
 }
 
-class UserEntity(id: EntityID<Int>) : IntEntity(id) {
+class UserEntity(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<UserEntity>(UsersTable)
 
     var address by AddressEntity optionalReferencedOn UsersTable.address

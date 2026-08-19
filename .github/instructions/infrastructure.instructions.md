@@ -19,21 +19,26 @@ Do not expose infrastructure implementation details upward.
 
 ## PostgreSQL / Exposed
 
-PostgreSQL is the transactional source of truth. Check transaction boundaries, constraints, nullability, indexes, migrations, domain/persistence mapping, and existing Exposed conventions.
+PostgreSQL is the transactional source of truth. Check transaction boundaries, constraints, nullability, indexes,
+migrations, domain/persistence mapping, and existing Exposed conventions.
 
 ## MongoDB
 
-MongoDB is used for Service Order history and snapshots. Keep historical responsibilities separate from transactional state.
+MongoDB is used for Service Order history and snapshots. Keep historical responsibilities separate from transactional
+state.
 
 ## Redis / Lettuce
 
-Redis Streams is used for asynchronous processing. Check stream names, consumer groups, acknowledgment, pending messages, errors, retries, payload shape, coroutine usage, and accidental Pub/Sub semantics.
+Redis Streams is used for asynchronous processing. Check stream names, consumer groups, acknowledgment, pending
+messages, errors, retries, payload shape, coroutine usage, and accidental Pub/Sub semantics.
 
 Redis is not the business source of truth.
 
 ## Azure Communication Services
 
-Check that Azure SDK code remains in infrastructure, credentials come from configuration/secrets, provider errors are handled, `EmailSender` remains the application-facing abstraction, and Azure-specific models do not leak outside infrastructure.
+Check that Azure SDK code remains in infrastructure, credentials come from configuration/secrets, provider errors are
+handled, `EmailSender` remains the application-facing abstraction, and Azure-specific models do not leak outside
+infrastructure.
 
 ## Configuration
 
@@ -41,4 +46,5 @@ Never commit access keys, passwords, credential-bearing connection strings, toke
 
 ## Adapters
 
-Adapters translate between internal models and provider-specific models. Do not leak provider-specific types through application interfaces.
+Adapters translate between internal models and provider-specific models. Do not leak provider-specific types through
+application interfaces.

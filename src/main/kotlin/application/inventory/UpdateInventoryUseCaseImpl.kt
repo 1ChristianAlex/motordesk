@@ -7,12 +7,9 @@ import com.khrix.domain.inventory.usecase.UpdateInventoryUseCase
 
 class UpdateInventoryUseCaseImpl(
     private val inventoryRepository: InventoryRepository,
-) : UpdateInventoryUseCase, BaseUseCaseImpl<InventoryItem, Unit>() {
-    override suspend fun internalExecute(command: InventoryItem) {
-        return inventoryRepository.update(command.id, command)
-    }
+) : BaseUseCaseImpl<InventoryItem, Unit>(),
+    UpdateInventoryUseCase {
+    override suspend fun internalExecute(command: InventoryItem) = inventoryRepository.update(command.id, command)
 
-    override suspend fun useCaseDescription(): String {
-        return "Update an existing inventory item"
-    }
+    override suspend fun useCaseDescription(): String = "Update an existing inventory item"
 }

@@ -10,8 +10,7 @@ suspend fun OrderApprovalEntity.toModel(): ServiceOrderApprovalToken =
             serviceOrderCode = serviceOrder.code,
             tokenHash = tokenHash,
             expiresAt = expiresAt,
-            usedAt = usedAt,
-            revokedAt = revokedAt,
+            _usedAt = usedAt,
             id = this@toModel.id.value,
         )
     }

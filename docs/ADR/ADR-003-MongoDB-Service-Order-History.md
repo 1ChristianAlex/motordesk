@@ -8,27 +8,23 @@ Accepted
 
 ## Context
 
-The Service Order is the main business entity in MotorDesk. During its
-lifecycle it changes frequently:
+The Service Order is the main business entity in MotorDesk. During its lifecycle it changes frequently:
 
--   status updates;
--   task additions/removals;
--   inventory changes;
--   budget updates;
--   diagnosis updates;
--   customer approval.
+- status updates;
+- task additions/removals;
+- inventory changes;
+- budget updates;
+- diagnosis updates;
+- customer approval.
 
-Besides the current state, the system must preserve a complete history
-for auditing and traceability without impacting transactional
-performance.
+Besides the current state, the system must preserve a complete history for auditing and traceability without impacting
+transactional performance.
 
 ## Decision
 
-MongoDB will store snapshots of the Service Order whenever a relevant
-update occurs.
+MongoDB will store snapshots of the Service Order whenever a relevant update occurs.
 
-Each document represents the complete state of a Service Order at a
-specific point in time.
+Each document represents the complete state of a Service Order at a specific point in time.
 
 PostgreSQL remains the system of record for transactional data.
 
@@ -59,13 +55,13 @@ Each update creates a new document, preserving previous versions.
 
 **Pros**
 
--   Existing infrastructure
--   Transactional consistency
+- Existing infrastructure
+- Transactional consistency
 
 **Cons**
 
--   Complex schema
--   Audit queries affect transactional database
+- Complex schema
+- Audit queries affect transactional database
 
 **Decision:** Rejected.
 
@@ -77,16 +73,16 @@ Each update creates a new document, preserving previous versions.
 
 **Pros**
 
--   Natural document storage
--   No normalization required
--   Snapshot-based history
--   Horizontal scalability
--   Low impact on PostgreSQL
+- Natural document storage
+- No normalization required
+- Snapshot-based history
+- Horizontal scalability
+- Low impact on PostgreSQL
 
 **Cons**
 
--   Data duplication
--   Eventual consistency
+- Data duplication
+- Eventual consistency
 
 **Decision:** Accepted.
 
@@ -94,33 +90,32 @@ Each update creates a new document, preserving previous versions.
 
 ### Positive
 
--   Complete audit trail
--   Independent audit queries
--   Easy historical reconstruction
--   Flexible schema evolution
+- Complete audit trail
+- Independent audit queries
+- Easy historical reconstruction
+- Flexible schema evolution
 
 ### Negative
 
--   Higher storage usage
--   Snapshot synchronization
--   Intentional data duplication
+- Higher storage usage
+- Snapshot synchronization
+- Intentional data duplication
 
 ## Implementation Notes
 
--   MongoDB is used exclusively for history.
--   PostgreSQL remains the source of truth.
--   Every relevant update generates a new snapshot.
--   Access is abstracted by `ServiceOrderHistoryRepository`.
--   Mongo implementation lives in `ServiceOrderMongoRepositoryImpl`.
+- MongoDB is used exclusively for history.
+- PostgreSQL remains the source of truth.
+- Every relevant update generates a new snapshot.
+- Access is abstracted by `ServiceOrderHistoryRepository`.
+- Mongo implementation lives in `ServiceOrderMongoRepositoryImpl`.
 
 ## Architectural Motivation
 
 This decision aligns with:
 
--   Separation of transactional and audit workloads
--   Domain-Driven Design
--   Layered Architecture
--   Repository single responsibility
--   Flexible document storage
--   Preservation of historical data without affecting transactional
-    performance
+- Separation of transactional and audit workloads
+- Domain-Driven Design
+- Layered Architecture
+- Repository single responsibility
+- Flexible document storage
+- Preservation of historical data without affecting transactional performance

@@ -21,7 +21,9 @@ object AddressTable : BaseTable("address") {
     val zipCode = varchar("zipCode", 20)
 }
 
-class AddressEntity(id: EntityID<Int>) : IntEntity(id) {
+class AddressEntity(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<AddressEntity>(AddressTable)
 
     var street by AddressTable.street

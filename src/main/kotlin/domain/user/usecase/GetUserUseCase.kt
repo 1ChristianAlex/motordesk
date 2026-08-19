@@ -5,4 +5,6 @@ import com.khrix.domain.user.model.User
 
 interface GetUserUseCase : BaseUseCase<Int, User>
 
-class UserNotFoundException(id: Int) : NoSuchElementException("No user found with id $id")
+class UserNotFoundException(
+    id: Int,
+) : NoSuchElementException("No user found with id $id")

@@ -8,12 +8,9 @@ import com.khrix.domain.core.BaseUseCaseImpl
 
 class SearchCompanyByCnpjUseCaseImpl(
     private val companyRepository: CompanyRepository,
-) : SearchCompanyByCnpjUseCase, BaseUseCaseImpl<SearchCompanyByCnpjUseCaseCommand, Company?>() {
-    override suspend fun internalExecute(command: SearchCompanyByCnpjUseCaseCommand): Company? {
-        return companyRepository.findByCnpj(command.cnpj)
-    }
+) : BaseUseCaseImpl<SearchCompanyByCnpjUseCaseCommand, Company?>(),
+    SearchCompanyByCnpjUseCase {
+    override suspend fun internalExecute(command: SearchCompanyByCnpjUseCaseCommand): Company? = companyRepository.findByCnpj(command.cnpj)
 
-    override suspend fun useCaseDescription(): String {
-        return "Hash password and create new user"
-    }
+    override suspend fun useCaseDescription(): String = "Hash password and create new user"
 }

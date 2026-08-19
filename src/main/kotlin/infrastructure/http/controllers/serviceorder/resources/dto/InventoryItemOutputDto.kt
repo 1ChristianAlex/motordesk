@@ -12,5 +12,5 @@ data class InventoryItemOutputDto(
     val quantity: Int,
     val minimumQuantity: Int,
     val unitPrice: Price,
-    val isActive: Boolean
+    val isActive: Boolean,
 )

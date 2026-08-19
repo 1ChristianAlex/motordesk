@@ -9,6 +9,7 @@ import com.khrix.domain.email.publisher.EventPublisher
 import com.khrix.domain.email.repository.EmailQueueRepository
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
+import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.domain.user.address.repository.AddressRepository
 import io.ktor.server.plugins.di.annotations.Named
 import kotlinx.coroutines.CoroutineScope
@@ -26,12 +27,28 @@ class CreateEmailQueueUseCaseImpl(
             val clientAddress =
                 addressRepository.read(command.client.addressId) ?: throw NoSuchElementException("Address is null")
 
+            val eventName =
+                if (command.status ==
+                    ServiceOrderStatus.CREATED
+                ) {
+                    EmailEventKeys.APPROVAL_EVENT_NAME
+                } else {
+                    EmailEventKeys.UPDATE_EVENT_NAME
+                }
+
             val result =
                 emailQueueRepository.create(
                     EmailQueueItem(
                         id = 0,
                         recipient = command.client.email.value,
-                        subject = "Service Order Created",
+                        subject =
+                            if (command.status ==
+                                ServiceOrderStatus.CREATED
+                            ) {
+                                "Sua ordem de serviço foi criada!"
+                            } else {
+                                "Sua ordem de serviço tem uma atualização!"
+                            },
                         metadata =
                             ServiceOrderEmailMetadata(
                                 serviceOrder = command,
@@ -44,7 +61,7 @@ class CreateEmailQueueUseCaseImpl(
                     ),
                 )
 
-            eventPublisher.publish(EmailEventKeys.APPROVAL_EVENT_NAME, result)
+            eventPublisher.publish(eventName, result)
         }
     }
 

@@ -13,53 +13,54 @@ import org.bson.types.ObjectId
 
 class ServiceOrderTaskMongoRepositoryImpl(
     private val mongoConnection: MongoConnection,
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
 ) : ServiceOrderTaskHistoryRepository {
     private val collection by lazy {
         mongoConnection.database
             .getCollection<ServiceOrderTaskHistory>(
-                "service_order_task_history"
+                "service_order_task_history",
             )
     }
 
-    override suspend fun read(
-        id: Int
-    ): List<ServiceOrderTask> {
-        val projectionFields = Projections.fields(
-            Projections.include(
-                ServiceOrderTaskHistory::status.name,
-                ServiceOrderTaskHistory::serviceOrderId.name,
-                ServiceOrderTaskHistory::taskId.name,
-            ),
-            Projections.excludeId()
-        )
+    override suspend fun read(id: Int): List<ServiceOrderTask> {
+        val projectionFields =
+            Projections.fields(
+                Projections.include(
+                    ServiceOrderTaskHistory::status.name,
+                    ServiceOrderTaskHistory::serviceOrderId.name,
+                    ServiceOrderTaskHistory::taskId.name,
+                ),
+                Projections.excludeId(),
+            )
 
         val taskList = taskRepository.getTasksFromServiceOrder(id)
 
-        val documents = collection
-            .find(
-                eq(
-                    ServiceOrderTaskHistory::serviceOrderId.name,
-                    id
-                )
-            ).projection(projectionFields)
+        val documents =
+            collection
+                .find(
+                    eq(
+                        ServiceOrderTaskHistory::serviceOrderId.name,
+                        id,
+                    ),
+                ).projection(projectionFields)
 
-        val historyTasks = documents.map { history ->
-            val taskItem = taskList.find { task -> task.id == history.taskId }
+        val historyTasks =
+            documents
+                .map { history ->
+                    val taskItem = taskList.find { task -> task.id == history.taskId }
 
-            taskItem?.let {
-                ServiceOrderTask(id, taskItem.id, history.status)
-            }
-        }.toList().filterNotNull()
+                    taskItem?.let {
+                        ServiceOrderTask(id, taskItem.id, history.status)
+                    }
+                }.toList()
+                .filterNotNull()
 
         return historyTasks
     }
 
-    override suspend fun create(
-        data: ServiceOrderTask
-    ) {
+    override suspend fun create(data: ServiceOrderTask) {
         collection.insertOne(
-            ServiceOrderTaskHistory.fromModel(data, ObjectId())
+            ServiceOrderTaskHistory.fromModel(data, ObjectId()),
         )
     }
 }

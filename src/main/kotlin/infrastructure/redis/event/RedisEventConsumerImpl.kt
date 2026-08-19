@@ -14,6 +14,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 import java.time.Duration
 
 @OptIn(ExperimentalLettuceCoroutinesApi::class)
@@ -21,6 +22,8 @@ class RedisEventConsumerImpl(
     private val redis: RedisConnection,
     @Named("consumerHandlerList") private val consumerHandlers: List<RedisConsumerHandler>,
 ) : EventConsumer {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     private suspend fun createConsumerGroup() {
         runCatching {
             redis.commands.xgroupCreate(
@@ -51,6 +54,7 @@ class RedisEventConsumerImpl(
                 )
 
             messages.collect { stream ->
+                logger.info("Collecting redis item " + stream.id)
                 stream.body.forEach { message ->
                     val myScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
                     myScope
@@ -71,6 +75,7 @@ class RedisEventConsumerImpl(
                     RedisEventKeys.EVENT_GROUP.value,
                     stream.id,
                 )
+                logger.info("Removing redis item " + stream.id)
             }
         }
     }

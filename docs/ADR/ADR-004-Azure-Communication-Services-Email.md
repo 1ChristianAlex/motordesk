@@ -6,21 +6,32 @@ Accepted
 
 ## Context
 
-Motor Desk needs to send transactional emails to customers at different points in the lifecycle of a `ServiceOrder`, including service order creation, budget approval requests, service completion, vehicle delivery, and other business notifications.
+Motor Desk needs to send transactional emails to customers at different points in the lifecycle of a `ServiceOrder`,
+including service order creation, budget approval requests, service completion, vehicle delivery, and other business
+notifications.
 
-Email delivery depends on an external infrastructure provider and must not be tightly coupled to business rules or to synchronous HTTP request processing.
+Email delivery depends on an external infrastructure provider and must not be tightly coupled to business rules or to
+synchronous HTTP request processing.
 
-The implementation scope also includes an integration point for external tools that can trigger `ServiceOrder` status updates from inbound messages, such as parsed emails or connector-driven events. Issue #26 requires a documented mechanism for this inbound flow and at least one working integration test or simulation script that demonstrates a status update through the chosen mechanism.
+The implementation scope also includes an integration point for external tools that can trigger `ServiceOrder` status
+updates from inbound messages, such as parsed emails or connector-driven events. Issue #26 requires a documented
+mechanism for this inbound flow and at least one working integration test or simulation script that demonstrates a
+status update through the chosen mechanism.
 
-The architecture already uses Redis Streams to decouple asynchronous notification processing. That decision is documented in `docs/ADR/ADR-002-Redis-Streams.md`.
+The architecture already uses Redis Streams to decouple asynchronous notification processing. That decision is
+documented in `docs/ADR/ADR-002-Redis-Streams.md`.
 
 Beyond the messaging mechanism, the system also needs to define the actual email delivery provider.
 
-The main reason for choosing Azure Communication Services is the availability of Azure resources for academic and student accounts. Azure for Students provides Azure credits and access to Azure services without requiring a credit card, which allows students to develop, test, and demonstrate applications using real cloud infrastructure.
+The main reason for choosing Azure Communication Services is the availability of Azure resources for academic and
+student accounts. Azure for Students provides Azure credits and access to Azure services without requiring a credit
+card, which allows students to develop, test, and demonstrate applications using real cloud infrastructure.
 
-That makes Azure a practical choice for the current Motor Desk context because it allows the project to use a real transactional email service without requiring a separate commercial email infrastructure at the start.
+That makes Azure a practical choice for the current Motor Desk context because it allows the project to use a real
+transactional email service without requiring a separate commercial email infrastructure at the start.
 
-This ADR records the motivation for the decision in the context in which it was made. It does not guarantee future availability, pricing, or student-program terms.
+This ADR records the motivation for the decision in the context in which it was made. It does not guarantee future
+availability, pricing, or student-program terms.
 
 ## Decision
 
@@ -28,9 +39,12 @@ Azure Communication Services will be used as the transactional email provider fo
 
 ACS will be used only as an infrastructure implementation for message delivery.
 
-The application must not depend directly on Azure Communication Services types or APIs in the domain or application layers.
+The application must not depend directly on Azure Communication Services types or APIs in the domain or application
+layers.
 
-Inbound message-driven status updates remain an application concern and must be exposed through a documented processing entry point, such as an inbound mail webhook, connector, or worker-based processor. The chosen mechanism must be testable through an integration test or simulation script.
+Inbound message-driven status updates remain an application concern and must be exposed through a documented processing
+entry point, such as an inbound mail webhook, connector, or worker-based processor. The chosen mechanism must be
+testable through an integration test or simulation script.
 
 The integration follows this structure:
 
@@ -70,7 +84,8 @@ flowchart LR
     ACS --> Customer
 ```
 
-Azure Communication Services is responsible for email delivery, while Redis Streams remains responsible for asynchronous decoupling and processing.
+Azure Communication Services is responsible for email delivery, while Redis Streams remains responsible for asynchronous
+decoupling and processing.
 
 ## Responsibilities
 
@@ -83,7 +98,8 @@ The application must:
 - publish the event to the messaging infrastructure;
 - process the message asynchronously;
 - control retry attempts and processing state.
-- expose a documented entry point for inbound message processing when an external tool triggers a `ServiceOrder` status update;
+- expose a documented entry point for inbound message processing when an external tool triggers a `ServiceOrder` status
+  update;
 - support a reproducible integration test or simulation script for that inbound flow.
 
 ### EmailSender
@@ -106,7 +122,9 @@ It must not know about Azure SDKs, `EmailAsyncClient`, Azure-specific types, or 
 
 ACS is responsible exclusively for transactional email delivery.
 
-ACS is not the mechanism for inbound status changes. If inbound email is used as the trigger source, the parsing and status update workflow belongs to the application layer, with the provider-specific transport hidden behind infrastructure adapters.
+ACS is not the mechanism for inbound status changes. If inbound email is used as the trigger source, the parsing and
+status update workflow belongs to the application layer, with the provider-specific transport hidden behind
+infrastructure adapters.
 
 ## Architecture
 
@@ -271,7 +289,8 @@ The messaging strategy itself remains defined in `docs/ADR/ADR-002-Redis-Streams
 
 ## External Tool Driven Status Updates
 
-Issue #26 adds an adjacent requirement to the email integration work: external tools must be able to drive `ServiceOrder` status changes.
+Issue #26 adds an adjacent requirement to the email integration work: external tools must be able to drive
+`ServiceOrder` status changes.
 
 ```mermaid
 flowchart LR
@@ -298,14 +317,14 @@ The exact inbound transport may vary, but the implementation must satisfy these 
 
 ## Impact on the Architecture
 
-| Component | Responsibility |
-|---|---|
-| PostgreSQL | Transactional state and persisted email data |
-| Redis Streams | Messaging and asynchronous processing |
-| Email Worker | Event consumption and processing |
-| EmailSender | Sending abstraction |
-| AzureEmailSender | Provider adapter |
-| Azure Communication Services | Email delivery |
+| Component                    | Responsibility                               |
+|------------------------------|----------------------------------------------|
+| PostgreSQL                   | Transactional state and persisted email data |
+| Redis Streams                | Messaging and asynchronous processing        |
+| Email Worker                 | Event consumption and processing             |
+| EmailSender                  | Sending abstraction                          |
+| AzureEmailSender             | Provider adapter                             |
+| Azure Communication Services | Email delivery                               |
 
 ## Relationship With Other ADRs
 
@@ -330,4 +349,6 @@ This ADR defines which external provider is used for email delivery.
 
 ## Summary
 
-> Azure Communication Services was chosen mainly because the project is being developed in an academic context and the Azure ecosystem provides resources and credits for student accounts, which makes it possible to use a real transactional email solution without requiring an additional commercial email infrastructure at the beginning.
+> Azure Communication Services was chosen mainly because the project is being developed in an academic context and the
+> Azure ecosystem provides resources and credits for student accounts, which makes it possible to use a real transactional
+> email solution without requiring an additional commercial email infrastructure at the beginning.

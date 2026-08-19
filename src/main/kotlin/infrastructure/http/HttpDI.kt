@@ -9,6 +9,8 @@ import com.khrix.infrastructure.http.controllers.register.RegisterController
 import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserHandler
 import com.khrix.infrastructure.http.controllers.register.handlers.CreateNewUserHandlerImpl
 import com.khrix.infrastructure.http.controllers.serviceorder.ServiceOrderController
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.ApprovesServiceOrderHandler
+import com.khrix.infrastructure.http.controllers.serviceorder.handlers.ApprovesServiceOrderHandlerImpl
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderHandler
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.CreateNewServiceOrderHandlerImpl
 import com.khrix.infrastructure.http.controllers.serviceorder.handlers.GetClientServiceOrderItemHandler
@@ -52,6 +54,8 @@ fun httpDI(dependencies: DependencyRegistry) {
         provide<GetClientServicesOrderHandler>(GetClientServicesOrderHandlerImpl::class)
         provide<GetClientServiceOrderItemHandler>(GetClientServiceOrderItemHandlerImpl::class)
         provide<GetServiceOrderItemHandler>(GetServiceOrderItemHandlerImpl::class)
+        provide<ApprovesServiceOrderHandler>(ApprovesServiceOrderHandlerImpl::class)
+
         provide<List<AppController>> {
             listOf(
                 RegisterController(resolve()),
@@ -69,6 +73,7 @@ fun httpDI(dependencies: DependencyRegistry) {
                     getClientServicesOrderHandler = resolve(),
                     getClientServiceOrderItemHandler = resolve(),
                     getServiceOrderItemHandler = resolve(),
+                    approvesServiceOrderHandler = resolve(),
                 ),
             )
         }

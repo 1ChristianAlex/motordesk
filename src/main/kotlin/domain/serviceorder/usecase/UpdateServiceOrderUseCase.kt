@@ -15,4 +15,3 @@ data class UpdateServiceOrderCommand(
 )
 
 interface UpdateServiceOrderUseCase : BaseUseCase<UpdateServiceOrderCommand, Unit>
-

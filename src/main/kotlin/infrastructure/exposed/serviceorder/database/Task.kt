@@ -1,15 +1,12 @@
 package com.khrix.infrastructure.exposed.serviceorder.database
 
-
 import com.khrix.domain.serviceorder.task.model.TaskCategory
 import com.khrix.infrastructure.exposed.BaseTable
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
-
 object TaskTable : BaseTable("task") {
-
     val name = varchar("name", 150)
 
     val description = text("description").nullable()
@@ -23,8 +20,9 @@ object TaskTable : BaseTable("task") {
     val category = enumerationByName<TaskCategory>("category", 50)
 }
 
-class TaskEntity(id: EntityID<Int>) : IntEntity(id) {
-
+class TaskEntity(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<TaskEntity>(TaskTable)
 
     var name by TaskTable.name

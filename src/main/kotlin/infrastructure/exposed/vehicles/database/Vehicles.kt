@@ -20,8 +20,9 @@ object VehicleTable : BaseTable("vehicles") {
     val fuelType = enumerationByName<FuelType>("fuelType", 20)
 }
 
-class VehicleEntity(id: EntityID<Int>) : IntEntity(id) {
-
+class VehicleEntity(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<VehicleEntity>(VehicleTable)
 
     var owner by UserEntity referencedOn VehicleTable.owner

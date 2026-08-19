@@ -26,7 +26,7 @@ suspend fun AddressEntity.toModel(): Address {
             country = country,
             zipCode = zipCode,
             createdAt = createdAt,
-            updatedAt = updatedAt
+            updatedAt = updatedAt,
         )
     }
 }

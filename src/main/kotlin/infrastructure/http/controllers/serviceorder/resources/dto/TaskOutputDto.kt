@@ -16,5 +16,5 @@ data class TaskOutputDto(
     val price: BigDecimal,
     val isActive: Boolean,
     val category: TaskCategory,
-    val status: TaskProgressStatus
+    val status: TaskProgressStatus,
 )

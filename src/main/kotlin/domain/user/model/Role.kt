@@ -4,5 +4,5 @@ enum class Role {
     ADMIN,
     CLIENT,
     MANAGER,
-    ENGINEER
+    ENGINEER,
 }

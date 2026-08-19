@@ -17,11 +17,13 @@ import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.slf4j.LoggerFactory
 
 abstract class DatabaseConnection(
     private val loadSeeds: LoadSeeds,
 ) {
     abstract val database: Database
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     private val tableList =
         listOf(
@@ -51,6 +53,7 @@ abstract class DatabaseConnection(
 
     fun getConnection(): Database =
         try {
+            logger.info("Starting exposed database")
             database.apply {
                 transaction {
                     beforeLoad()

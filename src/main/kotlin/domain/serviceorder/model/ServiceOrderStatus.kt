@@ -11,26 +11,30 @@ enum class ServiceOrderStatus {
     IN_PROGRESS,
     FINISHED,
     DELIVERED,
-    CANCELLED;
+    CANCELLED,
+    ;
 
-    private fun getAllowStatusByRole(role: Role): List<ServiceOrderStatus> {
-        return when (role) {
+    private fun getAllowStatusByRole(role: Role): List<ServiceOrderStatus> =
+        when (role) {
             Role.ADMIN,
-            Role.MANAGER -> entries
+            Role.MANAGER,
+            -> {
+                entries
+            }
 
-            Role.ENGINEER -> listOf(
-                IN_DIAGNOSIS,
-                IN_PROGRESS,
-                FINISHED,
-                DELIVERED,
-            )
+            Role.ENGINEER -> {
+                listOf(
+                    IN_DIAGNOSIS,
+                    IN_PROGRESS,
+                    FINISHED,
+                    DELIVERED,
+                )
+            }
 
-            else -> listOf()
+            else -> {
+                listOf()
+            }
         }
-    }
 
-    fun checkRole(role: Role): Boolean {
-        return this in getAllowStatusByRole(role)
-    }
+    fun checkRole(role: Role): Boolean = this in getAllowStatusByRole(role)
 }
-

@@ -4,11 +4,14 @@
 
 This file is the operational guide for AI coding agents working on **Motor Desk**.
 
-The goal is to provide enough project context for an agent to make changes that are consistent with the existing architecture, domain model, coding conventions and documentation strategy.
+The goal is to provide enough project context for an agent to make changes that are consistent with the existing
+architecture, domain model, coding conventions and documentation strategy.
 
-> **Important:** This file is a guide for implementation work. It must not become a replacement for the project's domain, architectural or API documentation.
+> **Important:** This file is a guide for implementation work. It must not become a replacement for the project's
+> domain, architectural or API documentation.
 
-When detailed information already exists in `docs/`, prefer reading and following that documentation instead of duplicating it here.
+When detailed information already exists in `docs/`, prefer reading and following that documentation instead of
+duplicating it here.
 
 ---
 
@@ -128,7 +131,8 @@ When introducing a new architectural decision that is:
 
 consider creating or updating an ADR instead of documenting the decision only in code.
 
-Do not rewrite an ADR merely because the implementation changed accidentally. First determine whether the architectural decision itself changed.
+Do not rewrite an ADR merely because the implementation changed accidentally. First determine whether the architectural
+decision itself changed.
 
 ### 3.4 Domain Storytelling
 
@@ -174,7 +178,8 @@ If an endpoint contract changes, consider whether the corresponding collection n
 
 ### 3.7 Project Delivery Documentation
 
-The repository also contains project delivery documentation describing the implemented scope and the relationship between the README, ADRs, storytelling, OpenAPI and Postman documentation.
+The repository also contains project delivery documentation describing the implemented scope and the relationship
+between the README, ADRs, storytelling, OpenAPI and Postman documentation.
 
 Use it as supporting documentation, not as a replacement for source code or ADRs.
 
@@ -216,7 +221,8 @@ The `domain/` layer should contain:
 
 Keep infrastructure-specific implementations outside this layer.
 
-For example, an abstraction such as an email sender may belong to the domain/application boundary while the Azure Communication Services implementation belongs to infrastructure.
+For example, an abstraction such as an email sender may belong to the domain/application boundary while the Azure
+Communication Services implementation belongs to infrastructure.
 
 ### 4.3 Application
 
@@ -257,7 +263,8 @@ It should be treated as the source of truth for transactional state.
 
 Exposed is used for database access.
 
-The project uses Kotlin-oriented database definitions and migrations. Follow the existing Exposed conventions before introducing another persistence style.
+The project uses Kotlin-oriented database definitions and migrations. Follow the existing Exposed conventions before
+introducing another persistence style.
 
 Do not move transactional state to MongoDB merely because the data is document-shaped.
 
@@ -265,7 +272,8 @@ Do not move transactional state to MongoDB merely because the data is document-s
 
 MongoDB is used for Service Order history.
 
-Its purpose is historical/audit data and snapshots rather than replacing PostgreSQL as the transactional source of truth.
+Its purpose is historical/audit data and snapshots rather than replacing PostgreSQL as the transactional source of
+truth.
 
 Read the MongoDB ADR before modifying this responsibility.
 
@@ -323,7 +331,8 @@ flowchart LR
 4. The worker loads the persisted email information.
 5. Email provider details must remain behind an abstraction.
 6. Azure Communication Services SDK usage belongs to infrastructure.
-7. Failed sends are retried up to the configured maximum, currently represented as three attempts in the documented flow.
+7. Failed sends are retried up to the configured maximum, currently represented as three attempts in the documented
+   flow.
 8. The final database state must reflect whether processing succeeded or exhausted retries.
 9. Do not put Azure SDK types in domain models.
 10. Do not couple domain logic directly to `EmailAsyncClient`.
@@ -519,7 +528,8 @@ For email-related changes, prioritize tests for:
 - adapter behavior;
 - provider failure handling.
 
-Avoid tests that unnecessarily depend on a real Azure Communication Services account unless the test is explicitly an integration test.
+Avoid tests that unnecessarily depend on a real Azure Communication Services account unless the test is explicitly an
+integration test.
 
 ---
 
@@ -548,7 +558,8 @@ src/main/resources/secrets.properties.example
 
 Never commit real credentials.
 
-For Azure Communication Services, credentials and connection information must be supplied through the project's secret/configuration mechanism.
+For Azure Communication Services, credentials and connection information must be supplied through the project's
+secret/configuration mechanism.
 
 ---
 
@@ -558,15 +569,15 @@ Documentation is part of the implementation.
 
 When making a change, decide whether it affects:
 
-| Change | Documentation to consider |
-|---|---|
-| Domain terminology | `docs/Ubiquitous Language.md` |
-| Business flow | `docs/storytelling/` |
-| Architectural decision | `docs/ADR/` |
-| API contract | OpenAPI / Swagger |
-| Manual API test | `postman/` |
-| High-level architecture | `README.md` |
-| Email architecture | Email ADR + README/flow documentation |
+| Change                  | Documentation to consider             |
+|-------------------------|---------------------------------------|
+| Domain terminology      | `docs/Ubiquitous Language.md`         |
+| Business flow           | `docs/storytelling/`                  |
+| Architectural decision  | `docs/ADR/`                           |
+| API contract            | OpenAPI / Swagger                     |
+| Manual API test         | `postman/`                            |
+| High-level architecture | `README.md`                           |
+| Email architecture      | Email ADR + README/flow documentation |
 
 ### Avoid duplication
 

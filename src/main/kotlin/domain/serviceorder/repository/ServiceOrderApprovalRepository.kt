@@ -8,4 +8,6 @@ import com.khrix.domain.serviceorder.model.ServiceOrderApprovalToken
 interface ServiceOrderApprovalRepository :
     BaseRead<ServiceOrderApprovalToken>,
     BaseUpdate<ServiceOrderApprovalToken>,
-    BaseCreateReturn<ServiceOrderApprovalToken>
+    BaseCreateReturn<ServiceOrderApprovalToken> {
+    suspend fun getByToken(token: String): ServiceOrderApprovalToken?
+}

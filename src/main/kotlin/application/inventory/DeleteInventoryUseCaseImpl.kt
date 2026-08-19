@@ -6,12 +6,11 @@ import com.khrix.domain.inventory.usecase.DeleteInventoryUseCase
 
 class DeleteInventoryUseCaseImpl(
     private val inventoryRepository: InventoryRepository,
-) : DeleteInventoryUseCase, BaseUseCaseImpl<Int, Unit>() {
+) : BaseUseCaseImpl<Int, Unit>(),
+    DeleteInventoryUseCase {
     override suspend fun internalExecute(command: Int) {
         inventoryRepository.delete(command)
     }
 
-    override suspend fun useCaseDescription(): String {
-        return "Delete an existing inventory item"
-    }
+    override suspend fun useCaseDescription(): String = "Delete an existing inventory item"
 }

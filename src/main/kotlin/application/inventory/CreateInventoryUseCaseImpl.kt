@@ -7,12 +7,9 @@ import com.khrix.domain.inventory.usecase.CreateInventoryUseCase
 
 class CreateInventoryUseCaseImpl(
     private val inventoryRepository: InventoryRepository,
-) : CreateInventoryUseCase, BaseUseCaseImpl<InventoryItem, InventoryItem>() {
-    override suspend fun internalExecute(command: InventoryItem): InventoryItem {
-        return inventoryRepository.createRead(command)
-    }
+) : BaseUseCaseImpl<InventoryItem, InventoryItem>(),
+    CreateInventoryUseCase {
+    override suspend fun internalExecute(command: InventoryItem): InventoryItem = inventoryRepository.createRead(command)
 
-    override suspend fun useCaseDescription(): String {
-        return "Create a new inventory item"
-    }
+    override suspend fun useCaseDescription(): String = "Create a new inventory item"
 }

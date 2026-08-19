@@ -7,8 +7,10 @@ import org.jetbrains.exposed.v1.datetime.datetime
 abstract class BaseTable(
     name: String = "",
 ) : IntIdTable(name, "id") {
-    val createdAt = datetime("createdAt")
-        .defaultExpression(CurrentDateTime)
-    val updatedAt = datetime("updatedAt")
-        .defaultExpression(CurrentDateTime)
+    val createdAt =
+        datetime("createdAt")
+            .defaultExpression(CurrentDateTime)
+    val updatedAt =
+        datetime("updatedAt")
+            .defaultExpression(CurrentDateTime)
 }

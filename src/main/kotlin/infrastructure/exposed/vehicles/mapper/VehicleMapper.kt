@@ -5,8 +5,8 @@ import com.khrix.domain.valueobject.vehicle.Year
 import com.khrix.domain.vehicle.model.Vehicle
 import com.khrix.infrastructure.exposed.vehicles.database.VehicleEntity
 
-fun VehicleEntity.toModel(): Vehicle {
-    return Vehicle(
+fun VehicleEntity.toModel(): Vehicle =
+    Vehicle(
         id = id.value,
         ownerId = owner.id.value,
         plate = Plate(plate),
@@ -20,4 +20,3 @@ fun VehicleEntity.toModel(): Vehicle {
         createdAt = createdAt,
         updatedAt = updatedAt,
     )
-}

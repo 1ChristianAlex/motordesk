@@ -82,13 +82,13 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
         - register
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Client can create a new account - You can only create a high role account if you are manager or ADM
       requestBody:
         content:
@@ -231,7 +231,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
@@ -386,7 +386,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
@@ -475,14 +475,14 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
         - self
         - update
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Get self client info
       requestBody:
         content:
@@ -587,13 +587,13 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
         - self
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Get self client info
   /vehicles/owner:
     get:
@@ -630,14 +630,14 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
         - vehicles
         - owner
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Get vehicle given a client data
   /vehicles/create:
     post:
@@ -711,14 +711,14 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
         - vehicles
         - create
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Create a new vehicle to be used on a service order
       requestBody:
         content:
@@ -772,7 +772,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
         '400':
@@ -789,14 +789,14 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
         - vehicles
         - update
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         content:
           application/json:
@@ -831,7 +831,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
         '400':
@@ -848,7 +848,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
@@ -856,7 +856,7 @@ paths:
         - delete
         - '{id}'
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Virtually delete a vehicle
     parameters:
       - name: id
@@ -1121,7 +1121,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
@@ -1129,7 +1129,7 @@ paths:
         - manager
         - create
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Only manager - Create new service order to a given client
       requestBody:
         content:
@@ -1425,7 +1425,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
@@ -1434,7 +1434,7 @@ paths:
         - '{code}'
         - delete
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Update service order
       requestBody:
         content:
@@ -1735,7 +1735,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
@@ -1743,7 +1743,7 @@ paths:
         - manager
         - '{code}'
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Get any service order from any client
     parameters:
       - name: code
@@ -2009,7 +2009,7 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
@@ -2017,7 +2017,7 @@ paths:
         - client
         - '{code}'
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Client can only retrieve its own service order given a service order's code
     parameters:
       - name: code
@@ -2061,19 +2061,19 @@ paths:
                   errors:
                     nullable: true
               example:
-                data: {}
+                data: { }
                 status: 9036
                 errors: null
       tags:
         - service-order
         - client
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       description: Get all service order from self
   '/openapi/:**':
     get:
       summary: '/openapi/:**'
-      responses: {}
+      responses: { }
       tags:
         - openapi
         - '{**}'
