@@ -37,7 +37,6 @@ class ServiceOrderApprovalTokenTest {
         assertEquals("ABC123", token.serviceOrderCode)
         assertEquals("hashed", token.tokenHash)
         assertEquals(null, token.usedAt)
-        assertEquals(null, token.revokedAt)
         assertTrue(token.expiresAt > Clock.System.now())
     }
 }

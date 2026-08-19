@@ -1,4 +1,4 @@
-package com.khrix.domain.email.publisher
+package com.khrix.application.email.publisher
 
 interface EventPublisher {
     suspend fun publish(

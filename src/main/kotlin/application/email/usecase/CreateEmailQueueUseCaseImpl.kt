@@ -1,11 +1,11 @@
 package com.khrix.application.email.usecase
 
+import com.khrix.application.email.publisher.EmailEventKeys
+import com.khrix.application.email.publisher.EventPublisher
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.model.EmailStatus
 import com.khrix.domain.email.model.ServiceOrderEmailMetadata
-import com.khrix.domain.email.publisher.EmailEventKeys
-import com.khrix.domain.email.publisher.EventPublisher
 import com.khrix.domain.email.repository.EmailQueueRepository
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder

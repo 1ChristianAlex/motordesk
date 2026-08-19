@@ -1,7 +1,7 @@
 package com.khrix.application.email.usecase
 
 import com.khrix.application.core.coroutine.ApplicationScope
-import com.khrix.domain.email.publisher.EventPublisher
+import com.khrix.application.email.publisher.EventPublisher
 import com.khrix.domain.email.repository.EmailQueueRepository
 import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.testutils.sampleAddress

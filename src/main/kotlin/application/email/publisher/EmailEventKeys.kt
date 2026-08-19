@@ -1,4 +1,4 @@
-package com.khrix.domain.email.publisher
+package com.khrix.application.email.publisher
 
 enum class EmailEventKeys(
     val value: String,

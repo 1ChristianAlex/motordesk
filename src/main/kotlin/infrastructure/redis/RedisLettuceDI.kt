@@ -1,7 +1,7 @@
 package com.khrix.infrastructure.redis
 
-import com.khrix.domain.email.publisher.EventConsumer
-import com.khrix.domain.email.publisher.EventPublisher
+import com.khrix.application.email.publisher.EventConsumer
+import com.khrix.application.email.publisher.EventPublisher
 import com.khrix.infrastructure.redis.bootstrap.EventConsumerBootstrap
 import com.khrix.infrastructure.redis.connection.RedisConnection
 import com.khrix.infrastructure.redis.event.RedisEmailPublisherImpl
@@ -19,10 +19,11 @@ fun redisLettuceDi(
 ) {
     with(dependencies) {
         provide(RedisConnection::class)
-        provide("consumerHandlerList") {
-            listOf<RedisConsumerHandler>(
-                HandleEmailUpdateEvent(resolve(), resolve()),
-                HandleEmailApprovalEvent(resolve(), resolve()),
+
+        provide<List<RedisConsumerHandler<Int>>> {
+            listOf(
+                HandleEmailUpdateEvent(resolve()),
+                HandleEmailApprovalEvent(resolve()),
             )
         }
         provide<EventPublisher>(RedisEmailPublisherImpl::class)

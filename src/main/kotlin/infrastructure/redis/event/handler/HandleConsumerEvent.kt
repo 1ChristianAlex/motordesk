@@ -1,21 +1,14 @@
 package com.khrix.infrastructure.redis.event.handler
 
-import com.khrix.domain.email.publisher.EmailEventKeys
 import com.khrix.infrastructure.redis.event.RedisDataEvent
 import org.slf4j.LoggerFactory
 
-abstract class HandleConsumerEvent<T> : RedisConsumerHandler {
+abstract class HandleConsumerEvent<T> : RedisConsumerHandler<T> {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     abstract suspend fun internalHandler(payload: T)
 
-    abstract val eventKey: EmailEventKeys
-
-    abstract fun unwrapEvent(payload: String): RedisDataEvent<T>
-
-    override suspend fun handle(payload: String) {
-        val event = unwrapEvent(payload)
-
+    override suspend fun handle(event: RedisDataEvent<T>) {
         if (event.event != eventKey) {
             return
         }

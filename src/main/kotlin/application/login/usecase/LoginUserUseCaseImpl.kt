@@ -40,5 +40,5 @@ class LoginUserUseCaseImpl(
 
     private suspend fun handleLoginWithCpf(command: LoginTypes.CpfCredentials): User? = userRepository.getByCpf(command.cpf)
 
-    override suspend fun useCaseDescription(): String = "Hash password and create new user"
+    override suspend fun useCaseDescription(): String = "Find user by credentials and compare password hash"
 }
