@@ -9,22 +9,18 @@ import kotlin.time.Instant
 
 data class ServiceOrderTaskHistory(
     @BsonId
-    val id: ObjectId,
+    val id: ObjectId = ObjectId(),
     val taskId: Int,
     val status: TaskProgressStatus,
     val serviceOrderId: Int,
     val createdAt: Instant = Clock.System.now(),
 ) {
     companion object {
-        fun fromModel(
-            serviceOrderTask: ServiceOrderTask,
-            id: ObjectId,
-        ): ServiceOrderTaskHistory =
+        fun fromModel(serviceOrderTask: ServiceOrderTask): ServiceOrderTaskHistory =
             ServiceOrderTaskHistory(
                 status = serviceOrderTask.status,
                 serviceOrderId = serviceOrderTask.serviceOrderId,
                 taskId = serviceOrderTask.taskId,
-                id = id,
             )
     }
 }

@@ -8,20 +8,16 @@ import java.time.Instant
 
 data class ServiceOrderHistory(
     @BsonId
-    val id: ObjectId,
+    val id: ObjectId = ObjectId(),
     val serviceOrderId: Int,
     val status: ServiceOrderStatus,
-    val complaint: String,
+    val complaint: String? = null,
     val diagnosis: String? = null,
     val createdAt: Instant = Instant.now(),
 ) {
     companion object {
-        fun fromModel(
-            serviceOrder: ServiceOrder,
-            id: ObjectId,
-        ): ServiceOrderHistory =
+        fun fromModel(serviceOrder: ServiceOrder): ServiceOrderHistory =
             ServiceOrderHistory(
-                id = id,
                 status = serviceOrder.status,
                 complaint = serviceOrder.complaint,
                 diagnosis = serviceOrder.diagnosis,

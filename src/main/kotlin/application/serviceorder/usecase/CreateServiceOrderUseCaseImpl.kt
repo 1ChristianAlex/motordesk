@@ -6,13 +6,15 @@ import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
-import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
+import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
+import io.ktor.server.plugins.di.annotations.Named
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -25,7 +27,8 @@ class CreateServiceOrderUseCaseImpl(
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
     private val createEmailQueueUseCase: CreateEmailQueueUseCase,
     private val shortId: ShortId,
-    private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository,
+    private val createServiceOrderHistoryUseCase: CreateServiceOrderHistoryUseCase,
+    @Named("applicationScope") private val scope: CoroutineScope,
 ) : BaseUseCaseImpl<CreateServiceOrderCommand, ServiceOrder>(),
     CreateServiceOrderUseCase {
     override suspend fun internalExecute(command: CreateServiceOrderCommand): ServiceOrder =
@@ -63,8 +66,8 @@ class CreateServiceOrderUseCaseImpl(
             }
             val order = serviceOrderRepository.createRead(serviceOrder)
 
-            launch { createEmailQueueUseCase.execute(serviceOrder) }
-            launch { serviceOrderHistoryRepository.create(serviceOrder) }
+            scope.launch { createEmailQueueUseCase.execute(serviceOrder) }
+            scope.launch { createServiceOrderHistoryUseCase.execute(serviceOrder) }
 
             order
         }

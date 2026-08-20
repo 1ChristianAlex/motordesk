@@ -15,12 +15,15 @@ import com.khrix.application.inventory.GetInventoryByListIdOrSkuUseCaseImpl
 import com.khrix.application.inventory.UpdateInventoryUseCaseImpl
 import com.khrix.application.login.usecase.LoginUserUseCaseImpl
 import com.khrix.application.register.usecase.CreateNewUserUseCaseImpl
+import com.khrix.application.serviceorder.ServiceOrderDiffResolverImpl
+import com.khrix.application.serviceorder.task.TaskDiffResolverImpl
 import com.khrix.application.serviceorder.task.usecase.CreateTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.DeleteTaskUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.GetTaskByIdUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.GetTaskByListIdUseCaseImpl
 import com.khrix.application.serviceorder.task.usecase.UpdateTaskUseCaseImpl
 import com.khrix.application.serviceorder.usecase.ApprovesServiceOrderUseCaseImpl
+import com.khrix.application.serviceorder.usecase.CreateServiceOrderHistoryUseCaseImpl
 import com.khrix.application.serviceorder.usecase.CreateServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.DeleteServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.GetClientServiceOrdersByCodeUseCaseImpl
@@ -48,12 +51,15 @@ import com.khrix.domain.inventory.usecase.DeleteInventoryUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByIdOrSkuUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.inventory.usecase.UpdateInventoryUseCase
+import com.khrix.domain.serviceorder.ServiceOrderDiffResolver
+import com.khrix.domain.serviceorder.task.TaskDiffResolver
 import com.khrix.domain.serviceorder.task.usecase.CreateTaskUseCase
 import com.khrix.domain.serviceorder.task.usecase.DeleteTaskUseCase
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByIdUseCase
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.task.usecase.UpdateTaskUseCase
 import com.khrix.domain.serviceorder.usecase.ApprovesServiceOrderUseCase
+import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeUseCase
@@ -116,6 +122,9 @@ fun Application.applicationDI() {
         provide<SendEmailApprovalUseCase>(SendEmailApprovalUseCaseImpl::class)
         provide<ApprovesServiceOrderUseCase>(ApprovesServiceOrderUseCaseImpl::class)
         provide<SendEmailUpdateUseCase>(SendEmailUpdateUseCaseImpl::class)
+        provide<CreateServiceOrderHistoryUseCase>(CreateServiceOrderHistoryUseCaseImpl::class)
+        provide<TaskDiffResolver>(TaskDiffResolverImpl::class)
+        provide<ServiceOrderDiffResolver>(ServiceOrderDiffResolverImpl::class)
     }
 
     monitor.subscribe(

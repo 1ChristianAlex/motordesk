@@ -9,7 +9,6 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Projections
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
-import org.bson.types.ObjectId
 
 class ServiceOrderTaskMongoRepositoryImpl(
     private val mongoConnection: MongoConnection,
@@ -60,7 +59,7 @@ class ServiceOrderTaskMongoRepositoryImpl(
 
     override suspend fun create(data: ServiceOrderTask) {
         collection.insertOne(
-            ServiceOrderTaskHistory.fromModel(data, ObjectId()),
+            ServiceOrderTaskHistory.fromModel(data),
         )
     }
 }
