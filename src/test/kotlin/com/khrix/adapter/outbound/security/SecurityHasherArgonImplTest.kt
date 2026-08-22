@@ -1,6 +1,5 @@
-package com.khrix.adapter.security
+package com.khrix.adapter.outbound.security
 
-import com.khrix.adapter.outbound.security.SecurityHasherArgonImpl
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
@@ -105,7 +104,7 @@ class SecurityHasherArgonImplTest {
 
     @Test
     fun `should handle unicode characters in password`() {
-        val password = "пароль密码🔐"
+        val password = "Ð¿Ð°Ñ€Ð¾Ð»ÑŒå¯†ç ðŸ”"
         val hash = hasher.hash(password)
 
         val isValid = hasher.verify(password, hash)

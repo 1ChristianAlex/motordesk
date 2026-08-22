@@ -1,7 +1,5 @@
-package com.khrix.adapter.http.controllers.register.handlers
+package com.khrix.adapter.inbound.http.controllers.register.handlers
 
-import com.khrix.adapter.inbound.http.controllers.register.handlers.CreateNewUserHandlerImpl
-import com.khrix.adapter.inbound.http.controllers.register.handlers.CreateNewUserRequest
 import com.khrix.adapter.inbound.http.controllers.register.resources.dto.AddressDto
 import com.khrix.adapter.inbound.http.controllers.register.resources.dto.ClientRegisterDto
 import com.khrix.adapter.inbound.http.controllers.register.resources.dto.CompanyDto

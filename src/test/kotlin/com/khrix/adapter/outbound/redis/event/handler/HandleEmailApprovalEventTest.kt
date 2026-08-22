@@ -1,4 +1,4 @@
-package com.khrix.adapter.redis.event.handler
+package com.khrix.adapter.outbound.redis.event.handler
 
 import com.khrix.adapter.outbound.redis.event.RedisDataEvent
 import com.khrix.adapter.outbound.redis.event.handler.HandleEmailApprovalEvent
@@ -9,6 +9,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 class HandleEmailApprovalEventTest {
     private val sendEmailApprovalUseCase = mockk<SendEmailApprovalUseCase>()
@@ -31,7 +32,7 @@ class HandleEmailApprovalEventTest {
             val payload = RedisDataEvent(EmailEventKeys.APPROVAL_EVENT_NAME, 10)
             coEvery { sendEmailApprovalUseCase.execute(10) } returns Result.failure(IllegalStateException("boom"))
 
-            kotlin.test.assertFailsWith<IllegalStateException> {
+            assertFailsWith<IllegalStateException> {
                 handler.handle(payload)
             }
 
