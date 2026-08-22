@@ -1,6 +1,7 @@
 package com.khrix.adapter.outbound.exposed.email.database
 
 import com.khrix.adapter.outbound.exposed.BaseTable
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import com.khrix.domain.email.model.EmailStatus
 import com.khrix.domain.email.model.ServiceOrderEmailMetadata
 import kotlinx.serialization.json.Json
@@ -9,7 +10,7 @@ import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 import org.jetbrains.exposed.v1.json.jsonb
 
-object EmailQueueTable : BaseTable("emailQueue") {
+object EmailQueueTable : BaseTable("emailQueue", DatabaseSchemas.EMAIL) {
     val recipient = varchar("recipient", 255)
 
     val subject = varchar("subject", 255)

@@ -1,12 +1,13 @@
 package com.khrix.adapter.outbound.exposed.serviceorder.database
 
 import com.khrix.adapter.outbound.exposed.BaseTable
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import com.khrix.domain.serviceorder.task.model.TaskCategory
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
-object TaskTable : BaseTable("task") {
+object TaskTable : BaseTable("task", DatabaseSchemas.SERVICE_ORDER) {
     val name = varchar("name", 150)
 
     val description = text("description").nullable()

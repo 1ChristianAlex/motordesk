@@ -1,12 +1,13 @@
 package com.khrix.adapter.outbound.exposed.serviceorder.database
 
 import com.khrix.adapter.outbound.exposed.BaseTable
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 import org.jetbrains.exposed.v1.datetime.timestamp
 
-object OrderApprovalTable : BaseTable("orderApprovals") {
+object OrderApprovalTable : BaseTable("orderApprovals", DatabaseSchemas.SERVICE_ORDER) {
     val serviceOrder = reference("serviceOrderId", ServiceOrdersTable)
     val tokenHash = text("tokenHash")
 

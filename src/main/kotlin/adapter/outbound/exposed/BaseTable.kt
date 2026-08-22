@@ -6,7 +6,8 @@ import org.jetbrains.exposed.v1.datetime.datetime
 
 abstract class BaseTable(
     name: String = "",
-) : IntIdTable(name, "id") {
+    schema: DatabaseSchemas,
+) : IntIdTable("${schema.value}.$name", "id") {
     val createdAt =
         datetime("createdAt")
             .defaultExpression(CurrentDateTime)

@@ -1,11 +1,12 @@
 package com.khrix.adapter.outbound.exposed.inventory.database
 
 import com.khrix.adapter.outbound.exposed.BaseTable
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
-object InventoryTable : BaseTable("inventory") {
+object InventoryTable : BaseTable("inventory", DatabaseSchemas.INVENTORY) {
     val sku = varchar("sku", 50).uniqueIndex()
 
     val name = varchar("name", 150)

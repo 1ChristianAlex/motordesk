@@ -1,6 +1,7 @@
 package com.khrix.adapter.outbound.exposed.user.database
 
 import com.khrix.adapter.outbound.exposed.BaseTable
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import com.khrix.adapter.outbound.exposed.address.database.AddressEntity
 import com.khrix.adapter.outbound.exposed.address.database.AddressTable
 import com.khrix.adapter.outbound.exposed.company.database.CompanyEntity
@@ -10,7 +11,7 @@ import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
-object UsersTable : BaseTable("users") {
+object UsersTable : BaseTable("users", DatabaseSchemas.IDENTITY) {
     val address = reference("addressId", AddressTable).nullable()
     val role = enumerationByName<Role>("role", 20).default(Role.CLIENT)
 

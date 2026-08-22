@@ -1,5 +1,6 @@
 package com.khrix.adapter.outbound.exposed.connections
 
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import com.khrix.adapter.outbound.exposed.address.database.AddressTable
 import com.khrix.adapter.outbound.exposed.company.database.CompanyTable
 import com.khrix.adapter.outbound.exposed.email.database.EmailQueueTable
@@ -12,6 +13,7 @@ import com.khrix.adapter.outbound.exposed.serviceorder.database.ServiceOrdersTab
 import com.khrix.adapter.outbound.exposed.serviceorder.database.TaskTable
 import com.khrix.adapter.outbound.exposed.user.database.UsersTable
 import com.khrix.adapter.outbound.exposed.vehicles.database.VehicleTable
+import org.jetbrains.exposed.v1.core.Schema
 import org.jetbrains.exposed.v1.core.StdOutSqlLogger
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
@@ -24,6 +26,12 @@ abstract class DatabaseConnection(
 ) {
     abstract val database: Database
     private val logger = LoggerFactory.getLogger(javaClass)
+
+    private val schemaList =
+        DatabaseSchemas.entries
+            .map {
+                Schema(it.value)
+            }.toTypedArray()
 
     private val tableList =
         listOf(
@@ -57,6 +65,9 @@ abstract class DatabaseConnection(
             database.apply {
                 transaction {
                     beforeLoad()
+                    SchemaUtils.createSchema(
+                        *schemaList,
+                    )
                     SchemaUtils.create(
                         *tableList,
                     )
