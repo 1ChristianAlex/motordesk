@@ -1,10 +1,10 @@
-package com.khrix.adapter.azure.email
+package com.khrix.adapter.outbound.azure.email
 
 import com.azure.communication.email.models.EmailAddress
 import com.azure.communication.email.models.EmailMessage
 import com.azure.communication.email.models.EmailSendResult
 import com.azure.core.util.polling.PollerFlux
-import com.khrix.adapter.azure.AzureCredentialConnection
+import com.khrix.adapter.outbound.azure.AzureCredentialConnection
 import com.khrix.application.email.EmailMessageBody
 import com.khrix.application.email.EmailSender
 import kotlinx.coroutines.reactor.awaitSingle

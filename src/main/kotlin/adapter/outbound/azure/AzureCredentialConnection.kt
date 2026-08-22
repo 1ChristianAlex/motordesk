@@ -1,4 +1,4 @@
-package com.khrix.adapter.azure
+package com.khrix.adapter.outbound.azure
 
 import com.azure.communication.email.EmailAsyncClient
 import com.azure.communication.email.EmailClientBuilder

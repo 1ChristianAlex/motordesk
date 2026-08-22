@@ -690,7 +690,7 @@
     // Script section to load models into a JS Var
     var defs = {}
             defs["ApprovesServiceOrderInputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.ApprovesServiceOrderInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ApprovesServiceOrderInputDto",
   "required" : [ "code", "token" ],
   "properties" : {
     "token" : { },
@@ -698,12 +698,12 @@
   }
 };
             defs["AuthenticateOutputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.core.dto.AuthenticateOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.core.dto.AuthenticateOutputDto",
   "required" : [ "token", "user" ],
   "properties" : {
     "token" : { },
     "user" : {
-      "title" : "com.khrix.adapter.http.controllers.user.resources.dto.UserOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
       "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
       "properties" : {
         "id" : { },
@@ -722,11 +722,11 @@
   }
 };
             defs["ClientRegisterDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.register.resources.dto.ClientRegisterDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.ClientRegisterDto",
   "required" : [ "address", "user" ],
   "properties" : {
     "user" : {
-      "title" : "com.khrix.adapter.http.controllers.register.resources.dto.CreateUserDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.CreateUserDto",
       "required" : [ "cpf", "email", "firstName", "lastName", "password", "phone" ],
       "properties" : {
         "firstName" : { },
@@ -741,7 +741,7 @@
       }
     },
     "address" : {
-      "title" : "com.khrix.adapter.http.controllers.register.resources.dto.AddressDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.AddressDto",
       "required" : [ "city", "country", "neighborhood", "number", "state", "street", "zipCode" ],
       "properties" : {
         "street" : { },
@@ -756,7 +756,7 @@
     },
     "company" : {
       "oneOf" : [ {
-        "title" : "com.khrix.adapter.http.controllers.register.resources.dto.CompanyDto",
+        "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.CompanyDto",
         "required" : [ "cnpj", "name" ],
         "properties" : {
           "cnpj" : { },
@@ -767,7 +767,7 @@
   }
 };
             defs["LoginInputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.login.resources.dto.LoginInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.login.resources.dto.LoginInputDto",
   "required" : [ "password", "userName" ],
   "properties" : {
     "userName" : { },
@@ -779,7 +779,7 @@
   "properties" : { }
 };
             defs["ServiceOrderInputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto",
   "required" : [ "clientId", "complaint", "operatorId", "tasksIds", "vehicleId" ],
   "properties" : {
     "clientId" : { },
@@ -796,12 +796,12 @@
   }
 };
             defs["ServiceOrderOutputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
   "required" : [ "client", "code", "complaint", "expectedMinutes", "id", "operator", "status", "tasks", "totalPrice", "vehicle" ],
   "properties" : {
     "id" : { },
     "client" : {
-      "title" : "com.khrix.adapter.http.controllers.user.resources.dto.UserOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
       "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
       "properties" : {
         "id" : { },
@@ -818,7 +818,7 @@
       }
     },
     "operator" : {
-      "title" : "com.khrix.adapter.http.controllers.user.resources.dto.UserOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
       "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
       "properties" : {
         "id" : { },
@@ -835,7 +835,7 @@
       }
     },
     "vehicle" : {
-      "title" : "com.khrix.adapter.http.controllers.vehicles.resources.dto.VehicleOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
       "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
       "properties" : {
         "id" : { },
@@ -867,7 +867,7 @@
     },
     "inventoryItems" : {
       "items" : {
-        "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
+        "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
         "required" : [ "id", "isActive", "minimumQuantity", "name", "quantity", "sku", "unitPrice" ],
         "properties" : {
           "id" : { },
@@ -890,16 +890,16 @@
   }
 };
             defs["ServiceOrderWithHistoryOutputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.ServiceOrderWithHistoryOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderWithHistoryOutputDto",
   "required" : [ "history", "serviceOrder" ],
   "properties" : {
     "serviceOrder" : {
-      "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
       "required" : [ "client", "code", "complaint", "expectedMinutes", "id", "operator", "status", "tasks", "totalPrice", "vehicle" ],
       "properties" : {
         "id" : { },
         "client" : {
-          "title" : "com.khrix.adapter.http.controllers.user.resources.dto.UserOutputDto",
+          "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
           "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
           "properties" : {
             "id" : { },
@@ -916,7 +916,7 @@
           }
         },
         "operator" : {
-          "title" : "com.khrix.adapter.http.controllers.user.resources.dto.UserOutputDto",
+          "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
           "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
           "properties" : {
             "id" : { },
@@ -933,7 +933,7 @@
           }
         },
         "vehicle" : {
-          "title" : "com.khrix.adapter.http.controllers.vehicles.resources.dto.VehicleOutputDto",
+          "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
           "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
           "properties" : {
             "id" : { },
@@ -962,7 +962,7 @@
         "diagnosis" : { },
         "tasks" : {
           "items" : {
-            "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.TaskOutputDto",
+            "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.TaskOutputDto",
             "required" : [ "category", "estimatedMinutes", "id", "isActive", "name", "price", "status" ],
             "properties" : {
               "id" : { },
@@ -982,7 +982,7 @@
         },
         "inventoryItems" : {
           "items" : {
-            "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
+            "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
             "required" : [ "id", "isActive", "minimumQuantity", "name", "quantity", "sku", "unitPrice" ],
             "properties" : {
               "id" : { },
@@ -1006,7 +1006,7 @@
     },
     "history" : {
       "items" : {
-        "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.HistoryChangesDto",
+        "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.HistoryChangesDto",
         "required" : [ "changedAt", "changes" ],
         "properties" : {
           "changedAt" : { },
@@ -1019,7 +1019,7 @@
   }
 };
             defs["UpdateServiceOrderInputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto",
   "required" : [ "code", "operatorRole" ],
   "properties" : {
     "code" : { },
@@ -1040,7 +1040,7 @@
   }
 };
             defs["UserInputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.user.resources.dto.UserInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserInputDto",
   "required" : [ "id" ],
   "properties" : {
     "id" : { },
@@ -1055,7 +1055,7 @@
   }
 };
             defs["UserOutputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.user.resources.dto.UserOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
   "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
   "properties" : {
     "id" : { },
@@ -1072,7 +1072,7 @@
   }
 };
             defs["VehicleInputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.vehicles.resources.dto.VehicleInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleInputDto",
   "required" : [ "brand", "chassis", "color", "fuelType", "model", "ownerId", "plate", "year" ],
   "properties" : {
     "id" : { },
@@ -1090,7 +1090,7 @@
   }
 };
             defs["VehicleOutputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.vehicles.resources.dto.VehicleOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
   "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
   "properties" : {
     "id" : { },
@@ -1110,7 +1110,7 @@
   }
 };
             defs["VehicleUpdateInputDto"] = {
-  "title" : "com.khrix.adapter.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto",
   "required" : [ "id" ],
   "properties" : {
     "id" : { },

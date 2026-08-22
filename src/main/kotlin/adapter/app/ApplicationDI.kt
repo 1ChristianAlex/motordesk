@@ -1,9 +1,9 @@
 package com.khrix.adapter.app
 
-import com.khrix.adapter.azure.azureDI
 import com.khrix.adapter.exposed.appDatabase
 import com.khrix.adapter.inbound.http.httpDI
 import com.khrix.adapter.mongodb.appMongoDb
+import com.khrix.adapter.outbound.azure.azureDI
 import com.khrix.adapter.security.securityDI
 import com.khrix.adapter.sqids.sqIdsDI
 import io.ktor.server.application.Application

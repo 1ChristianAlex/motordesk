@@ -1,6 +1,6 @@
-package com.khrix.adapter.azure
+package com.khrix.adapter.outbound.azure
 
-import com.khrix.adapter.azure.email.AzureEmailSender
+import com.khrix.adapter.outbound.azure.email.AzureEmailSender
 import com.khrix.application.email.EmailSender
 import io.ktor.server.plugins.di.DependencyRegistry
 
