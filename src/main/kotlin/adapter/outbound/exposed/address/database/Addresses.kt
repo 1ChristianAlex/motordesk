@@ -1,13 +1,14 @@
 package com.khrix.adapter.outbound.exposed.address.database
 
 import com.khrix.adapter.outbound.exposed.BaseTable
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import com.khrix.adapter.outbound.exposed.user.database.UserEntity
 import com.khrix.adapter.outbound.exposed.user.database.UsersTable
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
-object AddressTable : BaseTable("address") {
+object AddressTable : BaseTable("address", DatabaseSchemas.IDENTITY) {
     val street = varchar("street", 255)
     val number = varchar("number", 20)
 

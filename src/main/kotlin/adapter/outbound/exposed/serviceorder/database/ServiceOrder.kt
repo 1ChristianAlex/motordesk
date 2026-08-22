@@ -1,6 +1,7 @@
 package com.khrix.adapter.outbound.exposed.serviceorder.database
 
 import com.khrix.adapter.outbound.exposed.BaseTable
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import com.khrix.adapter.outbound.exposed.inventory.database.InventoryEntity
 import com.khrix.adapter.outbound.exposed.user.database.UserEntity
 import com.khrix.adapter.outbound.exposed.user.database.UsersTable
@@ -11,7 +12,7 @@ import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
-object ServiceOrdersTable : BaseTable("serviceOrders") {
+object ServiceOrdersTable : BaseTable("serviceOrders", DatabaseSchemas.SERVICE_ORDER) {
     val client = reference("clientId", UsersTable)
 
     val operator = reference("operatorId", UsersTable)

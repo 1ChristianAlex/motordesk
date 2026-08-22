@@ -1,10 +1,11 @@
 package com.khrix.adapter.outbound.exposed.serviceorder.database
 
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
 import org.jetbrains.exposed.v1.core.Table
 
 object ServiceOrderTasksTable : Table(
-    "serviceOrderTasks",
+    "${DatabaseSchemas.SERVICE_ORDER}.serviceOrderTasks",
 ) {
     val serviceOrder =
         reference("serviceOrderId", ServiceOrdersTable)

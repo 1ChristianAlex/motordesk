@@ -1,6 +1,7 @@
 package com.khrix.adapter.outbound.exposed.vehicles.database
 
 import com.khrix.adapter.outbound.exposed.BaseTable
+import com.khrix.adapter.outbound.exposed.DatabaseSchemas
 import com.khrix.adapter.outbound.exposed.user.database.UserEntity
 import com.khrix.adapter.outbound.exposed.user.database.UsersTable
 import com.khrix.domain.vehicle.model.FuelType
@@ -8,7 +9,7 @@ import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.IntEntity
 import org.jetbrains.exposed.v1.dao.IntEntityClass
 
-object VehicleTable : BaseTable("vehicles") {
+object VehicleTable : BaseTable("vehicles", DatabaseSchemas.VEHICLES) {
     val owner = reference("ownerId", UsersTable)
     val plate = varchar("plate", 7).uniqueIndex()
     val brand = varchar("brand", 100)
