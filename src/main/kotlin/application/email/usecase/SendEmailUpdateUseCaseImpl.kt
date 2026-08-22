@@ -4,9 +4,9 @@ import com.khrix.application.email.EmailSender
 import com.khrix.application.email.toStatusUpdateEmail
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.email.model.EmailStatus
-import com.khrix.domain.email.repository.EmailQueueRepository
-import com.khrix.domain.email.usecase.SendEmailUpdateUseCase
-import com.khrix.domain.email.usecase.SendEmailUseCaseError
+import com.khrix.domain.email.port.repository.EmailQueueRepository
+import com.khrix.domain.email.port.usecase.SendEmailUpdateUseCase
+import com.khrix.domain.email.port.usecase.SendEmailUseCaseError
 
 class SendEmailUpdateUseCaseImpl(
     private val emailSender: EmailSender,

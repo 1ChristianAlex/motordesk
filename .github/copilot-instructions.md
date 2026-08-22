@@ -31,13 +31,13 @@ Respect:
 
 ```mermaid
 flowchart TB
-    Infrastructure --> Application --> Domain
+    Adapter --> Application --> Domain
 ```
 
-The domain must not depend on Ktor, Exposed, Redis/Lettuce, MongoDB drivers, Azure SDKs, HTTP clients, or infrastructure
+The domain must not depend on Ktor, Exposed, Redis/Lettuce, MongoDB drivers, Azure SDKs, HTTP clients, or adapter
 configuration.
 
-External providers must be isolated behind appropriate abstractions and infrastructure adapters.
+External providers must be isolated behind appropriate abstractions and adapter adapters.
 
 ## Domain
 
@@ -53,7 +53,7 @@ Pay special attention to:
 - `Task`
 - `InventoryItem`
 
-Business rules should remain outside HTTP controllers and infrastructure adapters.
+Business rules should remain outside HTTP controllers and adapter adapters.
 
 ## Persistence
 
@@ -136,7 +136,7 @@ Do not duplicate detailed documentation inside this file.
 ## Architectural Decisions
 
 Check `docs/ADR/` for persistence, messaging, external providers, architectural boundaries, security model, or major
-infrastructure decisions.
+adapter decisions.
 
 Do not request an ADR for ordinary implementation details.
 

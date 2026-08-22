@@ -1,10 +1,10 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeCommand
-import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeUseCase
-import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByCodeUseCase
-import com.khrix.domain.serviceorder.usecase.ServiceOrderWithHistory
+import com.khrix.domain.serviceorder.port.usecase.GetClientServiceOrdersByCodeCommand
+import com.khrix.domain.serviceorder.port.usecase.GetClientServiceOrdersByCodeUseCase
+import com.khrix.domain.serviceorder.port.usecase.GetServiceOrdersByCodeUseCase
+import com.khrix.domain.serviceorder.port.usecase.ServiceOrderWithHistory
 
 class GetClientServiceOrdersByCodeUseCaseImpl(
     private val getServiceOrdersByCodeUseCase: GetServiceOrdersByCodeUseCase,

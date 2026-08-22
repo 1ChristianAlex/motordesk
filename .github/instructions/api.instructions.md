@@ -1,5 +1,5 @@
 ---
-applyTo: "**/infrastructure/**/http/**/*.kt,**/routes/**/*.kt,**/*Route.kt,**/*Routes.kt"
+applyTo: "**/adapter/**/http/**/*.kt,**/routes/**/*.kt,**/*Route.kt,**/*Routes.kt"
 ---
 
 # Motor Desk - API Review
@@ -10,7 +10,7 @@ Review HTTP/API changes for contract stability, security, and architectural boun
 
 ```mermaid
 flowchart TB
-    HTTPRequest[HTTP Request] --> RequestDTO[Request DTO] --> UseCase --> Domain --> Port --> Infrastructure
+    HTTPRequest[HTTP Request] --> RequestDTO[Request DTO] --> UseCase --> Domain --> Port --> Adapter
 ```
 
 Do not put SQL, Redis commands, Azure SDK calls, or complex business rules inside route handlers.
@@ -18,7 +18,7 @@ Do not put SQL, Redis commands, Azure SDK calls, or complex business rules insid
 ## Ktor Resources
 
 The project uses Ktor Resources for type-safe routing and reverse URL generation. Keep `@Resource` and URL-building
-concerns in the HTTP/infrastructure boundary. Do not introduce Ktor Resources into domain models.
+concerns in the HTTP/adapter boundary. Do not introduce Ktor Resources into domain models.
 
 ## API Contracts
 

@@ -1,9 +1,9 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderTaskCommand
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderTaskUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderTaskCommand
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderTaskUseCase
 
 class UpdateServiceOrderTaskUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,

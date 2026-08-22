@@ -2,9 +2,9 @@ package com.khrix.application.vehicles.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.vehicle.repository.VehiclesRepository
-import com.khrix.domain.vehicle.usecase.DeleteVehicleByIdUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.vehicle.port.repository.VehiclesRepository
+import com.khrix.domain.vehicle.port.usecase.DeleteVehicleByIdUseCase
 
 class DeleteVehicleByIdUseCaseImpl(
     private val vehiclesRepository: VehiclesRepository,

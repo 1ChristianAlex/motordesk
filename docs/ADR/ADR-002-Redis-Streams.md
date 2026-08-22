@@ -21,7 +21,7 @@ operation during the HTTP request would:
 
 - increase API response time;
 - make the main feature dependent on email provider availability;
-- increase coupling between business logic and notification infrastructure.
+- increase coupling between business logic and notification adapter.
 
 Future notifications may also include WhatsApp, Push Notifications, external integrations, and audit events.
 
@@ -56,7 +56,7 @@ flowchart TB
         EventDir --> EmailRequestedEvent
     end
 
-    subgraph Infrastructure["infrastructure"]
+    subgraph Infrastructure["adapter"]
         subgraph Redis["redis/"]
             RedisConnection["RedisConnection"]
             RedisStreamPublisher["RedisStreamPublisher"]
@@ -111,7 +111,7 @@ flowchart TB
 
 ### RabbitMQ
 
-**Decision:** Rejected due to additional infrastructure complexity.
+**Decision:** Rejected due to additional adapter complexity.
 
 ### Apache Kafka
 
@@ -153,7 +153,7 @@ flowchart TB
 
 This decision follows:
 
-- Layered Architecture
+- Hexagonal Architecture
 - Domain-Driven Design (DDD)
 - Single Responsibility Principle
 - Event-Driven Architecture

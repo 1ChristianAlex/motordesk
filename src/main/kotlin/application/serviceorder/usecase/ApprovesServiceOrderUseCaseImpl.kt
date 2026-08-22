@@ -2,12 +2,12 @@ package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
-import com.khrix.domain.serviceorder.repository.ServiceOrderApprovalRepository
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.usecase.ApprovesServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.ApprovesServiceOrderUseCase
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderApprovalRepository
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.ApprovesServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.ApprovesServiceOrderUseCase
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderUseCase
 import com.khrix.domain.user.model.Role
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch

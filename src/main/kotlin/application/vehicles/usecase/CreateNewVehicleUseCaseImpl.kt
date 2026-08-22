@@ -2,8 +2,8 @@ package com.khrix.application.vehicles.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.vehicle.model.Vehicle
-import com.khrix.domain.vehicle.repository.VehiclesRepository
-import com.khrix.domain.vehicle.usecase.CreateNewVehicleUseCase
+import com.khrix.domain.vehicle.port.repository.VehiclesRepository
+import com.khrix.domain.vehicle.port.usecase.CreateNewVehicleUseCase
 
 class CreateNewVehicleUseCaseImpl(
     private val vehiclesRepository: VehiclesRepository,

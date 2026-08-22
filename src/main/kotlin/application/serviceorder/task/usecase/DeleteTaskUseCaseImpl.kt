@@ -1,8 +1,8 @@
 package com.khrix.application.serviceorder.task.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.serviceorder.task.repository.TaskRepository
-import com.khrix.domain.serviceorder.task.usecase.DeleteTaskUseCase
+import com.khrix.domain.serviceorder.task.port.repository.TaskRepository
+import com.khrix.domain.serviceorder.task.port.usecase.DeleteTaskUseCase
 
 class DeleteTaskUseCaseImpl(
     private val taskRepository: TaskRepository,

@@ -1,8 +1,8 @@
 package com.khrix.application.inventory
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.inventory.repository.InventoryRepository
-import com.khrix.domain.inventory.usecase.DeleteInventoryUseCase
+import com.khrix.domain.inventory.port.repository.InventoryRepository
+import com.khrix.domain.inventory.port.usecase.DeleteInventoryUseCase
 
 class DeleteInventoryUseCaseImpl(
     private val inventoryRepository: InventoryRepository,

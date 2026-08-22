@@ -6,12 +6,12 @@ import com.khrix.application.inventory.DeleteInventoryUseCaseImpl
 import com.khrix.application.inventory.GetInventoryByIdOrSkuUseCaseImpl
 import com.khrix.application.inventory.GetInventoryByListIdOrSkuUseCaseImpl
 import com.khrix.application.inventory.UpdateInventoryUseCaseImpl
-import com.khrix.domain.inventory.usecase.CreateInventoryUseCase
-import com.khrix.domain.inventory.usecase.DecrementItemInventoryUseCase
-import com.khrix.domain.inventory.usecase.DeleteInventoryUseCase
-import com.khrix.domain.inventory.usecase.GetInventoryByIdOrSkuUseCase
-import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
-import com.khrix.domain.inventory.usecase.UpdateInventoryUseCase
+import com.khrix.domain.inventory.port.usecase.CreateInventoryUseCase
+import com.khrix.domain.inventory.port.usecase.DecrementItemInventoryUseCase
+import com.khrix.domain.inventory.port.usecase.DeleteInventoryUseCase
+import com.khrix.domain.inventory.port.usecase.GetInventoryByIdOrSkuUseCase
+import com.khrix.domain.inventory.port.usecase.GetInventoryByListIdOrSkuUseCase
+import com.khrix.domain.inventory.port.usecase.UpdateInventoryUseCase
 import io.ktor.server.plugins.di.DependencyRegistry
 
 fun installInventoryDI(dependencies: DependencyRegistry) {

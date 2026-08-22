@@ -9,112 +9,68 @@
 ![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 ![OpenAPI](https://img.shields.io/badge/OpenAPI-3.x-6BA539?logo=openapiinitiative&logoColor=white)
-![DDD](https://img.shields.io/badge/Architecture-DDD-blueviolet) ![Clean Architecture](https://img.shields.io/badge/Clean-Architecture-success)
+![DDD](https://img.shields.io/badge/Architecture-DDD-blueviolet)
+![Hexagonal Architecture](https://img.shields.io/badge/Hexagonal-Architecture-success)
 
-Backend API for automotive repair shop management built with **Kotlin**
-and **Ktor 3**. Motor Desk manages Service Orders, customers, vehicles, tasks, inventory items, budget approvals and
-asynchronous email notifications.
+Motor Desk is a backend API for automotive repair shop management built with Kotlin and Ktor 3. The codebase follows a
+hexagonal style with domain ports, application use cases, and infrastructure adapters. It manages service orders,
+customers, vehicles, tasks, inventory items, approvals, authentication, service order history, and asynchronous email
+notifications.
 
 ## Technologies
 
 - Kotlin
 - Ktor 3
 - PostgreSQL + Exposed
-- MongoDB (Service Order history)
-- Redis Streams (asynchronous email queue)
-- JWT Authentication
+- MongoDB for Service Order history
+- Redis Streams for asynchronous email processing
+- JWT authentication
 - Docker Compose
-- Sonar
 - OpenAPI + Swagger UI
-
-## Ubiquitous Language
-
-- [Ubiquitous Language](docs/Ubiquitous%20Language.md)
-
-## Architecture Decision Records
-
-- [ADR-001 - PostgreSQL + Kotlin Exposed](docs/ADR/ADR-001%20%E2%80%94%20PostgreSQL%20+%20Kotlin%20Exposed.md)
-- [ADR-002 - Redis Streams](docs/ADR/ADR-002-Redis-Streams.md)
-- [ADR-003 - MongoDB Service Order History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
-- [ADR-004 - Azure Communication Services Email](docs/ADR/ADR-004-Azure-Communication-Services-Email.md)
-
-## Diagrams
-
-- [Send Email Sequence](docs/diagrams/send-email-sequence.md)
-- [Email Sending with Azure](docs/diagrams/email-sending-azure.md)
-
-## Technical-Debt
-
-- [TD-001-Serializable-in-Domain.md](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
-
-## Project Structure
-
-``` text
-src/main/kotlin
-├── domain
-├── application
-└── infrastructure
-
-docs
-├── ADR
-├── Technical-Debt
-├── Ubiquitous Language.md
-├── storytelling
-└── index.html
-
-bruno
-```
 
 ## Architecture
 
-### Clean Architecture
+### Hexagonal Structure
 
-``` mermaid
+```mermaid
 flowchart TB
 Infrastructure --> Application
 Application --> Domain
 ```
 
-### Runtime Infrastructure
+The main code locations are:
 
-``` mermaid
-flowchart LR
-Client --> API[Ktor API]
-API --> PostgreSQL
-API --> MongoDB
-API --> Redis
-API --> Swagger["Swagger UI"]
+```text
+src/main/kotlin
+├── domain
+├── application
+└── infrastructure
 ```
 
-### Service Order Flow
+## Documentation
 
-![img_1.png](docs/service-order-flow.png)
-
-More about flows can be found on `docs/storytelling/`**
+- [Ubiquitous Language](docs/Ubiquitous%20Language.md)
+- [ADR-001 - PostgreSQL + Kotlin Exposed](docs/ADR/ADR-001%20%E2%80%94%20PostgreSQL%20+%20Kotlin%20Exposed.md)
+- [ADR-002 - Redis Streams](docs/ADR/ADR-002-Redis-Streams.md)
+- [ADR-003 - MongoDB Service Order History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
+- [ADR-004 - Azure Communication Services Email](docs/ADR/ADR-004-Azure-Communication-Services-Email.md)
+- [ADR-005 - Migrating to Hexagonal Architecture](docs/ADR/ADR-005-Migrating-to-Hexagonal-Architecture.md)
+- [Send Email Sequence](docs/diagrams/send-email-sequence.md)
+- [Email Sending with Azure](docs/diagrams/email-sending-azure.md)
+- [Technical Debt - Serializable in Domain](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
+- [Business flows](docs/storytelling/)
 
 ## Business Flows
 
-Business diagrams are available under `docs/storytelling/`:
-
-- [Login / Registration](docs/storytelling/Login.drawio)
-- [Service Order](docs/storytelling/Service%20Order.drawio)
-- [Vehicle Registration](docs/storytelling/Vehicle%20registration.drawio)
-- [Forgot Password (planned)](docs/storytelling/Forgot%20Password.drawio)
+- Login / Registration
+- Service Order
+- Vehicle Registration
+- Forgot Password
 
 ## API Documentation
 
 - Interactive Swagger UI: `http://127.0.0.1:8080/swaggerUI`
 - Static OpenAPI: `docs/index.html`
-
-### Swagger UI Preview
-
-![Swagger UI](docs/swaggerUI.png)
-
-### Sonar UI Preview
-
-![Sonar UI](docs/sonar-preview.png)
-
-Cove coverage is only on top of domain and application modules**
 
 ## Running the Project
 
@@ -124,62 +80,23 @@ Cove coverage is only on top of domain and application modules**
 - Docker
 - Docker Compose
 
-### Run on your machine
+### Local run
 
-``` bash
+```bash
 docker compose -f docker-compose-dev.yml up -d
-```
-
-``` bash
 ./gradlew runDev
 ```
 
-#### Code analyses (only works with docker-compose-dev.yml)
+### Useful Gradle tasks
 
-``` bash
-./gradlew sonar
-```
+- `./gradlew test`
+- `./gradlew build`
+- `./gradlew sonar`
+- `./gradlew buildFatJar`
 
-### Run a product-like build using docker
+## Project Notes
 
-``` bash
-docker compose -f docker-compose.yml up -d
-```
-
-### Bruno Collection
-
-Bruno collection can be loaded up from this repo
-
-### Seed users
-
-Role Login Password
-  --------------- -------------------------------- -----------
-Customer
-
-- christian.alexsander@email.com
-- test@123!
-
-Administrator
-
-- christian.alex@email.com
-- test@123!
-
-## Useful Gradle Tasks
-
-Command Description
-  ----------------------- ----------------------
-`./gradlew runDev`        Run application
-`./gradlew test`          Execute tests
-`./gradlew sonar`         Execute tests, coverage and upload to local sonar
-`./gradlew build`         Full build
-`./gradlew buildFatJar`   Build executable JAR
-
-### Other Resources
-
-- Ubiquitous Language: `docs/Ubiquitous Language.md`
-- Architecture decisions: `docs/ADR/`
-- Diagrams: `docs/diagrams/`
-- Storytelling diagrams: `docs/storytelling/`
-- Static OpenAPI: `docs/index.html`
-- Swagger UI screenshot: `docs/swaggerUI.png`
-- Bruno collection: `bruno/`
+- The application uses Ktor DI at the composition root.
+- Domain ports live under `domain/`.
+- Use-case implementations live under `application/`.
+- Technical integrations live under `infrastructure/`.

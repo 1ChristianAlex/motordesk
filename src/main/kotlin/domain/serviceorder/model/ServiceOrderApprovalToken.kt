@@ -1,6 +1,6 @@
 package com.khrix.domain.serviceorder.model
 
-import com.khrix.domain.user.security.SecurityHasher
+import com.khrix.domain.user.port.security.SecurityHasher
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant

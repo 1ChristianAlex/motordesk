@@ -55,7 +55,7 @@ Each update creates a new document, preserving previous versions.
 
 **Pros**
 
-- Existing infrastructure
+- Existing adapter
 - Transactional consistency
 
 **Cons**
@@ -115,7 +115,7 @@ This decision aligns with:
 
 - Separation of transactional and audit workloads
 - Domain-Driven Design
-- Layered Architecture
+- Hexagonal Architecture
 - Repository single responsibility
 - Flexible document storage
 - Preservation of historical data without affecting transactional performance

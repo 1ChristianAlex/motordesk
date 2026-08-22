@@ -4,7 +4,7 @@ This directory contains repository instructions for AI-assisted development and 
 
 - `copilot-instructions.md` — repository-wide GitHub Copilot review rules.
 - `instructions/domain.instructions.md` — domain-layer rules.
-- `instructions/infrastructure.instructions.md` — infrastructure and external integration rules.
+- `instructions/adapter.instructions.md` — adapter and external integration rules.
 - `instructions/api.instructions.md` — HTTP/API review rules.
 - `instructions/tests.instructions.md` — testing review rules.
 

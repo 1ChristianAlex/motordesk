@@ -1,7 +1,7 @@
 package com.khrix.application.serviceorder.usecase
 
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderCommand
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.DeleteServiceOrderCommand
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery
 import io.mockk.coVerify

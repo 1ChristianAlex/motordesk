@@ -1,9 +1,9 @@
 package com.khrix.application.login.usecase
 
 import com.khrix.domain.user.model.LoginTypes
-import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.user.security.SecurityHasher
-import com.khrix.domain.user.usecase.InvalidCredentialsException
+import com.khrix.domain.user.port.repository.UserRepository
+import com.khrix.domain.user.port.security.SecurityHasher
+import com.khrix.domain.user.port.usecase.InvalidCredentialsException
 import com.khrix.domain.valueobject.user.Email
 import com.khrix.domain.valueobject.user.Password
 import com.khrix.testutils.sampleUser

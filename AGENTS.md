@@ -70,7 +70,7 @@ Use it for:
 - project overview;
 - technology stack;
 - high-level architecture;
-- infrastructure;
+- adapter;
 - asynchronous email flow;
 - business flow index;
 - API documentation;
@@ -126,7 +126,7 @@ When introducing a new architectural decision that is:
 - difficult to reverse;
 - cross-cutting;
 - externally visible;
-- infrastructure-related;
+- adapter-related;
 - a significant trade-off;
 
 consider creating or updating an ADR instead of documenting the decision only in code.
@@ -232,7 +232,7 @@ Use cases should:
 
 - orchestrate domain behavior;
 - coordinate ports;
-- avoid direct dependency on infrastructure implementations;
+ - avoid direct dependency on infrastructure implementations;
 - avoid containing HTTP-specific concerns;
 - avoid containing provider-specific SDK code.
 
@@ -330,7 +330,7 @@ flowchart LR
 3. Redis carries the event/trigger used by the worker.
 4. The worker loads the persisted email information.
 5. Email provider details must remain behind an abstraction.
-6. Azure Communication Services SDK usage belongs to infrastructure.
+6. Azure Communication Services SDK usage belongs to adapter.
 7. Failed sends are retried up to the configured maximum, currently represented as three attempts in the documented
    flow.
 8. The final database state must reflect whether processing succeeded or exhausted retries.
@@ -345,7 +345,7 @@ Prefer a structure similar to:
 Domain/Application
     EmailSender
         ↓
-Infrastructure
+Adapter
     AzureEmailSender
         ↓
     EmailAsyncClient
@@ -395,7 +395,7 @@ Avoid:
 
 - unnecessary mutable state;
 - `!!` when safe alternatives exist;
-- leaking infrastructure types across boundaries;
+- leaking adapter types across boundaries;
 - large use cases that mix HTTP, persistence and external provider concerns;
 - generic utility classes that hide domain behavior.
 
@@ -413,7 +413,7 @@ Keep the distinction between:
 - HTTP DTOs;
 - external provider models.
 
-Do not reuse an infrastructure DTO as a domain object just because its fields happen to match.
+Do not reuse an adapter DTO as a domain object just because its fields happen to match.
 
 For transformations, prefer explicit adapters/mappers when crossing architectural boundaries.
 
@@ -602,7 +602,7 @@ Examples:
 - introducing a new database;
 - changing the email provider;
 - changing the email delivery reliability model;
-- introducing a new cross-cutting infrastructure dependency;
+- introducing a new cross-cutting adapter dependency;
 - changing a major architectural boundary.
 
 Do not create an ADR for ordinary implementation details such as:
@@ -652,7 +652,7 @@ For an unfamiliar task, use this order:
        ↓
 6. Existing domain port/model
        ↓
-7. Existing infrastructure adapter
+7. Existing adapter adapter
        ↓
 8. Tests
        ↓
@@ -704,7 +704,7 @@ A change is considered complete when applicable:
 
 - [ ] The implementation follows the existing architecture.
 - [ ] Domain terminology follows the Ubiquitous Language.
-- [ ] Infrastructure dependencies remain behind appropriate boundaries.
+- [ ] Adapter dependencies remain behind appropriate boundaries.
 - [ ] Tests are added or updated.
 - [ ] `./gradlew test` passes.
 - [ ] `./gradlew build` passes when appropriate.
@@ -729,7 +729,7 @@ Motor Desk
 ├── application/
 │   └── use cases
 │
-├── infrastructure/
+├── adapter/
 │   ├── HTTP / Ktor
 │   ├── PostgreSQL / Exposed
 │   ├── MongoDB
@@ -753,7 +753,7 @@ Motor Desk
 README.md
   ├── Project overview
   ├── Architecture overview
-  ├── Runtime infrastructure
+  ├── Runtime adapter
   └── Getting started
        │
        ├── docs/Ubiquitous Language.md

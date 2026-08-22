@@ -1,8 +1,8 @@
 package com.khrix.application.serviceorder
 
 import com.khrix.domain.history.model.HistoryChanges
-import com.khrix.domain.serviceorder.ServiceOrderDiffResolver
 import com.khrix.domain.serviceorder.model.ServiceOrder
+import com.khrix.domain.serviceorder.port.ServiceOrderDiffResolver
 import kotlinx.serialization.json.Json
 import kotlin.time.Clock
 

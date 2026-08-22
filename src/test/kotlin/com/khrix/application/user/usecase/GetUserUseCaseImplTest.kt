@@ -1,7 +1,7 @@
 package com.khrix.application.user.usecase
 
-import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.user.usecase.UserNotFoundException
+import com.khrix.domain.user.port.repository.UserRepository
+import com.khrix.domain.user.port.usecase.UserNotFoundException
 import com.khrix.testutils.sampleUser
 import io.mockk.coEvery
 import io.mockk.mockk

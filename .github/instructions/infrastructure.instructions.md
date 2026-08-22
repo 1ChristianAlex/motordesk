@@ -1,10 +1,10 @@
 ---
-applyTo: "**/infrastructure/**/*.kt"
+applyTo: "**/adapter/**/*.kt"
 ---
 
 # Motor Desk - Infrastructure Review
 
-Review infrastructure implementations for correct adapter boundaries, reliability, and configuration safety.
+Review adapter implementations for correct adapter boundaries, reliability, and configuration safety.
 
 ## Architecture
 
@@ -15,7 +15,7 @@ flowchart BT
     InfrastructureAdapter[Infrastructure Adapter] --> Port[Application / Domain Port]
 ```
 
-Do not expose infrastructure implementation details upward.
+Do not expose adapter implementation details upward.
 
 ## PostgreSQL / Exposed
 
@@ -36,9 +36,9 @@ Redis is not the business source of truth.
 
 ## Azure Communication Services
 
-Check that Azure SDK code remains in infrastructure, credentials come from configuration/secrets, provider errors are
+Check that Azure SDK code remains in adapter, credentials come from configuration/secrets, provider errors are
 handled, `EmailSender` remains the application-facing abstraction, and Azure-specific models do not leak outside
-infrastructure.
+adapter.
 
 ## Configuration
 

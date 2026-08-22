@@ -1,12 +1,12 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.shortid.ShortId
-import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
-import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryUseCase
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.email.port.usecase.CreateEmailQueueUseCase
+import com.khrix.domain.inventory.port.usecase.GetInventoryByListIdOrSkuUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderHistoryUseCase
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.serviceorder.task.port.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.user.model.Role
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery

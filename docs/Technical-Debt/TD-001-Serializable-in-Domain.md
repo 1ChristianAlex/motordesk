@@ -8,7 +8,7 @@ Opened (Technical Debt)
 
 ## Context
 
-The project follows **Domain-Driven Design (DDD)** and a layered architecture, where the **Domain** layer should remain
+The project follows **Domain-Driven Design (DDD)** and a hexagonal architecture, where the **Domain** layer should remain
 independent of infrastructure and framework-specific concerns.
 
 During the implementation of the Service Order history, domain models needed to be serialized for persistence in MongoDB
@@ -50,7 +50,7 @@ The issue is recognized as **technical debt** and should be addressed in a futur
 
 ## Proposed Solution
 
-Serialization concerns should be moved to the Infrastructure layer.
+Serialization concerns should be moved to the infrastructure layer.
 
 Instead of serializing domain entities directly, dedicated persistence models (Documents) and message models
 (Events/DTOs) should be introduced.
@@ -86,7 +86,7 @@ However, these drawbacks are considered acceptable in exchange for a cleaner arc
 ## Migration Plan
 
 1. Remove `@Serializable` from all Domain classes.
-2. Implement mappers between Domain and Infrastructure models.
+2. Implement mappers between Domain and infrastructure models.
 3. Update repositories and publishers to use the new models.
 4. Remove the dependency on Kotlin Serialization from the Domain module.
 

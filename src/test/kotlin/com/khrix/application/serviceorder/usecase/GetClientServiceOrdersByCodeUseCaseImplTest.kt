@@ -1,8 +1,8 @@
 package com.khrix.application.serviceorder.usecase
 
-import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeCommand
-import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByCodeUseCase
-import com.khrix.domain.serviceorder.usecase.ServiceOrderWithHistory
+import com.khrix.domain.serviceorder.port.usecase.GetClientServiceOrdersByCodeCommand
+import com.khrix.domain.serviceorder.port.usecase.GetServiceOrdersByCodeUseCase
+import com.khrix.domain.serviceorder.port.usecase.ServiceOrderWithHistory
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery
 import io.mockk.mockk
