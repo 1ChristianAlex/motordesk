@@ -70,7 +70,7 @@ Use it for:
 - project overview;
 - technology stack;
 - high-level architecture;
-- infrastructure;
+- adapter;
 - asynchronous email flow;
 - business flow index;
 - API documentation;
@@ -126,7 +126,7 @@ When introducing a new architectural decision that is:
 - difficult to reverse;
 - cross-cutting;
 - externally visible;
-- infrastructure-related;
+- adapter-related;
 - a significant trade-off;
 
 consider creating or updating an ADR instead of documenting the decision only in code.
@@ -201,9 +201,9 @@ Application
 Domain
 ```
 
-The domain must not depend on infrastructure implementations.
+The domain must not depend on adapter implementations.
 
-Avoid importing infrastructure concerns into:
+Avoid importing adapter concerns into:
 
 - domain models;
 - domain ports;
@@ -219,10 +219,10 @@ The `domain/` layer should contain:
 - domain-level ports/interfaces;
 - abstractions required by the business.
 
-Keep infrastructure-specific implementations outside this layer.
+Keep adapter-specific implementations outside this layer.
 
 For example, an abstraction such as an email sender may belong to the domain/application boundary while the Azure
-Communication Services implementation belongs to infrastructure.
+Communication Services implementation belongs to adapter.
 
 ### 4.3 Application
 
@@ -232,7 +232,7 @@ Use cases should:
 
 - orchestrate domain behavior;
 - coordinate ports;
-- avoid direct dependency on infrastructure implementations;
+- avoid direct dependency on adapter implementations;
 - avoid containing HTTP-specific concerns;
 - avoid containing provider-specific SDK code.
 
@@ -330,7 +330,7 @@ flowchart LR
 3. Redis carries the event/trigger used by the worker.
 4. The worker loads the persisted email information.
 5. Email provider details must remain behind an abstraction.
-6. Azure Communication Services SDK usage belongs to infrastructure.
+6. Azure Communication Services SDK usage belongs to adapter.
 7. Failed sends are retried up to the configured maximum, currently represented as three attempts in the documented
    flow.
 8. The final database state must reflect whether processing succeeded or exhausted retries.
@@ -395,7 +395,7 @@ Avoid:
 
 - unnecessary mutable state;
 - `!!` when safe alternatives exist;
-- leaking infrastructure types across boundaries;
+- leaking adapter types across boundaries;
 - large use cases that mix HTTP, persistence and external provider concerns;
 - generic utility classes that hide domain behavior.
 
@@ -413,7 +413,7 @@ Keep the distinction between:
 - HTTP DTOs;
 - external provider models.
 
-Do not reuse an infrastructure DTO as a domain object just because its fields happen to match.
+Do not reuse an adapter DTO as a domain object just because its fields happen to match.
 
 For transformations, prefer explicit adapters/mappers when crossing architectural boundaries.
 
@@ -491,15 +491,15 @@ When modifying an endpoint, verify:
 
 Follow the existing DI composition instead of creating ad-hoc global instances.
 
-The application bootstrap currently composes infrastructure and application dependencies before configuring HTTP.
+The application bootstrap currently composes adapter and application dependencies before configuring HTTP.
 
 When adding a new adapter:
 
 1. define the appropriate abstraction;
-2. implement the adapter in infrastructure;
+2. implement the adapter in adapter;
 3. register it in the existing DI mechanism;
 4. inject the abstraction into the consumer;
-5. avoid constructing infrastructure dependencies inside use cases.
+5. avoid constructing adapter dependencies inside use cases.
 
 ---
 
@@ -535,7 +535,7 @@ integration test.
 
 ## 14. Local Development
 
-The project uses Docker Compose for local infrastructure.
+The project uses Docker Compose for local adapter.
 
 Typical startup:
 
@@ -602,7 +602,7 @@ Examples:
 - introducing a new database;
 - changing the email provider;
 - changing the email delivery reliability model;
-- introducing a new cross-cutting infrastructure dependency;
+- introducing a new cross-cutting adapter dependency;
 - changing a major architectural boundary.
 
 Do not create an ADR for ordinary implementation details such as:
@@ -652,7 +652,7 @@ For an unfamiliar task, use this order:
        ↓
 6. Existing domain port/model
        ↓
-7. Existing infrastructure adapter
+7. Existing adapter adapter
        ↓
 8. Tests
        ↓
@@ -729,7 +729,7 @@ Motor Desk
 ├── application/
 │   └── use cases
 │
-├── infrastructure/
+├── adapter/
 │   ├── HTTP / Ktor
 │   ├── PostgreSQL / Exposed
 │   ├── MongoDB
@@ -753,7 +753,7 @@ Motor Desk
 README.md
   ├── Project overview
   ├── Architecture overview
-  ├── Runtime infrastructure
+  ├── Runtime adapter
   └── Getting started
        │
        ├── docs/Ubiquitous Language.md

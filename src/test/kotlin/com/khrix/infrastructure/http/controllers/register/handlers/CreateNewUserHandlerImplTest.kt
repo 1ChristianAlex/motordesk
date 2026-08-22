@@ -1,13 +1,13 @@
-package com.khrix.infrastructure.http.controllers.register.handlers
+package com.khrix.adapter.http.controllers.register.handlers
 
+import com.khrix.adapter.http.controllers.register.resources.dto.AddressDto
+import com.khrix.adapter.http.controllers.register.resources.dto.ClientRegisterDto
+import com.khrix.adapter.http.controllers.register.resources.dto.CompanyDto
+import com.khrix.adapter.http.controllers.register.resources.dto.CreateUserDto
 import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCase
-import com.khrix.infrastructure.http.controllers.register.resources.dto.AddressDto
-import com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto
-import com.khrix.infrastructure.http.controllers.register.resources.dto.CompanyDto
-import com.khrix.infrastructure.http.controllers.register.resources.dto.CreateUserDto
 import io.ktor.http.HttpStatusCode
 import io.mockk.coEvery
 import io.mockk.coJustRun

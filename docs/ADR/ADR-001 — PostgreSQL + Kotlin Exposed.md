@@ -54,7 +54,7 @@ PostgreSQL was chosen because it provides:
 Another important factor was the development team's familiarity with PostgreSQL.
 
 Choosing a technology already known by the developer reduced implementation risks, shortened the learning curve and
-allowed more time to focus on solving business problems rather than infrastructure challenges.
+allowed more time to focus on solving business problems rather than adapter challenges.
 
 Finally, PostgreSQL is an open-source database with a permissive license, making it suitable for academic projects while
 also being widely adopted in enterprise environments.

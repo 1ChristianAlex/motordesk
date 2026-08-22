@@ -55,7 +55,7 @@ Each update creates a new document, preserving previous versions.
 
 **Pros**
 
-- Existing infrastructure
+- Existing adapter
 - Transactional consistency
 
 **Cons**

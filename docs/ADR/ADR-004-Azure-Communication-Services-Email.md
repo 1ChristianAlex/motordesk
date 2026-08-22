@@ -10,7 +10,7 @@ Motor Desk needs to send transactional emails to customers at different points i
 including service order creation, budget approval requests, service completion, vehicle delivery, and other business
 notifications.
 
-Email delivery depends on an external infrastructure provider and must not be tightly coupled to business rules or to
+Email delivery depends on an external adapter provider and must not be tightly coupled to business rules or to
 synchronous HTTP request processing.
 
 The implementation scope also includes an integration point for external tools that can trigger `ServiceOrder` status
@@ -25,10 +25,10 @@ Beyond the messaging mechanism, the system also needs to define the actual email
 
 The main reason for choosing Azure Communication Services is the availability of Azure resources for academic and
 student accounts. Azure for Students provides Azure credits and access to Azure services without requiring a credit
-card, which allows students to develop, test, and demonstrate applications using real cloud infrastructure.
+card, which allows students to develop, test, and demonstrate applications using real cloud adapter.
 
 That makes Azure a practical choice for the current Motor Desk context because it allows the project to use a real
-transactional email service without requiring a separate commercial email infrastructure at the start.
+transactional email service without requiring a separate commercial email adapter at the start.
 
 This ADR records the motivation for the decision in the context in which it was made. It does not guarantee future
 availability, pricing, or student-program terms.
@@ -37,7 +37,7 @@ availability, pricing, or student-program terms.
 
 Azure Communication Services will be used as the transactional email provider for Motor Desk.
 
-ACS will be used only as an infrastructure implementation for message delivery.
+ACS will be used only as an adapter implementation for message delivery.
 
 The application must not depend directly on Azure Communication Services types or APIs in the domain or application
 layers.
@@ -95,7 +95,7 @@ The application must:
 
 - create the email send request;
 - persist the state required for processing;
-- publish the event to the messaging infrastructure;
+- publish the event to the messaging adapter;
 - process the message asynchronously;
 - control retry attempts and processing state.
 - expose a documented entry point for inbound message processing when an external tool triggers a `ServiceOrder` status
@@ -124,7 +124,7 @@ ACS is responsible exclusively for transactional email delivery.
 
 ACS is not the mechanism for inbound status changes. If inbound email is used as the trigger source, the parsing and
 status update workflow belongs to the application layer, with the provider-specific transport hidden behind
-infrastructure adapters.
+adapter adapters.
 
 ## Architecture
 
@@ -160,7 +160,7 @@ flowchart TB
     Application --> Domain
 ```
 
-The Azure adapter belongs to infrastructure and must not be referenced directly by the domain.
+The Azure adapter belongs to adapter and must not be referenced directly by the domain.
 
 ## Alternatives Considered
 
@@ -168,7 +168,7 @@ The Azure adapter belongs to infrastructure and must not be referenced directly 
 
 Pros:
 
-- full control over the infrastructure;
+- full control over the adapter;
 - independence from a specific provider.
 
 Cons:
@@ -177,7 +177,7 @@ Cons:
 - need to manage an SMTP server;
 - reputation and deliverability setup;
 - higher maintenance effort;
-- not aligned with the goal of keeping the infrastructure simple in an academic context.
+- not aligned with the goal of keeping the adapter simple in an academic context.
 
 Decision: rejected.
 
@@ -188,7 +188,7 @@ Specialized transactional email services such as SendGrid, Mailgun, Amazon SES, 
 Pros:
 
 - specialized services;
-- strong delivery infrastructure;
+- strong delivery adapter;
 - dedicated transactional email APIs.
 
 Cons:
@@ -196,7 +196,7 @@ Cons:
 - another provider added to the ecosystem;
 - another account to manage;
 - costs and limits depend on the provider;
-- less alignment with the Azure infrastructure already available in the academic context.
+- less alignment with the Azure adapter already available in the academic context.
 
 Decision: rejected for the current context.
 
@@ -216,7 +216,7 @@ Cons:
 
 - dependence on a specific provider;
 - dependence on Azure availability and commercial terms;
-- technical coupling limited to the infrastructure adapter;
+- technical coupling limited to the adapter adapter;
 - costs may apply after credits or free-tier allowances are exhausted.
 
 Decision: accepted.
@@ -225,10 +225,10 @@ Decision: accepted.
 
 ### Positive
 
-- real email delivery infrastructure;
+- real email delivery adapter;
 - less operational effort than managing SMTP;
 - use of Azure resources available in the academic context;
-- provider isolation in the infrastructure layer;
+- provider isolation in the adapter layer;
 - ability to replace the provider without changing business rules;
 - natural fit with the existing asynchronous processing model based on Redis Streams;
 - decoupling from synchronous HTTP requests.
@@ -267,7 +267,7 @@ Never commit:
 - credentials;
 - production secrets.
 
-The Azure SDK must be instantiated in infrastructure and injected through the existing DI mechanism.
+The Azure SDK must be instantiated in adapter and injected through the existing DI mechanism.
 
 ## Resilience
 
@@ -337,7 +337,7 @@ This ADR defines which external provider is used for email delivery.
 
 ## References
 
-- `README.md` — Motor Desk architecture and infrastructure.
+- `README.md` — Motor Desk architecture and adapter.
 - `docs/ADR/ADR-002-Redis-Streams.md` — asynchronous notification processing.
 - `docs/ADR/ADR-003-MongoDB-Service-Order-History.md` — `ServiceOrder` history.
 - `https://github.com/1ChristianAlex/motordesk/issues/26` — external-tool-driven status update requirement.
@@ -351,4 +351,4 @@ This ADR defines which external provider is used for email delivery.
 
 > Azure Communication Services was chosen mainly because the project is being developed in an academic context and the
 > Azure ecosystem provides resources and credits for student accounts, which makes it possible to use a real transactional
-> email solution without requiring an additional commercial email infrastructure at the beginning.
+> email solution without requiring an additional commercial email adapter at the beginning.

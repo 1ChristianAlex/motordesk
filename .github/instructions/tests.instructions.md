@@ -23,7 +23,7 @@ For new functionality consider:
 
 ## Domain Tests
 
-Domain tests should not require infrastructure unless explicitly integration tests.
+Domain tests should not require adapter unless explicitly integration tests.
 
 ## Integration Tests
 

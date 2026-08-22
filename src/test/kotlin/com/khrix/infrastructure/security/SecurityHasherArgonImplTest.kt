@@ -1,4 +1,4 @@
-package com.khrix.infrastructure.security
+package com.khrix.adapter.security
 
 import kotlin.test.Test
 import kotlin.test.assertFalse

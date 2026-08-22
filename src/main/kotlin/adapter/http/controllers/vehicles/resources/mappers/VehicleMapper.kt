@@ -1,0 +1,20 @@
+package com.khrix.adapter.http.controllers.vehicles.resources.mappers
+
+import com.khrix.adapter.http.controllers.vehicles.resources.dto.VehicleOutputDto
+import com.khrix.domain.vehicle.model.Vehicle
+
+fun Vehicle.toOutputDto(): VehicleOutputDto =
+    VehicleOutputDto(
+        id = id,
+        userId = ownerId,
+        plate = plate.value,
+        brand = brand,
+        model = model,
+        color = color,
+        year = year.value,
+        mileage = mileage,
+        chassis = chassis,
+        fuelType = fuelType,
+        createdAt = createdAt!!,
+        updatedAt = updatedAt!!,
+    )

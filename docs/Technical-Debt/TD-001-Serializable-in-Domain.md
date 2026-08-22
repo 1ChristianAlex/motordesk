@@ -9,7 +9,7 @@ Opened (Technical Debt)
 ## Context
 
 The project follows **Domain-Driven Design (DDD)** and a layered architecture, where the **Domain** layer should remain
-independent of infrastructure and framework-specific concerns.
+independent of adapter and framework-specific concerns.
 
 During the implementation of the Service Order history, domain models needed to be serialized for persistence in MongoDB
 and for message exchange through Redis Streams.
@@ -26,7 +26,7 @@ Although this approach reduced development effort, it introduced an unwanted dep
 
 The Domain layer is now aware of a serialization technology.
 
-This creates a violation of the Dependency Rule, since business entities should not depend on infrastructure concerns.
+This creates a violation of the Dependency Rule, since business entities should not depend on adapter concerns.
 
 Consequences include:
 
@@ -113,4 +113,4 @@ when architectural improvements become a priority over feature development.
 
 * Cleaner architecture.
 * Better maintainability.
-* Lower coupling between business rules and infrastructure.
+* Lower coupling between business rules and adapter.

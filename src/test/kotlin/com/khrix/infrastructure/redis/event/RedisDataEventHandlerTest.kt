@@ -1,4 +1,4 @@
-package com.khrix.infrastructure.redis.event
+package com.khrix.adapter.redis.event
 
 import com.khrix.application.email.publisher.EmailEventKeys
 import kotlin.test.Test

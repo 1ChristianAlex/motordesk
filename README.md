@@ -53,7 +53,7 @@ asynchronous email notifications.
 src/main/kotlin
 ├── domain
 ├── application
-└── infrastructure
+└── adapter
 
 docs
 ├── ADR
