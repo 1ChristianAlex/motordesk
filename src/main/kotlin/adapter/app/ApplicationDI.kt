@@ -1,8 +1,8 @@
 package com.khrix.adapter.app
 
-import com.khrix.adapter.exposed.appDatabase
 import com.khrix.adapter.inbound.http.httpDI
 import com.khrix.adapter.outbound.azure.azureDI
+import com.khrix.adapter.outbound.exposed.appDatabase
 import com.khrix.adapter.outbound.mongodb.appMongoDb
 import com.khrix.adapter.outbound.security.securityDI
 import com.khrix.adapter.outbound.sqids.sqIdsDI
