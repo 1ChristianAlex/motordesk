@@ -1,6 +1,6 @@
-package com.khrix.adapter.redis.event.handler
+package com.khrix.adapter.outbound.redis.event.handler
 
-import com.khrix.adapter.redis.event.RedisDataEvent
+import com.khrix.adapter.outbound.redis.event.RedisDataEvent
 import com.khrix.application.email.publisher.EmailEventKeys
 
 interface RedisConsumerHandler<T> {

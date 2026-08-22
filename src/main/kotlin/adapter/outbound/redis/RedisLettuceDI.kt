@@ -1,12 +1,12 @@
-package com.khrix.adapter.redis
+package com.khrix.adapter.outbound.redis
 
-import com.khrix.adapter.redis.bootstrap.EventConsumerBootstrap
-import com.khrix.adapter.redis.connection.RedisConnection
-import com.khrix.adapter.redis.event.RedisEmailPublisherImpl
-import com.khrix.adapter.redis.event.RedisEventConsumerImpl
-import com.khrix.adapter.redis.event.handler.HandleEmailApprovalEvent
-import com.khrix.adapter.redis.event.handler.HandleEmailUpdateEvent
-import com.khrix.adapter.redis.event.handler.RedisConsumerHandler
+import com.khrix.adapter.outbound.redis.bootstrap.EventConsumerBootstrap
+import com.khrix.adapter.outbound.redis.connection.RedisConnection
+import com.khrix.adapter.outbound.redis.event.RedisEmailPublisherImpl
+import com.khrix.adapter.outbound.redis.event.RedisEventConsumerImpl
+import com.khrix.adapter.outbound.redis.event.handler.HandleEmailApprovalEvent
+import com.khrix.adapter.outbound.redis.event.handler.HandleEmailUpdateEvent
+import com.khrix.adapter.outbound.redis.event.handler.RedisConsumerHandler
 import com.khrix.application.email.publisher.EventConsumer
 import com.khrix.application.email.publisher.EventPublisher
 import io.ktor.events.Events

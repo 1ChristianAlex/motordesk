@@ -1,4 +1,4 @@
-package com.khrix.adapter.redis.event.handler
+package com.khrix.adapter.outbound.redis.event.handler
 
 import com.khrix.application.email.publisher.EmailEventKeys
 import com.khrix.domain.email.usecase.SendEmailApprovalUseCase

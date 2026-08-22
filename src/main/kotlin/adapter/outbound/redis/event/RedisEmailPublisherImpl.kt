@@ -1,6 +1,6 @@
-package com.khrix.adapter.redis.event
+package com.khrix.adapter.outbound.redis.event
 
-import com.khrix.adapter.redis.connection.RedisConnection
+import com.khrix.adapter.outbound.redis.connection.RedisConnection
 import com.khrix.application.email.publisher.EmailEventKeys
 import com.khrix.application.email.publisher.EventPublisher
 import io.lettuce.core.ExperimentalLettuceCoroutinesApi

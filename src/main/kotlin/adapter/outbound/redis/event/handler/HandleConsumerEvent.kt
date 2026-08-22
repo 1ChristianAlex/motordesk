@@ -1,6 +1,6 @@
-package com.khrix.adapter.redis.event.handler
+package com.khrix.adapter.outbound.redis.event.handler
 
-import com.khrix.adapter.redis.event.RedisDataEvent
+import com.khrix.adapter.outbound.redis.event.RedisDataEvent
 import org.slf4j.LoggerFactory
 
 abstract class HandleConsumerEvent<T> : RedisConsumerHandler<T> {

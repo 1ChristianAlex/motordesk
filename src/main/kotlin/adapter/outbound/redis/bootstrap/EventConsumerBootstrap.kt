@@ -1,4 +1,4 @@
-package com.khrix.adapter.redis.bootstrap
+package com.khrix.adapter.outbound.redis.bootstrap
 
 import com.khrix.application.email.publisher.EventConsumer
 import io.ktor.server.plugins.di.annotations.Named

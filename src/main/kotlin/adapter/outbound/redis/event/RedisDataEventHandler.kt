@@ -1,4 +1,4 @@
-package com.khrix.adapter.redis.event
+package com.khrix.adapter.outbound.redis.event
 
 import com.khrix.application.email.publisher.EmailEventKeys
 import kotlinx.serialization.Serializable

@@ -1,4 +1,4 @@
-package com.khrix.adapter.redis.event
+package com.khrix.adapter.outbound.redis.event
 
 enum class RedisEventKeys(
     val value: String,

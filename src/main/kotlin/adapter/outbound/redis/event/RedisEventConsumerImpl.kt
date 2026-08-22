@@ -1,7 +1,7 @@
-package com.khrix.adapter.redis.event
+package com.khrix.adapter.outbound.redis.event
 
-import com.khrix.adapter.redis.connection.RedisConnection
-import com.khrix.adapter.redis.event.handler.RedisConsumerHandler
+import com.khrix.adapter.outbound.redis.connection.RedisConnection
+import com.khrix.adapter.outbound.redis.event.handler.RedisConsumerHandler
 import com.khrix.application.email.publisher.EventConsumer
 import com.khrix.domain.email.usecase.SendEmailUseCaseError
 import io.lettuce.core.Consumer

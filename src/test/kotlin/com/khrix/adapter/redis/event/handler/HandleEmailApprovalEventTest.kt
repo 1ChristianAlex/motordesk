@@ -1,7 +1,7 @@
 package com.khrix.adapter.redis.event.handler
 
-import com.khrix.adapter.redis.event.RedisDataEvent
-import com.khrix.adapter.redis.event.RedisDataEventHandler
+import com.khrix.adapter.outbound.redis.event.RedisDataEvent
+import com.khrix.adapter.outbound.redis.event.handler.HandleEmailApprovalEvent
 import com.khrix.application.email.publisher.EmailEventKeys
 import com.khrix.domain.email.usecase.SendEmailApprovalUseCase
 import io.mockk.coEvery

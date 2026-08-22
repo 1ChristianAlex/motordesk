@@ -1,4 +1,4 @@
-package com.khrix.adapter.redis.connection
+package com.khrix.adapter.outbound.redis.connection
 
 import com.khrix.adapter.app.InfraConfig
 import io.lettuce.core.ExperimentalLettuceCoroutinesApi
