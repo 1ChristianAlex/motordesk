@@ -1,4 +1,4 @@
-package com.khrix.adapter.mongodb.registerHistory.database
+package com.khrix.adapter.outbound.mongodb.registerHistory.database
 
 import com.khrix.domain.history.model.HistoryChanges
 import org.bson.codecs.pojo.annotations.BsonId

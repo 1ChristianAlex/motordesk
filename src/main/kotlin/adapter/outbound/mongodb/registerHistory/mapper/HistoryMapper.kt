@@ -1,6 +1,6 @@
-package com.khrix.adapter.mongodb.registerHistory.mapper
+package com.khrix.adapter.outbound.mongodb.registerHistory.mapper
 
-import com.khrix.adapter.mongodb.registerHistory.database.RegisterHistoryDocument
+import com.khrix.adapter.outbound.mongodb.registerHistory.database.RegisterHistoryDocument
 import com.khrix.domain.history.model.HistoryChanges
 import kotlin.time.toKotlinInstant
 

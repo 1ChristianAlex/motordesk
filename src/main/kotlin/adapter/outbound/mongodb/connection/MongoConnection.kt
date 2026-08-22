@@ -1,4 +1,4 @@
-package com.khrix.adapter.mongodb.connection
+package com.khrix.adapter.outbound.mongodb.connection
 
 import com.khrix.adapter.app.InfraConfig
 import com.mongodb.kotlin.client.coroutine.MongoClient

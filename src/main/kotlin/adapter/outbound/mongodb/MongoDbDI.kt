@@ -1,8 +1,8 @@
-package com.khrix.adapter.mongodb
+package com.khrix.adapter.outbound.mongodb
 
-import com.khrix.adapter.mongodb.connection.MongoConnection
-import com.khrix.adapter.mongodb.registerHistory.database.RegisterHistoryDocument
-import com.khrix.adapter.mongodb.registerHistory.repository.RegisterHistoryRepositoryMongoFactory
+import com.khrix.adapter.outbound.mongodb.connection.MongoConnection
+import com.khrix.adapter.outbound.mongodb.registerHistory.database.RegisterHistoryDocument
+import com.khrix.adapter.outbound.mongodb.registerHistory.repository.RegisterHistoryRepositoryMongoFactory
 import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
 import com.khrix.domain.serviceorder.task.repository.TaskHistoryRepository
 import io.ktor.events.Events
