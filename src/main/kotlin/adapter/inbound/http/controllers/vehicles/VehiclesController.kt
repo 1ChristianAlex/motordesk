@@ -9,7 +9,7 @@ import com.khrix.adapter.inbound.http.controllers.vehicles.handlers.UpdateVehicl
 import com.khrix.adapter.inbound.http.controllers.vehicles.resources.VehiclesResource
 import com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleInputDto
 import com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto
-import com.khrix.adapter.security.UserClaims
+import com.khrix.adapter.outbound.security.UserClaims
 import io.ktor.server.resources.delete
 import io.ktor.server.resources.get
 import io.ktor.server.resources.post

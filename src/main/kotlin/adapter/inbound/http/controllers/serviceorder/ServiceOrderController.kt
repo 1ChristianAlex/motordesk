@@ -13,7 +13,7 @@ import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.App
 import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ClientServiceOrderItemInputDto
 import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto
 import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto
-import com.khrix.adapter.security.UserClaims
+import com.khrix.adapter.outbound.security.UserClaims
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import io.ktor.server.resources.delete
 import io.ktor.server.resources.get

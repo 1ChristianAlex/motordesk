@@ -1,9 +1,8 @@
 package com.khrix.application.serviceorder.usecase
 
-import com.khrix.adapter.sqids.SqIdsShortIdImpl
+import com.khrix.adapter.outbound.sqids.SqIdsShortIdImpl
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
-import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand

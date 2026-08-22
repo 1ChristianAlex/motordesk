@@ -1,4 +1,4 @@
-package com.khrix.adapter.sqids
+package com.khrix.adapter.outbound.sqids
 
 import com.khrix.domain.core.shortid.ShortId
 import io.ktor.server.plugins.di.DependencyRegistry

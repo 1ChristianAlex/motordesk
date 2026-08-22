@@ -1,5 +1,6 @@
 package com.khrix.adapter.security
 
+import com.khrix.adapter.outbound.security.SecurityHasherArgonImpl
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals

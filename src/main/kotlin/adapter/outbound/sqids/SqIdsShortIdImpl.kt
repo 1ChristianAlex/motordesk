@@ -1,4 +1,4 @@
-package com.khrix.adapter.sqids
+package com.khrix.adapter.outbound.sqids
 
 import com.khrix.domain.core.shortid.ShortId
 import org.sqids.Sqids

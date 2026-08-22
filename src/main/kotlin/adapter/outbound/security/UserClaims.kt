@@ -1,4 +1,4 @@
-package com.khrix.adapter.security
+package com.khrix.adapter.outbound.security
 
 import com.auth0.jwt.interfaces.Payload
 import com.khrix.domain.user.model.Role

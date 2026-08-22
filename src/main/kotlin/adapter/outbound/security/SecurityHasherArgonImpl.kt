@@ -1,4 +1,4 @@
-package com.khrix.adapter.security
+package com.khrix.adapter.outbound.security
 
 import com.khrix.domain.user.security.SecurityHasher
 import de.mkammerer.argon2.Argon2Factory

@@ -7,7 +7,7 @@ import com.khrix.adapter.inbound.http.controllers.core.AppController
 import com.khrix.adapter.inbound.http.controllers.core.AuthNames
 import com.khrix.adapter.inbound.http.controllers.core.HttpResult
 import com.khrix.adapter.inbound.http.controllers.core.exceptions.HandlerException
-import com.khrix.adapter.security.UserClaims
+import com.khrix.adapter.outbound.security.UserClaims
 import com.khrix.domain.user.model.Role
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType

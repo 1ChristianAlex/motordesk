@@ -4,7 +4,7 @@ import com.khrix.adapter.inbound.http.controllers.core.BaseHTTPHandler
 import com.khrix.adapter.inbound.http.controllers.core.HttpResult
 import com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto
 import com.khrix.adapter.inbound.http.controllers.user.resources.mappers.toOutputDto
-import com.khrix.adapter.security.UserClaims
+import com.khrix.adapter.outbound.security.UserClaims
 import com.khrix.domain.user.usecase.GetUserUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation

@@ -7,7 +7,7 @@ import com.khrix.adapter.inbound.http.controllers.user.handlers.UpdateSelfUserHa
 import com.khrix.adapter.inbound.http.controllers.user.handlers.UpdateSelfUserHandlerBody
 import com.khrix.adapter.inbound.http.controllers.user.resources.UserResource
 import com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserInputDto
-import com.khrix.adapter.security.UserClaims
+import com.khrix.adapter.outbound.security.UserClaims
 import io.ktor.server.resources.get
 import io.ktor.server.resources.put
 import io.ktor.server.routing.Routing
