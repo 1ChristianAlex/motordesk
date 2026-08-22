@@ -1,9 +1,11 @@
 package com.khrix.adapter.http.controllers.register.handlers
 
-import com.khrix.adapter.http.controllers.register.resources.dto.AddressDto
-import com.khrix.adapter.http.controllers.register.resources.dto.ClientRegisterDto
-import com.khrix.adapter.http.controllers.register.resources.dto.CompanyDto
-import com.khrix.adapter.http.controllers.register.resources.dto.CreateUserDto
+import com.khrix.adapter.inbound.http.controllers.register.handlers.CreateNewUserHandlerImpl
+import com.khrix.adapter.inbound.http.controllers.register.handlers.CreateNewUserRequest
+import com.khrix.adapter.inbound.http.controllers.register.resources.dto.AddressDto
+import com.khrix.adapter.inbound.http.controllers.register.resources.dto.ClientRegisterDto
+import com.khrix.adapter.inbound.http.controllers.register.resources.dto.CompanyDto
+import com.khrix.adapter.inbound.http.controllers.register.resources.dto.CreateUserDto
 import com.khrix.domain.user.security.TokenService
 import com.khrix.domain.user.usecase.CreateNewUserUseCase
 import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
