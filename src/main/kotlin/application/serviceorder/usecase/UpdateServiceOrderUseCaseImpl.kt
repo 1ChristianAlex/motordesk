@@ -6,9 +6,10 @@ import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
-import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
+import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryCommand
+import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryUseCase
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
 import com.khrix.domain.user.model.Role
@@ -21,8 +22,8 @@ class UpdateServiceOrderUseCaseImpl(
     private val getInventoryByListIdOrSkuUseCase: GetInventoryByListIdOrSkuUseCase,
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
     private val shortId: ShortId,
-    private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository,
     private val createEmailQueueUseCase: CreateEmailQueueUseCase,
+    private val createServiceOrderHistoryUseCase: CreateServiceOrderHistoryUseCase,
 ) : BaseUseCaseImpl<UpdateServiceOrderCommand, Unit>(),
     UpdateServiceOrderUseCase {
     override suspend fun internalExecute(command: UpdateServiceOrderCommand) {
@@ -68,7 +69,14 @@ class UpdateServiceOrderUseCaseImpl(
                 }
             }
 
-            launch { serviceOrderHistoryRepository.create(newServiceOrder) }
+            launch {
+                createServiceOrderHistoryUseCase.execute(
+                    CreateServiceOrderHistoryCommand(
+                        newServiceOrder,
+                        serviceOrder,
+                    ),
+                )
+            }
         }
     }
 

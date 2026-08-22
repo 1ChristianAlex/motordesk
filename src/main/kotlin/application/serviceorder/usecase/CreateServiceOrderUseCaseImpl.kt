@@ -9,7 +9,6 @@ import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
 import com.khrix.domain.user.usecase.GetUserUseCase
 import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
@@ -27,7 +26,6 @@ class CreateServiceOrderUseCaseImpl(
     private val getTaskByListIdUseCase: GetTaskByListIdUseCase,
     private val createEmailQueueUseCase: CreateEmailQueueUseCase,
     private val shortId: ShortId,
-    private val createServiceOrderHistoryUseCase: CreateServiceOrderHistoryUseCase,
     @Named("applicationScope") private val scope: CoroutineScope,
 ) : BaseUseCaseImpl<CreateServiceOrderCommand, ServiceOrder>(),
     CreateServiceOrderUseCase {
@@ -67,7 +65,6 @@ class CreateServiceOrderUseCaseImpl(
             val order = serviceOrderRepository.createRead(serviceOrder)
 
             scope.launch { createEmailQueueUseCase.execute(serviceOrder) }
-            scope.launch { createServiceOrderHistoryUseCase.execute(serviceOrder) }
 
             order
         }

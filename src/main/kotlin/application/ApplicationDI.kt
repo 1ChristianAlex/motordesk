@@ -27,6 +27,7 @@ import com.khrix.application.serviceorder.usecase.CreateServiceOrderHistoryUseCa
 import com.khrix.application.serviceorder.usecase.CreateServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.DeleteServiceOrderUseCaseImpl
 import com.khrix.application.serviceorder.usecase.GetClientServiceOrdersByCodeUseCaseImpl
+import com.khrix.application.serviceorder.usecase.GetServiceOrderHistoryUseCaseImpl
 import com.khrix.application.serviceorder.usecase.GetServiceOrdersByClientIdUseCaseImpl
 import com.khrix.application.serviceorder.usecase.GetServiceOrdersByCodeUseCaseImpl
 import com.khrix.application.serviceorder.usecase.UpdateServiceOrderTaskUseCaseImpl
@@ -63,6 +64,7 @@ import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderUseCase
 import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeUseCase
+import com.khrix.domain.serviceorder.usecase.GetServiceOrderHistoryUseCase
 import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByClientIdUseCase
 import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByCodeUseCase
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderTaskUseCase
@@ -125,6 +127,7 @@ fun Application.applicationDI() {
         provide<CreateServiceOrderHistoryUseCase>(CreateServiceOrderHistoryUseCaseImpl::class)
         provide<TaskDiffResolver>(TaskDiffResolverImpl::class)
         provide<ServiceOrderDiffResolver>(ServiceOrderDiffResolverImpl::class)
+        provide<GetServiceOrderHistoryUseCase>(GetServiceOrderHistoryUseCaseImpl::class)
     }
 
     monitor.subscribe(

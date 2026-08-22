@@ -7,6 +7,7 @@ import com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDt
 import com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
+import kotlin.time.Instant
 
 @Serializable
 data class ServiceOrderInputDto(
@@ -62,4 +63,16 @@ data class ServiceOrderOutputDto(
 data class ApprovesServiceOrderInputDto(
     val token: String,
     val code: String,
+)
+
+@Serializable
+data class HistoryChangesDto(
+    val changedAt: Instant,
+    val changes: Map<String, String>,
+)
+
+@Serializable
+data class ServiceOrderWithHistoryOutputDto(
+    val serviceOrder: ServiceOrderOutputDto,
+    val history: List<HistoryChangesDto>,
 )

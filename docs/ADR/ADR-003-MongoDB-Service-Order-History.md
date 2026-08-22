@@ -107,7 +107,7 @@ Each update creates a new document, preserving previous versions.
 - PostgreSQL remains the source of truth.
 - Every relevant update generates a new snapshot.
 - Access is abstracted by `ServiceOrderHistoryRepository`.
-- Mongo implementation lives in `ServiceOrderMongoRepositoryImpl`.
+- Mongo implementation lives in `RegisterHistoryRepositoryMongoFactory`.
 
 ## Architectural Motivation
 

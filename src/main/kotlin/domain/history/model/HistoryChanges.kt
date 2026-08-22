@@ -5,5 +5,5 @@ import kotlin.time.Instant
 data class HistoryChanges(
     val id: Int,
     val changedAt: Instant,
-    val changes: List<RegisterChange<Comparable<String>>>,
+    val changes: Map<String, String>,
 )

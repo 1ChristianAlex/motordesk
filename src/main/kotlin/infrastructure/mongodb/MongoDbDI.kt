@@ -1,10 +1,10 @@
 package com.khrix.infrastructure.mongodb
 
 import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
-import com.khrix.domain.serviceorder.repository.ServiceOrderTaskHistoryRepository
+import com.khrix.domain.serviceorder.task.repository.TaskHistoryRepository
 import com.khrix.infrastructure.mongodb.connection.MongoConnection
-import com.khrix.infrastructure.mongodb.serviceorder.repository.ServiceOrderMongoRepositoryImpl
-import com.khrix.infrastructure.mongodb.serviceorder.repository.ServiceOrderTaskMongoRepositoryImpl
+import com.khrix.infrastructure.mongodb.registerHistory.database.RegisterHistoryDocument
+import com.khrix.infrastructure.mongodb.registerHistory.repository.RegisterHistoryRepositoryMongoFactory
 import io.ktor.events.Events
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.plugins.di.DependencyRegistry
@@ -15,8 +15,13 @@ fun appMongoDb(
 ) {
     with(dependencies) {
         provide(MongoConnection::class)
-        provide<ServiceOrderHistoryRepository>(ServiceOrderMongoRepositoryImpl::class)
-        provide<ServiceOrderTaskHistoryRepository>(ServiceOrderTaskMongoRepositoryImpl::class)
+        provide<ServiceOrderHistoryRepository> {
+            RegisterHistoryRepositoryMongoFactory.create(resolve(), RegisterHistoryDocument.SERVICE_ORDER_HISTORY)
+        }
+        provide<TaskHistoryRepository> {
+            RegisterHistoryRepositoryMongoFactory.create(resolve(), RegisterHistoryDocument.SERVICE_ORDER_TASK_HISTORY)
+        }
+
         monitor.subscribe(ApplicationStopping) {
             val mongoConnection: MongoConnection by dependencies
             mongoConnection.close()

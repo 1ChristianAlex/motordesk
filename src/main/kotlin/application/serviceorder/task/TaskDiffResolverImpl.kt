@@ -1,7 +1,6 @@
 package com.khrix.application.serviceorder.task
 
 import com.khrix.domain.history.model.HistoryChanges
-import com.khrix.domain.history.model.RegisterChange
 import com.khrix.domain.serviceorder.task.TaskDiffResolver
 import com.khrix.domain.serviceorder.task.model.Task
 import kotlinx.serialization.json.Json
@@ -15,25 +14,25 @@ class TaskDiffResolverImpl : TaskDiffResolver {
         compareB: Task,
     ): HistoryChanges {
         val changes =
-            buildList<RegisterChange<Comparable<String>>> {
+            buildMap {
                 if (compareA.status != compareB.status) {
-                    add(RegisterChange(Task::status.name, simpleSerialize(compareA.status)))
+                    put(Task::status.name, simpleSerialize(compareA.status))
                 }
 
                 if (compareA.estimatedMinutes != compareB.estimatedMinutes) {
-                    add(RegisterChange(Task::estimatedMinutes.name, simpleSerialize(compareA.estimatedMinutes)))
+                    put(Task::estimatedMinutes.name, simpleSerialize(compareA.estimatedMinutes))
                 }
 
                 if (compareA.price != compareB.price) {
-                    add(RegisterChange(Task::price.name, simpleSerialize(compareA.price)))
+                    put(Task::price.name, simpleSerialize(compareA.price))
                 }
 
                 if (compareA.category != compareB.category) {
-                    add(RegisterChange(Task::category.name, simpleSerialize(compareA.category)))
+                    put(Task::category.name, simpleSerialize(compareA.category))
                 }
 
                 if (compareA.category != compareB.category) {
-                    add(RegisterChange(Task::category.name, simpleSerialize(compareA.category)))
+                    put(Task::category.name, simpleSerialize(compareA.category))
                 }
             }
 

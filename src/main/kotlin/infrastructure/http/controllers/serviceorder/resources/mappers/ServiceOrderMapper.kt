@@ -1,14 +1,18 @@
 package com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers
 
+import com.khrix.domain.history.model.HistoryChanges
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.usecase.ApprovesServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeCommand
+import com.khrix.domain.serviceorder.usecase.ServiceOrderWithHistory
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ApprovesServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ClientServiceOrderItemInputDto
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.HistoryChangesDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderWithHistoryOutputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.user.resources.mappers.toOutputDto
 import com.khrix.infrastructure.http.controllers.vehicles.resources.mappers.toOutputDto
@@ -58,3 +62,17 @@ fun ClientServiceOrderItemInputDto.toCommand() =
     )
 
 fun ApprovesServiceOrderInputDto.toCommand() = ApprovesServiceOrderCommand(token, code)
+
+private fun List<HistoryChanges>.toOutputDto(): List<HistoryChangesDto> =
+    this.map {
+        HistoryChangesDto(
+            it.changedAt,
+            it.changes,
+        )
+    }
+
+fun ServiceOrderWithHistory.toOutputDto(): ServiceOrderWithHistoryOutputDto =
+    ServiceOrderWithHistoryOutputDto(
+        this.serviceOrder.toOutputDto(),
+        this.changes.toOutputDto(),
+    )

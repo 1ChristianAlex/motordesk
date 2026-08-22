@@ -1,20 +1,20 @@
 package com.khrix.domain.core
 
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 abstract class BaseTryBlock<TOutData> {
-    private val className get() = this::class.simpleName ?: javaClass.simpleName
-    private val logger = LoggerFactory.getLogger(javaClass)
+    protected val logger: Logger? = LoggerFactory.getLogger(javaClass)
 
     suspend fun tryBlock(
         description: String,
         callback: suspend () -> TOutData,
     ): Result<TOutData> =
         try {
-            logger.info("Executing - $description")
+            logger?.info("Executing - $description")
             Result.success(callback())
         } catch (ex: Exception) {
-            logger.error(ex.message, ex.cause)
+            logger?.error(ex.message, ex.cause)
             Result.failure(ex)
         }
 }
