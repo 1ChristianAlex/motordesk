@@ -1,6 +1,6 @@
 package com.khrix.domain.serviceorder.model
 
-import com.khrix.domain.user.security.SecurityHasher
+import com.khrix.domain.user.port.security.SecurityHasher
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test

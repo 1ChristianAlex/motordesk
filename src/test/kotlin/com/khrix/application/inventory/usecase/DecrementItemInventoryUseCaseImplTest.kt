@@ -1,8 +1,8 @@
 package com.khrix.application.inventory.usecase
 
 import com.khrix.application.inventory.DecrementItemInventoryUseCaseImpl
-import com.khrix.domain.inventory.repository.InventoryRepository
-import com.khrix.domain.inventory.usecase.DecrementItemInventoryCommand
+import com.khrix.domain.inventory.port.repository.InventoryRepository
+import com.khrix.domain.inventory.port.usecase.DecrementItemInventoryCommand
 import com.khrix.testutils.sampleInventoryItem
 import io.mockk.coEvery
 import io.mockk.coVerify

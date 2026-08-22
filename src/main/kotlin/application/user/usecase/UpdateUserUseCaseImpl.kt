@@ -2,11 +2,11 @@ package com.khrix.application.user.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.user.model.User
-import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.user.security.SecurityHasher
-import com.khrix.domain.user.usecase.UpdateUserUseCase
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCase
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCaseCommand
+import com.khrix.domain.user.port.repository.UserRepository
+import com.khrix.domain.user.port.security.SecurityHasher
+import com.khrix.domain.user.port.usecase.UpdateUserUseCase
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCase
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCaseCommand
 
 class UpdateUserUseCaseImpl(
     private val userRepository: UserRepository,

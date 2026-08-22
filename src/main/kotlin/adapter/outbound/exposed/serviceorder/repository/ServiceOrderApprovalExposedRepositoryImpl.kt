@@ -6,8 +6,8 @@ import com.khrix.adapter.outbound.exposed.serviceorder.database.OrderApprovalTab
 import com.khrix.adapter.outbound.exposed.serviceorder.database.ServiceOrderEntity
 import com.khrix.adapter.outbound.exposed.serviceorder.mapper.toModel
 import com.khrix.domain.serviceorder.model.ServiceOrderApprovalToken
-import com.khrix.domain.serviceorder.repository.ServiceOrderApprovalRepository
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderApprovalRepository
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database
 

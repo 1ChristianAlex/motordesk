@@ -6,7 +6,7 @@ import com.khrix.adapter.outbound.exposed.vehicles.database.VehicleEntity
 import com.khrix.adapter.outbound.exposed.vehicles.database.VehicleTable
 import com.khrix.adapter.outbound.exposed.vehicles.mapper.toModel
 import com.khrix.domain.vehicle.model.Vehicle
-import com.khrix.domain.vehicle.repository.VehiclesRepository
+import com.khrix.domain.vehicle.port.repository.VehiclesRepository
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.Database

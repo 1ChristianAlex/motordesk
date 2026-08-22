@@ -2,8 +2,8 @@ package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.serviceorder.model.ServiceOrder
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByClientIdUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.GetServiceOrdersByClientIdUseCase
 
 class GetServiceOrdersByClientIdUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,

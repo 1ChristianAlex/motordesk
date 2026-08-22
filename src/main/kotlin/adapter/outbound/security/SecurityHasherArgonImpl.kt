@@ -1,6 +1,6 @@
 package com.khrix.adapter.outbound.security
 
-import com.khrix.domain.user.security.SecurityHasher
+import com.khrix.domain.user.port.security.SecurityHasher
 import de.mkammerer.argon2.Argon2Factory
 import java.util.regex.Pattern
 

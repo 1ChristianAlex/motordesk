@@ -1,7 +1,7 @@
 package com.khrix.adapter.outbound.redis.event.handler
 
 import com.khrix.application.email.publisher.EmailEventKeys
-import com.khrix.domain.email.usecase.SendEmailUpdateUseCase
+import com.khrix.domain.email.port.usecase.SendEmailUpdateUseCase
 
 class HandleEmailUpdateEvent(
     private val sendEmailUpdateUseCase: SendEmailUpdateUseCase,

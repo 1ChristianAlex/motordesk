@@ -6,11 +6,11 @@ import com.khrix.adapter.inbound.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.adapter.inbound.http.controllers.register.resources.dto.ClientRegisterDto
 import com.khrix.adapter.inbound.http.controllers.user.resources.mappers.toOutputDto
 import com.khrix.domain.user.model.Role
-import com.khrix.domain.user.security.TokenService
-import com.khrix.domain.user.usecase.CreateNewUserUseCase
-import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCase
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCaseCommand
+import com.khrix.domain.user.port.security.TokenService
+import com.khrix.domain.user.port.usecase.CreateNewUserUseCase
+import com.khrix.domain.user.port.usecase.CreateNewUserUseCaseCommand
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCase
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCaseCommand
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
 import io.ktor.openapi.jsonSchema

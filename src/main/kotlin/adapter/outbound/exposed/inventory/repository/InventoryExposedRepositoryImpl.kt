@@ -5,7 +5,7 @@ import com.khrix.adapter.outbound.exposed.inventory.database.InventoryEntity
 import com.khrix.adapter.outbound.exposed.inventory.database.InventoryTable
 import com.khrix.adapter.outbound.exposed.inventory.mapper.toModel
 import com.khrix.domain.inventory.model.InventoryItem
-import com.khrix.domain.inventory.repository.InventoryRepository
+import com.khrix.domain.inventory.port.repository.InventoryRepository
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.minus

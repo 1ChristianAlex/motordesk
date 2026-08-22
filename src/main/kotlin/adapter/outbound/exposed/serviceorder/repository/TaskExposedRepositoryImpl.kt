@@ -6,7 +6,7 @@ import com.khrix.adapter.outbound.exposed.serviceorder.database.TaskEntity
 import com.khrix.adapter.outbound.exposed.serviceorder.database.TaskTable
 import com.khrix.adapter.outbound.exposed.serviceorder.mapper.toModel
 import com.khrix.domain.serviceorder.task.model.Task
-import com.khrix.domain.serviceorder.task.repository.TaskRepository
+import com.khrix.domain.serviceorder.task.port.repository.TaskRepository
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.Database
 

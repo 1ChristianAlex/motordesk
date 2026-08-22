@@ -1,7 +1,7 @@
 package com.khrix.adapter.outbound.redis.event.handler
 
 import com.khrix.application.email.publisher.EmailEventKeys
-import com.khrix.domain.email.usecase.SendEmailApprovalUseCase
+import com.khrix.domain.email.port.usecase.SendEmailApprovalUseCase
 
 class HandleEmailApprovalEvent(
     private val sendEmailApprovalUseCase: SendEmailApprovalUseCase,

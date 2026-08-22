@@ -5,13 +5,13 @@ import com.khrix.application.register.usecase.CreateNewUserUseCaseImpl
 import com.khrix.application.user.usecase.GetUserUseCaseImpl
 import com.khrix.application.user.usecase.UpdateUserUseCaseImpl
 import com.khrix.application.user.usecase.VerifyIsUserDataAvailableUseCaseImpl
-import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
-import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
-import com.khrix.domain.user.usecase.CreateNewUserUseCase
-import com.khrix.domain.user.usecase.GetUserUseCase
-import com.khrix.domain.user.usecase.LoginUserUseCase
-import com.khrix.domain.user.usecase.UpdateUserUseCase
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCase
+import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCase
+import com.khrix.domain.company.port.usecase.SearchCompanyByCnpjUseCase
+import com.khrix.domain.user.port.usecase.CreateNewUserUseCase
+import com.khrix.domain.user.port.usecase.GetUserUseCase
+import com.khrix.domain.user.port.usecase.LoginUserUseCase
+import com.khrix.domain.user.port.usecase.UpdateUserUseCase
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCase
 import io.ktor.server.plugins.di.DependencyRegistry
 
 fun installUserDI(dependencies: DependencyRegistry) {

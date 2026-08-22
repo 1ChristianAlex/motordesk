@@ -1,10 +1,10 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.serviceorder.ServiceOrderDiffResolver
-import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryCommand
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryUseCase
+import com.khrix.domain.serviceorder.port.ServiceOrderDiffResolver
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderHistoryRepository
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderHistoryCommand
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderHistoryUseCase
 
 class CreateServiceOrderHistoryUseCaseImpl(
     private val serviceOrderHistoryRepository: ServiceOrderHistoryRepository,

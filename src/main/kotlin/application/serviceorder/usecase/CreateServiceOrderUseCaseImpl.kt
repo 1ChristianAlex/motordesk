@@ -2,16 +2,16 @@ package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.core.shortid.ShortId
-import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
-import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
+import com.khrix.domain.email.port.usecase.CreateEmailQueueUseCase
+import com.khrix.domain.inventory.port.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
-import com.khrix.domain.user.usecase.GetUserUseCase
-import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderUseCase
+import com.khrix.domain.serviceorder.task.port.usecase.GetTaskByListIdUseCase
+import com.khrix.domain.user.port.usecase.GetUserUseCase
+import com.khrix.domain.vehicle.port.usecase.GetVehicleByIdUseCase
 import io.ktor.server.plugins.di.annotations.Named
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async

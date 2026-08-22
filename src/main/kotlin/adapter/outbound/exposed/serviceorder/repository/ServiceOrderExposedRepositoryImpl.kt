@@ -11,7 +11,7 @@ import com.khrix.adapter.outbound.exposed.user.database.UserEntity
 import com.khrix.adapter.outbound.exposed.vehicles.database.VehicleEntity
 import com.khrix.domain.serviceorder.model.ServiceOrder
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq

@@ -2,7 +2,7 @@ package com.khrix.adapter.inbound.http.controllers.vehicles.handlers
 
 import com.khrix.adapter.inbound.http.controllers.core.BaseHTTPHandler
 import com.khrix.adapter.inbound.http.controllers.core.HttpResult
-import com.khrix.domain.vehicle.usecase.DeleteVehicleByIdUseCase
+import com.khrix.domain.vehicle.port.usecase.DeleteVehicleByIdUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
 import io.ktor.openapi.jsonSchema

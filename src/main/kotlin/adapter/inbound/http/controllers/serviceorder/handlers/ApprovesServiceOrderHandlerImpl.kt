@@ -4,7 +4,7 @@ import com.khrix.adapter.inbound.http.controllers.core.BaseHTTPHandler
 import com.khrix.adapter.inbound.http.controllers.core.HttpResult
 import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ApprovesServiceOrderInputDto
 import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.mappers.toCommand
-import com.khrix.domain.serviceorder.usecase.ApprovesServiceOrderUseCase
+import com.khrix.domain.serviceorder.port.usecase.ApprovesServiceOrderUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
 import io.ktor.openapi.jsonSchema

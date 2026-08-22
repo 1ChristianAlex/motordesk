@@ -1,9 +1,9 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.DeleteServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.DeleteServiceOrderUseCase
 
 class DeleteServiceOrderUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,

@@ -5,7 +5,7 @@ import com.khrix.adapter.inbound.http.controllers.core.HttpResult
 import com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleInputDto
 import com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto
 import com.khrix.adapter.inbound.http.controllers.vehicles.resources.mappers.toOutputDto
-import com.khrix.domain.vehicle.usecase.CreateNewVehicleUseCase
+import com.khrix.domain.vehicle.port.usecase.CreateNewVehicleUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
 import io.ktor.openapi.jsonSchema

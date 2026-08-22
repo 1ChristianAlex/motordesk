@@ -3,7 +3,7 @@ package com.khrix.adapter.outbound.redis.event
 import com.khrix.adapter.outbound.redis.connection.RedisConnection
 import com.khrix.adapter.outbound.redis.event.handler.RedisConsumerHandler
 import com.khrix.application.email.publisher.EventConsumer
-import com.khrix.domain.email.usecase.SendEmailUseCaseError
+import com.khrix.domain.email.port.usecase.SendEmailUseCaseError
 import io.lettuce.core.Consumer
 import io.lettuce.core.ExperimentalLettuceCoroutinesApi
 import io.lettuce.core.StreamMessage

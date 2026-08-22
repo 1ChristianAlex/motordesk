@@ -3,8 +3,8 @@ package com.khrix.application.register.usecase
 import com.khrix.application.user.usecase.VerifyIsUserDataAvailableUseCaseImpl
 import com.khrix.domain.user.model.Role
 import com.khrix.domain.user.model.User
-import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCaseCommand
+import com.khrix.domain.user.port.repository.UserRepository
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCaseCommand
 import com.khrix.domain.valueobject.user.CPF
 import com.khrix.domain.valueobject.user.Email
 import com.khrix.domain.valueobject.user.Name

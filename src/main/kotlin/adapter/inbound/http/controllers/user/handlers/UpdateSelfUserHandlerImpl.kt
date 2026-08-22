@@ -6,9 +6,9 @@ import com.khrix.adapter.inbound.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.adapter.inbound.http.controllers.core.exceptions.HandlerException
 import com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserInputDto
 import com.khrix.adapter.inbound.http.controllers.user.resources.mappers.toOutputDto
-import com.khrix.domain.user.security.TokenService
-import com.khrix.domain.user.usecase.GetUserUseCase
-import com.khrix.domain.user.usecase.UpdateUserUseCase
+import com.khrix.domain.user.port.security.TokenService
+import com.khrix.domain.user.port.usecase.GetUserUseCase
+import com.khrix.domain.user.port.usecase.UpdateUserUseCase
 import com.khrix.domain.valueobject.user.CPF
 import com.khrix.domain.valueobject.user.Email
 import com.khrix.domain.valueobject.user.Name

@@ -2,8 +2,8 @@ package com.khrix.application.email.usecase
 
 import com.khrix.application.core.coroutine.ApplicationScope
 import com.khrix.application.email.publisher.EventPublisher
-import com.khrix.domain.email.repository.EmailQueueRepository
-import com.khrix.domain.user.address.repository.AddressRepository
+import com.khrix.domain.email.port.repository.EmailQueueRepository
+import com.khrix.domain.user.address.port.repository.AddressRepository
 import com.khrix.testutils.sampleAddress
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery

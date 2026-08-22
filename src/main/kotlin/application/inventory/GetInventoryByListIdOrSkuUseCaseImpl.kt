@@ -2,8 +2,8 @@ package com.khrix.application.inventory
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.inventory.model.InventoryItem
-import com.khrix.domain.inventory.repository.InventoryRepository
-import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
+import com.khrix.domain.inventory.port.repository.InventoryRepository
+import com.khrix.domain.inventory.port.usecase.GetInventoryByListIdOrSkuUseCase
 
 class GetInventoryByListIdOrSkuUseCaseImpl(
     private val inventoryRepository: InventoryRepository,

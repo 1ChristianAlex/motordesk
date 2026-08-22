@@ -6,7 +6,7 @@ import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.Ser
 import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
 import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.mappers.toCommand
 import com.khrix.adapter.inbound.http.controllers.serviceorder.resources.mappers.toOutputDto
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderUseCase
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
 import io.ktor.openapi.jsonSchema

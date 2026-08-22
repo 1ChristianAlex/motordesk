@@ -8,7 +8,7 @@ import com.khrix.adapter.outbound.exposed.user.database.UserEntity
 import com.khrix.adapter.outbound.exposed.user.database.UsersTable
 import com.khrix.adapter.outbound.exposed.user.mapper.toModel
 import com.khrix.domain.user.model.User
-import com.khrix.domain.user.repository.UserRepository
+import com.khrix.domain.user.port.repository.UserRepository
 import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.domain.valueobject.user.CPF
 import com.khrix.domain.valueobject.user.Email

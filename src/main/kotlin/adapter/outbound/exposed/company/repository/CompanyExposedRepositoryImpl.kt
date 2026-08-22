@@ -6,7 +6,7 @@ import com.khrix.adapter.outbound.exposed.company.database.CompanyTable
 import com.khrix.adapter.outbound.exposed.company.mapper.toModel
 import com.khrix.adapter.outbound.exposed.user.database.UserEntity
 import com.khrix.domain.company.model.Company
-import com.khrix.domain.company.repository.CompanyRepository
+import com.khrix.domain.company.port.repository.CompanyRepository
 import com.khrix.domain.valueobject.company.CNPJ
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database

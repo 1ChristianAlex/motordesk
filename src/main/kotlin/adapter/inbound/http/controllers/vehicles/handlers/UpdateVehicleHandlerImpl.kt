@@ -3,8 +3,8 @@ package com.khrix.adapter.inbound.http.controllers.vehicles.handlers
 import com.khrix.adapter.inbound.http.controllers.core.BaseHTTPHandler
 import com.khrix.adapter.inbound.http.controllers.core.HttpResult
 import com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto
-import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
-import com.khrix.domain.vehicle.usecase.UpdateVehicleUseCase
+import com.khrix.domain.vehicle.port.usecase.GetVehicleByIdUseCase
+import com.khrix.domain.vehicle.port.usecase.UpdateVehicleUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
 import io.ktor.openapi.jsonSchema

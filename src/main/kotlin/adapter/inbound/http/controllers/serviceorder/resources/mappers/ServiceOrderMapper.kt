@@ -11,11 +11,11 @@ import com.khrix.adapter.inbound.http.controllers.user.resources.mappers.toOutpu
 import com.khrix.adapter.inbound.http.controllers.vehicles.resources.mappers.toOutputDto
 import com.khrix.domain.history.model.HistoryChanges
 import com.khrix.domain.serviceorder.model.ServiceOrder
-import com.khrix.domain.serviceorder.usecase.ApprovesServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeCommand
-import com.khrix.domain.serviceorder.usecase.ServiceOrderWithHistory
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.ApprovesServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.GetClientServiceOrdersByCodeCommand
+import com.khrix.domain.serviceorder.port.usecase.ServiceOrderWithHistory
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderCommand
 
 fun ServiceOrderInputDto.toCommand(): CreateServiceOrderCommand =
     CreateServiceOrderCommand(

@@ -13,7 +13,7 @@ import com.khrix.adapter.outbound.exposed.vehicles.database.VehicleEntity
 import com.khrix.adapter.outbound.exposed.vehicles.database.VehicleTable
 import com.khrix.domain.serviceorder.task.model.TaskCategory
 import com.khrix.domain.user.model.Role
-import com.khrix.domain.user.security.SecurityHasher
+import com.khrix.domain.user.port.security.SecurityHasher
 import com.khrix.domain.vehicle.model.FuelType
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database

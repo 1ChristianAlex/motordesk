@@ -6,8 +6,8 @@ import com.khrix.adapter.inbound.http.controllers.core.dto.AuthenticateOutputDto
 import com.khrix.adapter.inbound.http.controllers.login.resources.dto.LoginInputDto
 import com.khrix.adapter.inbound.http.controllers.user.resources.mappers.toOutputDto
 import com.khrix.domain.user.model.LoginTypes
-import com.khrix.domain.user.security.TokenService
-import com.khrix.domain.user.usecase.LoginUserUseCase
+import com.khrix.domain.user.port.security.TokenService
+import com.khrix.domain.user.port.usecase.LoginUserUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
 import io.ktor.openapi.jsonSchema

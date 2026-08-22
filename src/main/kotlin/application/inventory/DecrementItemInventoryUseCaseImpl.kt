@@ -1,9 +1,9 @@
 package com.khrix.application.inventory
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.inventory.repository.InventoryRepository
-import com.khrix.domain.inventory.usecase.DecrementItemInventoryCommand
-import com.khrix.domain.inventory.usecase.DecrementItemInventoryUseCase
+import com.khrix.domain.inventory.port.repository.InventoryRepository
+import com.khrix.domain.inventory.port.usecase.DecrementItemInventoryCommand
+import com.khrix.domain.inventory.port.usecase.DecrementItemInventoryUseCase
 
 class DecrementItemInventoryUseCaseImpl(
     private val inventoryRepository: InventoryRepository,

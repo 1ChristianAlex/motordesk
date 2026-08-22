@@ -1,9 +1,9 @@
 package com.khrix.application.user.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCase
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCaseCommand
+import com.khrix.domain.user.port.repository.UserRepository
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCase
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCaseCommand
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 

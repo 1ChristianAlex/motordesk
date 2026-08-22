@@ -3,8 +3,8 @@ package com.khrix.adapter.outbound.mongodb
 import com.khrix.adapter.outbound.mongodb.connection.MongoConnection
 import com.khrix.adapter.outbound.mongodb.registerHistory.database.RegisterHistoryDocument
 import com.khrix.adapter.outbound.mongodb.registerHistory.repository.RegisterHistoryRepositoryMongoFactory
-import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
-import com.khrix.domain.serviceorder.task.repository.TaskHistoryRepository
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderHistoryRepository
+import com.khrix.domain.serviceorder.task.port.repository.TaskHistoryRepository
 import io.ktor.events.Events
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.plugins.di.DependencyRegistry

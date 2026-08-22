@@ -4,7 +4,7 @@ import com.khrix.adapter.outbound.exposed.BaseExposedRepository
 import com.khrix.adapter.outbound.exposed.address.database.AddressEntity
 import com.khrix.adapter.outbound.exposed.address.mapper.toModel
 import com.khrix.domain.user.address.model.Address
-import com.khrix.domain.user.address.repository.AddressRepository
+import com.khrix.domain.user.address.port.repository.AddressRepository
 import org.jetbrains.exposed.v1.jdbc.Database
 
 class AddressExposedRepositoryImpl(

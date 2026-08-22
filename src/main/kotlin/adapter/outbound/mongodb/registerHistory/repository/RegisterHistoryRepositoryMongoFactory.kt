@@ -4,7 +4,7 @@ import com.khrix.adapter.outbound.mongodb.connection.MongoConnection
 import com.khrix.adapter.outbound.mongodb.registerHistory.database.RegisterHistoryDocument
 import com.khrix.adapter.outbound.mongodb.registerHistory.mapper.toModel
 import com.khrix.domain.history.model.HistoryChanges
-import com.khrix.domain.history.repository.RegisterHistoryRepository
+import com.khrix.domain.history.port.repository.RegisterHistoryRepository
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Projections
 import kotlinx.coroutines.flow.map

@@ -6,7 +6,7 @@ import com.khrix.adapter.outbound.exposed.email.database.EmailQueueTable
 import com.khrix.adapter.outbound.exposed.email.mapper.toModel
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.model.EmailStatus
-import com.khrix.domain.email.repository.EmailQueueRepository
+import com.khrix.domain.email.port.repository.EmailQueueRepository
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.plus
 import org.jetbrains.exposed.v1.jdbc.Database
