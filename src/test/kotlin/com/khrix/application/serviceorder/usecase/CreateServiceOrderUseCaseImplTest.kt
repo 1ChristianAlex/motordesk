@@ -13,8 +13,10 @@ import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -30,19 +32,6 @@ class CreateServiceOrderUseCaseImplTest {
     private val getVehicleByIdUseCase = mockk<GetVehicleByIdUseCase>()
     private val getTaskByListIdUseCase = mockk<GetTaskByListIdUseCase>()
     private val createEmailQueueUseCase = mockk<CreateEmailQueueUseCase>()
-    private val serviceOrderHistoryRepository = mockk<ServiceOrderHistoryRepository>()
-
-    private val impl =
-        CreateServiceOrderUseCaseImpl(
-            serviceOrderRepository,
-            getInventoryByListIdOrSkuUseCase,
-            getUserUseCase,
-            getVehicleByIdUseCase,
-            getTaskByListIdUseCase,
-            createEmailQueueUseCase,
-            shortId = SqIdsShortIdImpl(),
-            serviceOrderHistoryRepository = serviceOrderHistoryRepository,
-        )
 
     @BeforeTest
     fun setUp() {
@@ -57,6 +46,19 @@ class CreateServiceOrderUseCaseImplTest {
     @Test
     fun `internalExecute creates service order and enqueues email`() =
         runTest {
+            val applicationScope = CoroutineScope(StandardTestDispatcher(testScheduler))
+            val impl =
+                CreateServiceOrderUseCaseImpl(
+                    serviceOrderRepository,
+                    getInventoryByListIdOrSkuUseCase,
+                    getUserUseCase,
+                    getVehicleByIdUseCase,
+                    getTaskByListIdUseCase,
+                    createEmailQueueUseCase,
+                    shortId = SqIdsShortIdImpl(),
+                    scope = applicationScope,
+                )
+
             val sample = sampleServiceOrder()
             val command =
                 CreateServiceOrderCommand(
@@ -77,13 +79,12 @@ class CreateServiceOrderUseCaseImplTest {
             coEvery { serviceOrderRepository.createRead(any()) } returns sample
             coEvery { serviceOrderRepository.getByCode(any()) } returns null
             coEvery { createEmailQueueUseCase.execute(any()) } returns Result.success(Unit)
-            coEvery { serviceOrderHistoryRepository.create(any()) } returns 1
 
             val res = impl.execute(command)
             val created = res.getOrThrow()
+            advanceUntilIdle()
             assertEquals(sample, created)
             coVerify { serviceOrderRepository.createRead(any()) }
             coVerify { createEmailQueueUseCase.execute(any()) }
-            coVerify { serviceOrderHistoryRepository.create(any()) }
         }
 }

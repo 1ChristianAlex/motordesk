@@ -2,6 +2,7 @@ package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeCommand
 import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByCodeUseCase
+import com.khrix.domain.serviceorder.usecase.ServiceOrderWithHistory
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -18,16 +19,18 @@ class GetClientServiceOrdersByCodeUseCaseImplTest {
     fun `returns an order owned by the requesting client`() =
         runTest {
             val order = sampleServiceOrder()
-            coEvery { getByCode.execute("#code") } returns Result.success(order)
+            val withHistory = ServiceOrderWithHistory(order, emptyList())
+            coEvery { getByCode.execute("#code") } returns Result.success(withHistory)
             val command = GetClientServiceOrdersByCodeCommand("#code", order.client.id)
-            assertEquals(order, useCase.execute(command).getOrThrow())
+            assertEquals(withHistory, useCase.execute(command).getOrThrow())
         }
 
     @Test
     fun `rejects an order owned by another client`() =
         runTest {
             val order = sampleServiceOrder()
-            coEvery { getByCode.execute("#code") } returns Result.success(order)
+            val withHistory = ServiceOrderWithHistory(order, emptyList())
+            coEvery { getByCode.execute("#code") } returns Result.success(withHistory)
             val command = GetClientServiceOrdersByCodeCommand("#code", order.client.id + 1)
             assertFailsWith<UnsupportedOperationException> { useCase.execute(command).getOrThrow() }
         }

@@ -38,7 +38,7 @@ import com.khrix.infrastructure.http.controllers.vehicles.handlers.UpdateVehicle
 import com.khrix.infrastructure.http.helper.ApprovalLinkGeneratorKtorImpl
 import io.ktor.server.plugins.di.DependencyRegistry
 
-fun httpDI(dependencies: DependencyRegistry) {
+fun installHttpDI(dependencies: DependencyRegistry) {
     with(dependencies) {
         provide<ApprovalLinkGenerator>(ApprovalLinkGeneratorKtorImpl::class)
         provide<CreateNewUserHandler>(CreateNewUserHandlerImpl::class)
@@ -79,3 +79,5 @@ fun httpDI(dependencies: DependencyRegistry) {
         }
     }
 }
+
+fun httpDI(dependencies: DependencyRegistry) = installHttpDI(dependencies)

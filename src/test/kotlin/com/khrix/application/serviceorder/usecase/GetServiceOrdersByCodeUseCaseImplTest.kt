@@ -1,6 +1,7 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.usecase.GetServiceOrderHistoryUseCase
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -11,14 +12,16 @@ import kotlin.test.assertFailsWith
 
 class GetServiceOrdersByCodeUseCaseImplTest {
     private val repository = mockk<ServiceOrderRepository>()
-    private val useCase = GetServiceOrdersByCodeUseCaseImpl(repository)
+    private val getServiceOrderHistoryUseCase = mockk<GetServiceOrderHistoryUseCase>()
+    private val useCase = GetServiceOrdersByCodeUseCaseImpl(repository, getServiceOrderHistoryUseCase)
 
     @Test
     fun `returns service order found by code`() =
         runTest {
             val order = sampleServiceOrder()
+            coEvery { getServiceOrderHistoryUseCase.execute(order.id) } returns Result.success(emptyList())
             coEvery { repository.getByCode("#code") } returns order
-            assertEquals(order, useCase.execute("#code").getOrThrow())
+            assertEquals(order, useCase.execute("#code").getOrThrow().serviceOrder)
         }
 
     @Test

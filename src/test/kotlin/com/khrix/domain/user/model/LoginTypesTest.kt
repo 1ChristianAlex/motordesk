@@ -17,7 +17,7 @@ class LoginTypesTest {
 
         assertTrue(result is LoginTypes.EmailCredentials)
 
-        val credentials = result as LoginTypes.EmailCredentials
+        val credentials = result
 
         assertEquals(
             Email("john@doe.com"),
@@ -40,7 +40,7 @@ class LoginTypesTest {
 
         assertTrue(result is LoginTypes.CpfCredentials)
 
-        val credentials = result as LoginTypes.CpfCredentials
+        val credentials = result
 
         assertEquals(
             CPF("114.154.800-36"),

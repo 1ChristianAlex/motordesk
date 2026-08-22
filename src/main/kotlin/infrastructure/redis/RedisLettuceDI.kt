@@ -13,7 +13,7 @@ import io.ktor.events.Events
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.plugins.di.DependencyRegistry
 
-fun redisLettuceDi(
+fun installRedisDI(
     dependencies: DependencyRegistry,
     monitor: Events,
 ) {
