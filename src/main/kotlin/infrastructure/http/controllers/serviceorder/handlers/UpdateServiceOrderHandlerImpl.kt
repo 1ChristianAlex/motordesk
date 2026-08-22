@@ -4,7 +4,7 @@ import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByCodeUseCase
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
 import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
 import com.khrix.infrastructure.http.controllers.core.HttpResult
-import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderWithHistoryOutputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers.toCommand
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers.toOutputDto
@@ -15,9 +15,9 @@ import io.ktor.openapi.jsonSchema
 class UpdateServiceOrderHandlerImpl(
     private val updateServiceOrderUseCase: UpdateServiceOrderUseCase,
     private val getServiceOrdersByCodeUseCase: GetServiceOrdersByCodeUseCase,
-) : BaseHTTPHandler<UpdateServiceOrderInputDto, ServiceOrderOutputDto>(),
+) : BaseHTTPHandler<UpdateServiceOrderInputDto, ServiceOrderWithHistoryOutputDto>(),
     UpdateServiceOrderHandler {
-    override suspend fun handle(body: UpdateServiceOrderInputDto): HttpResult<ServiceOrderOutputDto> {
+    override suspend fun handle(body: UpdateServiceOrderInputDto): HttpResult<ServiceOrderWithHistoryOutputDto> {
         updateServiceOrderUseCase.execute(body.toCommand()).getOrThrow()
         val servicerOrder = getServiceOrdersByCodeUseCase.execute(body.code).getOrThrow()
 
@@ -33,7 +33,7 @@ class UpdateServiceOrderHandlerImpl(
         }
         configure.responses {
             HttpStatusCode.OK {
-                schema = jsonSchema<HttpResult<ServiceOrderOutputDto>>()
+                schema = jsonSchema<HttpResult<ServiceOrderWithHistoryOutputDto>>()
             }
             HttpStatusCode.BadRequest {
                 schema = jsonSchema<HttpResult<Nothing>>()

@@ -4,6 +4,7 @@ import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByCodeUseCase
 import com.khrix.infrastructure.http.controllers.core.BaseHTTPHandler
 import com.khrix.infrastructure.http.controllers.core.HttpResult
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto
+import com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderWithHistoryOutputDto
 import com.khrix.infrastructure.http.controllers.serviceorder.resources.mappers.toOutputDto
 import io.ktor.http.HttpStatusCode
 import io.ktor.openapi.Operation
@@ -11,9 +12,9 @@ import io.ktor.openapi.jsonSchema
 
 class GetServiceOrderItemHandlerImpl(
     private val getServiceOrdersByCodeUseCase: GetServiceOrdersByCodeUseCase,
-) : BaseHTTPHandler<String, ServiceOrderOutputDto>(),
+) : BaseHTTPHandler<String, ServiceOrderWithHistoryOutputDto>(),
     GetServiceOrderItemHandler {
-    override suspend fun handle(body: String): HttpResult<ServiceOrderOutputDto> {
+    override suspend fun handle(body: String): HttpResult<ServiceOrderWithHistoryOutputDto> {
         val servicerOrder =
             getServiceOrdersByCodeUseCase
                 .execute(

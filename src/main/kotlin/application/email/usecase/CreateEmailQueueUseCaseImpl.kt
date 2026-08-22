@@ -28,9 +28,7 @@ class CreateEmailQueueUseCaseImpl(
                 addressRepository.read(command.client.addressId) ?: throw NoSuchElementException("Address is null")
 
             val eventName =
-                if (command.status ==
-                    ServiceOrderStatus.CREATED
-                ) {
+                if (command.status.needApproval()) {
                     EmailEventKeys.APPROVAL_EVENT_NAME
                 } else {
                     EmailEventKeys.UPDATE_EVENT_NAME

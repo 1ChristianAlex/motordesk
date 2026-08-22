@@ -108,7 +108,7 @@ fun sampleTask(id: Int = 1): Task =
         estimatedMinutes = 30,
         price = Price(BigDecimal("100.00")),
         isActive = true,
-        category = com.khrix.domain.serviceorder.task.model.TaskCategory.GENERAL_REVIEW,
+        category = TaskCategory.GENERAL_REVIEW,
         status = TaskProgressStatus.NOT_STARTED,
     )
 
