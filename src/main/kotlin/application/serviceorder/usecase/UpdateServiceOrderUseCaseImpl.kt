@@ -5,14 +5,12 @@ import com.khrix.domain.core.shortid.ShortId
 import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
-import com.khrix.domain.serviceorder.model.ServiceOrderStatus
 import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
 import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryCommand
 import com.khrix.domain.serviceorder.usecase.CreateServiceOrderHistoryUseCase
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
 import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
-import com.khrix.domain.user.model.Role
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -58,15 +56,6 @@ class UpdateServiceOrderUseCaseImpl(
 
             if (needToSendEmail(serviceOrder, newServiceOrder)) {
                 launch { createEmailQueueUseCase.execute(newServiceOrder) }
-                launch {
-                    serviceOrderRepository.update(
-                        newServiceOrder.id,
-                        newServiceOrder.updateStatus(
-                            ServiceOrderStatus.QUEUED,
-                            Role.MANAGER,
-                        ),
-                    )
-                }
             }
 
             launch {

@@ -61,7 +61,7 @@ fun ServiceOrderEmailMetadata.generateHtmlApprovalRequestTemplate(
                                                 href = approvalWebhookUrl,
                                                 target = "_blank",
                                                 style = "display:inline-block; background-color:#18181b; color:#ffffff; text-decoration:none; padding:14px 22px; border-radius:6px; font-weight:bold; font-size:15px;",
-                                                text = "Revisar e aprovar ordem de serviço",
+                                                text = "Aprovar ordem de serviço",
                                             )
                                         }
                                     }

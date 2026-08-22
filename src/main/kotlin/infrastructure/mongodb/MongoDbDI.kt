@@ -16,10 +16,21 @@ fun appMongoDb(
     with(dependencies) {
         provide(MongoConnection::class)
         provide<ServiceOrderHistoryRepository> {
-            RegisterHistoryRepositoryMongoFactory.create(resolve(), RegisterHistoryDocument.SERVICE_ORDER_HISTORY)
+            val mongoConnection = resolve<MongoConnection>()
+            object :
+                RegisterHistoryRepositoryMongoFactory(mongoConnection, RegisterHistoryDocument.SERVICE_ORDER_HISTORY),
+                ServiceOrderHistoryRepository {
+            }
         }
         provide<TaskHistoryRepository> {
-            RegisterHistoryRepositoryMongoFactory.create(resolve(), RegisterHistoryDocument.SERVICE_ORDER_TASK_HISTORY)
+            val mongoConnection = resolve<MongoConnection>()
+            object :
+                RegisterHistoryRepositoryMongoFactory(
+                    mongoConnection,
+                    RegisterHistoryDocument.SERVICE_ORDER_TASK_HISTORY,
+                ),
+                TaskHistoryRepository {
+            }
         }
 
         monitor.subscribe(ApplicationStopping) {

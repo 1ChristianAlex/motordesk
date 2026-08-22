@@ -10,17 +10,10 @@ import com.mongodb.client.model.Projections
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 
-class RegisterHistoryRepositoryMongoFactory private constructor(
+abstract class RegisterHistoryRepositoryMongoFactory(
     private val mongoConnection: MongoConnection,
     private val collectionName: String,
 ) : RegisterHistoryRepository {
-    companion object {
-        fun <T : RegisterHistoryRepository> create(
-            mongoConnection: MongoConnection,
-            collectionName: String,
-        ): T = RegisterHistoryRepositoryMongoFactory(mongoConnection, collectionName) as T
-    }
-
     private val collection by lazy {
         mongoConnection.database
             .getCollection<RegisterHistoryDocument>(

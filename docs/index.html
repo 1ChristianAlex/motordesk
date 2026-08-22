@@ -863,24 +863,7 @@
     "totalPrice" : { },
     "diagnosis" : { },
     "tasks" : {
-      "items" : {
-        "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.TaskOutputDto",
-        "required" : [ "category", "estimatedMinutes", "id", "isActive", "name", "price", "status" ],
-        "properties" : {
-          "id" : { },
-          "name" : { },
-          "description" : { },
-          "estimatedMinutes" : { },
-          "price" : { },
-          "isActive" : { },
-          "category" : {
-            "enum" : [ "ENGINE", "SUSPENSION", "BRAKES", "ELECTRICAL", "ALIGNMENT", "AIR_CONDITIONING", "DIAGNOSTIC", "GENERAL_REVIEW" ]
-          },
-          "status" : {
-            "enum" : [ "NOT_STARTED", "IN_PROGRESS", "COMPLETE" ]
-          }
-        }
-      }
+      "$ref" : "#/components/schemas/kotlin.collections.ArrayList"
     },
     "inventoryItems" : {
       "items" : {
@@ -901,6 +884,135 @@
             }
           },
           "isActive" : { }
+        }
+      }
+    }
+  }
+};
+            defs["ServiceOrderWithHistoryOutputDto"] = {
+  "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderWithHistoryOutputDto",
+  "required" : [ "history", "serviceOrder" ],
+  "properties" : {
+    "serviceOrder" : {
+      "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
+      "required" : [ "client", "code", "complaint", "expectedMinutes", "id", "operator", "status", "tasks", "totalPrice", "vehicle" ],
+      "properties" : {
+        "id" : { },
+        "client" : {
+          "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto",
+          "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
+          "properties" : {
+            "id" : { },
+            "addressId" : { },
+            "companyId" : { },
+            "firstName" : { },
+            "lastName" : { },
+            "email" : { },
+            "phone" : { },
+            "cpf" : { },
+            "isActive" : { },
+            "createdAt" : { },
+            "updatedAt" : { }
+          }
+        },
+        "operator" : {
+          "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto",
+          "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
+          "properties" : {
+            "id" : { },
+            "addressId" : { },
+            "companyId" : { },
+            "firstName" : { },
+            "lastName" : { },
+            "email" : { },
+            "phone" : { },
+            "cpf" : { },
+            "isActive" : { },
+            "createdAt" : { },
+            "updatedAt" : { }
+          }
+        },
+        "vehicle" : {
+          "title" : "com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto",
+          "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
+          "properties" : {
+            "id" : { },
+            "userId" : { },
+            "plate" : { },
+            "brand" : { },
+            "model" : { },
+            "color" : { },
+            "year" : { },
+            "mileage" : { },
+            "chassis" : { },
+            "fuelType" : {
+              "enum" : [ "GASOLINE", "ETHANOL", "FLEX", "DIESEL", "ELECTRIC", "HYBRID" ]
+            },
+            "createdAt" : { },
+            "updatedAt" : { }
+          }
+        },
+        "status" : {
+          "enum" : [ "CREATED", "QUEUED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
+        },
+        "complaint" : { },
+        "code" : { },
+        "expectedMinutes" : { },
+        "totalPrice" : { },
+        "diagnosis" : { },
+        "tasks" : {
+          "items" : {
+            "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.TaskOutputDto",
+            "required" : [ "category", "estimatedMinutes", "id", "isActive", "name", "price", "status" ],
+            "properties" : {
+              "id" : { },
+              "name" : { },
+              "description" : { },
+              "estimatedMinutes" : { },
+              "price" : { },
+              "isActive" : { },
+              "category" : {
+                "enum" : [ "ENGINE", "SUSPENSION", "BRAKES", "ELECTRICAL", "ALIGNMENT", "AIR_CONDITIONING", "DIAGNOSTIC", "GENERAL_REVIEW" ]
+              },
+              "status" : {
+                "enum" : [ "NOT_STARTED", "IN_PROGRESS", "COMPLETE" ]
+              }
+            }
+          }
+        },
+        "inventoryItems" : {
+          "items" : {
+            "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
+            "required" : [ "id", "isActive", "minimumQuantity", "name", "quantity", "sku", "unitPrice" ],
+            "properties" : {
+              "id" : { },
+              "sku" : { },
+              "name" : { },
+              "description" : { },
+              "quantity" : { },
+              "minimumQuantity" : { },
+              "unitPrice" : {
+                "title" : "com.khrix.domain.valueobject.Price",
+                "required" : [ "value" ],
+                "properties" : {
+                  "value" : { }
+                }
+              },
+              "isActive" : { }
+            }
+          }
+        }
+      }
+    },
+    "history" : {
+      "items" : {
+        "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.HistoryChangesDto",
+        "required" : [ "changedAt", "changes" ],
+        "properties" : {
+          "changedAt" : { },
+          "changes" : {
+            "additionalProperties" : { }
+          }
         }
       }
     }
@@ -1965,7 +2077,7 @@ except ApiException as e:
         "properties" : {
           "data" : {
             "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderOutputDto"
+              "$ref" : "#/components/schemas/ServiceOrderWithHistoryOutputDto"
             }, { } ]
           },
           "status" : { },
@@ -4290,7 +4402,7 @@ except ApiException as e:
         "properties" : {
           "data" : {
             "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderOutputDto"
+              "$ref" : "#/components/schemas/ServiceOrderWithHistoryOutputDto"
             }, { } ]
           },
           "status" : { },

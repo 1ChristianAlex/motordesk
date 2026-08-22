@@ -12,7 +12,7 @@ http:
     type: json
     data: |-
       {
-        "userName": "gamamik261@hutdot.com",
+        "userName": "sehem32096@bocably.com",
         "password": "test@123!"
       }
   auth: inherit
