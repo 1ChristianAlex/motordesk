@@ -54,6 +54,7 @@ src/main/kotlin
 - [ADR-002 - Redis Streams](docs/ADR/ADR-002-Redis-Streams.md)
 - [ADR-003 - MongoDB Service Order History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
 - [ADR-004 - Azure Communication Services Email](docs/ADR/ADR-004-Azure-Communication-Services-Email.md)
+- [ADR-005 - Migrating to Hexagonal Architecture](docs/ADR/ADR-005-Migrating-to-Hexagonal-Architecture.md)
 - [Send Email Sequence](docs/diagrams/send-email-sequence.md)
 - [Email Sending with Azure](docs/diagrams/email-sending-azure.md)
 - [Technical Debt - Serializable in Domain](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
