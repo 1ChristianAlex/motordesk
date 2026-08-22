@@ -40,7 +40,7 @@ sonar {
             "sonar.coverage.jacoco.xmlReportPaths",
             "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml",
         )
-        property("sonar.exclusions", "**/infrastructure/**, **/*Dto.kt, **/config/*")
+        property("sonar.exclusions", "**/adapter/**, **/*Dto.kt, **/config/*")
     }
 }
 

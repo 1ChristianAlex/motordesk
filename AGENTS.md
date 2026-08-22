@@ -201,9 +201,9 @@ Application
 Domain
 ```
 
-The domain must not depend on adapter implementations.
+The domain must not depend on infrastructure implementations.
 
-Avoid importing adapter concerns into:
+Avoid importing infrastructure concerns into:
 
 - domain models;
 - domain ports;
@@ -219,10 +219,10 @@ The `domain/` layer should contain:
 - domain-level ports/interfaces;
 - abstractions required by the business.
 
-Keep adapter-specific implementations outside this layer.
+Keep infrastructure-specific implementations outside this layer.
 
 For example, an abstraction such as an email sender may belong to the domain/application boundary while the Azure
-Communication Services implementation belongs to adapter.
+Communication Services implementation belongs to infrastructure.
 
 ### 4.3 Application
 
@@ -232,7 +232,7 @@ Use cases should:
 
 - orchestrate domain behavior;
 - coordinate ports;
-- avoid direct dependency on adapter implementations;
+ - avoid direct dependency on infrastructure implementations;
 - avoid containing HTTP-specific concerns;
 - avoid containing provider-specific SDK code.
 
@@ -345,7 +345,7 @@ Prefer a structure similar to:
 Domain/Application
     EmailSender
         ↓
-Infrastructure
+Adapter
     AzureEmailSender
         ↓
     EmailAsyncClient
@@ -491,15 +491,15 @@ When modifying an endpoint, verify:
 
 Follow the existing DI composition instead of creating ad-hoc global instances.
 
-The application bootstrap currently composes adapter and application dependencies before configuring HTTP.
+The application bootstrap currently composes infrastructure and application dependencies before configuring HTTP.
 
 When adding a new adapter:
 
 1. define the appropriate abstraction;
-2. implement the adapter in adapter;
+2. implement the adapter in infrastructure;
 3. register it in the existing DI mechanism;
 4. inject the abstraction into the consumer;
-5. avoid constructing adapter dependencies inside use cases.
+5. avoid constructing infrastructure dependencies inside use cases.
 
 ---
 
@@ -535,7 +535,7 @@ integration test.
 
 ## 14. Local Development
 
-The project uses Docker Compose for local adapter.
+The project uses Docker Compose for local infrastructure.
 
 Typical startup:
 
@@ -704,7 +704,7 @@ A change is considered complete when applicable:
 
 - [ ] The implementation follows the existing architecture.
 - [ ] Domain terminology follows the Ubiquitous Language.
-- [ ] Infrastructure dependencies remain behind appropriate boundaries.
+- [ ] Adapter dependencies remain behind appropriate boundaries.
 - [ ] Tests are added or updated.
 - [ ] `./gradlew test` passes.
 - [ ] `./gradlew build` passes when appropriate.

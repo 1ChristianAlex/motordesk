@@ -115,7 +115,7 @@ This decision aligns with:
 
 - Separation of transactional and audit workloads
 - Domain-Driven Design
-- Layered Architecture
+- Hexagonal Architecture
 - Repository single responsibility
 - Flexible document storage
 - Preservation of historical data without affecting transactional performance

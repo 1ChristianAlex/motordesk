@@ -8,8 +8,8 @@ Opened (Technical Debt)
 
 ## Context
 
-The project follows **Domain-Driven Design (DDD)** and a layered architecture, where the **Domain** layer should remain
-independent of adapter and framework-specific concerns.
+The project follows **Domain-Driven Design (DDD)** and a hexagonal architecture, where the **Domain** layer should remain
+independent of infrastructure and framework-specific concerns.
 
 During the implementation of the Service Order history, domain models needed to be serialized for persistence in MongoDB
 and for message exchange through Redis Streams.
@@ -26,7 +26,7 @@ Although this approach reduced development effort, it introduced an unwanted dep
 
 The Domain layer is now aware of a serialization technology.
 
-This creates a violation of the Dependency Rule, since business entities should not depend on adapter concerns.
+This creates a violation of the Dependency Rule, since business entities should not depend on infrastructure concerns.
 
 Consequences include:
 
@@ -50,7 +50,7 @@ The issue is recognized as **technical debt** and should be addressed in a futur
 
 ## Proposed Solution
 
-Serialization concerns should be moved to the Infrastructure layer.
+Serialization concerns should be moved to the infrastructure layer.
 
 Instead of serializing domain entities directly, dedicated persistence models (Documents) and message models
 (Events/DTOs) should be introduced.
@@ -86,7 +86,7 @@ However, these drawbacks are considered acceptable in exchange for a cleaner arc
 ## Migration Plan
 
 1. Remove `@Serializable` from all Domain classes.
-2. Implement mappers between Domain and Infrastructure models.
+2. Implement mappers between Domain and infrastructure models.
 3. Update repositories and publishers to use the new models.
 4. Remove the dependency on Kotlin Serialization from the Domain module.
 
@@ -113,4 +113,4 @@ when architectural improvements become a priority over feature development.
 
 * Cleaner architecture.
 * Better maintainability.
-* Lower coupling between business rules and adapter.
+* Lower coupling between business rules and infrastructure.

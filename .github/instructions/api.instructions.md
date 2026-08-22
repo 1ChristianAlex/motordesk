@@ -10,7 +10,7 @@ Review HTTP/API changes for contract stability, security, and architectural boun
 
 ```mermaid
 flowchart TB
-    HTTPRequest[HTTP Request] --> RequestDTO[Request DTO] --> UseCase --> Domain --> Port --> Infrastructure
+    HTTPRequest[HTTP Request] --> RequestDTO[Request DTO] --> UseCase --> Domain --> Port --> Adapter
 ```
 
 Do not put SQL, Redis commands, Azure SDK calls, or complex business rules inside route handlers.

@@ -31,7 +31,7 @@ Respect:
 
 ```mermaid
 flowchart TB
-    Infrastructure --> Application --> Domain
+    Adapter --> Application --> Domain
 ```
 
 The domain must not depend on Ktor, Exposed, Redis/Lettuce, MongoDB drivers, Azure SDKs, HTTP clients, or adapter

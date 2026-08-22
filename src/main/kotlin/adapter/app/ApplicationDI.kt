@@ -18,7 +18,7 @@ private fun getLazyInfraCredentials(isDevelopment: Boolean): InfraConfig {
     return result
 }
 
-fun Application.installInfrastructureDI() {
+fun Application.installAdapterDI() {
     val isDevelopment = developmentMode
 
     dependencies {
@@ -29,9 +29,9 @@ fun Application.installInfrastructureDI() {
 
     dependencies {
         provide<Application>("ktorApplication") {
-            this@installInfrastructureDI
+            this@installAdapterDI
         }
-        provide("infraScope") {
+        provide("adapterScope") {
             scope
         }
         provide<InfraConfig> {

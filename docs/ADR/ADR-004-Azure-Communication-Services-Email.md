@@ -228,7 +228,7 @@ Decision: accepted.
 - real email delivery adapter;
 - less operational effort than managing SMTP;
 - use of Azure resources available in the academic context;
-- provider isolation in the adapter layer;
+- provider isolation in the infrastructure layer;
 - ability to replace the provider without changing business rules;
 - natural fit with the existing asynchronous processing model based on Redis Streams;
 - decoupling from synchronous HTTP requests.

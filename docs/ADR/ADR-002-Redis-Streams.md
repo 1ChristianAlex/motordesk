@@ -153,7 +153,7 @@ flowchart TB
 
 This decision follows:
 
-- Layered Architecture
+- Hexagonal Architecture
 - Domain-Driven Design (DDD)
 - Single Responsibility Principle
 - Event-Driven Architecture

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 
 class EventConsumerBootstrap(
     private val eventConsumer: EventConsumer,
-    @Named("infraScope") private val applicationScope: CoroutineScope,
+    @Named("adapterScope") private val applicationScope: CoroutineScope,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 

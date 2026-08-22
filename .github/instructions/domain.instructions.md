@@ -39,7 +39,7 @@ Prioritize:
 
 1. Broken domain invariants.
 2. Wrong domain terminology.
-3. Infrastructure leakage.
+3. Adapter leakage.
 4. Unnecessary framework coupling.
 5. Incorrect aggregate behavior.
 6. Missing tests for business rules.
