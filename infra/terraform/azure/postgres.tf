@@ -59,7 +59,7 @@ resource "azurerm_postgresql_flexible_server_database" "motordesk" {
   collation = "en_US.utf8"
 }
 
-resource "azurerm_postgresql_flexible_server_firewall_rule" "dev_client" {
+resource "azurerm_postgresql_flexible_server_firewall_rule" "dev_postgres_firewall" {
   count            = var.environment == "prod" ? 0 : 1
   name             = "postgres-${var.environment}-${var.project_name}-dev-client"
   server_id        = azurerm_postgresql_flexible_server.pg_db.id

@@ -12,7 +12,7 @@ resource "azurerm_mongo_cluster" "mongo" {
   version                = "8.0"
 }
 
-resource "azurerm_mongo_cluster_firewall_rule" "example" {
+resource "azurerm_mongo_cluster_firewall_rule" "dev_mongo_firewall" {
   count = var.environment == "prod" ? 0 : 1
   name  = "mongo-${var.environment}-${var.project_name}-dev-client"
 
