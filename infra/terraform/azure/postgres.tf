@@ -1,5 +1,6 @@
 
 resource "azurerm_subnet" "subnet_db" {
+  count                = var.environment == "prod" ? 1 : 0
   name                 = "${var.environment}-${var.project_name}-subnet-db"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.network.name
@@ -14,24 +15,21 @@ resource "azurerm_subnet" "subnet_db" {
       ]
     }
   }
-  depends_on = [azurerm_resource_group.rg, azurerm_virtual_network.network]
 }
 
 resource "azurerm_private_dns_zone" "dns_zone_db" {
+  count               = var.environment == "prod" ? 1 : 0
   name                = "${var.environment}-${var.project_name}.postgres.database.azure.com"
   resource_group_name = azurerm_resource_group.rg.name
   tags                = var.tags
-
-  depends_on = [azurerm_resource_group.rg]
-
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_virtual_network_link_db" {
+  count               = var.environment == "prod" ? 1 : 0
   name                = "${var.environment}-${var.project_name}VnetZone.com"
-  private_dns_zone_id = azurerm_private_dns_zone.dns_zone_db.id
+  private_dns_zone_id = azurerm_private_dns_zone.dns_zone_db[0].id
   tags                = var.tags
   virtual_network_id  = azurerm_virtual_network.network.id
-  depends_on          = [azurerm_subnet.subnet_db]
 }
 
 resource "azurerm_postgresql_flexible_server" "pg_db" {
@@ -39,9 +37,9 @@ resource "azurerm_postgresql_flexible_server" "pg_db" {
   resource_group_name           = azurerm_resource_group.rg.name
   location                      = azurerm_resource_group.rg.location
   version                       = var.postgres_version
-  delegated_subnet_id           = azurerm_subnet.subnet_db.id
-  private_dns_zone_id           = azurerm_private_dns_zone.dns_zone_db.id
-  public_network_access_enabled = true
+  delegated_subnet_id           = var.environment == "prod" ? azurerm_subnet.subnet_db[0].id : null
+  private_dns_zone_id           = var.environment == "prod" ? azurerm_private_dns_zone.dns_zone_db[0].id : null
+  public_network_access_enabled = var.environment != "prod"
   administrator_login           = var.postgres_admin_username
   administrator_password        = var.postgres_admin_password
   zone                          = "1"
@@ -50,9 +48,8 @@ resource "azurerm_postgresql_flexible_server" "pg_db" {
   storage_mb   = 32768
   storage_tier = "P4"
 
-  sku_name   = "B_Standard_B1ms"
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_zone_virtual_network_link_db]
-  tags       = var.tags
+  sku_name = "B_Standard_B1ms"
+  tags     = var.tags
 }
 
 resource "azurerm_postgresql_flexible_server_database" "motordesk" {
@@ -60,4 +57,12 @@ resource "azurerm_postgresql_flexible_server_database" "motordesk" {
   server_id = azurerm_postgresql_flexible_server.pg_db.id
   charset   = "UTF8"
   collation = "en_US.utf8"
+}
+
+resource "azurerm_postgresql_flexible_server_firewall_rule" "dev_client" {
+  count            = var.environment == "prod" ? 0 : 1
+  name             = "postgres-${var.environment}-${var.project_name}-dev-client"
+  server_id        = azurerm_postgresql_flexible_server.pg_db.id
+  start_ip_address = var.dev_client_ip
+  end_ip_address   = var.dev_client_ip
 }

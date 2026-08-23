@@ -13,7 +13,7 @@ variable "project_name" {
 variable "environment" {
   description = "Deployment environment."
   type        = string
-  default     = "dev-test"
+  default     = "dev"
 }
 
 variable "postgres_version" {
@@ -31,6 +31,20 @@ variable "postgres_admin_username" {
 
 variable "postgres_admin_password" {
   description = "PostgreSQL administrator password."
+  type        = string
+  sensitive   = true
+  default     = "5@K{9/)t=#)9"
+}
+
+variable "mongo_admin_username" {
+  description = "Mongo administrator username."
+  type        = string
+  sensitive   = true
+  default     = "psqladmin"
+}
+
+variable "mongo_admin_password" {
+  description = "Mongo administrator password."
   type        = string
   sensitive   = true
   default     = "5@K{9/)t=#)9"
@@ -61,3 +75,10 @@ variable "no_replay_username" {
   type    = string
   default = "noreplay-sys-email"
 }
+
+variable "dev_client_ip" {
+  description = "Public IP address allowed to connect to the dev PostgreSQL server."
+  type        = string
+  default     = "0.0.0.0"
+}
+
