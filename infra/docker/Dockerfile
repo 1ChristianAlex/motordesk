@@ -7,11 +7,11 @@ FROM gradle:9.6.0-jdk21 AS builder
 
 WORKDIR /home/gradle/project
 
-COPY gradle gradle
-COPY gradlew .
-COPY settings.gradle.kts .
-COPY build.gradle.kts .
-COPY gradle/libs.versions.toml gradle/libs.versions.toml
+COPY ../../gradle gradle
+COPY ../../gradlew .
+COPY ../../settings.gradle.kts .
+COPY ../../build.gradle.kts .
+COPY ../../gradle/libs.versions.toml gradle/libs.versions.toml
 
 RUN chmod +x gradlew
 
@@ -19,7 +19,7 @@ RUN chmod +x gradlew
 RUN ./gradlew dependencies --no-daemon
 
 # Código da aplicação
-COPY . .
+COPY ../.. .
 
 # Gera a distribuição da aplicação
 RUN ./gradlew installDist --no-daemon
