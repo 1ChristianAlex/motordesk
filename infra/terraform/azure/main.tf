@@ -22,11 +22,19 @@ provider "azapi" {
   skip_provider_registration = false
 }
 
+data "azurerm_client_config" "client_config" {}
+
 # Create a resource group
 resource "azurerm_resource_group" "rg" {
   name     = "terraform-${var.environment}-${var.project_name}"
   location = var.infra_location
   tags     = var.tags
+}
+
+resource "azurerm_role_assignment" "current_user" {
+  scope                = azurerm_resource_group.rg.id
+  role_definition_name = "Terraform Integration"
+  principal_id         = data.azurerm_client_config.client_config.object_id
 }
 
 # Create a virtual network within the resource group

@@ -23,7 +23,7 @@ resource "azurerm_redis_firewall_rule" "dev_redis_firewall" {
   resource_group_name = azurerm_resource_group.rg.name
 
   count = var.environment == "prod" ? 0 : 1
-  name  = "redis-${var.environment}-${var.project_name}-dev-client"
+  name  = "redis_${var.environment}_${var.project_name}_dev_client"
 
   start_ip = var.dev_client_ip
   end_ip   = var.dev_client_ip

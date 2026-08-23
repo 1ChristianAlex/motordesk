@@ -8,18 +8,6 @@ services:
       sql-database: { condition: service_healthy }
       mongodb: { condition: service_started }
       redis: { condition: service_healthy }
-    environment:
-      DATABASE_URL: jdbc:postgresql://sql-database:5432/motordesk
-      DATABASE_USER: motordesk
-      DATABASE_PASSWORD: motordesk_pass
-      DATABASE_DRIVER: org.postgresql.Driver
-      MONGO_URL: mongodb://mongodb:27017
-      MONGO_USER: motordesk
-      MONGO_PASSWORD: motordesk_pass
-      MONGO_DATABASE: motordesk
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: motordesk_pass
 
     networks: [ backend,frontend ]
 

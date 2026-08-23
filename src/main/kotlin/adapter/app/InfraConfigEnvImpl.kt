@@ -1,5 +1,7 @@
 package com.khrix.adapter.app
 
+import io.ktor.http.URLProtocol
+
 class InfraConfigEnvImpl : InfraConfig {
     private fun requireEnv(name: String): String =
         System.getenv(name)
@@ -26,10 +28,28 @@ class InfraConfigEnvImpl : InfraConfig {
             user = requireEnv("DATABASE_USER"),
             password = requireEnv("DATABASE_PASSWORD"),
         )
-    override val azureConfig: AzureConfig
-        get() = TODO("Not yet implemented")
-    override val jwtConfig: JwtConfig
-        get() = TODO("Not yet implemented")
-    override val serverConfig: ServerConfig
-        get() = TODO("Not yet implemented")
+    override val azureConfig by lazy {
+        AzureConfig(
+            accessKey = requireEnv("AZURE_COMMUNICATION_ACCESS_KEY"),
+            communicationEndpoint = requireEnv("AZURE_COMMUNICATION_ENDPOINT"),
+        )
+    }
+    override val jwtConfig: JwtConfig by lazy {
+        JwtConfig(
+            issuer = requireEnv("JWT_ISSUER"),
+            audience = requireEnv("JWT_AUDIENCE"),
+            realm = requireEnv("JWT_REALM"),
+            secret = requireEnv("JWT_SECRET"),
+        )
+    }
+    override val serverConfig by lazy {
+        ServerConfig(
+            host = requireEnv("HTTP_HOST"),
+            port = requireEnv("HTTP_PORT").toInt(),
+            protocol =
+                requireEnv("HTTP_PROTOCOL").let {
+                    URLProtocol.createOrDefault(it)
+                },
+        )
+    }
 }

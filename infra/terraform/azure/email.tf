@@ -1,3 +1,19 @@
+resource "azapi_resource" "communicationService" {
+  type      = "Microsoft.Communication/communicationServices@2026-03-18"
+  parent_id = azurerm_resource_group.rg.id
+  name      = var.resource_name_email
+  tags      = var.tags
+  location  = "global"
+  body = {
+    properties = {
+      dataLocation = "United States"
+    }
+  }
+  schema_validation_enabled = false
+  response_export_values    = ["*"]
+  depends_on                = [azurerm_resource_group.rg]
+}
+
 resource "azapi_resource" "emailService" {
   type      = "Microsoft.Communication/emailServices@2026-03-18"
   parent_id = azurerm_resource_group.rg.id
@@ -8,9 +24,10 @@ resource "azapi_resource" "emailService" {
       dataLocation = "United States"
     }
   }
+  tags                      = var.tags
   schema_validation_enabled = false
   response_export_values    = ["*"]
-  depends_on                = [azurerm_resource_group.rg]
+  depends_on                = [azapi_resource.communicationService]
 }
 
 resource "azapi_resource" "email_domain" {
