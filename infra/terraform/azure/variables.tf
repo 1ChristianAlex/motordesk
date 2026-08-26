@@ -13,7 +13,7 @@ variable "project_name" {
 variable "environment" {
   description = "Deployment environment."
   type        = string
-  default     = "dev"
+  default     = "development"
 }
 
 variable "postgres_version" {
@@ -40,7 +40,7 @@ variable "mongo_admin_username" {
   description = "Mongo administrator username."
   type        = string
   sensitive   = true
-  default     = "psqladmin"
+  default     = "mongoadmin"
 }
 
 variable "mongo_admin_password" {

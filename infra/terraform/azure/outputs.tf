@@ -1,69 +1,3 @@
-output "postgres_host" {
-  description = "PostgreSQL Flexible Server hostname."
-  value       = azurerm_postgresql_flexible_server.pg_db.fqdn
-}
-
-output "postgres_url" {
-  description = "JDBC URL for PostgreSQL."
-  value       = "jdbc:postgresql://${azurerm_postgresql_flexible_server.pg_db.fqdn}:5432/${var.postgres_database_name}"
-}
-
-output "postgres_user" {
-  description = "PostgreSQL administrator username."
-  value       = var.postgres_admin_username
-  sensitive   = true
-}
-
-output "postgres_password" {
-  description = "PostgreSQL administrator password."
-  value       = var.postgres_admin_password
-  sensitive   = true
-}
-
-output "postgres_driver" {
-  description = "PostgreSQL JDBC driver class."
-  value       = "org.postgresql.Driver"
-}
-
-output "mongo_connection_string" {
-  description = "Mongo cluster connection string."
-  value       = azurerm_mongo_cluster.mongo.connection_strings[0].value
-  sensitive   = true
-}
-
-output "mongo_database" {
-  description = "Mongo database name."
-  value       = var.postgres_database_name
-}
-
-output "mongo_user" {
-  description = "Mongo administrator username."
-  value       = var.mongo_admin_username
-  sensitive   = true
-}
-
-output "mongo_password" {
-  description = "Mongo administrator password."
-  value       = var.mongo_admin_password
-  sensitive   = true
-}
-
-output "redis_host" {
-  description = "Redis cache hostname."
-  value       = azurerm_redis_cache.redis.hostname
-}
-
-output "redis_port" {
-  description = "Redis TLS port."
-  value       = 6380
-}
-
-output "redis_password" {
-  description = "Redis cache primary access key."
-  value       = azurerm_redis_cache.redis.primary_access_key
-  sensitive   = true
-}
-
 output "acr_login_server" {
   description = "Azure Container Registry login server."
   value       = azurerm_container_registry.acr.login_server
@@ -74,7 +8,104 @@ output "acr_id" {
   value       = azurerm_container_registry.acr.id
 }
 
-output "access_key" {
-  description = "Azure user access key"
-  value = azurerm_role_assignment.current_user.condition
+resource "azurerm_key_vault_secret" "database_url" {
+  name         = "databaseUrl"
+  value        = "jdbc:postgresql://${azurerm_postgresql_flexible_server.pg_db.fqdn}:5432/${var.postgres_database_name}"
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "database_user" {
+  name         = "databaseUser"
+  value        = var.postgres_admin_username
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "database_password" {
+  name         = "databasePassword"
+  value        = var.postgres_admin_password
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "database_driver" {
+  name         = "databaseDriver"
+  value        = "org.postgresql.Driver"
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "mongo_url" {
+  name         = "mongoUrl"
+  value        = azurerm_mongo_cluster.mongo.connection_strings[0].value
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "mongo_user" {
+  name         = "mongoUser"
+  value        = var.mongo_admin_username
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "mongo_password" {
+  name         = "mongoPassword"
+  value        = var.mongo_admin_password
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "mongo_database" {
+  name         = "mongoDatabase"
+  value        = var.postgres_database_name
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "redis_host" {
+  name         = "redisHost"
+  value        = azurerm_redis_cache.redis.hostname
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "redis_port" {
+  name         = "redisPort"
+  value        = 6380
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "redis_password" {
+  name         = "redisPassword"
+  value        = azurerm_redis_cache.redis.primary_access_key
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "azure_communication_access_key" {
+  name         = "azureCommunicationAccessKey"
+  value        = jsondecode(azapi_resource.communicationService.output).properties.api
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "azure_communication_endpoint" {
+  name         = "azureCommunicationEndpoint"
+  value        = jsondecode(azapi_resource.communicationService.output).properties.hostName
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "jwt_issuer" {
+  name         = "jwtIssuer"
+  value        = "ktor-api"
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "jwt_audience" {
+  name         = "jwtAudience"
+  value        = "ktor-users"
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "jwt_realm" {
+  name         = "jwtRealm"
+  value        = "ktor-app"
+  key_vault_id = azurerm_key_vault.key_vault_app.id
+}
+
+resource "azurerm_key_vault_secret" "jwt_secret" {
+  name         = "jwtSecret"
+  value        = "super-secret-key"
+  key_vault_id = azurerm_key_vault.key_vault_app.id
 }

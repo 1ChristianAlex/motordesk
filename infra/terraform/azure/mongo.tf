@@ -4,7 +4,7 @@ resource "azurerm_mongo_cluster" "mongo" {
   location            = azurerm_resource_group.rg.location
 
   administrator_username = var.mongo_admin_username
-  administrator_password = var.mongo_admin_username
+  administrator_password = var.mongo_admin_password
   compute_tier           = "Free"
   high_availability_mode = "Disabled"
   shard_count            = "1"
