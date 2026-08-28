@@ -20,4 +20,3 @@ resource "azurerm_mongo_cluster_firewall_rule" "dev_mongo_firewall" {
   start_ip_address = var.dev_client_ip
   end_ip_address   = var.dev_client_ip
 }
-

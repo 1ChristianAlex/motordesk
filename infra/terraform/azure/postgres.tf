@@ -15,6 +15,9 @@ resource "azurerm_subnet" "subnet_db" {
       ]
     }
   }
+
+  depends_on = [azurerm_resource_group.rg]
+
 }
 
 resource "azurerm_private_dns_zone" "dns_zone_db" {
@@ -50,6 +53,12 @@ resource "azurerm_postgresql_flexible_server" "pg_db" {
 
   sku_name = "B_Standard_B1ms"
   tags     = var.tags
+
+  depends_on = [
+    azurerm_resource_group.rg,
+    azurerm_subnet.subnet_db,
+    azurerm_private_dns_zone.dns_zone_db
+  ]
 }
 
 resource "azurerm_postgresql_flexible_server_database" "motordesk" {
@@ -65,4 +74,12 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "dev_postgres_firewa
   server_id        = azurerm_postgresql_flexible_server.pg_db.id
   start_ip_address = var.dev_client_ip
   end_ip_address   = var.dev_client_ip
+}
+
+
+data "azurerm_postgresql_flexible_server" "data_pg" {
+  name                = azurerm_postgresql_flexible_server.pg_db.name
+  resource_group_name = azurerm_postgresql_flexible_server.pg_db.resource_group_name
+
+  depends_on = [azurerm_postgresql_flexible_server.pg_db]
 }

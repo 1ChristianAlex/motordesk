@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~>5.0"
+      version = "5.3.0"
     }
     azapi = {
       source  = "Azure/azapi"
@@ -20,6 +20,11 @@ provider "azurerm" {
       purge_soft_deleted_secrets_on_destroy = true
       recover_soft_deleted_secrets          = true
     }
+
+    app_configuration {
+      purge_soft_delete_on_destroy = true
+      recover_soft_deleted         = true
+    }
   }
 }
 
@@ -27,10 +32,34 @@ provider "azapi" {
   skip_provider_registration = false
 }
 
-data "azurerm_client_config" "client_config" {}
+data "azurerm_client_config" "client_config" {
+
+}
+
+
+# Create a resource group
+resource "azurerm_resource_group" "rg" {
+  name     = "terraform-${var.environment}-${var.project_name}"
+  location = var.infra_location
+  tags     = var.tags
+}
+
+resource "azurerm_app_configuration" "app_conf" {
+  name                       = "appConf-${var.environment}-${var.project_name}"
+  location                   = azurerm_resource_group.rg.location
+  resource_group_name        = azurerm_resource_group.rg.name
+
+  depends_on = [ azurerm_resource_group.rg ]
+}
+
+resource "azurerm_role_assignment" "appconf_dataowner" {
+  scope                = azurerm_app_configuration.app_conf.id
+  role_definition_name = "App Configuration Data Owner"
+  principal_id         = data.azurerm_client_config.client_config.object_id
+}
 
 resource "azurerm_key_vault" "key_vault_app" {
-  name                       = "kv${var.environment}${var.project_name}"
+  name                       = "kv${var.environment}-${var.project_name}"
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
   rbac_authorization_enabled = false
@@ -66,12 +95,7 @@ resource "azurerm_key_vault" "key_vault_app" {
   }
 }
 
-# Create a resource group
-resource "azurerm_resource_group" "rg" {
-  name     = "terraform-${var.environment}-${var.project_name}"
-  location = var.infra_location
-  tags     = var.tags
-}
+
 
 # Create a virtual network within the resource group
 resource "azurerm_virtual_network" "network" {
