@@ -10,9 +10,15 @@ terraform {
       source  = "Azure/azapi"
       version = "2.12.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.9.0"
+    }
   }
 }
-
+provider "random" {
+  # Configuration options
+}
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
   features {
@@ -45,11 +51,11 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_app_configuration" "app_conf" {
-  name                       = "appConf-${var.environment}-${var.project_name}"
-  location                   = azurerm_resource_group.rg.location
-  resource_group_name        = azurerm_resource_group.rg.name
+  name                = "appConf-${var.environment}-${var.project_name}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
 
-  depends_on = [ azurerm_resource_group.rg ]
+  depends_on = [azurerm_resource_group.rg]
 }
 
 resource "azurerm_role_assignment" "appconf_dataowner" {

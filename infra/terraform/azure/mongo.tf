@@ -1,10 +1,15 @@
+resource "random_password" "mongo_admin_password" {
+  length  = 16
+  special = true
+}
+
 resource "azurerm_mongo_cluster" "mongo" {
   name                = "${var.environment}-${var.project_name}-mongo-mc"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 
   administrator_username = var.mongo_admin_username
-  administrator_password = var.mongo_admin_password
+  administrator_password = random_password.mongo_admin_password.result
   compute_tier           = "Free"
   high_availability_mode = "Disabled"
   shard_count            = "1"

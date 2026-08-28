@@ -35,6 +35,11 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_virtual_netwo
   virtual_network_id  = azurerm_virtual_network.network.id
 }
 
+resource "random_password" "postgres_admin_password" {
+  length  = 16
+  special = true
+}
+
 resource "azurerm_postgresql_flexible_server" "pg_db" {
   name                          = "${var.environment}-${var.project_name}-psqlflexibleserver"
   resource_group_name           = azurerm_resource_group.rg.name
@@ -44,7 +49,7 @@ resource "azurerm_postgresql_flexible_server" "pg_db" {
   private_dns_zone_id           = var.environment == "prod" ? azurerm_private_dns_zone.dns_zone_db[0].id : null
   public_network_access_enabled = var.environment != "prod"
   administrator_login           = var.postgres_admin_username
-  administrator_password        = var.postgres_admin_password
+  administrator_password        = random_password.postgres_admin_password.result
   zone                          = "1"
   geo_redundant_backup_enabled  = false
 

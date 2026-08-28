@@ -29,25 +29,11 @@ variable "postgres_admin_username" {
   default     = "psqladmin"
 }
 
-variable "postgres_admin_password" {
-  description = "PostgreSQL administrator password."
-  type        = string
-  sensitive   = true
-  default     = "5@K{9/)t=#)9"
-}
-
 variable "mongo_admin_username" {
   description = "Mongo administrator username."
   type        = string
   sensitive   = true
   default     = "mongoadmin"
-}
-
-variable "mongo_admin_password" {
-  description = "Mongo administrator password."
-  type        = string
-  sensitive   = true
-  default     = "5@K{9/)t=#)9"
 }
 
 variable "postgres_database_name" {

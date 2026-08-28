@@ -10,7 +10,8 @@ output "acr_id" {
 
 resource "azurerm_app_configuration_key" "ack_database_url" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "databaseUrl"
+  key                    = "DATABASE_URL"
+  label                  = var.environment
   type                   = "kv"
   value                  = "jdbc:postgresql://${data.azurerm_postgresql_flexible_server.data_pg.fqdn}:5432/${azurerm_postgresql_flexible_server_database.motordesk.name}"
   depends_on = [
@@ -26,7 +27,8 @@ resource "azurerm_key_vault_secret" "database_user" {
 
 resource "azurerm_app_configuration_key" "ack_database_user" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "databaseUser"
+  key                    = "DATABASE_USER"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.database_user.versionless_id
   depends_on = [
@@ -36,13 +38,14 @@ resource "azurerm_app_configuration_key" "ack_database_user" {
 
 resource "azurerm_key_vault_secret" "database_password" {
   name         = "databasePassword"
-  value        = var.postgres_admin_password
+  value        = random_password.postgres_admin_password.result
   key_vault_id = azurerm_key_vault.key_vault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_database_password" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "databasePassword"
+  key                    = "DATABASE_PASSWORD"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.database_password.versionless_id
   depends_on = [
@@ -52,7 +55,8 @@ resource "azurerm_app_configuration_key" "ack_database_password" {
 
 resource "azurerm_app_configuration_key" "ack_database_driver" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "databaseDriver"
+  key                    = "DATABASE_DRIVER"
+  label                  = var.environment
   type                   = "kv"
   value                  = "org.postgresql.Driver"
   depends_on = [
@@ -68,7 +72,8 @@ resource "azurerm_key_vault_secret" "mongo_url" {
 
 resource "azurerm_app_configuration_key" "ack_mongo_url" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "mongoUrl"
+  key                    = "MONGO_URL"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.mongo_url.versionless_id
   depends_on = [
@@ -84,7 +89,8 @@ resource "azurerm_key_vault_secret" "mongo_user" {
 
 resource "azurerm_app_configuration_key" "ack_mongo_user" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "mongoUser"
+  key                    = "MONGO_USER"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.mongo_user.versionless_id
   depends_on = [
@@ -94,13 +100,14 @@ resource "azurerm_app_configuration_key" "ack_mongo_user" {
 
 resource "azurerm_key_vault_secret" "mongo_password" {
   name         = "mongoPassword"
-  value        = var.mongo_admin_password
+  value        = random_password.mongo_admin_password.result
   key_vault_id = azurerm_key_vault.key_vault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_password" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "mongoPassword"
+  key                    = "MONGO_PASSWORD"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.mongo_password.versionless_id
   depends_on = [
@@ -116,7 +123,8 @@ resource "azurerm_key_vault_secret" "mongo_database" {
 
 resource "azurerm_app_configuration_key" "ack_mongo_database" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "mongoDatabase"
+  key                    = "MONGO_DATABASE"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.mongo_database.versionless_id
   depends_on = [
@@ -126,7 +134,8 @@ resource "azurerm_app_configuration_key" "ack_mongo_database" {
 
 resource "azurerm_app_configuration_key" "ack_redis_host" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "redisHost"
+  key                    = "REDIS_HOST"
+  label                  = var.environment
   type                   = "kv"
   value                  = azurerm_redis_cache.redis.hostname
   depends_on = [
@@ -136,7 +145,8 @@ resource "azurerm_app_configuration_key" "ack_redis_host" {
 
 resource "azurerm_app_configuration_key" "ack_redis_port" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "redisPort"
+  key                    = "REDIS_PORT"
+  label                  = var.environment
   type                   = "kv"
   value                  = "6380"
   depends_on = [
@@ -155,7 +165,8 @@ resource "azurerm_key_vault_secret" "redis_password" {
 
 resource "azurerm_app_configuration_key" "ack_redis_password" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "redisPassword"
+  key                    = "REDIS_PASSWORD"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.redis_password.versionless_id
   depends_on = [
@@ -174,7 +185,8 @@ resource "azurerm_key_vault_secret" "azure_communication_access_key" {
 
 resource "azurerm_app_configuration_key" "ack_azure_communication_access_key" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "azureCommunicationAccessKey"
+  key                    = "AZURE_COMMUNICATION_ACCESS_KEY"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.azure_communication_access_key.versionless_id
   depends_on = [
@@ -193,53 +205,76 @@ resource "azurerm_key_vault_secret" "azure_communication_endpoint" {
 
 resource "azurerm_app_configuration_key" "ack_azure_communication_endpoint" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "azureCommunicationEndpoint"
+  key                    = "AZURE_COMMUNICATION_ENDPOINT"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.azure_communication_endpoint.versionless_id
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
   ]
 }
-
+resource "random_string" "ack_jwt_issuer" {
+  length  = 16
+  special = true
+}
 resource "azurerm_app_configuration_key" "ack_jwt_issuer" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "jwtIssuer"
+  key                    = "JWT_ISSUER"
+  label                  = var.environment
   type                   = "kv"
-  value                  = "ktor-api"
+  value                  = random_string.ack_jwt_issuer.result
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
   ]
+}
+
+resource "random_string" "ack_jwt_audience" {
+  length  = 16
+  special = true
 }
 
 resource "azurerm_app_configuration_key" "ack_jwt_audience" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "jwtAudience"
+  key                    = "JWT_AUDIENCE"
+  label                  = var.environment
   type                   = "kv"
-  value                  = "ktor-users"
+  value                  = random_string.ack_jwt_audience.result
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
   ]
+}
+
+resource "random_string" "ack_jwt_realm" {
+  length  = 16
+  special = true
 }
 
 resource "azurerm_app_configuration_key" "ack_jwt_realm" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "jwtRealm"
+  key                    = "JWT_REALM"
+  label                  = var.environment
   type                   = "kv"
-  value                  = "ktor-app"
+  value                  = random_string.ack_jwt_realm.result
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
   ]
 }
 
+resource "random_password" "jwt_secret" {
+  length  = 16
+  special = true
+}
+
 resource "azurerm_key_vault_secret" "jwt_secret" {
   name         = "jwtSecret"
-  value        = "super-secret-key"
+  value        = random_password.jwt_secret.result
   key_vault_id = azurerm_key_vault.key_vault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_jwt_secret" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "jwtSecret"
+  key                    = "JWT_SECRET"
+  label                  = var.environment
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.jwt_secret.versionless_id
   depends_on = [
