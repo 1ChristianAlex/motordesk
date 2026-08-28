@@ -1,9 +1,18 @@
+# Create a virtual network within the resource group
+resource "azurerm_virtual_network" "network_db" {
+  name                = "network-${var.environment}-${var.project_name}"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.infra_location
+  tags                = var.tags
+  address_space       = ["10.20.0.0/16"]
+}
+
 
 resource "azurerm_subnet" "subnet_db" {
   count                = var.environment == "prod" ? 1 : 0
   name                 = "${var.environment}-${var.project_name}-subnet-db"
   resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.network.name
+  virtual_network_name = azurerm_virtual_network.network_db.name
   address_prefixes     = ["10.20.0.0/24"]
 
   delegation {
@@ -32,7 +41,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_virtual_netwo
   name                = "${var.environment}-${var.project_name}VnetZone.com"
   private_dns_zone_id = azurerm_private_dns_zone.dns_zone_db[0].id
   tags                = var.tags
-  virtual_network_id  = azurerm_virtual_network.network.id
+  virtual_network_id  = azurerm_virtual_network.network_db.id
 }
 
 resource "random_password" "postgres_admin_password" {

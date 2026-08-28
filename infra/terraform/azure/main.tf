@@ -64,7 +64,7 @@ resource "azurerm_role_assignment" "appconf_dataowner" {
   principal_id         = data.azurerm_client_config.client_config.object_id
 }
 
-resource "azurerm_key_vault" "key_vault_app" {
+resource "azurerm_key_vault" "kvault_app" {
   name                       = "kv${var.environment}-${var.project_name}"
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
@@ -101,16 +101,6 @@ resource "azurerm_key_vault" "key_vault_app" {
   }
 }
 
-
-
-# Create a virtual network within the resource group
-resource "azurerm_virtual_network" "network" {
-  name                = "network-${var.environment}-${var.project_name}"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.infra_location
-  tags                = var.tags
-  address_space       = ["10.20.0.0/16"]
-}
 
 
 # $Env:ARM_CLIENT_ID = ""

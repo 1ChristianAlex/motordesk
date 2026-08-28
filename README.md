@@ -55,6 +55,7 @@ src/main/kotlin
 - [ADR-003 - MongoDB Service Order History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
 - [ADR-004 - Azure Communication Services Email](docs/ADR/ADR-004-Azure-Communication-Services-Email.md)
 - [ADR-005 - Migrating to Hexagonal Architecture](docs/ADR/ADR-005-Migrating-to-Hexagonal-Architecture.md)
+- [ADR-006 - Terraform and Microsoft Azure for Infrastructure as Code](docs/ADR/ADR-006-terraform-azure.md)
 - [Send Email Sequence](docs/diagrams/send-email-sequence.md)
 - [Email Sending with Azure](docs/diagrams/email-sending-azure.md)
 - [Technical Debt - Serializable in Domain](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
@@ -100,3 +101,4 @@ docker compose -f docker-compose-dev.yml up -d
 - Domain ports live under `domain/`.
 - Use-case implementations live under `application/`.
 - Technical integrations live under `infrastructure/`.
+- Azure infrastructure is provisioned with Terraform under `infra/terraform/azure/` and is documented in ADR-006.
