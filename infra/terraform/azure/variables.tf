@@ -10,10 +10,21 @@ variable "project_name" {
   default     = "motordesk"
 }
 
+variable "environments" {
+  description = "Possible environment"
+  type        = map(string)
+
+  default = {
+    dev  = "dev"
+    qa   = "qa"
+    prod = "prod"
+  }
+}
+
 variable "environment" {
   description = "Deployment environment."
   type        = string
-  default     = "development"
+  default     = "dev"
 }
 
 variable "postgres_version" {
@@ -67,4 +78,16 @@ variable "dev_client_ip" {
   type        = string
   default     = "0.0.0.0"
 }
+
+# variable "aks_node_count" {
+#   description = "Initial number of AKS nodes."
+#   type        = number
+#   default     = 1
+# }
+#
+# variable "aks_vm_size" {
+#   description = "VM size used by the AKS system node pool."
+#   type        = string
+#   default     = "Standard_F2"
+# }
 

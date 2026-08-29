@@ -137,7 +137,7 @@ resource "azurerm_app_configuration_key" "ack_redis_host" {
   key                    = "REDIS_HOST"
   label                  = var.environment
   type                   = "kv"
-  value                  = azurerm_redis_cache.redis.hostname
+  value                  = "redis"
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
   ]
@@ -154,9 +154,14 @@ resource "azurerm_app_configuration_key" "ack_redis_port" {
   ]
 }
 
+resource "random_password" "redis_password" {
+  length  = 16
+  special = true
+}
+
 resource "azurerm_key_vault_secret" "redis_password" {
   name         = "redisPassword"
-  value        = azurerm_redis_cache.redis.primary_access_key
+  value        = random_password.redis_password.result
   key_vault_id = azurerm_key_vault.kvault_app.id
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
@@ -281,3 +286,40 @@ resource "azurerm_app_configuration_key" "ack_jwt_secret" {
     azurerm_role_assignment.appconf_dataowner
   ]
 }
+
+# resource "azurerm_key_vault_secret" "aks_client_certificate" {
+#   name         = "aksClientCertificate"
+#   value        = azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate
+#   key_vault_id = azurerm_key_vault.kvault_app.id
+# }
+
+# resource "azurerm_app_configuration_key" "ack_aks_client_certificate" {
+#   configuration_store_id = azurerm_app_configuration.app_conf.id
+#   key                    = "AKS_CLIENT_CERTIFICATE"
+#   label                  = var.environment
+#   type                   = "vault"
+#   vault_key_reference    = azurerm_key_vault_secret.aks_client_certificate.versionless_id
+#   depends_on = [
+#     azurerm_role_assignment.appconf_dataowner
+#   ]
+# }
+
+#
+# resource "azurerm_key_vault_secret" "kube_config" {
+#   name         = "aksClientKubeConfigRaw"
+#   value        = azurerm_kubernetes_cluster.aks.kube_config_raw
+#   key_vault_id = azurerm_key_vault.kvault_app.id
+# }
+#
+# resource "azurerm_app_configuration_key" "ack_kube_config" {
+#   configuration_store_id = azurerm_app_configuration.app_conf.id
+#   key                    = "AKS_CLIENT_KUBE_CONFIG_RAW"
+#   label                  = var.environment
+#   type                   = "vault"
+#   vault_key_reference    = azurerm_key_vault_secret.kube_config.versionless_id
+#   depends_on = [
+#     azurerm_role_assignment.appconf_dataowner
+#   ]
+# }
+#
+

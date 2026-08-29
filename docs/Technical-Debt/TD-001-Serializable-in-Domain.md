@@ -1,4 +1,4 @@
-# ADR-003 - Technical Debt: `@Serializable` Annotation in the Domain Layer
+# TD-001 - Technical Debt: `@Serializable` Annotation in the Domain Layer
 
 ## Status
 
