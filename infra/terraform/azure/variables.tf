@@ -25,6 +25,11 @@ variable "environment" {
   description = "Deployment environment."
   type        = string
   default     = "dev"
+
+  validation {
+    condition     = contains(values(var.environments), var.environment)
+    error_message = "environment must match one of the values defined in environments."
+  }
 }
 
 variable "postgres_version" {
@@ -77,6 +82,12 @@ variable "dev_client_ip" {
   description = "Public IP address allowed to connect to the dev PostgreSQL server."
   type        = string
   default     = "0.0.0.0"
+}
+
+variable "image_tag" {
+  description = "Image tag for docker images"
+  type        = string
+  default     = ""
 }
 
 # variable "aks_node_count" {

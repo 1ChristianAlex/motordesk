@@ -80,6 +80,8 @@ src/main/kotlin
 - JDK 21
 - Docker
 - Docker Compose
+- `kotlinc` (Kotlin compiler) — required for local Terraform testing
+- Terraform (for infrastructure provisioning on Azure)
 
 ### Local run
 
@@ -88,12 +90,49 @@ docker compose -f docker-compose-dev.yml up -d
 ./gradlew runDev
 ```
 
+### Local Terraform Testing
+
+Motor Desk uses Terraform for Infrastructure as Code (IaC) on Microsoft Azure (see [ADR-006](docs/ADR/ADR-006-terraform-azure.md)).
+
+Local testing of Terraform configurations requires `kotlinc` because the project uses a Kotlin-based orchestration script (`scripts/terraform-local.main.kts`) to automate Terraform workflows. This script:
+
+1. Initializes and applies backend infrastructure (resource groups, storage accounts, containers for Terraform state)
+2. Configures Terraform remote state storage on Azure
+3. Validates Terraform configurations
+4. Plans or applies Azure infrastructure changes
+
+The script is executed by the `terraformLocal` Gradle task, which invokes `kotlinc -script` to run the `.kts` file directly.
+
+**To test Terraform configurations locally:**
+
+```bash
+./gradlew terraformLocal
+```
+
+This task accepts optional arguments:
+
+```bash
+# Plan infrastructure changes for QA environment
+./gradlew terraformLocal --environment qa --action plan
+
+# Apply infrastructure changes for production environment
+./gradlew terraformLocal --environment prod --action apply --image-tag v1.0.0
+```
+
+Available arguments:
+- `--environment` (default: `dev`) — deployment environment
+- `--image-tag` — container image tag for deployment
+- `--action` (default: `plan`) — `plan` or `apply`
+
+**Note:** `kotlinc` must be in your system PATH for the script to execute. Ensure your Kotlin installation is correctly configured.
+
 ### Useful Gradle tasks
 
-- `./gradlew test`
-- `./gradlew build`
-- `./gradlew sonar`
-- `./gradlew buildFatJar`
+- `./gradlew test` — run unit and integration tests
+- `./gradlew build` — build the project
+- `./gradlew sonar` — run SonarQube analysis
+- `./gradlew buildFatJar` — create a fat JAR for deployment
+- `./gradlew terraformLocal` — test local Terraform configurations (requires `kotlinc`)
 
 ## Project Notes
 

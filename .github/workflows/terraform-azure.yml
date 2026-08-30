@@ -1,0 +1,86 @@
+name: Terraform Azure
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+      image_tag:
+        required: true
+        type: string
+
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Azure environment
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+
+      image_tag:
+        description: Docker image tag
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init Backend
+        working-directory: infra/terraform/backend
+        run: terraform init -input=false
+
+      - name: Terraform Apply Backend
+        working-directory: infra/terraform/backend
+        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}"
+
+      - name: Read Backend Outputs
+        id: tfstate
+        working-directory: infra/terraform/backend
+        run: |
+          echo "resource_group_name=$(terraform output -raw resource_group_name)" >> "$GITHUB_OUTPUT"
+          echo "storage_account_name=$(terraform output -raw storage_account_name)" >> "$GITHUB_OUTPUT"
+          echo "container_name=$(terraform output -raw container_name)" >> "$GITHUB_OUTPUT"
+          echo "key=motordesk-${{ inputs.environment }}.tfstate" >> "$GITHUB_OUTPUT"
+
+      - name: Terraform Init
+        working-directory: infra/terraform/azure
+        run: |
+          terraform init -input=false -reconfigure \
+            -backend-config="resource_group_name=${{ steps.tfstate.outputs.resource_group_name }}" \
+            -backend-config="storage_account_name=${{ steps.tfstate.outputs.storage_account_name }}" \
+            -backend-config="container_name=${{ steps.tfstate.outputs.container_name }}" \
+            -backend-config="key=${{ steps.tfstate.outputs.key }}"
+
+      - name: Terraform Fmt
+        working-directory: infra/terraform/azure
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        working-directory: infra/terraform/azure
+        run: terraform validate
+
+      - name: Terraform Apply
+        working-directory: infra/terraform/azure
+        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}" -var="image_tag=${{ inputs.docker-image-tag }}"
