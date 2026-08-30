@@ -27,6 +27,12 @@ variable "environment" {
   default     = "dev"
 }
 
+variable "image_tag" {
+  description = "Container image tag to deploy."
+  type        = string
+  default     = "dev"
+}
+
 variable "postgres_version" {
   description = "PostgreSQL major version."
   type        = string
