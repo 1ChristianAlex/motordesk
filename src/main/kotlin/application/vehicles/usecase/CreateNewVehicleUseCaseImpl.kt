@@ -2,13 +2,13 @@ package com.khrix.application.vehicles.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.vehicle.model.Vehicle
-import com.khrix.domain.vehicle.port.repository.VehiclesRepository
-import com.khrix.domain.vehicle.port.usecase.CreateNewVehicleUseCase
+import com.khrix.domain.vehicle.repository.VehiclesRepository
+import com.khrix.domain.vehicle.usecase.CreateNewVehicleUseCase
 
 class CreateNewVehicleUseCaseImpl(
-    private val vehiclesRepository: VehiclesRepository,
-) : BaseUseCaseImpl<Vehicle, Vehicle>(),
-    CreateNewVehicleUseCase {
+    private val vehiclesRepository: VehiclesRepository
+) : CreateNewVehicleUseCase,
+    BaseUseCaseImpl<Vehicle, Vehicle>() {
     override suspend fun internalExecute(command: Vehicle): Vehicle {
         val existingVehicle = vehiclesRepository.getByPlateOrChassis(command.plate.value, command.chassis)
         if (existingVehicle != null) {
@@ -18,5 +18,7 @@ class CreateNewVehicleUseCaseImpl(
         return vehiclesRepository.createRead(command)
     }
 
-    override suspend fun useCaseDescription(): String = "Create new vehicle and bind with it's owner"
+    override suspend fun useCaseDescription(): String {
+        return "Create new vehicle and bind with it's owner"
+    }
 }

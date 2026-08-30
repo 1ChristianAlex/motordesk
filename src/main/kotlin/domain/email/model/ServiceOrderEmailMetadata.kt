@@ -31,7 +31,7 @@ data class AddressEmailMetadata(
     val neighborhood: String,
     val city: String,
     val state: String,
-    val zipCode: String,
+    val zipCode: String
 )
 
 @Serializable
@@ -45,46 +45,43 @@ data class ServiceOrderEmailMetadata(
     val tasks: List<Task>,
     val inventoryItems: List<InventoryItem> = listOf(),
     @Serializable(with = DecimalAsStringSerializer::class)
-    val totalAmount: BigDecimal,
+    val totalAmount: BigDecimal
 ) {
     constructor(serviceOrder: ServiceOrder, clientAddress: Address) : this(
-        client =
-            UserEmailMetadata(
-                id = serviceOrder.client.id,
-                address =
-                    AddressEmailMetadata(
-                        street = clientAddress.street,
-                        number = clientAddress.number,
-                        complement = clientAddress.complement,
-                        neighborhood = clientAddress.neighborhood,
-                        city = clientAddress.city,
-                        state = clientAddress.state,
-                        zipCode = clientAddress.zipCode,
-                    ),
-                firstName = serviceOrder.client.firstName.value,
-                lastName = serviceOrder.client.lastName.value,
-                email = serviceOrder.client.email.value,
-                phone = serviceOrder.client.phone.value,
-                cpf = serviceOrder.client.cpf.value,
-                role = serviceOrder.client.role,
+        client = UserEmailMetadata(
+            id = serviceOrder.client.id,
+            address = AddressEmailMetadata(
+                street = clientAddress.street,
+                number = clientAddress.number,
+                complement = clientAddress.complement,
+                neighborhood = clientAddress.neighborhood,
+                city = clientAddress.city,
+                state = clientAddress.state,
+                zipCode = clientAddress.zipCode
             ),
-        operator =
-            UserEmailMetadata(
-                id = serviceOrder.operator.id,
-                address = null,
-                firstName = serviceOrder.operator.firstName.value,
-                lastName = serviceOrder.operator.lastName.value,
-                email = serviceOrder.operator.email.value,
-                phone = serviceOrder.operator.phone.value,
-                cpf = serviceOrder.operator.cpf.value,
-                role = serviceOrder.operator.role,
-            ),
+            firstName = serviceOrder.client.firstName.value,
+            lastName = serviceOrder.client.lastName.value,
+            email = serviceOrder.client.email.value,
+            phone = serviceOrder.client.phone.value,
+            cpf = serviceOrder.client.cpf.value,
+            role = serviceOrder.client.role
+        ),
+        operator = UserEmailMetadata(
+            id = serviceOrder.operator.id,
+            address = null,
+            firstName = serviceOrder.operator.firstName.value,
+            lastName = serviceOrder.operator.lastName.value,
+            email = serviceOrder.operator.email.value,
+            phone = serviceOrder.operator.phone.value,
+            cpf = serviceOrder.operator.cpf.value,
+            role = serviceOrder.operator.role
+        ),
         vehicle = serviceOrder.vehicle,
         status = serviceOrder.status,
         complaint = serviceOrder.complaint,
         diagnosis = serviceOrder.diagnosis,
         tasks = serviceOrder.tasks.toList(),
         inventoryItems = serviceOrder.inventoryItems.toList(),
-        totalAmount = serviceOrder.totalPrice,
+        totalAmount = serviceOrder.totalPrice
     )
 }

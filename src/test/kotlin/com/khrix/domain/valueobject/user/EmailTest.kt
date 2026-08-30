@@ -1,5 +1,6 @@
 package com.khrix.domain.valueobject.user
 
+import com.khrix.domain.valueobject.user.Email
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

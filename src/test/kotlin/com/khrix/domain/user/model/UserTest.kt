@@ -18,6 +18,5 @@ class UserTest {
 }
 
 class RoleTest {
-    @Test
-    fun `contains all authorization roles`() = assertEquals(4, Role.entries.size)
+    @Test fun `contains all authorization roles`() = assertEquals(4, Role.entries.size)
 }

@@ -1,0 +1,15 @@
+$kind: http-request
+name: Manager - Delete vehicle
+description: Virtually delete a vehicle
+url: "{{baseUrl}}/vehicles/delete/:id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  id: "1"
+auth:
+  type: bearer
+  credentials:
+    token: "{{managerToken}}"
+examples: ./.resources/Manager - Delete vehicle.resources/examples
+order: 1000

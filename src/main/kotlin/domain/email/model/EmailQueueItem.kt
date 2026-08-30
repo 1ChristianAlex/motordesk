@@ -12,10 +12,4 @@ data class EmailQueueItem(
     val status: EmailStatus,
     val attempts: Int,
     val errorMessage: String?,
-) {
-    private val maxAttempt = 3
-
-    fun shouldBeSend(): Boolean = status != EmailStatus.SENT
-
-    fun canRetry(): Boolean = attempts <= maxAttempt
-}
+)

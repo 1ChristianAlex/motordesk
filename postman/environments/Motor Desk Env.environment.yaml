@@ -1,0 +1,10 @@
+name: Motor Desk Env
+values:
+  - key: clientToken
+    value: ''
+  - key: engineerToken
+    value: ''
+  - key: managerToken
+    value: ''
+  - key: baseUrl
+    value: ''

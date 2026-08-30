@@ -1,0 +1,37 @@
+$kind: http-request
+name: Create new user
+description: Client can create a new account - You can only create a high role account if you are manager or ADM
+url: "{{baseUrl}}/register/client"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "user": {
+        "firstName": "Lucas",
+        "lastName": "Silva",
+        "email": "lucas.silva@example.com",
+        "phone": "+5531999998888",
+        "password": "test@bdrasil2026",
+        "cpf": "54151385010"
+      },
+      "address": {
+        "street": "Avenida Afonso Pena",
+        "number": "1500",
+        "neighborhood": "Centro",
+        "city": "Belo Horizonte",
+        "state": "MG",
+        "country": "Brasil",
+        "zipCode": "30130005",
+        "complement": "Bloco A, Ap 402"
+      },
+      "company": {
+        "cnpj": "33575077000149",
+        "name": "TechSolutions Inovacao LTDA"
+      }
+    }
+examples: ./.resources/Create new user.resources/examples
+order: 2000

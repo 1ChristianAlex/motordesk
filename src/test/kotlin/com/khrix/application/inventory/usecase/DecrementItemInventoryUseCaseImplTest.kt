@@ -1,8 +1,8 @@
 package com.khrix.application.inventory.usecase
 
 import com.khrix.application.inventory.DecrementItemInventoryUseCaseImpl
-import com.khrix.domain.inventory.port.repository.InventoryRepository
-import com.khrix.domain.inventory.port.usecase.DecrementItemInventoryCommand
+import com.khrix.domain.inventory.repository.InventoryRepository
+import com.khrix.domain.inventory.usecase.DecrementItemInventoryCommand
 import com.khrix.testutils.sampleInventoryItem
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -44,10 +44,7 @@ class DecrementItemInventoryUseCaseImplTest {
             val cmd = DecrementItemInventoryCommand(itemId = 1, quantity = 5)
 
             coEvery { inventoryRepository.decrementItemQuantity(cmd.itemId, cmd.quantity) } returns Unit
-            coEvery { inventoryRepository.getByIdOrSku(cmd.itemId.toString()) } returns
-                sampleInventoryItem().copy(
-                    quantity = 0,
-                )
+            coEvery { inventoryRepository.getByIdOrSku(cmd.itemId.toString()) } returns sampleInventoryItem().copy(quantity = 0)
             coEvery { inventoryRepository.delete(cmd.itemId) } returns Unit
 
             impl.execute(cmd).getOrThrow()

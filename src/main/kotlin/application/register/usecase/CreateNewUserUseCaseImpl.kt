@@ -1,23 +1,23 @@
 package com.khrix.application.register.usecase
 
 import com.khrix.domain.company.model.Company
-import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCase
-import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCaseCommand
-import com.khrix.domain.company.port.usecase.SearchCompanyByCnpjUseCase
-import com.khrix.domain.company.port.usecase.SearchCompanyByCnpjUseCaseCommand
+import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
+import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseCommand
+import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
+import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCaseCommand
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.user.address.port.repository.AddressRepository
+import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.domain.user.model.User
-import com.khrix.domain.user.port.repository.UserRepository
-import com.khrix.domain.user.port.security.SecurityHasher
-import com.khrix.domain.user.port.usecase.CreateNewUserUseCase
-import com.khrix.domain.user.port.usecase.CreateNewUserUseCaseCommand
+import com.khrix.domain.user.repository.UserRepository
+import com.khrix.domain.user.security.PasswordHasher
+import com.khrix.domain.user.usecase.CreateNewUserUseCase
+import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 class CreateNewUserUseCaseImpl(
     private val userRepository: UserRepository,
-    private val securityHasher: SecurityHasher,
+    private val passwordHasher: PasswordHasher,
     private val addressRepository: AddressRepository,
     private val searchCompanyByCnpjUseCase: SearchCompanyByCnpjUseCase,
     private val createNewCompanyUseCase: CreateNewCompanyUseCase,
@@ -46,7 +46,7 @@ class CreateNewUserUseCaseImpl(
 
     override suspend fun internalExecute(command: CreateNewUserUseCaseCommand): User =
         coroutineScope {
-            val hashedPass = async { securityHasher.hash(command.user.password.value) }
+            val hashedPass = async { passwordHasher.hash(command.user.password.value) }
             val addressId = async { addressRepository.create(command.address) }
 
             val userWithHashedPassword =

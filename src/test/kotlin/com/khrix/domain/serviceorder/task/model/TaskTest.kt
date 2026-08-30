@@ -24,11 +24,9 @@ class TaskTest {
 }
 
 class TaskCategoryTest {
-    @Test
-    fun `contains supported categories`() = assertEquals(TaskCategory.ENGINE, TaskCategory.valueOf("ENGINE"))
+    @Test fun `contains supported categories`() = assertEquals(TaskCategory.ENGINE, TaskCategory.valueOf("ENGINE"))
 }
 
 class TaskProgressStatusTest {
-    @Test
-    fun `contains progress lifecycle`() = assertEquals(3, TaskProgressStatus.entries.size)
+    @Test fun `contains progress lifecycle`() = assertEquals(3, TaskProgressStatus.entries.size)
 }

@@ -7,7 +7,5 @@ out
 **/*.iml
 docs
 postman
-bruno
 README.md
-infra/docker/docker-compose.yml
-infra/terraform/azure/az-secrets.json
+docker-compose.yml

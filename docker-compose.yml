@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  app:
+    build: { context: ., dockerfile: Dockerfile }
+    ports: [ "8080:8080" ]
+    depends_on:
+      sql-database: { condition: service_healthy }
+      mongodb: { condition: service_started }
+      redis: { condition: service_healthy }
+    environment:
+      DATABASE_URL: jdbc:postgresql://sql-database:5432/motordesk
+      DATABASE_USER: motordesk
+      DATABASE_PASSWORD: motordesk_pass
+      DATABASE_DRIVER: org.postgresql.Driver
+      MONGO_URL: mongodb://mongodb:27017
+      MONGO_USER: motordesk
+      MONGO_PASSWORD: motordesk_pass
+      MONGO_DATABASE: motordesk
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: motordesk_pass
+
+    networks: [ backend,frontend ]
+
+  sql-database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: motordesk
+      POSTGRES_PASSWORD: motordesk_pass
+      POSTGRES_DB: motordesk
+    volumes: [ postgres_data:/var/lib/postgresql/data ]
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+    networks: [ backend ]
+
+  mongodb:
+    image: mongo:8
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: motordesk
+      MONGO_INITDB_ROOT_PASSWORD: motordesk_pass
+      MONGO_INITDB_DATABASE: motordesk
+    volumes: [ mongodb_data:/data/db ]
+    networks: [ backend ]
+
+  redis:
+    image: redis:8-alpine
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: motordesk_pass
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --requirepass
+      - motordesk_pass
+      - --user
+      - motordesk
+      - "on"
+      - ">motordesk_pass"
+      - "~*"
+      - "+@all"
+    volumes:
+      - redis_data:/data
+
+    healthcheck:
+      test: [ "CMD-SHELL","redis-cli", "-u", "redis://$$REDIS_PASSWORD@$$REDIS_HOST:6379", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+
+networks:
+  backend:
+    driver: bridge
+    internal: true
+  frontend:
+    driver: bridge
