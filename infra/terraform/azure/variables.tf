@@ -25,12 +25,11 @@ variable "environment" {
   description = "Deployment environment."
   type        = string
   default     = "dev"
-}
 
-variable "image_tag" {
-  description = "Container image tag to deploy."
-  type        = string
-  default     = "dev"
+  validation {
+    condition     = contains(values(var.environments), var.environment)
+    error_message = "environment must match one of the values defined in environments."
+  }
 }
 
 variable "postgres_version" {

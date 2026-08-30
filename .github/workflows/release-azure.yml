@@ -1,7 +1,5 @@
 name: release-azure
 
-
-
 on:
   push:
     branches:
@@ -52,6 +50,14 @@ jobs:
         run: |
           docker build \
             -f infra/docker/Dockerfile \
-            -t "${{ steps.acr.outputs.login_server }}/${PROJECT_NAME}:${IMAGE_TAG}" \
+            -t "${{ steps.acr.outputs.login_server }}/${PROJECT_NAME}/api:${IMAGE_TAG}" \
             .
-          docker push "${{ steps.acr.outputs.login_server }}/${PROJECT_NAME}:${IMAGE_TAG}"
+          docker push "${{ steps.acr.outputs.login_server }}/${PROJECT_NAME}/api:${IMAGE_TAG}"
+
+      - name: Build and Push Redis Image
+        run: |
+          docker build \
+            -f infra/docker/redis.Dockerfile \
+            -t "${{ steps.acr.outputs.login_server }}/${PROJECT_NAME}/redis:${IMAGE_TAG}" \
+            .
+          docker push "${{ steps.acr.outputs.login_server }}/${PROJECT_NAME}/redis:${IMAGE_TAG}"

@@ -3,14 +3,14 @@ name: terraform-azure
 on:
   workflow_dispatch:
     inputs:
-      action:
-        description: "Terraform action to run"
-        required: true
-        type: choice
+      environment:
+        description: "Terraform environment to run"
+        required: false
+        default: dev
+        type: string
         options:
-          - plan
-          - apply
-        default: plan
+          - dev
+          - qa
 
 permissions:
   contents: read
@@ -47,10 +47,5 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
-        if: inputs.action == 'plan'
-        run: terraform plan -input=false -out=tfplan
-
       - name: Terraform Apply
-        if: inputs.action == 'apply'
-        run: terraform apply -input=false -auto-approve tfplan
+        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}"
