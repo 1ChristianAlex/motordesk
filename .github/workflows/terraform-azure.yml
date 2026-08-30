@@ -1,36 +1,35 @@
-name: terraform-azure
+name: Terraform Azure
 
 on:
   workflow_call:
     inputs:
       environment:
-        description: "Terraform environment to run"
         required: true
         type: string
-      docker-image-tag:
-        description: "Docker image tag"
+
+      image_tag:
         required: true
         type: string
+
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+
   workflow_dispatch:
     inputs:
       environment:
-        description: "Terraform environment to run"
-        required: false
-        default: dev
-        type: string
+        description: Azure environment
+        required: true
+        type: choice
         options:
           - dev
           - qa
 
-      docker-image-tag:
-        description: "Docker image tag"
+      image_tag:
+        description: Docker image tag
         required: false
         default: ""
         type: string
-
-permissions:
-  contents: read
-  id-token: write
 
 jobs:
   terraform:
@@ -47,9 +46,6 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.9.8
-          terraform_wrapper: false
 
       - name: Terraform Init Backend
         working-directory: infra/terraform/backend

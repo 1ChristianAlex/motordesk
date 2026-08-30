@@ -1,18 +1,14 @@
-name: ci-tests
+name: CI Tests
 
 on:
-  workflow_call:
+  pull_request:
   push:
     branches:
-      - "dev"
-      - "main"
-  pull_request:
-
-permissions:
-  contents: read
+      - dev
+      - main
 
 jobs:
-  test-and-build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,11 +19,13 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "21"
-          cache: gradle
+          java-version: '21'
 
-      - name: Run unit tests
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Test
         run: ./gradlew test
 
-      - name: Verify build
+      - name: Build
         run: ./gradlew build
