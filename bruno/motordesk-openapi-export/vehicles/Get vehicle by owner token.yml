@@ -1,0 +1,62 @@
+info:
+  name: Get vehicle by owner token
+  type: http
+  seq: 1
+  tags:
+    - vehicles
+    - owner
+
+http:
+  method: GET
+  url: "{{baseUrl}}/vehicles/owner"
+  auth:
+    type: bearer
+    token: "{{clientToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 202 Response
+    description: "202"
+    request:
+      url: "{{baseUrl}}/vehicles/owner"
+      method: GET
+    response:
+      status: 202
+      statusText: Accepted
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": null,
+            "status": 2607,
+            "errors": null
+          }
+  - name: 400 Response
+    description: "400"
+    request:
+      url: "{{baseUrl}}/vehicles/owner"
+      method: GET
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {},
+            "status": 9036,
+            "errors": null
+          }
+
+docs: Get vehicle given a client data

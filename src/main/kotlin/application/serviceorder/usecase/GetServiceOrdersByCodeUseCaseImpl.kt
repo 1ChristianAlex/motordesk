@@ -1,20 +1,31 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.serviceorder.model.ServiceOrder
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.usecase.GetServiceOrdersByCodeUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.GetServiceOrderHistoryUseCase
+import com.khrix.domain.serviceorder.port.usecase.GetServiceOrdersByCodeUseCase
+import com.khrix.domain.serviceorder.port.usecase.ServiceOrderWithHistory
 
 class GetServiceOrdersByCodeUseCaseImpl(
     private val serviceOrderRepository: ServiceOrderRepository,
-) : GetServiceOrdersByCodeUseCase, BaseUseCaseImpl<String, ServiceOrder>() {
-    override suspend fun internalExecute(command: String): ServiceOrder {
-        val serviceOrder = serviceOrderRepository.getByCode(command)
+    private val getServiceOrderHistoryUseCase: GetServiceOrderHistoryUseCase,
+) : BaseUseCaseImpl<String, ServiceOrderWithHistory>(),
+    GetServiceOrdersByCodeUseCase {
+    override suspend fun internalExecute(command: String): ServiceOrderWithHistory {
+        val serviceOrder = serviceOrderRepository.getByCode(command) ?: throw NoSuchElementException()
 
-        return serviceOrder ?: throw NoSuchElementException()
+        val changes =
+            getServiceOrderHistoryUseCase
+                .execute(serviceOrder.id)
+                .onFailure {
+                    this.logger?.error(it.message, it)
+                }.getOrNull()
+
+        return ServiceOrderWithHistory(
+            serviceOrder = serviceOrder,
+            changes = changes ?: listOf(),
+        )
     }
 
-    override suspend fun useCaseDescription(): String {
-        return "Get service order using code"
-    }
+    override suspend fun useCaseDescription(): String = "Get service order using code"
 }

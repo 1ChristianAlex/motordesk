@@ -1,7 +1,7 @@
 package com.khrix.application.inventory.usecase
 
 import com.khrix.application.inventory.UpdateInventoryUseCaseImpl
-import com.khrix.domain.inventory.repository.InventoryRepository
+import com.khrix.domain.inventory.port.repository.InventoryRepository
 import com.khrix.testutils.sampleInventoryItem
 import io.mockk.coEvery
 import io.mockk.coVerify

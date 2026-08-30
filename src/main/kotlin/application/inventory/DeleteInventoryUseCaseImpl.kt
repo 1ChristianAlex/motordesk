@@ -1,17 +1,16 @@
 package com.khrix.application.inventory
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.inventory.repository.InventoryRepository
-import com.khrix.domain.inventory.usecase.DeleteInventoryUseCase
+import com.khrix.domain.inventory.port.repository.InventoryRepository
+import com.khrix.domain.inventory.port.usecase.DeleteInventoryUseCase
 
 class DeleteInventoryUseCaseImpl(
     private val inventoryRepository: InventoryRepository,
-) : DeleteInventoryUseCase, BaseUseCaseImpl<Int, Unit>() {
+) : BaseUseCaseImpl<Int, Unit>(),
+    DeleteInventoryUseCase {
     override suspend fun internalExecute(command: Int) {
         inventoryRepository.delete(command)
     }
 
-    override suspend fun useCaseDescription(): String {
-        return "Delete an existing inventory item"
-    }
+    override suspend fun useCaseDescription(): String = "Delete an existing inventory item"
 }

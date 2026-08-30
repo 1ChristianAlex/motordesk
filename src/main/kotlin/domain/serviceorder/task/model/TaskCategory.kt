@@ -8,11 +8,11 @@ enum class TaskCategory {
     ALIGNMENT,
     AIR_CONDITIONING,
     DIAGNOSTIC,
-    GENERAL_REVIEW
+    GENERAL_REVIEW,
 }
 
 enum class TaskProgressStatus {
     NOT_STARTED,
     IN_PROGRESS,
-    COMPLETE
+    COMPLETE,
 }

@@ -689,13 +689,21 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
+            defs["ApprovesServiceOrderInputDto"] = {
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ApprovesServiceOrderInputDto",
+  "required" : [ "code", "token" ],
+  "properties" : {
+    "token" : { },
+    "code" : { }
+  }
+};
             defs["AuthenticateOutputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.core.dto.AuthenticateOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.core.dto.AuthenticateOutputDto",
   "required" : [ "token", "user" ],
   "properties" : {
     "token" : { },
     "user" : {
-      "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
       "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
       "properties" : {
         "id" : { },
@@ -714,11 +722,11 @@
   }
 };
             defs["ClientRegisterDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.register.resources.dto.ClientRegisterDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.ClientRegisterDto",
   "required" : [ "address", "user" ],
   "properties" : {
     "user" : {
-      "title" : "com.khrix.infrastructure.http.controllers.register.resources.dto.CreateUserDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.CreateUserDto",
       "required" : [ "cpf", "email", "firstName", "lastName", "password", "phone" ],
       "properties" : {
         "firstName" : { },
@@ -733,7 +741,7 @@
       }
     },
     "address" : {
-      "title" : "com.khrix.infrastructure.http.controllers.register.resources.dto.AddressDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.AddressDto",
       "required" : [ "city", "country", "neighborhood", "number", "state", "street", "zipCode" ],
       "properties" : {
         "street" : { },
@@ -748,7 +756,7 @@
     },
     "company" : {
       "oneOf" : [ {
-        "title" : "com.khrix.infrastructure.http.controllers.register.resources.dto.CompanyDto",
+        "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.CompanyDto",
         "required" : [ "cnpj", "name" ],
         "properties" : {
           "cnpj" : { },
@@ -759,7 +767,7 @@
   }
 };
             defs["LoginInputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.login.resources.dto.LoginInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.login.resources.dto.LoginInputDto",
   "required" : [ "password", "userName" ],
   "properties" : {
     "userName" : { },
@@ -771,7 +779,7 @@
   "properties" : { }
 };
             defs["ServiceOrderInputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto",
   "required" : [ "clientId", "complaint", "operatorId", "tasksIds", "vehicleId" ],
   "properties" : {
     "clientId" : { },
@@ -788,12 +796,12 @@
   }
 };
             defs["ServiceOrderOutputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
   "required" : [ "client", "code", "complaint", "expectedMinutes", "id", "operator", "status", "tasks", "totalPrice", "vehicle" ],
   "properties" : {
     "id" : { },
     "client" : {
-      "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
       "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
       "properties" : {
         "id" : { },
@@ -810,7 +818,7 @@
       }
     },
     "operator" : {
-      "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
       "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
       "properties" : {
         "id" : { },
@@ -827,7 +835,7 @@
       }
     },
     "vehicle" : {
-      "title" : "com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto",
+      "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
       "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
       "properties" : {
         "id" : { },
@@ -847,7 +855,7 @@
       }
     },
     "status" : {
-      "enum" : [ "CREATED", "QUEUED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
+      "enum" : [ "CREATED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
     },
     "complaint" : { },
     "code" : { },
@@ -855,28 +863,11 @@
     "totalPrice" : { },
     "diagnosis" : { },
     "tasks" : {
-      "items" : {
-        "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.TaskOutputDto",
-        "required" : [ "category", "estimatedMinutes", "id", "isActive", "name", "price", "status" ],
-        "properties" : {
-          "id" : { },
-          "name" : { },
-          "description" : { },
-          "estimatedMinutes" : { },
-          "price" : { },
-          "isActive" : { },
-          "category" : {
-            "enum" : [ "ENGINE", "SUSPENSION", "BRAKES", "ELECTRICAL", "ALIGNMENT", "AIR_CONDITIONING", "DIAGNOSTIC", "GENERAL_REVIEW" ]
-          },
-          "status" : {
-            "enum" : [ "NOT_STARTED", "IN_PROGRESS", "COMPLETE" ]
-          }
-        }
-      }
+      "$ref" : "#/components/schemas/kotlin.collections.ArrayList"
     },
     "inventoryItems" : {
       "items" : {
-        "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
+        "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
         "required" : [ "id", "isActive", "minimumQuantity", "name", "quantity", "sku", "unitPrice" ],
         "properties" : {
           "id" : { },
@@ -898,8 +889,137 @@
     }
   }
 };
+            defs["ServiceOrderWithHistoryOutputDto"] = {
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderWithHistoryOutputDto",
+  "required" : [ "history", "serviceOrder" ],
+  "properties" : {
+    "serviceOrder" : {
+      "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
+      "required" : [ "client", "code", "complaint", "expectedMinutes", "id", "operator", "status", "tasks", "totalPrice", "vehicle" ],
+      "properties" : {
+        "id" : { },
+        "client" : {
+          "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
+          "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
+          "properties" : {
+            "id" : { },
+            "addressId" : { },
+            "companyId" : { },
+            "firstName" : { },
+            "lastName" : { },
+            "email" : { },
+            "phone" : { },
+            "cpf" : { },
+            "isActive" : { },
+            "createdAt" : { },
+            "updatedAt" : { }
+          }
+        },
+        "operator" : {
+          "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
+          "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
+          "properties" : {
+            "id" : { },
+            "addressId" : { },
+            "companyId" : { },
+            "firstName" : { },
+            "lastName" : { },
+            "email" : { },
+            "phone" : { },
+            "cpf" : { },
+            "isActive" : { },
+            "createdAt" : { },
+            "updatedAt" : { }
+          }
+        },
+        "vehicle" : {
+          "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
+          "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
+          "properties" : {
+            "id" : { },
+            "userId" : { },
+            "plate" : { },
+            "brand" : { },
+            "model" : { },
+            "color" : { },
+            "year" : { },
+            "mileage" : { },
+            "chassis" : { },
+            "fuelType" : {
+              "enum" : [ "GASOLINE", "ETHANOL", "FLEX", "DIESEL", "ELECTRIC", "HYBRID" ]
+            },
+            "createdAt" : { },
+            "updatedAt" : { }
+          }
+        },
+        "status" : {
+          "enum" : [ "CREATED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
+        },
+        "complaint" : { },
+        "code" : { },
+        "expectedMinutes" : { },
+        "totalPrice" : { },
+        "diagnosis" : { },
+        "tasks" : {
+          "items" : {
+            "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.TaskOutputDto",
+            "required" : [ "category", "estimatedMinutes", "id", "isActive", "name", "price", "status" ],
+            "properties" : {
+              "id" : { },
+              "name" : { },
+              "description" : { },
+              "estimatedMinutes" : { },
+              "price" : { },
+              "isActive" : { },
+              "category" : {
+                "enum" : [ "ENGINE", "SUSPENSION", "BRAKES", "ELECTRICAL", "ALIGNMENT", "AIR_CONDITIONING", "DIAGNOSTIC", "GENERAL_REVIEW" ]
+              },
+              "status" : {
+                "enum" : [ "NOT_STARTED", "IN_PROGRESS", "COMPLETE" ]
+              }
+            }
+          }
+        },
+        "inventoryItems" : {
+          "items" : {
+            "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
+            "required" : [ "id", "isActive", "minimumQuantity", "name", "quantity", "sku", "unitPrice" ],
+            "properties" : {
+              "id" : { },
+              "sku" : { },
+              "name" : { },
+              "description" : { },
+              "quantity" : { },
+              "minimumQuantity" : { },
+              "unitPrice" : {
+                "title" : "com.khrix.domain.valueobject.Price",
+                "required" : [ "value" ],
+                "properties" : {
+                  "value" : { }
+                }
+              },
+              "isActive" : { }
+            }
+          }
+        }
+      }
+    },
+    "history" : {
+      "items" : {
+        "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.HistoryChangesDto",
+        "required" : [ "changedAt", "changes" ],
+        "properties" : {
+          "changedAt" : { },
+          "changes" : {
+            "additionalProperties" : { }
+          }
+        }
+      }
+    }
+  }
+};
             defs["UpdateServiceOrderInputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto",
   "required" : [ "code", "operatorRole" ],
   "properties" : {
     "code" : { },
@@ -912,7 +1032,7 @@
       "items" : { }
     },
     "status" : {
-      "enum" : [ "CREATED", "QUEUED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
+      "enum" : [ "CREATED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
     },
     "operatorRole" : {
       "enum" : [ "ADMIN", "CLIENT", "MANAGER", "ENGINEER" ]
@@ -920,7 +1040,7 @@
   }
 };
             defs["UserInputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserInputDto",
   "required" : [ "id" ],
   "properties" : {
     "id" : { },
@@ -935,7 +1055,7 @@
   }
 };
             defs["UserOutputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.user.resources.dto.UserOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
   "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
   "properties" : {
     "id" : { },
@@ -952,7 +1072,7 @@
   }
 };
             defs["VehicleInputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleInputDto",
   "required" : [ "brand", "chassis", "color", "fuelType", "model", "ownerId", "plate", "year" ],
   "properties" : {
     "id" : { },
@@ -970,7 +1090,7 @@
   }
 };
             defs["VehicleOutputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleOutputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
   "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
   "properties" : {
     "id" : { },
@@ -990,7 +1110,7 @@
   }
 };
             defs["VehicleUpdateInputDto"] = {
-  "title" : "com.khrix.infrastructure.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto",
+  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto",
   "required" : [ "id" ],
   "properties" : {
     "id" : { },
@@ -1035,6 +1155,9 @@
                     </li>
                     <li data-group="Default" data-name="selfUpdatePut" class="">
                       <a href="#api-Default-selfUpdatePut">selfUpdatePut</a>
+                    </li>
+                    <li data-group="Default" data-name="serviceOrderClientCodeApprovalGet" class="">
+                      <a href="#api-Default-serviceOrderClientCodeApprovalGet">serviceOrderClientCodeApprovalGet</a>
                     </li>
                     <li data-group="Default" data-name="serviceOrderClientCodeGet" class="">
                       <a href="#api-Default-serviceOrderClientCodeGet">serviceOrderClientCodeGet</a>
@@ -1954,7 +2077,7 @@ except ApiException as e:
         "properties" : {
           "data" : {
             "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderOutputDto"
+              "$ref" : "#/components/schemas/ServiceOrderWithHistoryOutputDto"
             }, { } ]
           },
           "status" : { },
@@ -3554,6 +3677,457 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
+                    <div id="api-Default-serviceOrderClientCodeApprovalGet">
+                      <article id="api-Default-serviceOrderClientCodeApprovalGet-0" data-group="User" data-name="serviceOrderClientCodeApprovalGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>serviceOrderClientCodeApprovalGet</h1>
+                          <p>Client - Approves service order</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Approves service order given a token</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/service-order/client/{code}/approval</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-serviceOrderClientCodeApprovalGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-serviceOrderClientCodeApprovalGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+-H "Content-Type: application/json"\
+"//service-order/client/{code}/approval?token="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        
+        DefaultApi apiInstance = new DefaultApi();
+         token = ; //  | 
+         code = ; //  | 
+        ApprovesServiceOrderInputDto body = ; // ApprovesServiceOrderInputDto | 
+        try {
+            Object result = apiInstance.serviceOrderClientCodeApprovalGet(token, code, body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#serviceOrderClientCodeApprovalGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+         token = ; //  | 
+         code = ; //  | 
+        ApprovesServiceOrderInputDto body = ; // ApprovesServiceOrderInputDto | 
+        try {
+            Object result = apiInstance.serviceOrderClientCodeApprovalGet(token, code, body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#serviceOrderClientCodeApprovalGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp"> *token = ; // 
+ *code = ; // 
+ApprovesServiceOrderInputDto *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Client - Approves service order
+[apiInstance serviceOrderClientCodeApprovalGetWith:token
+    code:code
+    body:body
+              completionHandler: ^(Object output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var MotorDeskApi = require('motor_desk_api');
+
+var api = new MotorDeskApi.DefaultApi()
+var token = ; // {{}} 
+var code = ; // {{}} 
+var opts = { 
+  'body':  // {{ApprovesServiceOrderInputDto}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.serviceOrderClientCodeApprovalGet(tokencode, opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class serviceOrderClientCodeApprovalGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new DefaultApi();
+            var token = new (); //  | 
+            var code = new (); //  | 
+            var body = new ApprovesServiceOrderInputDto(); // ApprovesServiceOrderInputDto |  (optional) 
+
+            try
+            {
+                // Client - Approves service order
+                Object result = apiInstance.serviceOrderClientCodeApprovalGet(token, code, body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.serviceOrderClientCodeApprovalGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$token = ; //  | 
+$code = ; //  | 
+$body = ; // ApprovesServiceOrderInputDto | 
+
+try {
+    $result = $api_instance->serviceOrderClientCodeApprovalGet($token, $code, $body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->serviceOrderClientCodeApprovalGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $token = ; #  | 
+my $code = ; #  | 
+my $body = WWW::SwaggerClient::Object::ApprovesServiceOrderInputDto->new(); # ApprovesServiceOrderInputDto | 
+
+eval { 
+    my $result = $api_instance->serviceOrderClientCodeApprovalGet(token => $token, code => $code, body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->serviceOrderClientCodeApprovalGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-serviceOrderClientCodeApprovalGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+token =  #  | 
+code =  #  | 
+body =  # ApprovesServiceOrderInputDto |  (optional)
+
+try: 
+    # Client - Approves service order
+    api_response = api_instance.service_order_client_code_approval_get(token, code, body=body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->serviceOrderClientCodeApprovalGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">code*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_serviceOrderClientCodeApprovalGet_code">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      
+                                                  </span>
+                                  
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ApprovesServiceOrderInputDto"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_serviceOrderClientCodeApprovalGet_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_serviceOrderClientCodeApprovalGet_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">token*</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_serviceOrderClientCodeApprovalGet_token">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    
+                                                </span>
+                                
+                                            </div>
+                                                <div class="inner required">
+                                                    Required
+                                                </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 202 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-serviceOrderClientCodeApprovalGet-202-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-serviceOrderClientCodeApprovalGet-202-schema">
+                                  <div id='responses-serviceOrderClientCodeApprovalGet-202-schema-202' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "properties" : {
+          "data" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/Nothing"
+            }, { } ]
+          },
+          "status" : { },
+          "errors" : {
+            "items" : { }
+          }
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-serviceOrderClientCodeApprovalGet-202-schema-data').val(stringify(schema));
+                                        var result = $('#responses-serviceOrderClientCodeApprovalGet-202-schema-202');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-serviceOrderClientCodeApprovalGet-202-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 400 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-serviceOrderClientCodeApprovalGet-400-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-serviceOrderClientCodeApprovalGet-400-schema">
+                                  <div id='responses-serviceOrderClientCodeApprovalGet-400-schema-400' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "properties" : {
+          "data" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/Nothing"
+            }, { } ]
+          },
+          "status" : { },
+          "errors" : {
+            "items" : { }
+          }
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-serviceOrderClientCodeApprovalGet-400-schema-data').val(stringify(schema));
+                                        var result = $('#responses-serviceOrderClientCodeApprovalGet-400-schema-400');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-serviceOrderClientCodeApprovalGet-400-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Default-serviceOrderClientCodeGet">
                       <article id="api-Default-serviceOrderClientCodeGet-0" data-group="User" data-name="serviceOrderClientCodeGet" data-version="0">
                         <div class="pull-left">
@@ -3828,7 +4402,7 @@ except ApiException as e:
         "properties" : {
           "data" : {
             "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderOutputDto"
+              "$ref" : "#/components/schemas/ServiceOrderWithHistoryOutputDto"
             }, { } ]
           },
           "status" : { },

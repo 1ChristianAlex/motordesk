@@ -1,12 +1,12 @@
 package com.khrix.application.serviceorder.usecase
 
 import com.khrix.domain.core.shortid.ShortId
-import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
-import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
-import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.email.port.usecase.CreateEmailQueueUseCase
+import com.khrix.domain.inventory.port.usecase.GetInventoryByListIdOrSkuUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderHistoryUseCase
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.serviceorder.task.port.usecase.GetTaskByListIdUseCase
 import com.khrix.domain.user.model.Role
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery
@@ -26,7 +26,7 @@ class UpdateServiceOrderUseCaseImplTest {
     private val getInventoryByListIdOrSkuUseCase = mockk<GetInventoryByListIdOrSkuUseCase>()
     private val getTaskByListIdUseCase = mockk<GetTaskByListIdUseCase>()
     private val shortId = mockk<ShortId>()
-    private val serviceOrderHistoryRepository = mockk<ServiceOrderHistoryRepository>()
+    private val createServiceOrderHistoryUseCase = mockk<CreateServiceOrderHistoryUseCase>()
     private val createEmailQueueUseCase = mockk<CreateEmailQueueUseCase>()
 
     private val impl =
@@ -35,8 +35,8 @@ class UpdateServiceOrderUseCaseImplTest {
             getInventoryByListIdOrSkuUseCase,
             getTaskByListIdUseCase,
             shortId,
-            serviceOrderHistoryRepository,
             createEmailQueueUseCase,
+            createServiceOrderHistoryUseCase = createServiceOrderHistoryUseCase,
         )
 
     @BeforeTest
@@ -68,12 +68,12 @@ class UpdateServiceOrderUseCaseImplTest {
             coEvery { getTaskByListIdUseCase.execute(any()) } returns Result.success(existing.tasks)
             coEvery { getInventoryByListIdOrSkuUseCase.execute(any()) } returns Result.success(existing.inventoryItems)
             coEvery { serviceOrderRepository.update(any(), any()) } returns Unit
-            coEvery { serviceOrderHistoryRepository.create(any()) } returns 1
+            coEvery { createServiceOrderHistoryUseCase.execute(any()) } returns Result.success(Unit)
             coEvery { createEmailQueueUseCase.execute(any()) } returns Result.success(Unit)
             coEvery { shortId.encode(any()) } returns "order"
 
             impl.execute(command).getOrThrow()
             coVerify { serviceOrderRepository.update(any(), any()) }
-            coVerify { serviceOrderHistoryRepository.create(any()) }
+            coVerify { createServiceOrderHistoryUseCase.execute(any()) }
         }
 }

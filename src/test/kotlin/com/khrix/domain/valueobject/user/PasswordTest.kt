@@ -12,5 +12,6 @@ class PasswordTest {
         assertFailsWith<ValidationErrorResult> { Password.Raw("password") }
     }
 
-    @Test fun `hashed password is accepted as opaque data`() = assertEquals("hash", Password.Hashed("hash").value)
+    @Test
+    fun `hashed password is accepted as opaque data`() = assertEquals("hash", Password.Hashed("hash").value)
 }

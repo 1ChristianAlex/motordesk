@@ -1,7 +1,7 @@
 package com.khrix.application.task.usecase
 
 import com.khrix.application.serviceorder.task.usecase.DeleteTaskUseCaseImpl
-import com.khrix.domain.serviceorder.task.repository.TaskRepository
+import com.khrix.domain.serviceorder.task.port.repository.TaskRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

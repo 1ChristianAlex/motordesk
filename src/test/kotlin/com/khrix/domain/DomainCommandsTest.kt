@@ -1,21 +1,21 @@
 package com.khrix.domain
 
-import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseCommand
-import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseError
-import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCaseCommand
-import com.khrix.domain.inventory.usecase.DecrementItemInventoryCommand
+import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCaseCommand
+import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCaseError
+import com.khrix.domain.company.port.usecase.SearchCompanyByCnpjUseCaseCommand
+import com.khrix.domain.inventory.port.usecase.DecrementItemInventoryCommand
 import com.khrix.domain.serviceorder.model.ServiceOrderStatus
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.DeleteServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.GetClientServiceOrdersByCodeCommand
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderTaskCommand
 import com.khrix.domain.serviceorder.task.model.TaskProgressStatus
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.DeleteServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.GetClientServiceOrdersByCodeCommand
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
-import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderTaskCommand
 import com.khrix.domain.user.model.Role
-import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
-import com.khrix.domain.user.usecase.InvalidCredentialsException
-import com.khrix.domain.user.usecase.UserNotFoundException
-import com.khrix.domain.user.usecase.VerifyIsUserDataAvailableUseCaseCommand
+import com.khrix.domain.user.port.usecase.CreateNewUserUseCaseCommand
+import com.khrix.domain.user.port.usecase.InvalidCredentialsException
+import com.khrix.domain.user.port.usecase.UserNotFoundException
+import com.khrix.domain.user.port.usecase.VerifyIsUserDataAvailableUseCaseCommand
 import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.domain.valueobject.user.CPF
 import com.khrix.domain.valueobject.user.CompanyName
@@ -76,7 +76,7 @@ class UpdateServiceOrderCommandTest {
     @Test
     fun `retains operator authorization context`() {
         val command =
-            UpdateServiceOrderCommand("#code", null, status = ServiceOrderStatus.QUEUED, operatorRole = Role.MANAGER)
+            UpdateServiceOrderCommand("#code", null, status = ServiceOrderStatus.CREATED, operatorRole = Role.MANAGER)
         assertEquals(Role.MANAGER, command.operatorRole)
     }
 }
