@@ -121,6 +121,22 @@ tasks.register<JavaExec>("runDev") {
     jvmArgs = (runTask.jvmArgs ?: emptyList()) + "-Dio.ktor.development=true"
 }
 
+tasks.register<Exec>("terraformLocal") {
+    group = "terraform"
+    description = "Runs the local Terraform orchestration script with Kotlin."
+
+    commandLine(
+        "kotlinc",
+        "-script",
+        "scripts/terraform-local.main.kts",
+        "--",
+        "--environment",
+        "qa",
+        "--action",
+        "plan",
+    )
+}
+
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
