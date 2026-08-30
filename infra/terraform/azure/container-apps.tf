@@ -20,18 +20,32 @@ resource "azurerm_container_app_environment" "main" {
   tags = var.tags
 }
 
-resource "azurerm_user_assigned_identity" "acr_pull" {
-  name                = "mi-${var.environment}-${var.project_name}-acr"
+resource "azurerm_user_assigned_identity" "api" {
+  name                = "mi-${var.environment}-${var.project_name}-api"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 
   tags = var.tags
 }
 
-resource "azurerm_role_assignment" "acr_pull" {
+resource "azurerm_user_assigned_identity" "redis" {
+  name                = "mi-${var.environment}-${var.project_name}-redis"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+
+  tags = var.tags
+}
+
+resource "azurerm_role_assignment" "api_acr_pull" {
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "AcrPull"
-  principal_id         = azurerm_user_assigned_identity.acr_pull.principal_id
+  principal_id         = azurerm_user_assigned_identity.api.principal_id
+}
+
+resource "azurerm_role_assignment" "redis_acr_pull" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_user_assigned_identity.redis.principal_id
 }
 
 resource "azurerm_container_app" "main_api" {
@@ -45,12 +59,12 @@ resource "azurerm_container_app" "main_api" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.acr_pull.id]
+    identity_ids = [azurerm_user_assigned_identity.api.id]
   }
 
   registry {
     server   = azurerm_container_registry.acr.login_server
-    identity = azurerm_user_assigned_identity.acr_pull.id
+    identity = azurerm_user_assigned_identity.api.id
   }
 
   template {
@@ -221,12 +235,12 @@ resource "azurerm_container_app" "main_redis" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.acr_pull.id]
+    identity_ids = [azurerm_user_assigned_identity.redis.id]
   }
 
   registry {
     server   = azurerm_container_registry.acr.login_server
-    identity = azurerm_user_assigned_identity.acr_pull.id
+    identity = azurerm_user_assigned_identity.redis.id
   }
 
   template {
