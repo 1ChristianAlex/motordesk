@@ -6,6 +6,24 @@ on:
       - dev
     tags:
       - '*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment (dev, qa, prod)'
+        required: false
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Deployment environment (dev, qa, prod)'
+        required: false
+        type: string
+        default: 'dev'
 
 jobs:
   ci:
@@ -17,7 +35,7 @@ jobs:
 
     env:
       PROJECT_NAME: motordesk
-      ENVIRONMENT: ${{ github.ref_type == 'branch' && github.ref_name == 'dev' && 'dev' || 'qa' }}
+      ENVIRONMENT: ${{ inputs.environment || (github.ref_type == 'branch' && github.ref_name == 'dev' && 'dev' || 'qa') }}
 
     steps:
       - name: Checkout
