@@ -84,6 +84,12 @@ variable "dev_client_ip" {
   default     = "0.0.0.0"
 }
 
+variable "image_tag" {
+  description = "Image tag for docker images"
+  type        = string
+  default     = ""
+}
+
 # variable "aks_node_count" {
 #   description = "Initial number of AKS nodes."
 #   type        = number

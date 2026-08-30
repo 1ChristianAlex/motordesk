@@ -1,6 +1,16 @@
 name: terraform-azure
 
 on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "Terraform environment to run"
+        required: true
+        type: string
+      docker-image-tag:
+        description: "Docker image tag"
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       environment:
@@ -11,6 +21,12 @@ on:
         options:
           - dev
           - qa
+
+      docker-image-tag:
+        description: "Docker image tag"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -48,4 +64,4 @@ jobs:
         run: terraform validate
 
       - name: Terraform Apply
-        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}"
+        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}" -var="image_tag=${{ inputs.docker-image-tag }}"

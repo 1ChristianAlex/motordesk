@@ -23,7 +23,7 @@ jobs:
       PROJECT_NAME: motordesk
       AZURE_RESOURCE_GROUP: ${{ github.ref_type == 'branch' && github.ref_name == 'dev' && 'terraform-dev-motordesk' || 'terraform-qa-motordesk' }}
       ACR_NAME: ${{ github.ref_type == 'branch' && github.ref_name == 'dev' && 'devmotordeskacr' || 'qamotordeskacr' }}
-      IMAGE_TAG: ${{ github.ref_type == 'branch' && github.ref_name == 'dev' && 'dev' || github.ref_name }}
+      IMAGE_TAG: ${{ github.run_number }}
 
     steps:
       - name: Checkout
@@ -61,3 +61,11 @@ jobs:
             -t "${{ steps.acr.outputs.login_server }}/${PROJECT_NAME}/redis:${IMAGE_TAG}" \
             .
           docker push "${{ steps.acr.outputs.login_server }}/${PROJECT_NAME}/redis:${IMAGE_TAG}"
+
+  terraform-deploy:
+    needs: build-and-push
+    uses: ./.github/workflows/terraform-azure.yml
+    with:
+      environment: ${{ github.ref_type == 'branch' && github.ref_name == 'dev' && 'dev' || 'qa' }}
+      docker-image-tag: ${{ github.run_number }}
+    secrets: inherit

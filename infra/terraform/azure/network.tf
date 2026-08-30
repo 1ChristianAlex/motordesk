@@ -36,7 +36,7 @@ resource "azurerm_subnet" "container_apps" {
   name                 = "${var.environment}-${var.project_name}-subnet-ca"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.network.name
-  address_prefixes     = ["10.20.1.0/23"]
+  address_prefixes     = ["10.20.2.0/23"]
 
   delegation {
     name = "ca"

@@ -35,6 +35,8 @@ resource "azurerm_role_assignment" "acr_pull" {
 }
 
 resource "azurerm_container_app" "main_api" {
+  count = var.image_tag == "" ? 0 : 1
+
   name                         = "main-api-${var.environment}-${var.project_name}"
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.rg.name
@@ -57,7 +59,7 @@ resource "azurerm_container_app" "main_api" {
 
     container {
       name   = "${var.project_name}-api"
-      image  = "${azurerm_container_registry.acr.login_server}/${var.project_name}/api:latest"
+      image  = "${azurerm_container_registry.acr.login_server}/${var.project_name}/api:${var.image_tag}"
       cpu    = 0.5
       memory = "1Gi"
 
@@ -209,6 +211,8 @@ resource "azurerm_container_app" "main_api" {
 }
 
 resource "azurerm_container_app" "main_redis" {
+  count = var.image_tag == "" ? 0 : 1
+
   name                         = "main-redis-${var.environment}-${var.project_name}"
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.rg.name
@@ -231,7 +235,7 @@ resource "azurerm_container_app" "main_redis" {
 
     container {
       name   = "${var.project_name}-redis"
-      image  = "${azurerm_container_registry.acr.login_server}/${var.project_name}/redis:latest"
+      image  = "${azurerm_container_registry.acr.login_server}/${var.project_name}/redis:${var.image_tag}"
       cpu    = 0.25
       memory = "0.5Gi"
 
