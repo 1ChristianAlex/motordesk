@@ -1,0 +1,117 @@
+info:
+  name: Manager - Create a new vehicle
+  type: http
+  seq: 2
+  tags:
+    - vehicles
+    - create
+
+http:
+  method: POST
+  url: "{{baseUrl}}/vehicles/create"
+  body:
+    type: json
+    data: |-
+      {
+        "plate": "ABC3E23",
+        "brand": "Toyota",
+        "model": "Corolla XEi",
+        "color": "Prata",
+        "year": 2022,
+        "mileage": 45800,
+        "chassis": "9BRBD48E0D2234567",
+        "fuelType": "FLEX",
+        "ownerId": 1
+      }
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 202 Response
+    description: "202"
+    request:
+      url: "{{baseUrl}}/vehicles/create"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "plate": "ABC3E23",
+            "brand": "Toyota",
+            "model": "Corolla XEi",
+            "color": "Prata",
+            "year": 2022,
+            "mileage": 45800,
+            "chassis": "9BRBD48E0D2234567",
+            "fuelType": "FLEX",
+            "ownerId": 1
+          }
+    response:
+      status: 202
+      statusText: Accepted
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {
+              "userId": 7597,
+              "plate": "string",
+              "brand": "string",
+              "model": "string",
+              "color": "string",
+              "year": 173,
+              "mileage": 2882,
+              "chassis": "string",
+              "fuelType": "ELECTRIC",
+              "createdAt": "string",
+              "updatedAt": "string",
+              "id": 2863
+            },
+            "status": 8810,
+            "errors": null
+          }
+  - name: 400 Response
+    description: "400"
+    request:
+      url: "{{baseUrl}}/vehicles/create"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "plate": "ABC3E23",
+            "brand": "Toyota",
+            "model": "Corolla XEi",
+            "color": "Prata",
+            "year": 2022,
+            "mileage": 45800,
+            "chassis": "9BRBD48E0D2234567",
+            "fuelType": "FLEX",
+            "ownerId": 1
+          }
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {},
+            "status": 9036,
+            "errors": null
+          }
+
+docs: Create a new vehicle to be used on a service order

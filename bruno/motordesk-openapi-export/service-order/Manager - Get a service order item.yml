@@ -1,0 +1,177 @@
+info:
+  name: Manager - Get a service order item
+  type: http
+  seq: 3
+  tags:
+    - service-order
+    - manager
+    - "{code}"
+
+http:
+  method: GET
+  url: "{{baseUrl}}/service-order/manager/:code"
+  params:
+    - name: code
+      value: "#WT0jrd6ki5OymnsAFXpv"
+      type: path
+      description: Need to be encoded
+  auth:
+    type: bearer
+    token: "{{token}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response
+    description: "200"
+    request:
+      url: "{{baseUrl}}/service-order/manager/:code"
+      method: GET
+      params:
+        - name: code
+          value: "#WT0jrd6ki5OymnsAFXpv"
+          type: path
+          description: Need to be encoded
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {
+              "id": 7070,
+              "client": {
+                "id": 8903,
+                "addressId": 8150,
+                "firstName": "string",
+                "lastName": "string",
+                "email": "string",
+                "phone": "string",
+                "cpf": "string",
+                "isActive": true,
+                "createdAt": "string",
+                "updatedAt": "string",
+                "companyId": null
+              },
+              "operator": {
+                "id": 6711,
+                "addressId": 4394,
+                "firstName": "string",
+                "lastName": "string",
+                "email": "string",
+                "phone": "string",
+                "cpf": "string",
+                "isActive": false,
+                "createdAt": "string",
+                "updatedAt": "string",
+                "companyId": null
+              },
+              "vehicle": {
+                "userId": 4228,
+                "plate": "string",
+                "brand": "string",
+                "model": "string",
+                "color": "string",
+                "year": 4459,
+                "mileage": 2705,
+                "chassis": "string",
+                "fuelType": "HYBRID",
+                "createdAt": "string",
+                "updatedAt": "string",
+                "id": 8950
+              },
+              "status": "QUEUED",
+              "complaint": "string",
+              "code": "string",
+              "expectedMinutes": 3051,
+              "totalPrice": "string",
+              "tasks": [
+                {
+                  "id": 4398,
+                  "name": "string",
+                  "estimatedMinutes": 4093,
+                  "price": "string",
+                  "isActive": false,
+                  "category": "ENGINE",
+                  "status": "COMPLETE",
+                  "description": null
+                },
+                {
+                  "id": 9744,
+                  "name": "string",
+                  "estimatedMinutes": 9342,
+                  "price": "string",
+                  "isActive": false,
+                  "category": "ALIGNMENT",
+                  "status": "NOT_STARTED",
+                  "description": "string"
+                }
+              ],
+              "diagnosis": "string",
+              "inventoryItems": [
+                {
+                  "id": 7378,
+                  "sku": "string",
+                  "name": "string",
+                  "quantity": 7042,
+                  "minimumQuantity": 8760,
+                  "unitPrice": {
+                    "value": "string"
+                  },
+                  "isActive": false,
+                  "description": null
+                },
+                {
+                  "id": 636,
+                  "sku": "string",
+                  "name": "string",
+                  "quantity": 4082,
+                  "minimumQuantity": 2514,
+                  "unitPrice": {
+                    "value": "string"
+                  },
+                  "isActive": true,
+                  "description": null
+                }
+              ]
+            },
+            "status": 3672,
+            "errors": [
+              "string",
+              "string"
+            ]
+          }
+  - name: 400 Response
+    description: "400"
+    request:
+      url: "{{baseUrl}}/service-order/manager/:code"
+      method: GET
+      params:
+        - name: code
+          value: "#WT0jrd6ki5OymnsAFXpv"
+          type: path
+          description: Need to be encoded
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {},
+            "status": 9036,
+            "errors": null
+          }
+
+docs: Get any service order from any client

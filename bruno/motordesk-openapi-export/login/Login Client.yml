@@ -1,0 +1,95 @@
+info:
+  name: Login Client
+  type: http
+  seq: 2
+  tags:
+    - login
+
+http:
+  method: POST
+  url: "{{baseUrl}}/login"
+  body:
+    type: json
+    data: |-
+      {
+        "userName": "sehem32096@bocably.com",
+        "password": "test@123!"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Email
+    description: Email
+    request:
+      url: "{{baseUrl}}/login"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "userName": "christian.alexsander@email.com",
+            "password": "test@123!"
+          }
+    response:
+      status: 202
+      statusText: Accepted
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {
+              "token": "string",
+              "user": {
+                "id": 4002,
+                "addressId": 4214,
+                "firstName": "string",
+                "lastName": "string",
+                "email": "string",
+                "phone": "string",
+                "cpf": "string",
+                "isActive": true,
+                "createdAt": "string",
+                "updatedAt": "string",
+                "companyId": 1861
+              }
+            },
+            "status": 6903,
+            "errors": null
+          }
+  - name: CNPJ
+    description: CNPJ
+    request:
+      url: "{{baseUrl}}/login"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+                 "userName":"22855604000152",
+                 "password":"test@123!"
+                }
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+            "data": {},
+            "status": 9036,
+            "errors": null
+          }
+
+docs: You can login using email, cpf or cnpj

@@ -1,7 +1,7 @@
 package com.khrix.application.vehicles.usecase
 
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.vehicle.repository.VehiclesRepository
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.vehicle.port.repository.VehiclesRepository
 import com.khrix.testutils.sampleVehicle
 import io.mockk.coEvery
 import io.mockk.coVerify

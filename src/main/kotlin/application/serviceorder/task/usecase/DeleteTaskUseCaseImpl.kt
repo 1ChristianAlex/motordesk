@@ -1,17 +1,16 @@
 package com.khrix.application.serviceorder.task.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.serviceorder.task.repository.TaskRepository
-import com.khrix.domain.serviceorder.task.usecase.DeleteTaskUseCase
+import com.khrix.domain.serviceorder.task.port.repository.TaskRepository
+import com.khrix.domain.serviceorder.task.port.usecase.DeleteTaskUseCase
 
 class DeleteTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
-) : DeleteTaskUseCase, BaseUseCaseImpl<Int, Unit>() {
+) : BaseUseCaseImpl<Int, Unit>(),
+    DeleteTaskUseCase {
     override suspend fun internalExecute(command: Int) {
         taskRepository.delete(command)
     }
 
-    override suspend fun useCaseDescription(): String {
-        return "Soft delete task - deactivate"
-    }
+    override suspend fun useCaseDescription(): String = "Soft delete task - deactivate"
 }

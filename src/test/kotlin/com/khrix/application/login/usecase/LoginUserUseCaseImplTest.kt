@@ -1,9 +1,9 @@
 package com.khrix.application.login.usecase
 
 import com.khrix.domain.user.model.LoginTypes
-import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.user.security.PasswordHasher
-import com.khrix.domain.user.usecase.InvalidCredentialsException
+import com.khrix.domain.user.port.repository.UserRepository
+import com.khrix.domain.user.port.security.SecurityHasher
+import com.khrix.domain.user.port.usecase.InvalidCredentialsException
 import com.khrix.domain.valueobject.user.Email
 import com.khrix.domain.valueobject.user.Password
 import com.khrix.testutils.sampleUser
@@ -23,8 +23,8 @@ import kotlin.test.assertFailsWith
 
 class LoginUserUseCaseImplGeneratedTest {
     private val userRepository = mockk<UserRepository>()
-    private val passwordHasher = mockk<PasswordHasher>()
-    private val impl = LoginUserUseCaseImpl(userRepository, passwordHasher)
+    private val securityHasher = mockk<SecurityHasher>()
+    private val impl = LoginUserUseCaseImpl(userRepository, securityHasher)
 
     @BeforeTest
     fun setUp() {
@@ -60,12 +60,12 @@ class LoginUserUseCaseImplGeneratedTest {
             val cmd = LoginTypes.EmailCredentials(email = user.email, password = Password.Raw("rawPass!1234"))
 
             coEvery { userRepository.getByEmail(user.email) } returns user
-            coEvery { passwordHasher.verify(any(), any()) } returns true
+            coEvery { securityHasher.verify(any(), any()) } returns true
 
             val result = impl.execute(cmd)
             val returned = result.getOrThrow()
             assertEquals(user, returned)
-            coVerify { passwordHasher.verify(any(), any()) }
+            coVerify { securityHasher.verify(any(), any()) }
         }
     }
 }

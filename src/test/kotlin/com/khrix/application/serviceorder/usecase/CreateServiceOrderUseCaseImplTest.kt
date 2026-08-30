@@ -1,20 +1,21 @@
 package com.khrix.application.serviceorder.usecase
 
-import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
-import com.khrix.domain.inventory.usecase.GetInventoryByListIdOrSkuUseCase
-import com.khrix.domain.serviceorder.repository.ServiceOrderHistoryRepository
-import com.khrix.domain.serviceorder.repository.ServiceOrderRepository
-import com.khrix.domain.serviceorder.task.usecase.GetTaskByListIdUseCase
-import com.khrix.domain.serviceorder.usecase.CreateServiceOrderCommand
-import com.khrix.domain.user.usecase.GetUserUseCase
-import com.khrix.domain.vehicle.usecase.GetVehicleByIdUseCase
-import com.khrix.infrastructure.sqids.SqIdsShortIdImpl
+import com.khrix.adapter.outbound.sqids.SqIdsShortIdImpl
+import com.khrix.domain.email.port.usecase.CreateEmailQueueUseCase
+import com.khrix.domain.inventory.port.usecase.GetInventoryByListIdOrSkuUseCase
+import com.khrix.domain.serviceorder.port.repository.ServiceOrderRepository
+import com.khrix.domain.serviceorder.port.usecase.CreateServiceOrderCommand
+import com.khrix.domain.serviceorder.task.port.usecase.GetTaskByListIdUseCase
+import com.khrix.domain.user.port.usecase.GetUserUseCase
+import com.khrix.domain.vehicle.port.usecase.GetVehicleByIdUseCase
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -30,19 +31,6 @@ class CreateServiceOrderUseCaseImplTest {
     private val getVehicleByIdUseCase = mockk<GetVehicleByIdUseCase>()
     private val getTaskByListIdUseCase = mockk<GetTaskByListIdUseCase>()
     private val createEmailQueueUseCase = mockk<CreateEmailQueueUseCase>()
-    private val serviceOrderHistoryRepository = mockk<ServiceOrderHistoryRepository>()
-
-    private val impl =
-        CreateServiceOrderUseCaseImpl(
-            serviceOrderRepository,
-            getInventoryByListIdOrSkuUseCase,
-            getUserUseCase,
-            getVehicleByIdUseCase,
-            getTaskByListIdUseCase,
-            createEmailQueueUseCase,
-            shortId = SqIdsShortIdImpl(),
-            serviceOrderHistoryRepository = serviceOrderHistoryRepository,
-        )
 
     @BeforeTest
     fun setUp() {
@@ -57,6 +45,19 @@ class CreateServiceOrderUseCaseImplTest {
     @Test
     fun `internalExecute creates service order and enqueues email`() =
         runTest {
+            val applicationScope = CoroutineScope(StandardTestDispatcher(testScheduler))
+            val impl =
+                CreateServiceOrderUseCaseImpl(
+                    serviceOrderRepository,
+                    getInventoryByListIdOrSkuUseCase,
+                    getUserUseCase,
+                    getVehicleByIdUseCase,
+                    getTaskByListIdUseCase,
+                    createEmailQueueUseCase,
+                    shortId = SqIdsShortIdImpl(),
+                    scope = applicationScope,
+                )
+
             val sample = sampleServiceOrder()
             val command =
                 CreateServiceOrderCommand(
@@ -77,13 +78,12 @@ class CreateServiceOrderUseCaseImplTest {
             coEvery { serviceOrderRepository.createRead(any()) } returns sample
             coEvery { serviceOrderRepository.getByCode(any()) } returns null
             coEvery { createEmailQueueUseCase.execute(any()) } returns Result.success(Unit)
-            coEvery { serviceOrderHistoryRepository.create(any()) } returns 1
 
             val res = impl.execute(command)
             val created = res.getOrThrow()
+            advanceUntilIdle()
             assertEquals(sample, created)
             coVerify { serviceOrderRepository.createRead(any()) }
             coVerify { createEmailQueueUseCase.execute(any()) }
-            coVerify { serviceOrderHistoryRepository.create(any()) }
         }
 }

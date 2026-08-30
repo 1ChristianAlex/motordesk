@@ -1,11 +1,11 @@
 package com.khrix.application.register.usecase
 
-import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
-import com.khrix.domain.company.usecase.SearchCompanyByCnpjUseCase
-import com.khrix.domain.user.address.repository.AddressRepository
-import com.khrix.domain.user.repository.UserRepository
-import com.khrix.domain.user.security.PasswordHasher
-import com.khrix.domain.user.usecase.CreateNewUserUseCaseCommand
+import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCase
+import com.khrix.domain.company.port.usecase.SearchCompanyByCnpjUseCase
+import com.khrix.domain.user.address.port.repository.AddressRepository
+import com.khrix.domain.user.port.repository.UserRepository
+import com.khrix.domain.user.port.security.SecurityHasher
+import com.khrix.domain.user.port.usecase.CreateNewUserUseCaseCommand
 import com.khrix.testutils.sampleAddress
 import com.khrix.testutils.sampleCompany
 import com.khrix.testutils.sampleUser
@@ -24,7 +24,7 @@ import kotlin.test.assertEquals
 
 class CreateNewUserUseCaseImplGeneratedTest {
     private val userRepository = mockk<UserRepository>()
-    private val passwordHasher = mockk<PasswordHasher>()
+    private val securityHasher = mockk<SecurityHasher>()
     private val addressRepository = mockk<AddressRepository>()
     private val searchCompanyByCnpjUseCase = mockk<SearchCompanyByCnpjUseCase>()
     private val createNewCompanyUseCase = mockk<CreateNewCompanyUseCase>()
@@ -32,7 +32,7 @@ class CreateNewUserUseCaseImplGeneratedTest {
     private val impl =
         CreateNewUserUseCaseImpl(
             userRepository,
-            passwordHasher,
+            securityHasher,
             addressRepository,
             searchCompanyByCnpjUseCase,
             createNewCompanyUseCase,
@@ -62,7 +62,7 @@ class CreateNewUserUseCaseImplGeneratedTest {
             val address = sampleAddress()
             val company = sampleCompany()
 
-            coEvery { passwordHasher.hash(any()) } returns "hashed"
+            coEvery { securityHasher.hash(any()) } returns "hashed"
             coEvery { addressRepository.create(any()) } returns 10
             coEvery { searchCompanyByCnpjUseCase.execute(any()) } returns Result.success(null)
             coEvery { createNewCompanyUseCase.execute(any()) } returns Result.success(company)
@@ -81,7 +81,7 @@ class CreateNewUserUseCaseImplGeneratedTest {
             val created = res.getOrThrow()
             assertEquals(user.email.value, created.email.value)
 
-            coVerify { passwordHasher.hash(any()) }
+            coVerify { securityHasher.hash(any()) }
             coVerify { addressRepository.create(any()) }
             coVerify { userRepository.create(any()) }
         }

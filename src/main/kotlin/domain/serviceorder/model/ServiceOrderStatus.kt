@@ -4,33 +4,46 @@ import com.khrix.domain.user.model.Role
 
 enum class ServiceOrderStatus {
     CREATED,
-    QUEUED,
     WAITING_APPROVAL,
     REJECT_BY_CLIENT,
     IN_DIAGNOSIS,
     IN_PROGRESS,
     FINISHED,
     DELIVERED,
-    CANCELLED;
+    CANCELLED,
+    ;
 
-    private fun getAllowStatusByRole(role: Role): List<ServiceOrderStatus> {
-        return when (role) {
-            Role.ADMIN,
-            Role.MANAGER -> entries
-
-            Role.ENGINEER -> listOf(
-                IN_DIAGNOSIS,
-                IN_PROGRESS,
-                FINISHED,
-                DELIVERED,
+    fun needApproval(): Boolean {
+        val requireApprovals =
+            listOf(
+                CREATED,
+                WAITING_APPROVAL,
             )
 
-            else -> listOf()
+        return this in requireApprovals
+    }
+
+    private fun getAllowStatusByRole(role: Role): List<ServiceOrderStatus> =
+        when (role) {
+            Role.ADMIN,
+            Role.MANAGER,
+            -> {
+                entries
+            }
+
+            Role.ENGINEER -> {
+                listOf(
+                    IN_DIAGNOSIS,
+                    IN_PROGRESS,
+                    FINISHED,
+                    DELIVERED,
+                )
+            }
+
+            else -> {
+                listOf()
+            }
         }
-    }
 
-    fun checkRole(role: Role): Boolean {
-        return this in getAllowStatusByRole(role)
-    }
+    fun checkRole(role: Role): Boolean = this in getAllowStatusByRole(role)
 }
-
