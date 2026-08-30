@@ -3,6 +3,11 @@ name: Terraform Azure
 on:
   workflow_call:
     inputs:
+      new-backend:
+        required: false
+        type: boolean
+        default: false
+
       environment:
         required: true
         type: string
@@ -17,6 +22,10 @@ on:
 
   workflow_dispatch:
     inputs:
+      new-backend:
+        required: false
+        type: boolean
+        default: false
       environment:
         description: Azure environment
         required: true
@@ -52,6 +61,7 @@ jobs:
         run: terraform init -input=false
 
       - name: Terraform Apply Backend
+        if: inputs.new-backend == true
         working-directory: infra/terraform/backend
         run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}"
 
