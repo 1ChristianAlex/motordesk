@@ -83,4 +83,4 @@ jobs:
 
       - name: Terraform Apply
         working-directory: infra/terraform/azure
-        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}" -var="image_tag=${{ inputs.docker-image-tag }}"
+        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}" -var="image_tag=${{ inputs.image_tag }}"
