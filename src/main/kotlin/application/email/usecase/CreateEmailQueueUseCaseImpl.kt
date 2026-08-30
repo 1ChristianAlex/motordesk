@@ -1,16 +1,14 @@
 package com.khrix.application.email.usecase
 
-import com.khrix.application.email.publisher.EmailEventKeys
-import com.khrix.application.email.publisher.EventPublisher
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.email.model.EmailQueueItem
 import com.khrix.domain.email.model.EmailStatus
 import com.khrix.domain.email.model.ServiceOrderEmailMetadata
-import com.khrix.domain.email.port.repository.EmailQueueRepository
-import com.khrix.domain.email.port.usecase.CreateEmailQueueUseCase
+import com.khrix.domain.email.publisher.EventPublisher
+import com.khrix.domain.email.repository.EmailQueueRepository
+import com.khrix.domain.email.usecase.CreateEmailQueueUseCase
 import com.khrix.domain.serviceorder.model.ServiceOrder
-import com.khrix.domain.serviceorder.model.ServiceOrderStatus
-import com.khrix.domain.user.address.port.repository.AddressRepository
+import com.khrix.domain.user.address.repository.AddressRepository
 import io.ktor.server.plugins.di.annotations.Named
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -27,26 +25,12 @@ class CreateEmailQueueUseCaseImpl(
             val clientAddress =
                 addressRepository.read(command.client.addressId) ?: throw NoSuchElementException("Address is null")
 
-            val eventName =
-                if (command.status.needApproval()) {
-                    EmailEventKeys.APPROVAL_EVENT_NAME
-                } else {
-                    EmailEventKeys.UPDATE_EVENT_NAME
-                }
-
             val result =
-                emailQueueRepository.create(
+                emailQueueRepository.createRead(
                     EmailQueueItem(
                         id = 0,
                         recipient = command.client.email.value,
-                        subject =
-                            if (command.status ==
-                                ServiceOrderStatus.CREATED
-                            ) {
-                                "Sua ordem de serviço foi criada!"
-                            } else {
-                                "Sua ordem de serviço tem uma atualização!"
-                            },
+                        subject = "Service Order Created",
                         metadata =
                             ServiceOrderEmailMetadata(
                                 serviceOrder = command,
@@ -59,7 +43,7 @@ class CreateEmailQueueUseCaseImpl(
                     ),
                 )
 
-            eventPublisher.publish(eventName, result)
+            eventPublisher.publish(result)
         }
     }
 

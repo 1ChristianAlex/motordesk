@@ -1,8 +1,8 @@
 package com.khrix.application.company.usecase
 
 import com.khrix.domain.company.model.Company
-import com.khrix.domain.company.port.repository.CompanyRepository
-import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCaseCommand
+import com.khrix.domain.company.repository.CompanyRepository
+import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseCommand
 import com.khrix.domain.valueobject.company.CNPJ
 import com.khrix.domain.valueobject.user.CompanyName
 import io.mockk.coEvery

@@ -30,6 +30,7 @@ secrets.properties
 
 # JVM
 *.class
+*.jar
 *.war
 *.ear
 hs_err_pid*
@@ -72,17 +73,9 @@ coverage/
 # Package managers
 node_modules/
 
-# Terraform
-**/.terraform/
-*.tfstate
-*.tfstate.*
-crash.log
-crash.*.log
-
 # Generated Gradle files
 buildSrc/build/
 
 # Keep this file tracked
 !/.gitignore
 
-infra/terraform/azure/az-secrets.json

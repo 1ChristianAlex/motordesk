@@ -1,5 +1,6 @@
 package com.khrix.domain.valueobject.company
 
+import com.khrix.domain.valueobject.company.CNPJ
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

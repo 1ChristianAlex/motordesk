@@ -9,12 +9,12 @@
 ![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 ![OpenAPI](https://img.shields.io/badge/OpenAPI-3.x-6BA539?logo=openapiinitiative&logoColor=white)
-![DDD](https://img.shields.io/badge/Architecture-DDD-blueviolet)
-![Hexagonal Architecture](https://img.shields.io/badge/Hexagonal-Architecture-success)
+![DDD](https://img.shields.io/badge/Architecture-DDD-blueviolet) ![Clean
+Architecture](https://img.shields.io/badge/Clean-Architecture-success)
 
-Motor Desk is a backend API for automotive repair shop management built with Kotlin and Ktor 3. The codebase follows a
-hexagonal style with domain ports, application use cases, and infrastructure adapters. It manages service orders,
-customers, vehicles, tasks, inventory items, approvals, authentication, service order history, and asynchronous email
+Backend API for automotive repair shop management built with **Kotlin**
+and **Ktor 3**. Motor Desk manages Service Orders, customers, vehicles,
+tasks, inventory items, budget approvals and asynchronous email
 notifications.
 
 ## Technologies
@@ -22,56 +22,95 @@ notifications.
 - Kotlin
 - Ktor 3
 - PostgreSQL + Exposed
-- MongoDB for Service Order history
-- Redis Streams for asynchronous email processing
-- JWT authentication
+- MongoDB (Service Order history)
+- Redis Streams (asynchronous email queue)
+- JWT Authentication
 - Docker Compose
+- Sonar
 - OpenAPI + Swagger UI
+
+## Ubiquitous Language
+
+- [Ubiquitous Language](docs/Ubiquitous%20Language.md)
+
+## Architecture Decision Records
+
+- [ADR-001 - PostgreSQL as the Primary Relational Database](docs/ADR/ADR-001%20—%20PostgreSQL%20+%20Kotlin%20Exposed.md)
+- [ADR-002 - Using Redis Streams for Asynchronous Notification Processing](docs/ADR/ADR-002-Redis-Streams.md)
+- [ADR-003 - Using MongoDB for Service Order Update History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
+
+## Technical-Debt
+
+- [TD-001-Serializable-in-Domain.md](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
+
+## Project Structure
+
+``` text
+src/main/kotlin
+├── domain
+├── application
+└── infrastructure
+
+docs
+├── ADR
+├── Technical-Debt
+├── Ubiquitous Language.md
+├── storytelling
+└── index.html
+
+postman
+```
 
 ## Architecture
 
-### Hexagonal Structure
+### Clean Architecture
 
-```mermaid
+``` mermaid
 flowchart TB
 Infrastructure --> Application
 Application --> Domain
 ```
 
-The main code locations are:
+### Runtime Infrastructure
 
-```text
-src/main/kotlin
-├── domain
-├── application
-└── infrastructure
+``` mermaid
+flowchart LR
+Client --> API[Ktor API]
+API --> PostgreSQL
+API --> MongoDB
+API --> Redis
+API --> Swagger["Swagger UI"]
 ```
 
-## Documentation
+### Service Order Flow
 
-- [Ubiquitous Language](docs/Ubiquitous%20Language.md)
-- [ADR-001 - PostgreSQL + Kotlin Exposed](docs/ADR/ADR-001%20%E2%80%94%20PostgreSQL%20+%20Kotlin%20Exposed.md)
-- [ADR-002 - Redis Streams](docs/ADR/ADR-002-Redis-Streams.md)
-- [ADR-003 - MongoDB Service Order History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
-- [ADR-004 - Azure Communication Services Email](docs/ADR/ADR-004-Azure-Communication-Services-Email.md)
-- [ADR-005 - Migrating to Hexagonal Architecture](docs/ADR/ADR-005-Migrating-to-Hexagonal-Architecture.md)
-- [ADR-006 - Terraform and Microsoft Azure for Infrastructure as Code](docs/ADR/ADR-006-terraform-azure.md)
-- [Send Email Sequence](docs/diagrams/send-email-sequence.md)
-- [Email Sending with Azure](docs/diagrams/email-sending-azure.md)
-- [Technical Debt - Serializable in Domain](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
-- [Business flows](docs/storytelling/)
+![img_1.png](docs/service-order-flow.png)
+
+More about flows can be found on `docs/storytelling/`**
 
 ## Business Flows
 
-- Login / Registration
-- Service Order
-- Vehicle Registration
-- Forgot Password
+Business diagrams are available under `docs/storytelling/`:
+
+- [Login / Registration](docs/storytelling/Login.drawio)
+- [Service Order](docs/storytelling/Service%20Order.drawio)
+- [Vehicle Registration](docs/storytelling/Vehicle%20registration.drawio)
+- [Forgot Password (planned)](docs/storytelling/Forgot%20Password.drawio)
 
 ## API Documentation
 
 - Interactive Swagger UI: `http://127.0.0.1:8080/swaggerUI`
 - Static OpenAPI: `docs/index.html`
+
+### Swagger UI Preview
+
+![Swagger UI](docs/swaggerUI.png)
+
+### Sonar UI Preview
+
+![Sonar UI](docs/sonar-preview.png)
+
+Cove coverage is only on top of domain and application modules**
 
 ## Running the Project
 
@@ -80,64 +119,61 @@ src/main/kotlin
 - JDK 21
 - Docker
 - Docker Compose
-- `kotlinc` (Kotlin compiler) — required for local Terraform testing
-- Terraform (for infrastructure provisioning on Azure)
 
-### Local run
+### Run on your machine
 
-```bash
+``` bash
 docker compose -f docker-compose-dev.yml up -d
+```
+
+``` bash
 ./gradlew runDev
 ```
 
-### Local Terraform Testing
+#### Code analyses (only works with docker-compose-dev.yml)
 
-Motor Desk uses Terraform for Infrastructure as Code (IaC) on Microsoft Azure (see [ADR-006](docs/ADR/ADR-006-terraform-azure.md)).
-
-Local testing of Terraform configurations requires `kotlinc` because the project uses a Kotlin-based orchestration script (`scripts/terraform-local.main.kts`) to automate Terraform workflows. This script:
-
-1. Initializes and applies backend infrastructure (resource groups, storage accounts, containers for Terraform state)
-2. Configures Terraform remote state storage on Azure
-3. Validates Terraform configurations
-4. Plans or applies Azure infrastructure changes
-
-The script is executed by the `terraformLocal` Gradle task, which invokes `kotlinc -script` to run the `.kts` file directly.
-
-**To test Terraform configurations locally:**
-
-```bash
-./gradlew terraformLocal
+``` bash
+./gradlew sonar
 ```
 
-This task accepts optional arguments:
+### Run a product-like build using docker
 
-```bash
-# Plan infrastructure changes for QA environment
-./gradlew terraformLocal --environment qa --action plan
-
-# Apply infrastructure changes for production environment
-./gradlew terraformLocal --environment prod --action apply --image-tag v1.0.0
+``` bash
+docker compose -f docker-compose.yml up -d
 ```
 
-Available arguments:
-- `--environment` (default: `dev`) — deployment environment
-- `--image-tag` — container image tag for deployment
-- `--action` (default: `plan`) — `plan` or `apply`
+### Postman Collection
 
-**Note:** `kotlinc` must be in your system PATH for the script to execute. Ensure your Kotlin installation is correctly configured.
+Postman collection can be loaded up from this repo
 
-### Useful Gradle tasks
+### Seed users
 
-- `./gradlew test` — run unit and integration tests
-- `./gradlew build` — build the project
-- `./gradlew sonar` — run SonarQube analysis
-- `./gradlew buildFatJar` — create a fat JAR for deployment
-- `./gradlew terraformLocal` — test local Terraform configurations (requires `kotlinc`)
+Role Login Password
+  --------------- -------------------------------- -----------
+Customer
 
-## Project Notes
+- christian.alexsander@email.com
+- test@123!
 
-- The application uses Ktor DI at the composition root.
-- Domain ports live under `domain/`.
-- Use-case implementations live under `application/`.
-- Technical integrations live under `infrastructure/`.
-- Azure infrastructure is provisioned with Terraform under `infra/terraform/azure/` and is documented in ADR-006.
+Administrator
+
+- christian.alex@email.com
+- test@123!
+
+## Useful Gradle Tasks
+
+Command Description
+  ----------------------- ----------------------
+`./gradlew runDev`        Run application
+`./gradlew test`          Execute tests
+`./gradlew sonar`         Execute tests, coverage and upload to local sonar
+`./gradlew build`         Full build
+`./gradlew buildFatJar`   Build executable JAR
+
+### Other Resources
+
+- Ubiquitous Language: `docs/Ubiquitous Language.md`
+- Storytelling diagrams: `docs/storytelling/`
+- Static OpenAPI: `docs/index.html`
+- Swagger UI screenshot: `docs/swaggerUI.png`
+- Postman collection: `postman/`

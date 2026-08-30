@@ -91,7 +91,7 @@ data class ServiceOrder(
         if (status in statusListNotAllow) {
             throw IllegalArgumentException("Complaint can only be updated after diagnosis")
         }
-        return this.copy(complaint = complaint)
+        return this.copy(complaint = complaint ?: this.complaint)
     }
 
     fun updateDiagnosis(diagnosis: String? = null): ServiceOrder {

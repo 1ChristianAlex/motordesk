@@ -1,10 +1,10 @@
 package com.khrix.application.company.usecase
 
 import com.khrix.domain.company.model.Company
-import com.khrix.domain.company.port.repository.CompanyRepository
-import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCase
-import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCaseCommand
-import com.khrix.domain.company.port.usecase.CreateNewCompanyUseCaseError
+import com.khrix.domain.company.repository.CompanyRepository
+import com.khrix.domain.company.usecase.CreateNewCompanyUseCase
+import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseCommand
+import com.khrix.domain.company.usecase.CreateNewCompanyUseCaseError
 import com.khrix.domain.core.BaseUseCaseImpl
 import com.khrix.domain.core.getCurrentUtcDateTime
 

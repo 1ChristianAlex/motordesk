@@ -1,9 +1,10 @@
 package com.khrix.application.email.usecase
 
 import com.khrix.application.core.coroutine.ApplicationScope
-import com.khrix.application.email.publisher.EventPublisher
-import com.khrix.domain.email.port.repository.EmailQueueRepository
-import com.khrix.domain.user.address.port.repository.AddressRepository
+import com.khrix.domain.email.model.EmailQueueItem
+import com.khrix.domain.email.publisher.EventPublisher
+import com.khrix.domain.email.repository.EmailQueueRepository
+import com.khrix.domain.user.address.repository.AddressRepository
 import com.khrix.testutils.sampleAddress
 import com.khrix.testutils.sampleServiceOrder
 import io.mockk.coEvery
@@ -31,11 +32,11 @@ class CreateEmailQueueUseCaseImplTest {
             val so = sampleServiceOrder()
             val address = sampleAddress()
             coEvery { addressRepository.read(so.client.addressId) } returns address
-            coEvery { emailQueueRepository.create(any()) } returns 1
+            coEvery { emailQueueRepository.createRead(any()) } returns mockk<EmailQueueItem>()
 
             impl.execute(so).getOrThrow()
             coVerify(timeout = 2_000) {
-                emailQueueRepository.create(
+                emailQueueRepository.createRead(
                     match {
                         it.recipient == so.client.email.value && it.metadata.client.address
                             ?.street == address.street

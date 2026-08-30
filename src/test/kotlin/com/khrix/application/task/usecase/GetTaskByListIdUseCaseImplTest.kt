@@ -1,7 +1,7 @@
 package com.khrix.application.task.usecase
 
 import com.khrix.application.serviceorder.task.usecase.GetTaskByListIdUseCaseImpl
-import com.khrix.domain.serviceorder.task.port.repository.TaskRepository
+import com.khrix.domain.serviceorder.task.repository.TaskRepository
 import com.khrix.testutils.sampleTask
 import io.mockk.coEvery
 import io.mockk.mockk

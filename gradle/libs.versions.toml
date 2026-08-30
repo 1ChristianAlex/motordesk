@@ -1,49 +1,35 @@
 [versions]
-azure-email = "1.2.0-beta.1"
-exposed = "1.4.0"
-konform = "0.11.1"
-kotlin = "2.4.20-RC"
-coroutine = "1.11.0"
-lettuce = "7.6.0.RELEASE"
+exposed = "1.3.0"
+kotlin = "2.3.21"
 logback = "1.5.37"
-mockk = "1.14.11"
-mongodb = "5.9.2"
-postgresql = "42.7.10"
 r2dbc_h2 = "1.1.0.RELEASE"
-sonarqube = "6.2.0.5505"
+postgresql = "42.7.10"
+konform = "0.11.0"
+mockk = "1.14.9"
 sqids = "0.1.1"
-
+mongodb = "5.8.0"
+lettuce = "7.0.0.RELEASE"
+sonarqube = "6.2.0.5505"
 [libraries]
-argon2 = { module = "de.mkammerer:argon2-jvm", version = "2.11" }
-azure-email = { module = "com.azure:azure-communication-email", version.ref = "azure-email" }
+exposed-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-r2dbc", version.ref = "exposed" }
+migration-core = { group = "org.jetbrains.exposed", name = "exposed-migration-core", version.ref = "exposed" }
+migration-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-migration-r2dbc", version.ref = "exposed" }
+h2database-r2dbc = { module = "io.r2dbc:r2dbc-h2", version.ref = "r2dbc_h2" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+konform = { module = "io.konform:konform", version.ref = "konform" }
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
 exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "exposed" }
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
-exposed-jsonb = { group = "org.jetbrains.exposed", name = "exposed-json", version.ref = "exposed" }
 exposed-kotlin-datetime = { group = "org.jetbrains.exposed", name = "exposed-kotlin-datetime", version.ref = "exposed" }
-exposed-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-r2dbc", version.ref = "exposed" }
-h2database-r2dbc = { module = "io.r2dbc:r2dbc-h2", version.ref = "r2dbc_h2" }
-konform = { module = "io.konform:konform", version.ref = "konform" }
-lettuce = { module = "io.lettuce:lettuce-core", version.ref = "lettuce" }
-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-migration-core = { group = "org.jetbrains.exposed", name = "exposed-migration-core", version.ref = "exposed" }
-migration-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-migration-r2dbc", version.ref = "exposed" }
+exposed-jsonb = { group = "org.jetbrains.exposed", name = "exposed-json", version.ref = "exposed" }
+argon2 = { module = "de.mkammerer:argon2-jvm", version = "2.11" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-mongodb = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
-postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
-kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version = "0.11.0" }
 sqids = { module = "org.sqids:sqids-kotlin", version.ref = "sqids" }
-
-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
-coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "coroutine" }
-coroutines-reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactive", version.ref = "coroutine" }
+mongodb = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
+lettuce = { module = "io.lettuce:lettuce-core", version.ref = "lettuce" }
 
 [bundles]
-coroutines = [
-    "coroutines-core",
-    "coroutines-reactor",
-    "coroutines-reactive"
-]
 exposed = [
     "exposed-core",
     "exposed-dao",
@@ -60,5 +46,4 @@ exposed = [
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.22.0" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }

@@ -1,4 +1,4 @@
-# TD-001 - Technical Debt: `@Serializable` Annotation in the Domain Layer
+# ADR-003 - Technical Debt: `@Serializable` Annotation in the Domain Layer
 
 ## Status
 
@@ -8,17 +8,13 @@ Opened (Technical Debt)
 
 ## Context
 
-The project follows **Domain-Driven Design (DDD)** and a hexagonal architecture, where the **Domain** layer should remain
-independent of infrastructure and framework-specific concerns.
+The project follows **Domain-Driven Design (DDD)** and a layered architecture, where the **Domain** layer should remain independent of infrastructure and framework-specific concerns.
 
-During the implementation of the Service Order history, domain models needed to be serialized for persistence in MongoDB
-and for message exchange through Redis Streams.
+During the implementation of the Service Order history, domain models needed to be serialized for persistence in MongoDB and for message exchange through Redis Streams.
 
-To simplify the implementation within the project's time constraints, the Kotlin Serialization annotation
-(`@Serializable`) was added directly to several domain classes.
+To simplify the implementation within the project's time constraints, the Kotlin Serialization annotation (`@Serializable`) was added directly to several domain classes.
 
-Although this approach reduced development effort, it introduced an unwanted dependency between the Domain layer and the
-`kotlinx.serialization` framework.
+Although this approach reduced development effort, it introduced an unwanted dependency between the Domain layer and the `kotlinx.serialization` framework.
 
 ---
 
@@ -41,8 +37,7 @@ Consequences include:
 
 The project will temporarily keep the `@Serializable` annotations in the Domain layer.
 
-This decision was made to meet the academic project's deadline while avoiding unnecessary complexity during the initial
-implementation.
+This decision was made to meet the academic project's deadline while avoiding unnecessary complexity during the initial implementation.
 
 The issue is recognized as **technical debt** and should be addressed in a future refactoring.
 
@@ -50,10 +45,9 @@ The issue is recognized as **technical debt** and should be addressed in a futur
 
 ## Proposed Solution
 
-Serialization concerns should be moved to the infrastructure layer.
+Serialization concerns should be moved to the Infrastructure layer.
 
-Instead of serializing domain entities directly, dedicated persistence models (Documents) and message models
-(Events/DTOs) should be introduced.
+Instead of serializing domain entities directly, dedicated persistence models (Documents) and message models (Events/DTOs) should be introduced.
 
 Mapping between Domain objects and persistence/message models should be performed through dedicated mapper classes.
 
@@ -86,7 +80,7 @@ However, these drawbacks are considered acceptable in exchange for a cleaner arc
 ## Migration Plan
 
 1. Remove `@Serializable` from all Domain classes.
-2. Implement mappers between Domain and infrastructure models.
+2. Implement mappers between Domain and Infrastructure models.
 3. Update repositories and publishers to use the new models.
 4. Remove the dependency on Kotlin Serialization from the Domain module.
 
@@ -96,8 +90,7 @@ However, these drawbacks are considered acceptable in exchange for a cleaner arc
 
 **Medium**
 
-The current implementation is stable and does not compromise business functionality. The refactoring should be scheduled
-when architectural improvements become a priority over feature development.
+The current implementation is stable and does not compromise business functionality. The refactoring should be scheduled when architectural improvements become a priority over feature development.
 
 ---
 

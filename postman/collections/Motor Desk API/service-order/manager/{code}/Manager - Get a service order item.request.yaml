@@ -1,0 +1,29 @@
+$kind: http-request
+name: Manager - Get a service order item
+description: Get any service order from any client
+url: "{{baseUrl}}/service-order/manager/:code"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: code
+    value: "#WT0jrd6ki5OymnsAFXpv"
+    description: Need to be encoded
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+auth:
+  type: bearer
+  credentials:
+    token: "{{managerToken}}"
+examples: ./.resources/Manager - Get a service order item.resources/examples
+order: 2000

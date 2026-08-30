@@ -1,10 +1,10 @@
 package com.khrix.application.email.usecase
 
 import com.khrix.domain.core.BaseUseCaseImpl
-import com.khrix.domain.email.port.usecase.UpdateEmailQueueCommand
-import com.khrix.domain.email.port.usecase.UpdateEmailQueueUseCase
-import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderCommand
-import com.khrix.domain.serviceorder.port.usecase.UpdateServiceOrderUseCase
+import com.khrix.domain.email.usecase.UpdateEmailQueueCommand
+import com.khrix.domain.email.usecase.UpdateEmailQueueUseCase
+import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderCommand
+import com.khrix.domain.serviceorder.usecase.UpdateServiceOrderUseCase
 import com.khrix.domain.user.model.Role
 import io.ktor.server.plugins.di.annotations.Named
 import kotlinx.coroutines.CoroutineScope

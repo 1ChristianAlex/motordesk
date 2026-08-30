@@ -7,21 +7,19 @@ import io.konform.validation.Validation
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
-enum class FuelType(
-    val value: String,
-) {
+enum class FuelType(val value: String) {
     GASOLINE("GASOLINE"),
     ETHANOL("ETHANOL"),
     FLEX("FLEX"),
     DIESEL("DIESEL"),
     ELECTRIC("ELECTRIC"),
-    HYBRID("HYBRID"),
-    ;
+    HYBRID("HYBRID");
 
     companion object {
-        fun fromValue(value: String): FuelType =
-            entries.firstOrNull { it.value == value.uppercase() }
+        fun fromValue(value: String): FuelType {
+            return entries.firstOrNull { it.value == value.uppercase() }
                 ?: throw IllegalArgumentException("Invalid fuel type: $value")
+        }
     }
 }
 
@@ -40,36 +38,37 @@ data class Vehicle(
     val createdAt: LocalDateTime? = null,
     val updatedAt: LocalDateTime? = null,
 ) {
-    private fun validation() =
-        Validation.Companion<Vehicle> {
-            Vehicle::brand {
-                constrain("Brand cannot be blank") { it.isNotBlank() }
-            }
-            Vehicle::model {
-                constrain("Model cannot be blank") { it.isNotBlank() }
-            }
-            Vehicle::color {
-                constrain("Color cannot be blank") { it.isNotBlank() }
-            }
-            Vehicle::mileage {
-                constrain("Mileage cannot be negative") { it >= 0 }
-            }
-            Vehicle::chassis {
-                constrain("Chassis cannot be blank") { it.isNotBlank() }
-            }
-            Vehicle::ownerId {
-                constrain("User ID cannot be blank") { it >= 0 }
-            }
-            Vehicle::fuelType {
-                constrain("Fuel type cannot be blank") { it.value.isNotBlank() }
-            }
+    private fun validation() = Validation.Companion<Vehicle> {
+        Vehicle::brand {
+            constrain("Brand cannot be blank") { it.isNotBlank() }
         }
+        Vehicle::model {
+            constrain("Model cannot be blank") { it.isNotBlank() }
+        }
+        Vehicle::color {
+            constrain("Color cannot be blank") { it.isNotBlank() }
+        }
+        Vehicle::mileage {
+            constrain("Mileage cannot be negative") { it >= 0 }
+        }
+        Vehicle::chassis {
+            constrain("Chassis cannot be blank") { it.isNotBlank() }
+        }
+        Vehicle::ownerId {
+            constrain("User ID cannot be blank") { it >= 0 }
+        }
+        Vehicle::fuelType {
+            constrain("Fuel type cannot be blank") { it.value.isNotBlank() }
+        }
+    }
 
     init {
         validateWith(validation())
     }
 
-    fun updateColor(color: String): Vehicle = this.copy(color = color)
+    fun updateColor(color: String): Vehicle {
+        return this.copy(color = color)
+    }
 
     fun updateMileage(mileage: Int): Vehicle {
         if (this.mileage > mileage) {
@@ -78,4 +77,5 @@ data class Vehicle(
 
         return this.copy(mileage = mileage)
     }
+
 }

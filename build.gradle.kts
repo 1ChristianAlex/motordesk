@@ -1,10 +1,7 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.buildkonfig)
     alias(ktorLibs.plugins.ktor)
+    alias(libs.plugins.kotlin.serialization)
     jacoco
     alias(libs.plugins.sonarqube)
 }
@@ -12,89 +9,26 @@ plugins {
 group = "com.khrix"
 version = "1.0.0-SNAPSHOT"
 
-kotlin {
-    jvmToolchain(21)
-}
-
 application {
     mainClass = "com.khrix.MainKt"
 }
 
-buildkonfig {
-    packageName = "com.khrix"
-
-    defaultConfigs {
-        buildConfigField(Type.STRING, "PROPERTIES_FILE", "secrets.properties")
-    }
+kotlin {
+    jvmToolchain(21)
 }
-
 ktor {
 }
-
 sonar {
     properties {
         property("sonar.projectKey", "Motor-Desk")
         property("sonar.host.url", "http://localhost:9000/")
-        property("sonar.login", "sqp_41ef73321131622ad7143e4717d1601c0d03d5e6")
+        property("sonar.login", "sqp_95237eb6af760c30254b3ebd934a2e6fa90254a6")
         property(
             "sonar.coverage.jacoco.xmlReportPaths",
             "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml",
         )
-        property("sonar.exclusions", "**/adapter/**, **/*Dto.kt, **/config/*")
+        property("sonar.exclusions", "**/infrastructure/**, **/*Dto.kt, **/config/*")
     }
-}
-
-dependencies {
-    // Coroutines
-    implementation(libs.bundles.coroutines)
-
-    implementation(libs.kotlinx.html)
-
-    // Ktor
-    implementation(ktorLibs.serialization.kotlinx.json)
-    implementation(ktorLibs.server.auth)
-    implementation(ktorLibs.server.auth.jwt)
-    implementation(ktorLibs.server.callLogging)
-    implementation(ktorLibs.server.cachingHeaders)
-    implementation(ktorLibs.server.cio)
-    implementation(ktorLibs.server.compression)
-    implementation(ktorLibs.server.contentNegotiation)
-    implementation(ktorLibs.server.core)
-    implementation(ktorLibs.server.cors)
-    implementation(ktorLibs.server.defaultHeaders)
-    implementation(ktorLibs.server.di)
-    implementation(ktorLibs.server.requestValidation)
-    implementation(ktorLibs.server.resources)
-    implementation(ktorLibs.server.statusPages)
-
-    // Ktor docs
-    implementation(ktorLibs.server.openapi)
-    implementation(ktorLibs.server.routingOpenapi)
-    implementation(ktorLibs.server.swagger)
-
-    // Validation
-    implementation(libs.konform)
-    implementation(libs.logback.classic)
-
-    // Security / utility
-    implementation(libs.argon2)
-    implementation(libs.sqids)
-
-    // Cache
-    implementation(libs.lettuce)
-
-    // Database
-    implementation(libs.mongodb)
-    implementation(libs.bundles.exposed)
-
-    // Cloud
-    implementation(libs.azure.email)
-
-    // Test
-    testImplementation(kotlin("test"))
-    testImplementation(ktorLibs.server.testHost)
-    testImplementation(libs.mockk)
-    testImplementation("io.ktor:ktor-server-test-host-jvm:3.4.0")
 }
 
 allprojects {
@@ -108,6 +42,44 @@ allprojects {
         }
     }
 }
+dependencies {
+    implementation(ktorLibs.serialization.kotlinx.json)
+    implementation(ktorLibs.server.auth)
+    implementation(ktorLibs.server.auth.jwt)
+    implementation(ktorLibs.server.cachingHeaders)
+    implementation(ktorLibs.server.callLogging)
+    implementation(ktorLibs.server.cio)
+    implementation(ktorLibs.server.compression)
+    implementation(ktorLibs.server.contentNegotiation)
+    implementation(ktorLibs.server.core)
+    implementation(ktorLibs.server.statusPages)
+    implementation(ktorLibs.server.cors)
+    implementation(ktorLibs.server.defaultHeaders)
+    implementation(ktorLibs.server.di)
+    implementation(ktorLibs.server.requestValidation)
+    implementation(ktorLibs.server.resources)
+
+    implementation(ktorLibs.server.swagger)
+    implementation(ktorLibs.server.openapi)
+    implementation(ktorLibs.server.routingOpenapi)
+
+    implementation(libs.logback.classic)
+    implementation(libs.konform)
+
+    implementation(libs.argon2)
+    implementation(libs.sqids)
+
+    implementation(libs.mongodb)
+
+    implementation(libs.lettuce)
+
+    implementation(libs.bundles.exposed)
+
+    testImplementation(kotlin("test"))
+    testImplementation(ktorLibs.server.testHost)
+    testImplementation(libs.mockk)
+    testImplementation("io.ktor:ktor-server-test-host-jvm:3.4.0")
+}
 
 tasks.register<JavaExec>("runDev") {
     group = "application"
@@ -119,22 +91,6 @@ tasks.register<JavaExec>("runDev") {
     args = runTask.args ?: emptyList()
 
     jvmArgs = (runTask.jvmArgs ?: emptyList()) + "-Dio.ktor.development=true"
-}
-
-tasks.register<Exec>("terraformLocal") {
-    group = "terraform"
-    description = "Runs the local Terraform orchestration script with Kotlin."
-
-    commandLine(
-        "kotlinc",
-        "-script",
-        "scripts/terraform-local.main.kts",
-        "--",
-        "--environment",
-        "qa",
-        "--action",
-        "plan",
-    )
 }
 
 tasks.jacocoTestReport {

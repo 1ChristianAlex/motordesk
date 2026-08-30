@@ -1,0 +1,54 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/vehicles/create"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  body:
+    type: json
+    content: |-
+      {
+        "plate": "string",
+        "brand": "string",
+        "model": "string",
+        "color": "string",
+        "year": 8062,
+        "chassis": "string",
+        "fuelType": "GASOLINE",
+        "ownerId": 9236,
+        "id": 2579,
+        "mileage": 8700
+      }
+response:
+  statusCode: 202
+  statusText: Accepted
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "data": {
+          "userId": 7597,
+          "plate": "string",
+          "brand": "string",
+          "model": "string",
+          "color": "string",
+          "year": 173,
+          "mileage": 2882,
+          "chassis": "string",
+          "fuelType": "ELECTRIC",
+          "createdAt": "string",
+          "updatedAt": "string",
+          "id": 2863
+        },
+        "status": 8810,
+        "errors": null
+      }
+order: 1000

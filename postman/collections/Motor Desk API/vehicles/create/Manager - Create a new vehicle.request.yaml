@@ -1,0 +1,28 @@
+$kind: http-request
+name: Manager - Create a new vehicle
+description: Create a new vehicle to be used on a service order
+url: "{{baseUrl}}/vehicles/create"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+        "plate": "ABC3E23",
+        "brand": "Toyota",
+        "model": "Corolla XEi",
+        "color": "Prata",
+        "year": 2022,
+        "mileage": 45800,
+        "chassis": "9BRBD48E0D2234567",
+        "fuelType": "FLEX",
+        "ownerId": 1
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{managerToken}}"
+examples: ./.resources/Manager - Create a new vehicle.resources/examples
+order: 1000
