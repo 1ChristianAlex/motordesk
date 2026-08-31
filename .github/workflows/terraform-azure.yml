@@ -138,11 +138,19 @@ jobs:
       - name: Terraform Init Key Vault Bootstrap
         working-directory: infra/terraform/key-vault-bootstrap
         run: |
-          terraform init -input=false -reconfigure \
-            -backend-config="resource_group_name=${{ inputs.new-backend == true && steps.tfstate.outputs.resource_group_name || steps.local_tfstate.outputs.resource_group_name }}" \
-            -backend-config="storage_account_name=${{ inputs.new-backend == true && steps.tfstate.outputs.storage_account_name || steps.local_tfstate.outputs.storage_account_name }}" \
-            -backend-config="container_name=${{ inputs.new-backend == true && steps.tfstate.outputs.container_name || steps.local_tfstate.outputs.container_name }}" \
-            -backend-config="key=motordesk-${{ inputs.environment }}-keyvault.tfstate"
+          if [ "${{ inputs.new-backend }}" = "true" ]; then
+            terraform init -input=false -reconfigure \
+              -backend-config="resource_group_name=${{ steps.tfstate.outputs.resource_group_name }}" \
+              -backend-config="storage_account_name=${{ steps.tfstate.outputs.storage_account_name }}" \
+              -backend-config="container_name=${{ steps.tfstate.outputs.container_name }}" \
+              -backend-config="key=motordesk-${{ inputs.environment }}-keyvault.tfstate"
+          else
+            terraform init -input=false -reconfigure \
+              -backend-config="resource_group_name=${{ steps.local_tfstate.outputs.resource_group_name }}" \
+              -backend-config="storage_account_name=${{ steps.local_tfstate.outputs.storage_account_name }}" \
+              -backend-config="container_name=${{ steps.local_tfstate.outputs.container_name }}" \
+              -backend-config="key=motordesk-${{ inputs.environment }}-keyvault.tfstate"
+          fi
 
       - name: Reconcile Key Vault bootstrap state
         working-directory: infra/terraform/key-vault-bootstrap
@@ -161,15 +169,20 @@ jobs:
           fi
 
           if [ -n "$KEY_VAULT_ID" ] && ! terraform state show azurerm_role_assignment.terraform_secrets >/dev/null 2>&1; then
-            ROLE_ASSIGNMENT_ID=$(az role assignment list \
-              --scope "$KEY_VAULT_ID" \
-              --role "Key Vault Secrets Officer" \
-              --assignee-object-id "$(az account show --query user.name --output tsv)" \
-              --query "[0].id" \
-              --output tsv 2>/dev/null || true)
+            CLIENT_ID=$(az account show --query user.name --output tsv)
+            OBJECT_ID=$(az ad sp show --id "$CLIENT_ID" --query id --output tsv 2>/dev/null || true)
 
-            if [ -n "$ROLE_ASSIGNMENT_ID" ]; then
-              terraform import -input=false azurerm_role_assignment.terraform_secrets "$ROLE_ASSIGNMENT_ID"
+            if [ -n "$OBJECT_ID" ]; then
+              ROLE_ASSIGNMENT_ID=$(az role assignment list \
+                --scope "$KEY_VAULT_ID" \
+                --role "Key Vault Secrets Officer" \
+                --assignee-object-id "$OBJECT_ID" \
+                --query "[0].id" \
+                --output tsv 2>/dev/null || true)
+
+              if [ -n "$ROLE_ASSIGNMENT_ID" ]; then
+                terraform import -input=false azurerm_role_assignment.terraform_secrets "$ROLE_ASSIGNMENT_ID"
+              fi
             fi
           fi
 
