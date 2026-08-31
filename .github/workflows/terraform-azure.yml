@@ -76,47 +76,117 @@ jobs:
           echo "container_name=$(terraform output -raw container_name)" >> "$GITHUB_OUTPUT"
           echo "key=motordesk-${{ inputs.environment }}.tfstate" >> "$GITHUB_OUTPUT"
 
-      - name: Terraform Init
-        if: inputs.new-backend == true
-        working-directory: infra/terraform/azure
-        run: |
-          terraform init -input=false -reconfigure \
-            -backend-config="resource_group_name=${{ steps.tfstate.outputs.resource_group_name }}" \
-            -backend-config="storage_account_name=${{ steps.tfstate.outputs.storage_account_name }}" \
-            -backend-config="container_name=${{ steps.tfstate.outputs.container_name }}" \
-            -backend-config="key=${{ steps.tfstate.outputs.key }}"
-
       - name: Get existing backend
         id: local_tfstate
         if: inputs.new-backend == false
         run: |
           RESOURCE_GROUP_NAME="rg-persistent-motordesk-${{ inputs.environment }}"
-          
+
           STORAGE_ACCOUNT_NAME=$(az storage account list \
             --resource-group "$RESOURCE_GROUP_NAME" \
             --query "[0].name" \
             --output tsv)
-          
+
           CONTAINER_NAME=$(az storage container list \
             --account-name "$STORAGE_ACCOUNT_NAME" \
             --auth-mode login \
             --query "[?name=='tfstate'].name | [0]" \
             --output tsv)
-          
+
           echo "resource_group_name=$RESOURCE_GROUP_NAME" >> "$GITHUB_OUTPUT"
           echo "storage_account_name=$STORAGE_ACCOUNT_NAME" >> "$GITHUB_OUTPUT"
           echo "container_name=$CONTAINER_NAME" >> "$GITHUB_OUTPUT"
           echo "key=motordesk-${{ inputs.environment }}.tfstate" >> "$GITHUB_OUTPUT"
 
       - name: Terraform Init
-        if: inputs.new-backend == false
         working-directory: infra/terraform/azure
         run: |
+          if [ "${{ inputs.new-backend }}" = "true" ]; then
+            terraform init -input=false -reconfigure \
+              -backend-config="resource_group_name=${{ steps.tfstate.outputs.resource_group_name }}" \
+              -backend-config="storage_account_name=${{ steps.tfstate.outputs.storage_account_name }}" \
+              -backend-config="container_name=${{ steps.tfstate.outputs.container_name }}" \
+              -backend-config="key=${{ steps.tfstate.outputs.key }}"
+          else
+            terraform init -input=false -reconfigure \
+              -backend-config="resource_group_name=${{ steps.local_tfstate.outputs.resource_group_name }}" \
+              -backend-config="storage_account_name=${{ steps.local_tfstate.outputs.storage_account_name }}" \
+              -backend-config="container_name=${{ steps.local_tfstate.outputs.container_name }}" \
+              -backend-config="key=${{ steps.local_tfstate.outputs.key }}"
+          fi
+
+      - name: Reconcile application resource group
+        working-directory: infra/terraform/azure
+        env:
+          RESOURCE_GROUP_NAME: terraform-${{ inputs.environment }}-motordesk
+        run: |
+          if ! terraform state show azurerm_resource_group.rg >/dev/null 2>&1; then
+            RESOURCE_GROUP_ID=$(az group show \
+              --name "$RESOURCE_GROUP_NAME" \
+              --query id \
+              --output tsv 2>/dev/null || true)
+
+            if [ -n "$RESOURCE_GROUP_ID" ]; then
+              terraform import -input=false azurerm_resource_group.rg "$RESOURCE_GROUP_ID"
+            fi
+          fi
+
+          terraform apply -input=false -auto-approve \
+            -target=azurerm_resource_group.rg \
+            -var="environment=${{ inputs.environment }}"
+
+      - name: Terraform Init Key Vault Bootstrap
+        working-directory: infra/terraform/key-vault-bootstrap
+        run: |
           terraform init -input=false -reconfigure \
-            -backend-config="resource_group_name=${{ steps.local_tfstate.outputs.resource_group_name }}" \
-            -backend-config="storage_account_name=${{ steps.local_tfstate.outputs.storage_account_name }}" \
-            -backend-config="container_name=${{ steps.local_tfstate.outputs.container_name }}" \
-            -backend-config="key=${{ steps.local_tfstate.outputs.key }}"
+            -backend-config="resource_group_name=${{ inputs.new-backend == true && steps.tfstate.outputs.resource_group_name || steps.local_tfstate.outputs.resource_group_name }}" \
+            -backend-config="storage_account_name=${{ inputs.new-backend == true && steps.tfstate.outputs.storage_account_name || steps.local_tfstate.outputs.storage_account_name }}" \
+            -backend-config="container_name=${{ inputs.new-backend == true && steps.tfstate.outputs.container_name || steps.local_tfstate.outputs.container_name }}" \
+            -backend-config="key=motordesk-${{ inputs.environment }}-keyvault.tfstate"
+
+      - name: Reconcile Key Vault bootstrap state
+        working-directory: infra/terraform/key-vault-bootstrap
+        env:
+          KEY_VAULT_NAME: kv${{ inputs.environment }}-motordesk
+          RESOURCE_GROUP_NAME: terraform-${{ inputs.environment }}-motordesk
+        run: |
+          KEY_VAULT_ID=$(az keyvault show \
+            --name "$KEY_VAULT_NAME" \
+            --resource-group "$RESOURCE_GROUP_NAME" \
+            --query id \
+            --output tsv 2>/dev/null || true)
+
+          if [ -n "$KEY_VAULT_ID" ] && ! terraform state show azurerm_key_vault.app >/dev/null 2>&1; then
+            terraform import -input=false azurerm_key_vault.app "$KEY_VAULT_ID"
+          fi
+
+          if [ -n "$KEY_VAULT_ID" ] && ! terraform state show azurerm_role_assignment.terraform_secrets >/dev/null 2>&1; then
+            ROLE_ASSIGNMENT_ID=$(az role assignment list \
+              --scope "$KEY_VAULT_ID" \
+              --role "Key Vault Secrets Officer" \
+              --assignee-object-id "$(az account show --query user.name --output tsv)" \
+              --query "[0].id" \
+              --output tsv 2>/dev/null || true)
+
+            if [ -n "$ROLE_ASSIGNMENT_ID" ]; then
+              terraform import -input=false azurerm_role_assignment.terraform_secrets "$ROLE_ASSIGNMENT_ID"
+            fi
+          fi
+
+      - name: Terraform Fmt Bootstrap
+        working-directory: infra/terraform/key-vault-bootstrap
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate Bootstrap
+        working-directory: infra/terraform/key-vault-bootstrap
+        run: terraform validate
+
+      - name: Terraform Apply Key Vault Bootstrap
+        working-directory: infra/terraform/key-vault-bootstrap
+        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}"
+
+      - name: Wait for Key Vault RBAC propagation
+        run: sleep 90
 
       - name: Terraform Fmt
         working-directory: infra/terraform/azure
