@@ -70,7 +70,7 @@ resource "azurerm_key_vault" "kvault_app" {
   name                       = "kv${var.environment}-${var.project_name}"
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
-  rbac_authorization_enabled = false
+  rbac_authorization_enabled = true
   tenant_id                  = data.azurerm_client_config.client_config.tenant_id
   sku_name                   = "premium"
   soft_delete_retention_days = 7
@@ -98,9 +98,15 @@ resource "azurerm_key_vault" "kvault_app" {
       "Delete",
       "List",
       "Purge",
-      "Recover"
+      "Recover",
     ]
   }
+}
+
+resource "azurerm_role_assignment" "terraform_key_vault" {
+  scope                = azurerm_key_vault.kvault_app.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = data.azurerm_client_config.client_config.object_id
 }
 
 

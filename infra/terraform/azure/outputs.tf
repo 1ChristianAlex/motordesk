@@ -15,7 +15,8 @@ resource "azurerm_app_configuration_key" "ack_database_url" {
   type                   = "kv"
   value                  = "jdbc:postgresql://${data.azurerm_postgresql_flexible_server.data_pg.fqdn}:5432/${azurerm_postgresql_flexible_server_database.motordesk.name}"
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_postgresql_flexible_server.pg_db
   ]
 }
 
@@ -23,6 +24,8 @@ resource "azurerm_key_vault_secret" "database_user" {
   name         = "databaseUserv3"
   value        = data.azurerm_postgresql_flexible_server.data_pg.administrator_login
   key_vault_id = azurerm_key_vault.kvault_app.id
+
+  depends_on = [azurerm_role_assignment.terraform_key_vault, azurerm_postgresql_flexible_server.pg_db]
 }
 
 resource "azurerm_app_configuration_key" "ack_database_user" {
@@ -40,6 +43,8 @@ resource "azurerm_key_vault_secret" "database_password" {
   name         = "databasePasswordv3"
   value        = random_password.postgres_admin_password.result
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_role_assignment.terraform_key_vault]
+
 }
 
 resource "azurerm_app_configuration_key" "ack_database_password" {
@@ -68,6 +73,8 @@ resource "azurerm_key_vault_secret" "mongo_url" {
   name         = "mongoUrlv3"
   value        = azurerm_mongo_cluster.mongo.connection_strings[0].value
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_role_assignment.terraform_key_vault, azurerm_mongo_cluster.mongo]
+
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_url" {
@@ -85,6 +92,8 @@ resource "azurerm_key_vault_secret" "mongo_user" {
   name         = "mongoUserv3"
   value        = azurerm_mongo_cluster.mongo.administrator_username
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_role_assignment.terraform_key_vault, azurerm_mongo_cluster.mongo]
+
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_user" {
@@ -102,6 +111,8 @@ resource "azurerm_key_vault_secret" "mongo_password" {
   name         = "mongoPasswordv3"
   value        = random_password.mongo_admin_password.result
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_role_assignment.terraform_key_vault]
+
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_password" {
@@ -119,6 +130,7 @@ resource "azurerm_key_vault_secret" "mongo_database" {
   name         = "mongoDatabasev3"
   value        = azurerm_postgresql_flexible_server_database.motordesk.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_role_assignment.terraform_key_vault, azurerm_postgresql_flexible_server_database.motordesk]
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_database" {
@@ -164,7 +176,7 @@ resource "azurerm_key_vault_secret" "redis_password" {
   value        = random_password.redis_password.result
   key_vault_id = azurerm_key_vault.kvault_app.id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.terraform_key_vault
   ]
 }
 
@@ -183,9 +195,7 @@ resource "azurerm_key_vault_secret" "azure_communication_access_key" {
   name         = "azureCommunicationAccessKeyv3"
   value        = data.azurerm_communication_service.communication_service.primary_key
   key_vault_id = azurerm_key_vault.kvault_app.id
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
+  depends_on   = [azurerm_role_assignment.terraform_key_vault, azurerm_communication_service.cs_email]
 }
 
 resource "azurerm_app_configuration_key" "ack_azure_communication_access_key" {
@@ -203,9 +213,7 @@ resource "azurerm_key_vault_secret" "azure_communication_endpoint" {
   name         = "azureCommunicationEndpointv3"
   value        = data.azurerm_communication_service.communication_service.hostname
   key_vault_id = azurerm_key_vault.kvault_app.id
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
+  depends_on   = [azurerm_role_assignment.terraform_key_vault, azurerm_communication_service.cs_email]
 }
 
 resource "azurerm_app_configuration_key" "ack_azure_communication_endpoint" {
@@ -274,6 +282,8 @@ resource "azurerm_key_vault_secret" "jwt_secret" {
   name         = "jwtSecretv3"
   value        = random_password.jwt_secret.result
   key_vault_id = azurerm_key_vault.kvault_app.id
+
+  depends_on = [azurerm_role_assignment.terraform_key_vault]
 }
 
 resource "azurerm_app_configuration_key" "ack_jwt_secret" {

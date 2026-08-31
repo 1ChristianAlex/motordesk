@@ -133,7 +133,7 @@ tasks.register<Exec>("terraformLocal") {
         "--environment",
         "dev",
         "--action",
-        "plan",
+        "apply",
     )
 }
 

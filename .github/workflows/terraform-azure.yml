@@ -41,7 +41,31 @@ on:
         type: string
 
 jobs:
+  terraform-state:
+    runs-on: ubuntu-latest
+    if: inputs.new-backend == true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Terraform Init Backend
+        working-directory: infra/terraform/backend
+        run: terraform init -input=false
+
+      - name: Terraform Apply Backend
+        working-directory: infra/terraform/backend
+        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}"
+
   terraform:
+    needs: terraform-state
     runs-on: ubuntu-latest
 
     steps:
@@ -49,46 +73,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init Backend
-        if: inputs.new-backend == true
-        working-directory: infra/terraform/backend
-        run: terraform init -input=false
-
-      - name: Terraform Apply Backend
-        if: inputs.new-backend == true
-        working-directory: infra/terraform/backend
-        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}"
-
-      - name: Read Backend Outputs
-        id: tfstate
-        if: inputs.new-backend == true
-        working-directory: infra/terraform/backend
-        run: |
-          echo "resource_group_name=$(terraform output -raw resource_group_name)" >> "$GITHUB_OUTPUT"
-          echo "storage_account_name=$(terraform output -raw storage_account_name)" >> "$GITHUB_OUTPUT"
-          echo "container_name=$(terraform output -raw container_name)" >> "$GITHUB_OUTPUT"
-          echo "key=motordesk-${{ inputs.environment }}.tfstate" >> "$GITHUB_OUTPUT"
-
-      - name: Terraform Init
-        if: inputs.new-backend == true
-        working-directory: infra/terraform/azure
-        run: |
-          terraform init -input=false -reconfigure \
-            -backend-config="resource_group_name=${{ steps.tfstate.outputs.resource_group_name }}" \
-            -backend-config="storage_account_name=${{ steps.tfstate.outputs.storage_account_name }}" \
-            -backend-config="container_name=${{ steps.tfstate.outputs.container_name }}" \
-            -backend-config="key=${{ steps.tfstate.outputs.key }}"
+        uses: hashicorp/setup-terraform@v4
 
       - name: Get existing backend
         id: local_tfstate
-        if: inputs.new-backend == false
         run: |
           RESOURCE_GROUP_NAME="rg-persistent-motordesk-${{ inputs.environment }}"
           
@@ -109,7 +102,6 @@ jobs:
           echo "key=motordesk-${{ inputs.environment }}.tfstate" >> "$GITHUB_OUTPUT"
 
       - name: Terraform Init
-        if: inputs.new-backend == false
         working-directory: infra/terraform/azure
         run: |
           terraform init -input=false -reconfigure \
