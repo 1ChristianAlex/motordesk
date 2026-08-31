@@ -22,7 +22,7 @@ resource "azurerm_app_configuration_key" "ack_database_url" {
 resource "azurerm_key_vault_secret" "database_user" {
   name         = "databaseUser"
   value        = data.azurerm_postgresql_flexible_server.data_pg.administrator_login
-  key_vault_id = azurerm_key_vault.kvault_app.id
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_database_user" {
@@ -39,7 +39,7 @@ resource "azurerm_app_configuration_key" "ack_database_user" {
 resource "azurerm_key_vault_secret" "database_password" {
   name         = "databasePassword"
   value        = random_password.postgres_admin_password.result
-  key_vault_id = azurerm_key_vault.kvault_app.id
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_database_password" {
@@ -67,7 +67,7 @@ resource "azurerm_app_configuration_key" "ack_database_driver" {
 resource "azurerm_key_vault_secret" "mongo_url" {
   name         = "mongoUrl"
   value        = azurerm_mongo_cluster.mongo.connection_strings[0].value
-  key_vault_id = azurerm_key_vault.kvault_app.id
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_url" {
@@ -84,7 +84,7 @@ resource "azurerm_app_configuration_key" "ack_mongo_url" {
 resource "azurerm_key_vault_secret" "mongo_user" {
   name         = "mongoUser"
   value        = azurerm_mongo_cluster.mongo.administrator_username
-  key_vault_id = azurerm_key_vault.kvault_app.id
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_user" {
@@ -101,7 +101,7 @@ resource "azurerm_app_configuration_key" "ack_mongo_user" {
 resource "azurerm_key_vault_secret" "mongo_password" {
   name         = "mongoPassword"
   value        = random_password.mongo_admin_password.result
-  key_vault_id = azurerm_key_vault.kvault_app.id
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_password" {
@@ -118,7 +118,7 @@ resource "azurerm_app_configuration_key" "ack_mongo_password" {
 resource "azurerm_key_vault_secret" "mongo_database" {
   name         = "mongoDatabase"
   value        = azurerm_postgresql_flexible_server_database.motordesk.name
-  key_vault_id = azurerm_key_vault.kvault_app.id
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_database" {
@@ -162,7 +162,7 @@ resource "random_password" "redis_password" {
 resource "azurerm_key_vault_secret" "redis_password" {
   name         = "redisPassword"
   value        = random_password.redis_password.result
-  key_vault_id = azurerm_key_vault.kvault_app.id
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
   ]
@@ -182,144 +182,8 @@ resource "azurerm_app_configuration_key" "ack_redis_password" {
 resource "azurerm_key_vault_secret" "azure_communication_access_key" {
   name         = "azureCommunicationAccessKey"
   value        = data.azurerm_communication_service.communication_service.primary_key
-  key_vault_id = azurerm_key_vault.kvault_app.id
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
   ]
 }
-
-resource "azurerm_app_configuration_key" "ack_azure_communication_access_key" {
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "AZURE_COMMUNICATION_ACCESS_KEY"
-  label                  = var.environment
-  type                   = "vault"
-  vault_key_reference    = azurerm_key_vault_secret.azure_communication_access_key.versionless_id
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
-}
-
-resource "azurerm_key_vault_secret" "azure_communication_endpoint" {
-  name         = "azureCommunicationEndpoint"
-  value        = data.azurerm_communication_service.communication_service.hostname
-  key_vault_id = azurerm_key_vault.kvault_app.id
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
-}
-
-resource "azurerm_app_configuration_key" "ack_azure_communication_endpoint" {
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "AZURE_COMMUNICATION_ENDPOINT"
-  label                  = var.environment
-  type                   = "vault"
-  vault_key_reference    = azurerm_key_vault_secret.azure_communication_endpoint.versionless_id
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
-}
-resource "random_string" "ack_jwt_issuer" {
-  length  = 16
-  special = true
-}
-resource "azurerm_app_configuration_key" "ack_jwt_issuer" {
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "JWT_ISSUER"
-  label                  = var.environment
-  type                   = "kv"
-  value                  = random_string.ack_jwt_issuer.result
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
-}
-
-resource "random_string" "ack_jwt_audience" {
-  length  = 16
-  special = true
-}
-
-resource "azurerm_app_configuration_key" "ack_jwt_audience" {
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "JWT_AUDIENCE"
-  label                  = var.environment
-  type                   = "kv"
-  value                  = random_string.ack_jwt_audience.result
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
-}
-
-resource "random_string" "ack_jwt_realm" {
-  length  = 16
-  special = true
-}
-
-resource "azurerm_app_configuration_key" "ack_jwt_realm" {
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "JWT_REALM"
-  label                  = var.environment
-  type                   = "kv"
-  value                  = random_string.ack_jwt_realm.result
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
-}
-
-resource "random_password" "jwt_secret" {
-  length  = 16
-  special = true
-}
-
-resource "azurerm_key_vault_secret" "jwt_secret" {
-  name         = "jwtSecret"
-  value        = random_password.jwt_secret.result
-  key_vault_id = azurerm_key_vault.kvault_app.id
-}
-
-resource "azurerm_app_configuration_key" "ack_jwt_secret" {
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "JWT_SECRET"
-  label                  = var.environment
-  type                   = "vault"
-  vault_key_reference    = azurerm_key_vault_secret.jwt_secret.versionless_id
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
-}
-
-# resource "azurerm_key_vault_secret" "aks_client_certificate" {
-#   name         = "aksClientCertificate"
-#   value        = azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate
-#   key_vault_id = azurerm_key_vault.kvault_app.id
-# }
-
-# resource "azurerm_app_configuration_key" "ack_aks_client_certificate" {
-#   configuration_store_id = azurerm_app_configuration.app_conf.id
-#   key                    = "AKS_CLIENT_CERTIFICATE"
-#   label                  = var.environment
-#   type                   = "vault"
-#   vault_key_reference    = azurerm_key_vault_secret.aks_client_certificate.versionless_id
-#   depends_on = [
-#     azurerm_role_assignment.appconf_dataowner
-#   ]
-# }
-
-#
-# resource "azurerm_key_vault_secret" "kube_config" {
-#   name         = "aksClientKubeConfigRaw"
-#   value        = azurerm_kubernetes_cluster.aks.kube_config_raw
-#   key_vault_id = azurerm_key_vault.kvault_app.id
-# }
-#
-# resource "azurerm_app_configuration_key" "ack_kube_config" {
-#   configuration_store_id = azurerm_app_configuration.app_conf.id
-#   key                    = "AKS_CLIENT_KUBE_CONFIG_RAW"
-#   label                  = var.environment
-#   type                   = "vault"
-#   vault_key_reference    = azurerm_key_vault_secret.kube_config.versionless_id
-#   depends_on = [
-#     azurerm_role_assignment.appconf_dataowner
-#   ]
-# }
-#
-
