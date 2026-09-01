@@ -32,6 +32,8 @@ resource "azurerm_role_assignment" "acr_pull" {
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "AcrPull"
   principal_id         = azurerm_user_assigned_identity.acr_pull.principal_id
+
+  depends_on = [azurerm_user_assigned_identity.acr_pull]
 }
 
 resource "azurerm_container_app" "main_api" {
@@ -40,6 +42,8 @@ resource "azurerm_container_app" "main_api" {
   name                         = "main-api-${var.environment}-${var.project_name}"
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.rg.name
+
+  depends_on = [azurerm_user_assigned_identity.acr_pull, azurerm_role_assignment.acr_pull]
 
   revision_mode = "Single"
 
@@ -216,6 +220,8 @@ resource "azurerm_container_app" "main_redis" {
   name                         = "main-redis-${var.environment}-${var.project_name}"
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.rg.name
+
+  depends_on = [azurerm_user_assigned_identity.acr_pull, azurerm_role_assignment.acr_pull]
 
   revision_mode = "Single"
 
