@@ -43,7 +43,11 @@ resource "azurerm_container_app" "main_api" {
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.rg.name
 
-  depends_on = [azurerm_user_assigned_identity.acr_pull, azurerm_role_assignment.acr_pull]
+  depends_on = [
+    azurerm_user_assigned_identity.acr_pull,
+    azurerm_role_assignment.acr_pull,
+    azurerm_container_app_environment.main
+  ]
 
   revision_mode = "Single"
 
@@ -221,7 +225,12 @@ resource "azurerm_container_app" "main_redis" {
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.rg.name
 
-  depends_on = [azurerm_user_assigned_identity.acr_pull, azurerm_role_assignment.acr_pull]
+  depends_on = [
+    azurerm_user_assigned_identity.acr_pull,
+    azurerm_role_assignment.acr_pull,
+    azurerm_container_app.main_api,
+    azurerm_container_app_environment.main
+  ]
 
   revision_mode = "Single"
 
