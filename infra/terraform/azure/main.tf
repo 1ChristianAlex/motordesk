@@ -106,9 +106,3 @@ resource "azurerm_key_vault" "kvault_app" {
     ]
   }
 }
-
- # az group delete --name terraform-dev-motordesk --yes --no-wait
- # az group delete --name rg-persistent-motordesk-dev --yes --no-wait
- # az keyvault purge --name kvdev-motordesk --location brazilsouth
- # az appconfig purge --name appConf-dev-motordesk --location brazilsouth
- # az storage account purge --name stmotordeskdevtfstate --location brazilsouth
