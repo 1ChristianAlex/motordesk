@@ -58,7 +58,7 @@ jobs:
 
       - name: Terraform Init Backend
         working-directory: infra/terraform/backend
-        run: terraform init -input=false
+        run: terraform init -input=false -backend=false -reconfigure
 
       - name: Terraform Apply Backend
         working-directory: infra/terraform/backend
