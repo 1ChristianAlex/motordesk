@@ -128,7 +128,7 @@ resource "azurerm_app_configuration_key" "ack_mongo_password" {
 
 resource "azurerm_key_vault_secret" "mongo_database" {
   name         = "mongoDatabasev3"
-  value        = azurerm_postgresql_flexible_server_database.motordesk.name
+  value        = var.mongo_database_name
   key_vault_id = azurerm_key_vault.kvault_app.id
   depends_on   = [azurerm_key_vault.kvault_app, azurerm_postgresql_flexible_server_database.motordesk]
 }

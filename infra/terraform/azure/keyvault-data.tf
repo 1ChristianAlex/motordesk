@@ -1,49 +1,59 @@
 data "azurerm_key_vault_secret" "database_user" {
-  name         = "databaseUserv3"
+  name         = azurerm_key_vault_secret.database_user.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.database_user]
 }
 
 data "azurerm_key_vault_secret" "database_password" {
-  name         = "databasePasswordv3"
+  name         = azurerm_key_vault_secret.database_password.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.database_password]
 }
 
 data "azurerm_key_vault_secret" "mongo_url" {
-  name         = "mongoUrlv3"
+  name         = azurerm_key_vault_secret.mongo_url.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.mongo_url]
 }
 
 data "azurerm_key_vault_secret" "mongo_user" {
-  name         = "mongoUserv3"
+  name         = azurerm_key_vault_secret.mongo_user.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.mongo_user]
 }
 
 data "azurerm_key_vault_secret" "mongo_password" {
-  name         = "mongoPasswordv3"
+  name         = azurerm_key_vault_secret.mongo_password.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.mongo_password]
 }
 
 data "azurerm_key_vault_secret" "mongo_database" {
-  name         = "mongoDatabasev3"
+  name         = azurerm_key_vault_secret.mongo_database.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.mongo_database]
 }
 
 data "azurerm_key_vault_secret" "redis_password" {
-  name         = "redisPasswordv3"
+  name         = azurerm_key_vault_secret.redis_password.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.redis_password]
 }
 
 data "azurerm_key_vault_secret" "azure_communication_access_key" {
-  name         = "azureCommunicationAccessKeyv3"
+  name         = azurerm_key_vault_secret.azure_communication_access_key.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.azure_communication_access_key]
 }
 
 data "azurerm_key_vault_secret" "azure_communication_endpoint" {
-  name         = "azureCommunicationEndpointv3"
+  name         = azurerm_key_vault_secret.azure_communication_endpoint.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.azure_communication_endpoint]
 }
 
 data "azurerm_key_vault_secret" "jwt_secret" {
-  name         = "jwtSecretv3"
+  name         = azurerm_key_vault_secret.jwt_secret.name
   key_vault_id = azurerm_key_vault.kvault_app.id
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_key_vault_secret.jwt_secret]
 }

@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -90,3 +90,4 @@ jobs:
         with:
           environment: ${{ env.ENVIRONMENT }}
           image_tag: ${{ github.run_number }}
+          new-backend: false

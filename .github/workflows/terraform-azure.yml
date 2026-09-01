@@ -119,6 +119,14 @@ jobs:
         working-directory: infra/terraform/azure
         run: terraform validate
 
+      - name: Terraform Plan
+        working-directory: infra/terraform/azure
+        run: |
+          terraform plan -input=false \
+            -var="environment=${{ inputs.environment }}" \
+            -var="image_tag=${{ inputs.image_tag }}" \
+            -out=tfplan
+
       - name: Terraform Apply
         working-directory: infra/terraform/azure
-        run: terraform apply -input=false -auto-approve -var="environment=${{ inputs.environment }}" -var="image_tag=${{ inputs.image_tag }}"
+        run: terraform apply -input=false -auto-approve tfplan

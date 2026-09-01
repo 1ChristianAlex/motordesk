@@ -81,17 +81,17 @@ resource "azurerm_container_app" "main_api" {
       # PostgreSQL
       env {
         name  = "DATABASE_URL"
-        value = data.azurerm_app_configuration_key.ack_database_url.value
+        value = data.azurerm_app_configuration_key.database_url.value
       }
 
       env {
         name  = "DATABASE_DRIVER"
-        value = data.azurerm_app_configuration_key.ack_database_driver.value
+        value = data.azurerm_app_configuration_key.database_driver.value
       }
 
       env {
         name  = "DATABASE_USER"
-        value = data.azurerm_app_configuration_key.ack_database_user.value
+        value = data.azurerm_key_vault_secret.database_user.value
       }
 
       env {
@@ -102,12 +102,12 @@ resource "azurerm_container_app" "main_api" {
       # Mongo
       env {
         name  = "MONGO_URL"
-        value = data.azurerm_app_configuration_key.ack_mongo_url.value
+        value = data.azurerm_key_vault_secret.mongo_url.value
       }
 
       env {
         name  = "MONGO_USER"
-        value = data.azurerm_app_configuration_key.ack_mongo_user.value
+        value = data.azurerm_key_vault_secret.mongo_user.value
       }
 
       env {
@@ -117,18 +117,18 @@ resource "azurerm_container_app" "main_api" {
 
       env {
         name  = "MONGO_DATABASE"
-        value = data.azurerm_app_configuration_key.ack_mongo_database.value
+        value = data.azurerm_key_vault_secret.mongo_database.value
       }
 
       # Redis
       env {
         name  = "REDIS_HOST"
-        value = data.azurerm_app_configuration_key.ack_redis_host.value
+        value = data.azurerm_app_configuration_key.redis_host.value
       }
 
       env {
         name  = "REDIS_PORT"
-        value = data.azurerm_app_configuration_key.ack_redis_port.value
+        value = data.azurerm_app_configuration_key.redis_port.value
       }
 
       env {
@@ -139,7 +139,7 @@ resource "azurerm_container_app" "main_api" {
       # Azure Communication Services
       env {
         name  = "AZURE_COMMUNICATION_ENDPOINT"
-        value = data.azurerm_app_configuration_key.ack_azure_communication_endpoint.value
+        value = data.azurerm_key_vault_secret.azure_communication_endpoint.value
       }
 
       env {
@@ -150,17 +150,17 @@ resource "azurerm_container_app" "main_api" {
       # JWT
       env {
         name  = "JWT_ISSUER"
-        value = data.azurerm_app_configuration_key.ack_jwt_issuer.value
+        value = data.azurerm_app_configuration_key.jwt_issuer.value
       }
 
       env {
         name  = "JWT_AUDIENCE"
-        value = data.azurerm_app_configuration_key.ack_jwt_audience.value
+        value = data.azurerm_app_configuration_key.jwt_audience.value
       }
 
       env {
         name  = "JWT_REALM"
-        value = data.azurerm_app_configuration_key.ack_jwt_realm.value
+        value = data.azurerm_app_configuration_key.jwt_realm.value
       }
 
       env {
@@ -241,12 +241,12 @@ resource "azurerm_container_app" "main_redis" {
 
       env {
         name  = "REDIS_HOST"
-        value = data.azurerm_app_configuration_key.ack_redis_host.value
+        value = data.azurerm_app_configuration_key.redis_host.value
       }
 
       env {
         name  = "REDIS_PORT"
-        value = data.azurerm_app_configuration_key.ack_redis_port.value
+        value = data.azurerm_app_configuration_key.redis_port.value
       }
 
       env {
@@ -263,7 +263,7 @@ resource "azurerm_container_app" "main_redis" {
 
   ingress {
     external_enabled = false
-    target_port      = data.azurerm_app_configuration_key.ack_redis_port.value
+    target_port      = tonumber(data.azurerm_app_configuration_key.redis_port.value)
     transport        = "tcp"
 
     traffic_weight {

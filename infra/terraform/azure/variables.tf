@@ -58,6 +58,12 @@ variable "postgres_database_name" {
   default     = "motordesk"
 }
 
+variable "mongo_database_name" {
+  description = "Application MongoDB database name."
+  type        = string
+  default     = "motordesk"
+}
+
 variable "tags" {
   description = "Common Azure resource tags."
   type        = map(string)
