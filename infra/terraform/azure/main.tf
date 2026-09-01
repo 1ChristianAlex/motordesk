@@ -18,10 +18,11 @@ terraform {
     }
   }
 }
+
 provider "random" {
   # Configuration options
 }
-# Configure the Microsoft Azure Provider
+
 provider "azurerm" {
   features {
     key_vault {
@@ -40,12 +41,8 @@ provider "azapi" {
   skip_provider_registration = false
 }
 
-data "azurerm_client_config" "client_config" {
+data "azurerm_client_config" "client_config" {}
 
-}
-
-
-# Create a resource group
 resource "azurerm_resource_group" "rg" {
   name     = "terraform-${var.environment}-${var.project_name}"
   location = var.infra_location
@@ -66,44 +63,13 @@ resource "azurerm_role_assignment" "appconf_dataowner" {
   principal_id         = data.azurerm_client_config.client_config.object_id
 }
 
-resource "azurerm_key_vault" "kvault_app" {
-  name                       = "kv${var.environment}-${var.project_name}"
-  location                   = azurerm_resource_group.rg.location
-  resource_group_name        = azurerm_resource_group.rg.name
-  rbac_authorization_enabled = false
-  tenant_id                  = data.azurerm_client_config.client_config.tenant_id
-  sku_name                   = "premium"
-  soft_delete_retention_days = 7
-  tags                       = var.tags
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.client_config.tenant_id
-    object_id = data.azurerm_client_config.client_config.object_id
-
-    key_permissions = [
-      "Create",
-      "Delete",
-      "Get",
-      "Purge",
-      "Recover",
-      "List",
-      "Update",
-      "GetRotationPolicy",
-      "SetRotationPolicy"
-    ]
-
-    secret_permissions = [
-      "Set",
-      "Get",
-      "Delete",
-      "List",
-      "Purge",
-      "Recover",
-    ]
-  }
+# The Key Vault is a pre-existing shared application resource.
+# It is intentionally read as a data source so the application Terraform
+# apply does not try to create/recreate it on every environment deployment.
+data "azurerm_key_vault" "kvault_app" {
+  name                = "kv${var.environment}-${var.project_name}"
+  resource_group_name = azurerm_resource_group.rg.name
 }
-
-
 
 # $Env:ARM_CLIENT_ID = ""
 # $Env:ARM_CLIENT_SECRET = ""
