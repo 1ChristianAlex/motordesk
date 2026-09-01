@@ -63,12 +63,28 @@ resource "azurerm_role_assignment" "appconf_dataowner" {
   principal_id         = data.azurerm_client_config.client_config.object_id
 }
 
-# The Key Vault is a pre-existing shared application resource.
+# The Key Vault is a pre-existing application resource.
 # It is intentionally read as a data source so the application Terraform
-# apply does not try to create/recreate it on every environment deployment.
+# apply does not try to create or destroy the vault itself.
 data "azurerm_key_vault" "kvault_app" {
   name                = "kv${var.environment}-${var.project_name}"
   resource_group_name = azurerm_resource_group.rg.name
+}
+
+# The pipeline identity is a subscription/resource-group Contributor, but
+# Contributor does not grant access to Key Vault secrets. Keep the vault in
+# access-policy mode for now and grant only the read permissions Terraform
+# needs to consume existing application secrets. A later migration can move
+# this policy to Azure RBAC independently.
+resource "azurerm_key_vault_access_policy" "terraform" {
+  key_vault_id = data.azurerm_key_vault.kvault_app.id
+  tenant_id    = data.azurerm_client_config.client_config.tenant_id
+  object_id    = data.azurerm_client_config.client_config.object_id
+
+  secret_permissions = [
+    "Get",
+    "List",
+  ]
 }
 
 # $Env:ARM_CLIENT_ID = ""
