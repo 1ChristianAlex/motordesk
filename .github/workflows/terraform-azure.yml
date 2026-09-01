@@ -66,6 +66,7 @@ jobs:
 
   terraform:
     needs: terraform-state
+    if: always() && (needs.terraform-state.result == 'success' || needs.terraform-state.result == 'skipped')
     runs-on: ubuntu-latest
 
     steps:
