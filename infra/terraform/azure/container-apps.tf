@@ -20,20 +20,36 @@ resource "azurerm_container_app_environment" "main" {
   tags = var.tags
 }
 
-resource "azurerm_user_assigned_identity" "acr_pull" {
-  name                = "mi-${var.environment}-${var.project_name}-acr"
+resource "azurerm_user_assigned_identity" "api_acr_pull" {
+  name                = "mi-${var.environment}-${var.project_name}-api-acr"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 
   tags = var.tags
 }
 
-resource "azurerm_role_assignment" "acr_pull" {
+resource "azurerm_user_assigned_identity" "redis_acr_pull" {
+  name                = "mi-${var.environment}-${var.project_name}-redis-acr"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+
+  tags = var.tags
+}
+
+resource "azurerm_role_assignment" "api_acr_pull" {
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "AcrPull"
-  principal_id         = azurerm_user_assigned_identity.acr_pull.principal_id
+  principal_id         = azurerm_user_assigned_identity.api_acr_pull.principal_id
 
-  depends_on = [azurerm_user_assigned_identity.acr_pull]
+  depends_on = [azurerm_user_assigned_identity.api_acr_pull]
+}
+
+resource "azurerm_role_assignment" "redis_acr_pull" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_user_assigned_identity.redis_acr_pull.principal_id
+
+  depends_on = [azurerm_user_assigned_identity.redis_acr_pull]
 }
 
 resource "azurerm_container_app" "main_api" {
@@ -44,8 +60,8 @@ resource "azurerm_container_app" "main_api" {
   resource_group_name          = azurerm_resource_group.rg.name
 
   depends_on = [
-    azurerm_user_assigned_identity.acr_pull,
-    azurerm_role_assignment.acr_pull,
+    azurerm_user_assigned_identity.api_acr_pull,
+    azurerm_role_assignment.api_acr_pull,
     azurerm_container_app_environment.main
   ]
 
@@ -53,12 +69,12 @@ resource "azurerm_container_app" "main_api" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.acr_pull.id]
+    identity_ids = [azurerm_user_assigned_identity.api_acr_pull.id]
   }
 
   registry {
     server   = azurerm_container_registry.acr.login_server
-    identity = azurerm_user_assigned_identity.acr_pull.id
+    identity = azurerm_user_assigned_identity.api_acr_pull.id
   }
 
   template {
@@ -226,8 +242,8 @@ resource "azurerm_container_app" "main_redis" {
   resource_group_name          = azurerm_resource_group.rg.name
 
   depends_on = [
-    azurerm_user_assigned_identity.acr_pull,
-    azurerm_role_assignment.acr_pull,
+    azurerm_user_assigned_identity.redis_acr_pull,
+    azurerm_role_assignment.redis_acr_pull,
     azurerm_container_app_environment.main
   ]
 
@@ -235,12 +251,12 @@ resource "azurerm_container_app" "main_redis" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.acr_pull.id]
+    identity_ids = [azurerm_user_assigned_identity.redis_acr_pull.id]
   }
 
   registry {
     server   = azurerm_container_registry.acr.login_server
-    identity = azurerm_user_assigned_identity.acr_pull.id
+    identity = azurerm_user_assigned_identity.redis_acr_pull.id
   }
 
   template {
