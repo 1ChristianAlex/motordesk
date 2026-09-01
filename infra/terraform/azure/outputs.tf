@@ -157,6 +157,7 @@ resource "azurerm_app_configuration_key" "ack_mongo_database" {
 }
 
 resource "azurerm_app_configuration_key" "ack_redis_host" {
+  count                  = var.image_tag == "" ? 0 : 1
   configuration_store_id = azurerm_app_configuration.app_conf.id
   key                    = "REDIS_HOST"
   label                  = var.environment
@@ -169,6 +170,7 @@ resource "azurerm_app_configuration_key" "ack_redis_host" {
 }
 
 resource "azurerm_app_configuration_key" "ack_redis_port" {
+  count                  = var.image_tag == "" ? 0 : 1
   configuration_store_id = azurerm_app_configuration.app_conf.id
   key                    = "REDIS_PORT"
   label                  = var.environment

@@ -131,12 +131,12 @@ resource "azurerm_container_app" "main_api" {
       # Redis
       env {
         name  = "REDIS_HOST"
-        value = data.azurerm_app_configuration_key.redis_host.value
+        value = azurerm_container_app.main_redis[0].latest_revision_fqdn
       }
 
       env {
         name  = "REDIS_PORT"
-        value = data.azurerm_app_configuration_key.redis_port.value
+        value = "6379"
       }
 
       env {

@@ -13,6 +13,7 @@ data "azurerm_app_configuration_key" "database_driver" {
 }
 
 data "azurerm_app_configuration_key" "redis_host" {
+  count                  = var.image_tag == "" ? 0 : 1
   configuration_store_id = azurerm_app_configuration.app_conf.id
   key                    = "REDIS_HOST"
   label                  = var.environment
@@ -20,6 +21,7 @@ data "azurerm_app_configuration_key" "redis_host" {
 }
 
 data "azurerm_app_configuration_key" "redis_port" {
+  count                  = var.image_tag == "" ? 0 : 1
   configuration_store_id = azurerm_app_configuration.app_conf.id
   key                    = "REDIS_PORT"
   label                  = var.environment
