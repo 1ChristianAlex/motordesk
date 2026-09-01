@@ -169,19 +169,6 @@ resource "azurerm_app_configuration_key" "ack_redis_host" {
   ]
 }
 
-resource "azurerm_app_configuration_key" "ack_redis_port" {
-  count                  = var.image_tag == "" ? 0 : 1
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "REDIS_PORT"
-  label                  = var.environment
-  type                   = "kv"
-  value                  = tostring(azurerm_container_app.main_redis[0].ingress[0].target_port)
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner,
-    azurerm_container_app.main_redis
-  ]
-}
-
 resource "random_password" "redis_password" {
   length  = 16
   special = true

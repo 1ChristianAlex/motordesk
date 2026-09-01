@@ -136,7 +136,7 @@ resource "azurerm_container_app" "main_api" {
 
       env {
         name  = "REDIS_PORT"
-        value = "6379"
+        value = var.redis_port
       }
 
       env {
@@ -255,7 +255,7 @@ resource "azurerm_container_app" "main_redis" {
 
       env {
         name  = "REDIS_PORT"
-        value = "6379"
+        value = var.redis_port
       }
 
       env {
@@ -272,7 +272,7 @@ resource "azurerm_container_app" "main_redis" {
 
   ingress {
     external_enabled = false
-    target_port      = 6379
+    target_port      = var.redis_port
     transport        = "tcp"
 
     traffic_weight {

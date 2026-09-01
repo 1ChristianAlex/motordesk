@@ -90,6 +90,12 @@ variable "dev_client_ip" {
   default     = "0.0.0.0"
 }
 
+variable "redis_port" {
+  description = "Redis port"
+  type        = number
+  default     = 6379
+}
+
 variable "image_tag" {
   description = "Image tag for docker images"
   type        = string
