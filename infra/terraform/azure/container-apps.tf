@@ -254,11 +254,6 @@ resource "azurerm_container_app" "main_redis" {
       memory = "0.5Gi"
 
       env {
-        name  = "REDIS_HOST"
-        value = azurerm_container_app.main_redis[0].latest_revision_fqdn
-      }
-
-      env {
         name  = "REDIS_PORT"
         value = "6379"
       }
