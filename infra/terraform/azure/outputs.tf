@@ -161,9 +161,10 @@ resource "azurerm_app_configuration_key" "ack_redis_host" {
   key                    = "REDIS_HOST"
   label                  = var.environment
   type                   = "kv"
-  value                  = "redis"
+  value                  = azurerm_container_app.main_redis[0].latest_revision_fqdn
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_container_app.main_redis
   ]
 }
 
@@ -172,9 +173,10 @@ resource "azurerm_app_configuration_key" "ack_redis_port" {
   key                    = "REDIS_PORT"
   label                  = var.environment
   type                   = "kv"
-  value                  = "6380"
+  value                  = tostring(azurerm_container_app.main_redis[0].ingress[0].target_port)
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_container_app.main_redis
   ]
 }
 

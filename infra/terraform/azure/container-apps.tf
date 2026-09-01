@@ -228,7 +228,6 @@ resource "azurerm_container_app" "main_redis" {
   depends_on = [
     azurerm_user_assigned_identity.acr_pull,
     azurerm_role_assignment.acr_pull,
-    azurerm_container_app.main_api,
     azurerm_container_app_environment.main
   ]
 
@@ -256,12 +255,12 @@ resource "azurerm_container_app" "main_redis" {
 
       env {
         name  = "REDIS_HOST"
-        value = data.azurerm_app_configuration_key.redis_host.value
+        value = azurerm_container_app.main_redis[0].latest_revision_fqdn
       }
 
       env {
         name  = "REDIS_PORT"
-        value = data.azurerm_app_configuration_key.redis_port.value
+        value = "6379"
       }
 
       env {
@@ -278,7 +277,7 @@ resource "azurerm_container_app" "main_redis" {
 
   ingress {
     external_enabled = false
-    target_port      = tonumber(data.azurerm_app_configuration_key.redis_port.value)
+    target_port      = 6379
     transport        = "tcp"
 
     traffic_weight {

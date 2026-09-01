@@ -1,4 +1,4 @@
-package com.khrix.adapter.app
+﻿package com.khrix.adapter.app
 
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.http.URLProtocol
@@ -11,9 +11,7 @@ data class MongoConfig(
 ) {
     val connectionString: String
         get() =
-            "mongodb://$username:$password@" +
-                "${url.removePrefix("mongodb://")}/" +
-                "$database?authSource=admin"
+            "mongodb://${username}:${password}@${url.removePrefix("mongodb://")}/$database?authSource=admin"
 }
 
 data class RedisConfig(
@@ -22,7 +20,7 @@ data class RedisConfig(
     val port: String,
 ) {
     val connectionString: String
-        get() = "redis://$password@$host:$port"
+        get() = "redis://:${password}@${host}:${port}"
 }
 
 data class ExposedConfig(
