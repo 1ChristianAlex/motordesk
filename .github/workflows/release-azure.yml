@@ -85,9 +85,10 @@ jobs:
           docker push \
             "${{ steps.acr.outputs.name }}.azurecr.io/motordesk/redis:${{ github.run_number }}"
 
-      - name: Deploy infrastructure
-        uses: ./.github/workflows/terraform-azure.yml
-        with:
-          environment: ${{ env.ENVIRONMENT }}
-          image_tag: ${{ github.run_number }}
-          new-backend: false
+  deploy-infrastructure:
+    needs: build-and-deploy
+    uses: ./.github/workflows/terraform-azure.yml
+    with:
+      environment: ${{ inputs.environment || (github.ref_type == 'branch' && github.ref_name == 'dev' && 'dev' || 'qa') }}
+      image_tag: ${{ github.run_number }}
+      new-backend: false
