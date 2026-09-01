@@ -3,7 +3,7 @@ resource "azurerm_virtual_network" "network" {
   name                = "network-${var.environment}-${var.project_name}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.infra_location
-  tags                = var.tags
+  tags                = local.tags
   address_space       = ["10.20.0.0/16"]
 }
 # resource "azurerm_subnet" "aks" {
@@ -55,13 +55,13 @@ resource "azurerm_private_dns_zone" "dns_zone" {
   count               = 1
   name                = "private.postgres.database.azure.com"
   resource_group_name = azurerm_resource_group.rg.name
-  tags                = var.tags
+  tags                = local.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_virtual_network_link" {
   count               = 1
   name                = "${var.environment}-${var.project_name}VnetZone.com"
   private_dns_zone_id = azurerm_private_dns_zone.dns_zone[0].id
-  tags                = var.tags
+  tags                = local.tags
   virtual_network_id  = azurerm_virtual_network.network.id
 }

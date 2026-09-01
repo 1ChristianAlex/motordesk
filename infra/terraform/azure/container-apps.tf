@@ -6,7 +6,7 @@ resource "azurerm_log_analytics_workspace" "container_apps" {
   sku               = "PerGB2018"
   retention_in_days = 30
 
-  tags = var.tags
+  tags = local.tags
 }
 
 resource "azurerm_container_app_environment" "main" {
@@ -17,7 +17,27 @@ resource "azurerm_container_app_environment" "main" {
   infrastructure_subnet_id   = azurerm_subnet.container_apps.id
   logs_destination           = "log-analytics"
 
-  tags = var.tags
+  tags = local.tags
+}
+
+resource "azurerm_role_assignment" "api_acr_pull" {
+  count                            = var.image_tag == "" ? 0 : 1
+  scope                            = azurerm_container_registry.acr.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_container_app.main_api[0].identity[0].principal_id
+  skip_service_principal_aad_check = true
+
+  depends_on = [azurerm_container_app.main_api]
+}
+
+resource "azurerm_role_assignment" "redis_acr_pull" {
+  count                            = var.image_tag == "" ? 0 : 1
+  scope                            = azurerm_container_registry.acr.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_container_app.main_redis[0].identity[0].principal_id
+  skip_service_principal_aad_check = true
+
+  depends_on = [azurerm_container_app.main_redis]
 }
 
 resource "azurerm_container_app" "main_api" {
@@ -28,7 +48,8 @@ resource "azurerm_container_app" "main_api" {
   resource_group_name          = azurerm_resource_group.rg.name
 
   depends_on = [
-    azurerm_container_app_environment.main
+    azurerm_container_app_environment.main,
+    azurerm_container_app.main_redis
   ]
 
   revision_mode = "Single"
@@ -112,7 +133,7 @@ resource "azurerm_container_app" "main_api" {
       # Redis
       env {
         name  = "REDIS_HOST"
-        value = azurerm_container_app.main_redis[0].latest_revision_fqdn
+        value = local.redis_internal_host
       }
 
       env {
@@ -196,7 +217,7 @@ resource "azurerm_container_app" "main_api" {
     }
   }
 
-  tags = var.tags
+  tags = local.tags
 }
 
 resource "azurerm_container_app" "main_redis" {
@@ -259,5 +280,5 @@ resource "azurerm_container_app" "main_redis" {
     }
   }
 
-  tags = var.tags
+  tags = local.tags
 }

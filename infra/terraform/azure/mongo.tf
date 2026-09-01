@@ -18,10 +18,12 @@ resource "azurerm_mongo_cluster" "mongo" {
 }
 
 resource "azurerm_mongo_cluster_firewall_rule" "dev_mongo_firewall" {
-  count = var.environment == var.environments.prod ? 0 : 1
-  name  = "mongo-${var.environment}-${var.project_name}-dev-client"
+  # dev/qa: allow all IPs because Container Apps egress IP is not static on the student subscription.
+  # prod: restrict to known egress IPs before go-live (replace this rule).
+  count = var.mongo_firewall_allow_all && var.environment != var.environments.prod ? 1 : 0
+  name  = "mongo-${var.environment}-${var.project_name}-apps"
 
   mongo_cluster_id = azurerm_mongo_cluster.mongo.id
-  start_ip_address = var.dev_client_ip
-  end_ip_address   = var.dev_client_ip
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "255.255.255.255"
 }

@@ -49,13 +49,14 @@ data "azurerm_client_config" "client_config" {
 resource "azurerm_resource_group" "rg" {
   name     = "terraform-${var.environment}-${var.project_name}"
   location = var.infra_location
-  tags     = var.tags
+  tags     = local.tags
 }
 
 resource "azurerm_app_configuration" "app_conf" {
   name                = "appConf-${var.environment}-${var.project_name}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  tags                = local.tags
 
   depends_on = [azurerm_resource_group.rg]
 }
@@ -72,11 +73,11 @@ resource "azurerm_key_vault" "kvault_app" {
   resource_group_name           = azurerm_resource_group.rg.name
   rbac_authorization_enabled    = false
   tenant_id                     = data.azurerm_client_config.client_config.tenant_id
-  sku_name                      = "premium"
+  sku_name                      = var.key_vault_sku_name
   soft_delete_retention_days    = 7
   purge_protection_enabled      = false
   public_network_access_enabled = true
-  tags                          = var.tags
+  tags                          = local.tags
 
   depends_on = [azurerm_resource_group.rg]
 

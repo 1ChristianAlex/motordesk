@@ -65,15 +65,27 @@ variable "mongo_database_name" {
 }
 
 variable "tags" {
-  description = "Common Azure resource tags."
+  description = "Common Azure resource tags. environment is injected via local.tags."
   type        = map(string)
 
   default = {
-    project     = "motordesk"
-    managed_by  = "terraform"
-    environment = "dev"
+    project    = "motordesk"
+    managed_by = "terraform"
   }
 }
+
+variable "key_vault_sku_name" {
+  description = "Key Vault SKU. Use standard for dev/qa unless premium features are required."
+  type        = string
+  default     = "standard"
+}
+
+variable "mongo_firewall_allow_all" {
+  description = "When true (non-prod), allows all IPs on the Mongo firewall for Container Apps egress."
+  type        = bool
+  default     = true
+}
+
 variable "resource_name_email" {
   type    = string
   default = "motordesk-email-service"

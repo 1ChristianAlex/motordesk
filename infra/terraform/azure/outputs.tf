@@ -140,7 +140,7 @@ resource "azurerm_key_vault_secret" "mongo_database" {
   name         = "mongoDatabasev3"
   value        = var.mongo_database_name
   key_vault_id = azurerm_key_vault.kvault_app.id
-  depends_on   = [azurerm_key_vault.kvault_app, azurerm_postgresql_flexible_server_database.motordesk]
+  depends_on   = [azurerm_key_vault.kvault_app, azurerm_mongo_cluster.mongo]
 }
 
 resource "azurerm_app_configuration_key" "ack_mongo_database" {
@@ -153,19 +153,6 @@ resource "azurerm_app_configuration_key" "ack_mongo_database" {
     azurerm_role_assignment.appconf_dataowner,
     azurerm_key_vault.kvault_app,
     azurerm_key_vault_secret.mongo_database
-  ]
-}
-
-resource "azurerm_app_configuration_key" "ack_redis_host" {
-  count                  = var.image_tag == "" ? 0 : 1
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "REDIS_HOST"
-  label                  = var.environment
-  type                   = "kv"
-  value                  = azurerm_container_app.main_redis[0].latest_revision_fqdn
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner,
-    azurerm_container_app.main_redis
   ]
 }
 

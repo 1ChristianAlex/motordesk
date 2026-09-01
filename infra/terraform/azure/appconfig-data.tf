@@ -12,14 +12,6 @@ data "azurerm_app_configuration_key" "database_driver" {
   depends_on             = [azurerm_app_configuration_key.ack_database_driver]
 }
 
-data "azurerm_app_configuration_key" "redis_host" {
-  count                  = var.image_tag == "" ? 0 : 1
-  configuration_store_id = azurerm_app_configuration.app_conf.id
-  key                    = "REDIS_HOST"
-  label                  = var.environment
-  depends_on             = [azurerm_app_configuration_key.ack_redis_host]
-}
-
 data "azurerm_app_configuration_key" "jwt_issuer" {
   configuration_store_id = azurerm_app_configuration.app_conf.id
   key                    = "JWT_ISSUER"

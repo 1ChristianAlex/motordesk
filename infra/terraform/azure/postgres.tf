@@ -20,7 +20,7 @@ resource "azurerm_postgresql_flexible_server" "pg_db" {
   storage_tier = "P4"
 
   sku_name = "B_Standard_B1ms"
-  tags     = var.tags
+  tags     = local.tags
 
   depends_on = [
     azurerm_resource_group.rg,
