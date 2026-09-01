@@ -25,12 +25,12 @@ provider "random" {
 provider "azurerm" {
   features {
     key_vault {
-      purge_soft_deleted_secrets_on_destroy = false
+      purge_soft_deleted_secrets_on_destroy = true
       recover_soft_deleted_secrets          = false
     }
 
     app_configuration {
-      purge_soft_delete_on_destroy = false
+      purge_soft_delete_on_destroy = true
       recover_soft_deleted         = false
     }
   }
@@ -67,14 +67,18 @@ resource "azurerm_role_assignment" "appconf_dataowner" {
 }
 
 resource "azurerm_key_vault" "kvault_app" {
-  name                       = "kv${var.environment}-${var.project_name}"
-  location                   = azurerm_resource_group.rg.location
-  resource_group_name        = azurerm_resource_group.rg.name
-  rbac_authorization_enabled = false
-  tenant_id                  = data.azurerm_client_config.client_config.tenant_id
-  sku_name                   = "premium"
-  soft_delete_retention_days = 7
-  tags                       = var.tags
+  name                          = "kv${var.environment}-${var.project_name}"
+  location                      = azurerm_resource_group.rg.location
+  resource_group_name           = azurerm_resource_group.rg.name
+  rbac_authorization_enabled    = false
+  tenant_id                     = data.azurerm_client_config.client_config.tenant_id
+  sku_name                      = "premium"
+  soft_delete_retention_days    = 7
+  purge_protection_enabled      = false
+  public_network_access_enabled = true
+  tags                          = var.tags
+
+  depends_on = [azurerm_resource_group.rg]
 
   access_policy {
     tenant_id = data.azurerm_client_config.client_config.tenant_id

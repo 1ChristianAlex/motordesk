@@ -35,7 +35,9 @@ resource "azurerm_app_configuration_key" "ack_database_user" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.database_user.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.database_user
   ]
 }
 
@@ -54,7 +56,9 @@ resource "azurerm_app_configuration_key" "ack_database_password" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.database_password.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.database_password
   ]
 }
 
@@ -84,7 +88,9 @@ resource "azurerm_app_configuration_key" "ack_mongo_url" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.mongo_url.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.mongo_url
   ]
 }
 
@@ -103,7 +109,9 @@ resource "azurerm_app_configuration_key" "ack_mongo_user" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.mongo_user.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.mongo_user
   ]
 }
 
@@ -122,7 +130,9 @@ resource "azurerm_app_configuration_key" "ack_mongo_password" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.mongo_password.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.mongo_password
   ]
 }
 
@@ -140,7 +150,9 @@ resource "azurerm_app_configuration_key" "ack_mongo_database" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.mongo_database.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.mongo_database
   ]
 }
 
@@ -187,7 +199,9 @@ resource "azurerm_app_configuration_key" "ack_redis_password" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.redis_password.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.redis_password
   ]
 }
 
@@ -205,7 +219,9 @@ resource "azurerm_app_configuration_key" "ack_azure_communication_access_key" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.azure_communication_access_key.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.azure_communication_access_key
   ]
 }
 
@@ -223,7 +239,9 @@ resource "azurerm_app_configuration_key" "ack_azure_communication_endpoint" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.azure_communication_endpoint.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.azure_communication_endpoint
   ]
 }
 resource "random_string" "ack_jwt_issuer" {
@@ -293,7 +311,9 @@ resource "azurerm_app_configuration_key" "ack_jwt_secret" {
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.jwt_secret.versionless_id
   depends_on = [
-    azurerm_role_assignment.appconf_dataowner
+    azurerm_role_assignment.appconf_dataowner,
+    azurerm_key_vault.kvault_app,
+    azurerm_key_vault_secret.jwt_secret
   ]
 }
 
