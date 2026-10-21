@@ -6,7 +6,7 @@ resource "azurerm_log_analytics_workspace" "container_apps" {
   sku               = "PerGB2018"
   retention_in_days = 30
 
-  tags = var.tags
+  tags = local.tags
 }
 
 resource "azurerm_container_app_environment" "main" {
@@ -17,21 +17,41 @@ resource "azurerm_container_app_environment" "main" {
   infrastructure_subnet_id   = azurerm_subnet.container_apps.id
   logs_destination           = "log-analytics"
 
-  tags = var.tags
+  tags = local.tags
 }
 
-resource "azurerm_user_assigned_identity" "acr_pull" {
-  name                = "mi-${var.environment}-${var.project_name}-acr"
+resource "azurerm_user_assigned_identity" "api" {
+  count               = var.image_tag == "" ? 0 : 1
+  name                = "mi-${var.environment}-${var.project_name}-api"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-
-  tags = var.tags
 }
 
-resource "azurerm_role_assignment" "acr_pull" {
-  scope                = azurerm_container_registry.acr.id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_user_assigned_identity.acr_pull.principal_id
+resource "azurerm_user_assigned_identity" "redis" {
+  count               = var.image_tag == "" ? 0 : 1
+  name                = "mi-${var.environment}-${var.project_name}-redis"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+}
+
+resource "azurerm_role_assignment" "api_acr_pull" {
+  count                            = var.image_tag == "" ? 0 : 1
+  scope                            = azurerm_container_registry.acr.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_user_assigned_identity.api[0].principal_id
+  skip_service_principal_aad_check = true
+
+  depends_on = [azurerm_user_assigned_identity.api]
+}
+
+resource "azurerm_role_assignment" "redis_acr_pull" {
+  count                            = var.image_tag == "" ? 0 : 1
+  scope                            = azurerm_container_registry.acr.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_user_assigned_identity.redis[0].principal_id
+  skip_service_principal_aad_check = true
+
+  depends_on = [azurerm_user_assigned_identity.redis]
 }
 
 resource "azurerm_container_app" "main_api" {
@@ -41,16 +61,22 @@ resource "azurerm_container_app" "main_api" {
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.rg.name
 
+  depends_on = [
+    azurerm_container_app_environment.main,
+    azurerm_container_app.main_redis,
+    azurerm_role_assignment.api_acr_pull
+  ]
+
   revision_mode = "Single"
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.acr_pull.id]
+    identity_ids = [azurerm_user_assigned_identity.api[0].id]
   }
 
   registry {
     server   = azurerm_container_registry.acr.login_server
-    identity = azurerm_user_assigned_identity.acr_pull.id
+    identity = azurerm_user_assigned_identity.api[0].id
   }
 
   template {
@@ -81,17 +107,17 @@ resource "azurerm_container_app" "main_api" {
       # PostgreSQL
       env {
         name  = "DATABASE_URL"
-        value = azurerm_app_configuration_key.ack_database_url.value
+        value = data.azurerm_app_configuration_key.database_url.value
       }
 
       env {
         name  = "DATABASE_DRIVER"
-        value = azurerm_app_configuration_key.ack_database_driver.value
+        value = data.azurerm_app_configuration_key.database_driver.value
       }
 
       env {
         name  = "DATABASE_USER"
-        value = azurerm_app_configuration_key.ack_database_user.value
+        value = data.azurerm_key_vault_secret.database_user.value
       }
 
       env {
@@ -102,12 +128,12 @@ resource "azurerm_container_app" "main_api" {
       # Mongo
       env {
         name  = "MONGO_URL"
-        value = azurerm_app_configuration_key.ack_mongo_url.value
+        value = data.azurerm_key_vault_secret.mongo_url.value
       }
 
       env {
         name  = "MONGO_USER"
-        value = azurerm_app_configuration_key.ack_mongo_user.value
+        value = data.azurerm_key_vault_secret.mongo_user.value
       }
 
       env {
@@ -117,18 +143,18 @@ resource "azurerm_container_app" "main_api" {
 
       env {
         name  = "MONGO_DATABASE"
-        value = azurerm_app_configuration_key.ack_mongo_database.value
+        value = data.azurerm_key_vault_secret.mongo_database.value
       }
 
       # Redis
       env {
         name  = "REDIS_HOST"
-        value = azurerm_app_configuration_key.ack_redis_host.value
+        value = local.redis_internal_host
       }
 
       env {
         name  = "REDIS_PORT"
-        value = azurerm_app_configuration_key.ack_redis_port.value
+        value = var.redis_port
       }
 
       env {
@@ -139,7 +165,7 @@ resource "azurerm_container_app" "main_api" {
       # Azure Communication Services
       env {
         name  = "AZURE_COMMUNICATION_ENDPOINT"
-        value = azurerm_app_configuration_key.ack_azure_communication_endpoint.value
+        value = data.azurerm_key_vault_secret.azure_communication_endpoint.value
       }
 
       env {
@@ -150,17 +176,17 @@ resource "azurerm_container_app" "main_api" {
       # JWT
       env {
         name  = "JWT_ISSUER"
-        value = azurerm_app_configuration_key.ack_jwt_issuer.value
+        value = data.azurerm_app_configuration_key.jwt_issuer.value
       }
 
       env {
         name  = "JWT_AUDIENCE"
-        value = azurerm_app_configuration_key.ack_jwt_audience.value
+        value = data.azurerm_app_configuration_key.jwt_audience.value
       }
 
       env {
         name  = "JWT_REALM"
-        value = azurerm_app_configuration_key.ack_jwt_realm.value
+        value = data.azurerm_app_configuration_key.jwt_realm.value
       }
 
       env {
@@ -172,27 +198,27 @@ resource "azurerm_container_app" "main_api" {
 
   secret {
     name  = "database-password"
-    value = azurerm_key_vault_secret.database_password.value
+    value = data.azurerm_key_vault_secret.database_password.value
   }
 
   secret {
     name  = "mongo-password"
-    value = azurerm_key_vault_secret.mongo_password.value
+    value = data.azurerm_key_vault_secret.mongo_password.value
   }
 
   secret {
     name  = "redis-password"
-    value = azurerm_key_vault_secret.redis_password.value
+    value = data.azurerm_key_vault_secret.redis_password.value
   }
 
   secret {
     name  = "azure-communication-access-key"
-    value = azurerm_key_vault_secret.azure_communication_access_key.value
+    value = data.azurerm_key_vault_secret.azure_communication_access_key.value
   }
 
   secret {
     name  = "jwt-secret"
-    value = azurerm_key_vault_secret.jwt_secret.value
+    value = data.azurerm_key_vault_secret.jwt_secret.value
   }
 
   ingress {
@@ -207,7 +233,7 @@ resource "azurerm_container_app" "main_api" {
     }
   }
 
-  tags = var.tags
+  tags = local.tags
 }
 
 resource "azurerm_container_app" "main_redis" {
@@ -217,16 +243,21 @@ resource "azurerm_container_app" "main_redis" {
   container_app_environment_id = azurerm_container_app_environment.main.id
   resource_group_name          = azurerm_resource_group.rg.name
 
+  depends_on = [
+    azurerm_container_app_environment.main,
+    azurerm_role_assignment.redis_acr_pull
+  ]
+
   revision_mode = "Single"
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.acr_pull.id]
+    identity_ids = [azurerm_user_assigned_identity.redis[0].id]
   }
 
   registry {
     server   = azurerm_container_registry.acr.login_server
-    identity = azurerm_user_assigned_identity.acr_pull.id
+    identity = azurerm_user_assigned_identity.redis[0].id
   }
 
   template {
@@ -240,13 +271,8 @@ resource "azurerm_container_app" "main_redis" {
       memory = "0.5Gi"
 
       env {
-        name  = "REDIS_HOST"
-        value = azurerm_app_configuration_key.ack_redis_host.value
-      }
-
-      env {
         name  = "REDIS_PORT"
-        value = azurerm_app_configuration_key.ack_redis_port.value
+        value = var.redis_port
       }
 
       env {
@@ -258,12 +284,12 @@ resource "azurerm_container_app" "main_redis" {
 
   secret {
     name  = "redis-password"
-    value = azurerm_key_vault_secret.redis_password.value
+    value = data.azurerm_key_vault_secret.redis_password.value
   }
 
   ingress {
     external_enabled = false
-    target_port      = azurerm_app_configuration_key.ack_redis_port.value
+    target_port      = var.redis_port
     transport        = "tcp"
 
     traffic_weight {
@@ -272,5 +298,5 @@ resource "azurerm_container_app" "main_redis" {
     }
   }
 
-  tags = var.tags
+  tags = local.tags
 }
