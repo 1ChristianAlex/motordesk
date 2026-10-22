@@ -58,16 +58,34 @@ variable "postgres_database_name" {
   default     = "motordesk"
 }
 
+variable "mongo_database_name" {
+  description = "Application MongoDB database name."
+  type        = string
+  default     = "motordesk"
+}
+
 variable "tags" {
-  description = "Common Azure resource tags."
+  description = "Common Azure resource tags. environment is injected via local.tags."
   type        = map(string)
 
   default = {
-    project     = "motordesk"
-    managed_by  = "terraform"
-    environment = "dev"
+    project    = "motordesk"
+    managed_by = "terraform"
   }
 }
+
+variable "key_vault_sku_name" {
+  description = "Key Vault SKU. Use standard for dev/qa unless premium features are required."
+  type        = string
+  default     = "standard"
+}
+
+variable "mongo_firewall_allow_all" {
+  description = "When true (non-prod), allows all IPs on the Mongo firewall for Container Apps egress."
+  type        = bool
+  default     = true
+}
+
 variable "resource_name_email" {
   type    = string
   default = "motordesk-email-service"
@@ -82,6 +100,12 @@ variable "dev_client_ip" {
   description = "Public IP address allowed to connect to the dev PostgreSQL server."
   type        = string
   default     = "0.0.0.0"
+}
+
+variable "redis_port" {
+  description = "Redis port"
+  type        = number
+  default     = 6379
 }
 
 variable "image_tag" {
