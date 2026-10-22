@@ -131,9 +131,9 @@ tasks.register<Exec>("terraformLocal") {
         "scripts/terraform-local.main.kts",
         "--",
         "--environment",
-        "qa",
+        "dev",
         "--action",
-        "plan",
+        "apply",
     )
 }
 
