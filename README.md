@@ -53,11 +53,11 @@ src/main/kotlin
 - [ADR-001 - PostgreSQL + Kotlin Exposed](docs/ADR/ADR-001%20%E2%80%94%20PostgreSQL%20+%20Kotlin%20Exposed.md)
 - [ADR-002 - Redis Streams](docs/ADR/ADR-002-Redis-Streams.md)
 - [ADR-003 - MongoDB Service Order History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)
-- [ADR-004 - Azure Communication Services Email](docs/ADR/ADR-004-Azure-Communication-Services-Email.md)
+- [ADR-004 - Transactional Email (historical decision, superseded)](docs/ADR/ADR-004-Azure-Communication-Services-Email.md)
 - [ADR-005 - Migrating to Hexagonal Architecture](docs/ADR/ADR-005-Migrating-to-Hexagonal-Architecture.md)
-- [ADR-006 - Terraform and Microsoft Azure for Infrastructure as Code](docs/ADR/ADR-006-terraform-azure.md)
-- [Send Email Sequence](docs/diagrams/send-email-sequence.md)
-- [Email Sending with Azure](docs/diagrams/email-sending-azure.md)
+- [ADR-006 - Terraform and Microsoft Azure (superseded)](docs/ADR/ADR-006-terraform-azure.md)
+- [ADR-007 - Migration from Azure to AWS](docs/ADR/ADR-007-Migrate-Infrastructure-from-Microsoft-Azure-to-AWS.md)
+- [Email Sending Sequence](docs/diagrams/send-email-sequence.md)
 - [Technical Debt - Serializable in Domain](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
 - [Business flows](docs/storytelling/)
 
@@ -80,8 +80,8 @@ src/main/kotlin
 - JDK 21
 - Docker
 - Docker Compose
-- `kotlinc` (Kotlin compiler) — required for local Terraform testing
-- Terraform (for infrastructure provisioning on Azure)
+- `kotlinc` (Kotlin compiler) — required for local AWS Terraform automation
+- Terraform 1.10+ (for AWS infrastructure provisioning)
 
 ### Local run
 
@@ -90,41 +90,78 @@ docker compose -f docker-compose-dev.yml up -d
 ./gradlew runDev
 ```
 
-### Local Terraform Testing
+### AWS Infrastructure
 
-Motor Desk uses Terraform for Infrastructure as Code (IaC) on Microsoft Azure (see [ADR-006](docs/ADR/ADR-006-terraform-azure.md)).
+AWS is the only cloud provider configured by this repository. The application sends email through Amazon SES, and there
+is no provider-selection flag or Azure runtime adapter.
 
-Local testing of Terraform configurations requires `kotlinc` because the project uses a Kotlin-based orchestration script (`scripts/terraform-local.main.kts`) to automate Terraform workflows. This script:
+See [AWS Terraform Architecture](docs/deployment/aws-terraform-architecture.md) for the implemented resources, per-environment
+configuration, state backend, IAM, deployment workflow, and operational limitations.
 
-1. Initializes and applies backend infrastructure (resource groups, storage accounts, containers for Terraform state)
-2. Configures Terraform remote state storage on Azure
-3. Validates Terraform configurations
-4. Plans or applies Azure infrastructure changes
-
-The script is executed by the `terraformLocal` Gradle task, which invokes `kotlinc -script` to run the `.kts` file directly.
-
-**To test Terraform configurations locally:**
-
-```bash
-./gradlew terraformLocal
+```text
+infra/terraform/aws/
+├── backend/                 # One-time S3 state bucket bootstrap
+├── envs/dev/                # Independent dev state
+├── envs/qa/                 # Independent QA state
+├── envs/prod/               # Independent production state
+└── modules/application/     # Shared VPC, ECS, data services, IAM and SES
 ```
 
-This task accepts optional arguments:
+Terraform state uses S3 server-side encryption, versioning, public-access blocking, TLS-only bucket policy, and native
+S3 locking (`use_lockfile`, Terraform 1.10+). Do not reuse any previous provider's state in AWS. Legacy state and
+cloud resources are not manipulated by this repository.
+
+Bootstrap the remote state bucket once using an AWS profile with narrowly scoped setup permissions:
 
 ```bash
-# Plan infrastructure changes for QA environment
-./gradlew terraformLocal --environment qa --action plan
-
-# Apply infrastructure changes for production environment
-./gradlew terraformLocal --environment prod --action apply --image-tag v1.0.0
+terraform -chdir=infra/terraform/aws/backend init -backend=false
+terraform -chdir=infra/terraform/aws/backend apply \
+  -var="state_bucket_name=<globally-unique-bucket-name>" \
+  -var="aws_region=sa-east-1"
 ```
 
-Available arguments:
-- `--environment` (default: `dev`) — deployment environment
-- `--image-tag` — container image tag for deployment
-- `--action` (default: `plan`) — `plan` or `apply`
+Then configure backend access and environment-specific values in your local environment (never commit state, plans, or
+secret-bearing variable files):
 
-**Note:** `kotlinc` must be in your system PATH for the script to execute. Ensure your Kotlin installation is correctly configured.
+```powershell
+$env:AWS_REGION = "sa-east-1"
+$env:AWS_TF_BACKEND_BUCKET = "<state-bucket-name>"
+terraform -chdir=infra/terraform/aws/envs/dev init `
+  -backend-config="bucket=$env:AWS_TF_BACKEND_BUCKET" `
+  -backend-config="region=$env:AWS_REGION"
+terraform -chdir=infra/terraform/aws/envs/dev validate
+terraform -chdir=infra/terraform/aws/envs/dev plan
+```
+
+Set `certificate_arn`, `api_domain_name`, `ses_from_address`, and `github_oidc_subject` in an ignored local `.tfvars`
+file for each environment before provisioning. Every environment requires an ACM certificate matching its API domain;
+the public ALB redirects HTTP to HTTPS. Set `route53_zone_id` when the matching hosted zone is in Route 53, or create
+the DNS alias externally. QA/production additionally require explicit `documentdb_compatibility_confirmed=true` after integration tests
+against DocumentDB. `desired_count` defaults to zero until an application image exists. Database sizes, availability,
+cost, quotas, SES sending verification, and production backup/restore must be reviewed before any apply. PostgreSQL,
+DocumentDB, and ElastiCache resources are protected against accidental destroy; production enables multi-AZ PostgreSQL,
+two DocumentDB instances, multi-AZ Redis, per-AZ NAT gateways, deletion protection, and final snapshots.
+Before production, replace the database administrator credentials currently injected into the application with a
+dedicated least-privilege application database role and validate that role's grants.
+
+The GitHub workflows `Terraform AWS Validation` and `Deploy AWS` validate and deploy only to AWS. Deployment is manual
+and uses GitHub OIDC. After the initial AWS Terraform apply, configure repository variables
+`AWS_REGION`, `AWS_DEV_DEPLOY_ROLE_ARN`, `AWS_QA_DEPLOY_ROLE_ARN`, and `AWS_PROD_DEPLOY_ROLE_ARN`. The OIDC role trust
+subject must exactly match the branch/ref used to dispatch the workflow. SES sender verification and production access
+must be completed in AWS before email delivery is expected to work.
+
+The ECS service task definition and desired count are owned by the deploy workflow after initial creation, so later
+Terraform applies do not revert the deployed image or scale the service back to zero.
+See [the AWS operations runbook](docs/deployment/aws-migration-runbook.md) for data migration, cutover, AWS rollback,
+and legacy-resource cleanup requirements.
+
+For local automation, use `./gradlew terraformAws -PawsEnvironment=dev -PawsAction=validate`. Planning requires
+`AWS_TF_BACKEND_BUCKET` and AWS credentials. Applying additionally requires the explicit
+`-PawsAction=apply -PconfirmAwsApply=true` and a reviewed plan.
+
+The app always uses AWS SES. ECS injects region, SES sender, and JWT metadata from Parameter Store; database, MongoDB,
+Redis, and JWT credentials come from Secrets Manager. AWS SDK credentials come from the task role, not static access
+keys. Local development uses the standard AWS SDK credential chain.
 
 ### Useful Gradle tasks
 
@@ -132,7 +169,7 @@ Available arguments:
 - `./gradlew build` — build the project
 - `./gradlew sonar` — run SonarQube analysis
 - `./gradlew buildFatJar` — create a fat JAR for deployment
-- `./gradlew terraformLocal` — test local Terraform configurations (requires `kotlinc`)
+- `./gradlew terraformAws -PawsEnvironment=dev -PawsAction=validate` — validate AWS Terraform
 
 ## Project Notes
 
@@ -140,4 +177,5 @@ Available arguments:
 - Domain ports live under `domain/`.
 - Use-case implementations live under `application/`.
 - Technical integrations live under `infrastructure/`.
-- Azure infrastructure is provisioned with Terraform under `infra/terraform/azure/` and is documented in ADR-006.
+- AWS infrastructure is defined under `infra/terraform/aws/` and documented in ADR-007. ADR-004 and ADR-006 record
+  superseded provider decisions for historical context only.

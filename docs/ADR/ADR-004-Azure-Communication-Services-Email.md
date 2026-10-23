@@ -1,8 +1,8 @@
-# ADR-004 - Using Azure Communication Services for Transactional Email
+# ADR-004 - Transactional Email Provider (Historical Decision)
 
 ## Status
 
-Accepted
+Superseded by the AWS SES implementation described in ADR-007.
 
 ## Context
 
@@ -352,3 +352,12 @@ This ADR defines which external provider is used for email delivery.
 > Azure Communication Services was chosen mainly because the project is being developed in an academic context and the
 > Azure ecosystem provides resources and credits for student accounts, which makes it possible to use a real transactional
 > email solution without requiring an additional commercial email adapter at the beginning.
+
+## Migration to AWS
+
+ADR-007 supersedes this provider decision. The repository now uses Amazon SES exclusively through the existing
+`EmailSender` port. AWS deployments use `AWS_REGION` and a SES-verified `AWS_SES_FROM_ADDRESS`, and obtain AWS
+credentials from the ECS task role. No Azure email adapter or provider-selection configuration remains.
+
+SES identity verification, account sandbox restrictions, and actual delivery must be validated in each AWS environment.
+This ADR is retained only as a record of the previous decision.

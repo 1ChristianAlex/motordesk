@@ -1,10 +1,10 @@
 [versions]
-azure-email = "1.2.0-beta.1"
-exposed = "1.4.0"
+aws-sdk = "2.31.68"
+exposed = "1.6.0"
 konform = "0.11.1"
-kotlin = "2.4.20-RC"
+kotlin = "2.4.21"
 coroutine = "1.11.0"
-lettuce = "7.6.0.RELEASE"
+lettuce = "7.9.0.RELEASE"
 logback = "1.5.37"
 mockk = "1.14.11"
 mongodb = "5.9.2"
@@ -15,7 +15,7 @@ sqids = "0.1.1"
 
 [libraries]
 argon2 = { module = "de.mkammerer:argon2-jvm", version = "2.11" }
-azure-email = { module = "com.azure:azure-communication-email", version.ref = "azure-email" }
+aws-ses = { module = "software.amazon.awssdk:sesv2", version.ref = "aws-sdk" }
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
 exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "exposed" }
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }

@@ -34,7 +34,7 @@ Make dependencies on PostgreSQL, MongoDB, Redis, Ktor HTTP, or external adapters
 For email functionality test message mapping, successful delivery, provider failure, retry count, maximum retry
 behavior, terminal failure, worker processing, and persistence state transitions.
 
-Do not require a real Azure Communication Services account for ordinary unit tests.
+Do not require a real AWS account for ordinary unit tests.
 
 ## Security
 

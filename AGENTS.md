@@ -49,7 +49,7 @@ The project currently uses:
 - JWT;
 - Docker Compose;
 - OpenAPI / Swagger UI;
-- Azure Communication Services for email delivery;
+- Amazon SES for email delivery;
 - Konform for validation;
 - Sqids for public-facing identifiers.
 
@@ -221,8 +221,8 @@ The `domain/` layer should contain:
 
 Keep infrastructure-specific implementations outside this layer.
 
-For example, an abstraction such as an email sender may belong to the domain/application boundary while the Azure
-Communication Services implementation belongs to infrastructure.
+For example, an abstraction such as an email sender may belong to the application boundary while the Amazon SES
+implementation belongs to infrastructure.
 
 ### 4.3 Application
 
@@ -249,7 +249,7 @@ The `infrastructure/` layer contains adapters and technical implementations, inc
 - dependency injection;
 - external integrations.
 
-Provider SDKs such as Azure Communication Services belong here.
+Provider SDKs such as the AWS SDK belong here.
 
 ---
 
@@ -300,8 +300,8 @@ flowchart LR
     Stream[("Redis Stream")]
     Worker["Email Worker"]
     Service["Email Service"]
-    Sender["Azure Email Sender"]
-    ACS["Azure Communication Services"]
+    Sender["AWS SES Email Sender"]
+    SES["Amazon SES"]
     Customer["Customer"]
 
     Command -->|Create| DB
@@ -311,10 +311,10 @@ flowchart LR
     Worker -->|Load Email| DB
     Worker -->|Send Email| Service
     Service --> Sender
-    Sender --> ACS
-    ACS -->|Email| Customer
+    Sender --> SES
+    SES -->|Email| Customer
 
-    ACS --> Result{"Success?"}
+    SES --> Result{"Success?"}
     Result -->|Yes| DB
     Result -->|No| Attempts{"Attempts < 3?"}
 
@@ -325,17 +325,17 @@ flowchart LR
 
 ### Important rules
 
-1. The API should not synchronously depend on Azure email delivery for the main business operation.
+1. The API should not synchronously depend on SES delivery for the main business operation.
 2. Email information is persisted before asynchronous processing.
 3. Redis carries the event/trigger used by the worker.
 4. The worker loads the persisted email information.
 5. Email provider details must remain behind an abstraction.
-6. Azure Communication Services SDK usage belongs to adapter.
+6. AWS SES SDK usage belongs to the adapter.
 7. Failed sends are retried up to the configured maximum, currently represented as three attempts in the documented
    flow.
 8. The final database state must reflect whether processing succeeded or exhausted retries.
-9. Do not put Azure SDK types in domain models.
-10. Do not couple domain logic directly to `EmailAsyncClient`.
+9. Do not put AWS SDK types in domain models.
+10. Do not couple domain logic directly to `SesV2Client`.
 
 ### Email abstractions
 
@@ -346,12 +346,12 @@ Domain/Application
     EmailSender
         ↓
 Adapter
-    AzureEmailSender
+    AwsSesEmailSender
         ↓
-    EmailAsyncClient
+    SesV2Client
 ```
 
-`EmailMessage` / `EmailMessageBody` should represent application/domain data rather than Azure SDK request objects.
+`EmailMessage` / `EmailMessageBody` should represent application/domain data rather than AWS SDK request objects.
 
 Adapters are responsible for translating internal email models into provider-specific SDK models.
 
@@ -424,7 +424,7 @@ EmailQueueItem
       ↓
 EmailMessageBody
       ↓
-Azure Communication Services request
+Amazon SES request
 ```
 
 Each transformation should make the boundary explicit.
@@ -469,7 +469,7 @@ Avoid putting:
 
 - SQL queries;
 - Redis commands;
-- Azure SDK calls;
+- AWS SDK calls;
 - complex business rules;
 
 directly in HTTP handlers.
@@ -528,8 +528,7 @@ For email-related changes, prioritize tests for:
 - adapter behavior;
 - provider failure handling.
 
-Avoid tests that unnecessarily depend on a real Azure Communication Services account unless the test is explicitly an
-integration test.
+Avoid tests that unnecessarily depend on a real AWS account unless the test is explicitly an integration test.
 
 ---
 
@@ -558,8 +557,8 @@ src/main/resources/secrets.properties.example
 
 Never commit real credentials.
 
-For Azure Communication Services, credentials and connection information must be supplied through the project's
-secret/configuration mechanism.
+For AWS SES, configure `aws.region` and `aws.ses.from-address` in local development and use the standard AWS SDK
+credential chain. Production workloads use the ECS task role; do not configure static AWS keys.
 
 ---
 
@@ -674,7 +673,7 @@ Email domain/application abstractions
    ↓
 Email Worker
    ↓
-Azure Email adapter
+AWS SES adapter
    ↓
 Tests
 ```
@@ -687,7 +686,7 @@ Do not assume:
 
 - Redis is the source of truth;
 - MongoDB replaces PostgreSQL;
-- Azure SDK types belong in the domain;
+- AWS SDK types belong in the domain;
 - email sending must happen synchronously;
 - every external integration belongs in the application layer;
 - a new abstraction is necessary without checking existing ports;
@@ -734,7 +733,7 @@ Motor Desk
 │   ├── PostgreSQL / Exposed
 │   ├── MongoDB
 │   ├── Redis / Lettuce
-│   ├── Email / Azure Communication Services
+│   ├── Email / Amazon SES
 │   └── Security / JWT
 │
 ├── docs/

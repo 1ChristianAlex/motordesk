@@ -88,7 +88,7 @@ dependencies {
     implementation(libs.bundles.exposed)
 
     // Cloud
-    implementation(libs.azure.email)
+    implementation(libs.aws.ses)
 
     // Test
     testImplementation(kotlin("test"))
@@ -121,19 +121,21 @@ tasks.register<JavaExec>("runDev") {
     jvmArgs = (runTask.jvmArgs ?: emptyList()) + "-Dio.ktor.development=true"
 }
 
-tasks.register<Exec>("terraformLocal") {
+tasks.register<Exec>("terraformAws") {
     group = "terraform"
-    description = "Runs the local Terraform orchestration script with Kotlin."
+    description = "Validates or runs AWS Terraform through scripts/terraform-aws.main.kts."
 
     commandLine(
         "kotlinc",
         "-script",
-        "scripts/terraform-local.main.kts",
+        "scripts/terraform-aws.main.kts",
         "--",
         "--environment",
-        "dev",
+        providers.gradleProperty("awsEnvironment").orElse("dev").get(),
         "--action",
-        "apply",
+        providers.gradleProperty("awsAction").orElse("validate").get(),
+        "--confirm-apply",
+        providers.gradleProperty("confirmAwsApply").orElse("false").get(),
     )
 }
 
