@@ -84,11 +84,11 @@ dependencies {
     implementation(libs.lettuce)
 
     // Database
-    implementation(libs.mongodb)
     implementation(libs.bundles.exposed)
 
     // Cloud
-    implementation(libs.aws.ses)
+    implementation(platform(libs.aws.sdk.bom))
+    implementation(libs.bundles.aws.sdk)
 
     // Test
     testImplementation(kotlin("test"))

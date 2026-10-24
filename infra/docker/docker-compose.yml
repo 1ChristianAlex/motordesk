@@ -6,7 +6,7 @@ services:
     ports: [ "8080:8080" ]
     depends_on:
       sql-database: { condition: service_healthy }
-      mongodb: { condition: service_started }
+      dynamodb: { condition: service_started }
       redis: { condition: service_healthy }
 
     networks: [ backend,frontend ]
@@ -22,13 +22,11 @@ services:
       test: [ "CMD-SHELL","pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
     networks: [ backend ]
 
-  mongodb:
-    image: mongo:8
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: motordesk
-      MONGO_INITDB_ROOT_PASSWORD: motordesk_pass
-      MONGO_INITDB_DATABASE: motordesk
-    volumes: [ mongodb_data:/data/db ]
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    command: [ "-sharedDb", "-dbPath", "./data" ]
+    working_dir: /home/dynamodblocal
+    volumes: [ dynamodb_data:/home/dynamodblocal/data ]
     networks: [ backend ]
 
   redis:
@@ -63,7 +61,7 @@ services:
 
 volumes:
   postgres_data:
-  mongodb_data:
+  dynamodb_data:
   redis_data:
 
 networks:

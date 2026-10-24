@@ -19,18 +19,16 @@ services:
   #    volumes:
   #      - postgres_data:/var/lib/postgresql/data
 
-  mongodb:
-    image: mongo:8
-    container_name: motordesk_mongodb
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: motordesk_dynamodb
+    command: [ "-sharedDb", "-dbPath", "./data" ]
+    working_dir: /home/dynamodblocal
     restart: unless-stopped
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: motordesk
-      MONGO_INITDB_ROOT_PASSWORD: motordesk_pass
-      MONGO_INITDB_DATABASE: motordesk
     ports:
-      - "27017:27017"
-  #    volumes:
-  #      - mongodb_data:/data/db
+      - "8000:8000"
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
 
   redis:
     image: redis:8-alpine
@@ -75,6 +73,7 @@ services:
       - sonarqube_logs:/opt/sonarqube/logs
 
 volumes:
+  dynamodb_data:
   sonarqube_data:
   sonarqube_extensions:
   sonarqube_logs:
