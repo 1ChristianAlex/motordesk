@@ -6,8 +6,8 @@ source data, deployment, and AWS-native rollback. It does not destroy cloud reso
 ## Before provisioning
 
 - Confirm AWS account, region, quotas, budget, ownership, and an authorized bootstrap identity.
-- Check whether the account already has the GitHub Actions OIDC provider. Import an existing provider into Terraform
-  state rather than trying to create a duplicate.
+- Confirm the organization SCP permits creating the dedicated IAM deploy users, their inline policies, and access keys.
+  SCP denials cannot be overridden by granting broader IAM permissions in the account.
 - Verify the ACM certificate covers the chosen API hostname. Verify its DNS challenge and the SES sender identity
   separately; SES may also be restricted to sandbox recipients.
 - Decide the DNS ownership, desired retention, recovery point objective, recovery time objective, and approved rollback

@@ -121,24 +121,6 @@ tasks.register<JavaExec>("runDev") {
     jvmArgs = (runTask.jvmArgs ?: emptyList()) + "-Dio.ktor.development=true"
 }
 
-tasks.register<Exec>("terraformAws") {
-    group = "terraform"
-    description = "Validates or runs AWS Terraform through scripts/terraform-aws.main.kts."
-
-    commandLine(
-        "kotlinc",
-        "-script",
-        "scripts/terraform-aws.main.kts",
-        "--",
-        "--environment",
-        providers.gradleProperty("awsEnvironment").orElse("dev").get(),
-        "--action",
-        providers.gradleProperty("awsAction").orElse("validate").get(),
-        "--confirm-apply",
-        providers.gradleProperty("confirmAwsApply").orElse("false").get(),
-    )
-}
-
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {

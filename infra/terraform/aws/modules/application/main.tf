@@ -58,21 +58,6 @@ resource "aws_cloudwatch_log_group" "api" {
   retention_in_days = 1
 }
 
-resource "aws_secretsmanager_secret" "documentdb_password" {
-  name                    = "${var.project_name}/${var.environment}/documentdb-password"
-  recovery_window_in_days = 1
-}
-
-resource "random_password" "documentdb" {
-  length  = 32
-  special = false
-}
-
-resource "aws_secretsmanager_secret_version" "documentdb_password" {
-  secret_id     = aws_secretsmanager_secret.documentdb_password.id
-  secret_string = random_password.documentdb.result
-}
-
 resource "aws_secretsmanager_secret" "redis_auth_token" {
   name                    = "${var.project_name}/${var.environment}/redis-auth-token"
   recovery_window_in_days = 7
@@ -157,7 +142,6 @@ resource "aws_security_group" "postgres" {
 resource "aws_db_instance" "postgres" {
   identifier                  = "${var.project_name}-${var.environment}-postgres"
   engine                      = "postgres"
-  engine_version              = var.postgres_engine_version
   instance_class              = var.postgres_instance_class
   allocated_storage           = 20
   max_allocated_storage       = 100
@@ -168,7 +152,7 @@ resource "aws_db_instance" "postgres" {
   db_subnet_group_name        = aws_db_subnet_group.postgres.name
   vpc_security_group_ids      = [aws_security_group.postgres.id]
   publicly_accessible         = false
-  multi_az                    = var.environment == "prod"
+  multi_az                    = false
   backup_retention_period     = var.backup_retention_days
   deletion_protection         = var.environment == "prod"
   skip_final_snapshot         = var.environment != "prod"
@@ -180,65 +164,40 @@ resource "aws_db_instance" "postgres" {
   }
 }
 
-resource "aws_docdb_subnet_group" "main" {
-  name       = "${var.project_name}-${var.environment}-documentdb"
-  subnet_ids = aws_subnet.data[*].id
-}
+resource "aws_dynamodb_table" "history" {
+  name                        = "${var.project_name}-${var.environment}-history"
+  billing_mode                = "PAY_PER_REQUEST"
+  hash_key                    = "register_key"
+  range_key                   = "history_key"
+  deletion_protection_enabled = var.environment == "prod"
 
-resource "aws_security_group" "documentdb" {
-  name        = "${var.project_name}-${var.environment}-documentdb"
-  description = "DocumentDB access only from the application service."
-  vpc_id      = aws_vpc.main.id
-
-  ingress {
-    description     = "MongoDB-compatible access from ECS tasks"
-    from_port       = 27017
-    to_port         = 27017
-    protocol        = "tcp"
-    security_groups = [aws_security_group.tasks.id]
+  attribute {
+    name = "register_key"
+    type = "S"
   }
 
-  egress = []
-}
+  attribute {
+    name = "history_key"
+    type = "S"
+  }
 
-resource "aws_docdb_cluster" "main" {
-  cluster_identifier              = "${var.project_name}-${var.environment}-documentdb"
-  engine                          = "docdb"
-  engine_version                  = var.documentdb_engine_version
-  master_username                 = var.documentdb_admin_username
-  master_password                 = random_password.documentdb.result
-  db_subnet_group_name            = aws_docdb_subnet_group.main.name
-  vpc_security_group_ids          = [aws_security_group.documentdb.id]
-  storage_encrypted               = true
-  backup_retention_period         = var.backup_retention_days
-  preferred_backup_window         = "03:00-04:00"
-  preferred_maintenance_window    = "sun:04:00-sun:05:00"
-  deletion_protection             = var.environment == "prod"
-  skip_final_snapshot             = var.environment != "prod"
-  final_snapshot_identifier       = var.environment == "prod" ? "${var.project_name}-${var.environment}-documentdb-final" : null
-  apply_immediately               = var.apply_database_changes_immediately
-  db_cluster_parameter_group_name = aws_docdb_cluster_parameter_group.main.name
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  server_side_encryption {
+    enabled = true
+  }
+
+  tags = {
+    Project     = var.project_name
+    Environment = var.environment
+    Purpose     = "application-history"
+  }
 
   lifecycle {
     prevent_destroy = true
   }
-}
-
-resource "aws_docdb_cluster_parameter_group" "main" {
-  family = "docdb5.0"
-  name   = "${var.project_name}-${var.environment}-docdb"
-
-  parameter {
-    name  = "tls"
-    value = "enabled"
-  }
-}
-
-resource "aws_docdb_cluster_instance" "main" {
-  count              = var.environment == "prod" ? 2 : var.documentdb_instance_count
-  identifier         = "${var.project_name}-${var.environment}-documentdb-${count.index + 1}"
-  cluster_identifier = aws_docdb_cluster.main.id
-  instance_class     = var.documentdb_instance_class
 }
 
 resource "aws_elasticache_subnet_group" "main" {
@@ -276,8 +235,8 @@ resource "aws_elasticache_replication_group" "redis" {
   at_rest_encryption_enabled = true
   transit_encryption_enabled = true
   auth_token                 = random_password.redis_auth_token.result
-  automatic_failover_enabled = var.environment == "prod"
-  multi_az_enabled           = var.environment == "prod"
+  automatic_failover_enabled = false
+  multi_az_enabled           = false
   apply_immediately          = var.apply_database_changes_immediately
   snapshot_retention_limit   = var.backup_retention_days
   snapshot_window            = "02:00-03:00"

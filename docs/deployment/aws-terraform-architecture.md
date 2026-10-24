@@ -7,7 +7,7 @@ validação operacional.
 
 ## Visão geral
 
-O Terraform mantém uma implementação compartilhada e três roots independentes:
+O Terraform mantém uma implementação compartilhada e três roots com state remoto independente:
 
 ```text
 infra/terraform/aws/
@@ -20,8 +20,10 @@ infra/terraform/aws/
     └── application/         # Recursos compartilhados da aplicação
 ```
 
-Cada root fixa o ambiente e sua chave própria de state no S3 e chama `modules/application`. Os providers estão fixados
-em AWS `6.0.0` e Random `3.7.2`; os roots exigem Terraform `>= 1.10.0`. A região padrão é `sa-east-1`.
+Cada root fixa o ambiente e chama `modules/application`; todos usam chaves próprias de state no S3. Os providers estão
+fixados em AWS `6.0.0` e Random `3.7.2`; os roots exigem
+Terraform `>= 1.10.0`. A região padrão configurada nos roots é `us-east-2`; o módulo seleciona dinamicamente duas zonas
+de disponibilidade disponíveis nessa região.
 
 ## State e backend
 
@@ -52,8 +54,8 @@ podem conter valores sensíveis, incluindo senhas geradas; devem ser tratados co
 
 ### Rede e entrada HTTP
 
-O módulo cria uma VPC (CIDR padrão `10.40.0.0/16`) distribuída pelas duas primeiras zonas de disponibilidade
-disponíveis na região. Em cada AZ são criadas:
+O módulo cria uma VPC (CIDR padrão `10.40.0.0/16`) nas duas primeiras zonas de disponibilidade disponíveis na região
+configurada. Em cada AZ selecionada são criadas:
 
 - uma subnet pública para o Application Load Balancer e NAT;
 - uma subnet privada de aplicação para as tarefas ECS;
@@ -64,12 +66,21 @@ QA compartilham um NAT Gateway, enquanto produção cria um NAT Gateway por AZ. 
 para a internet.
 
 O ALB é público. Seu security group aceita HTTP/80 e HTTPS/443 da internet, e permite saída para a porta 8080 dentro da
-VPC. O listener HTTP redireciona para HTTPS; o listener HTTPS encaminha para o target group da API e exige um ARN de
-certificado ACM. A política TLS configurada é `ELBSecurityPolicy-TLS13-1-2-2021-06`.
+VPC. QA e prod, e dev quando `api_domain_name` estiver configurado, redirecionam HTTP para HTTPS usando certificado ACM
+gerenciado pelo Terraform. Em dev sem domínio próprio, o DNS gerado pelo ALB encaminha HTTP diretamente para o target
+group, sem certificado. A política TLS configurada é `ELBSecurityPolicy-TLS13-1-2-2021-06`.
 
-O target group usa targets do tipo IP e verifica `GET /health` a cada 30 segundos, esperando status 200. Se
-`route53_zone_id` for preenchido, o módulo cria um registro A alias apontando para o ALB; caso contrário, o DNS deve ser
-configurado fora do Terraform.
+O target group usa targets do tipo IP e verifica `GET /health` a cada 30 segundos, esperando status 200. O módulo
+solicita um certificado ACM para `api_domain_name`, usando validação DNS. Se `route53_zone_id` for preenchido, cria os
+registros DNS de validação, espera o certificado ser emitido e também cria um registro A alias para o ALB. Sem uma zona
+Route 53, `certificate_validation_records` expõe os CNAMEs necessários para publicação externa. Nesse caso, solicite o
+certificado com um apply direcionado, consulte o output, publique os CNAMEs e configure também o alias DNS da API fora
+do Terraform. Execute o apply completo após a emissão:
+
+```powershell
+terraform -chdir=infra/terraform/aws/envs/dev apply -target=module.application.aws_acm_certificate.api
+terraform -chdir=infra/terraform/aws/envs/dev output certificate_validation_records
+```
 
 As tarefas ECS não recebem IP público. O security group da aplicação aceita a porta 8080 somente do ALB e libera saída
 para tráfego externo através do NAT. Os security groups de PostgreSQL (5432), DocumentDB (27017) e Redis (6379) aceitam
@@ -99,7 +110,7 @@ versão ou escala definida pelo deploy.
 - armazenamento criptografado e sem acesso público;
 - senha master gerenciada pelo RDS no Secrets Manager;
 - retenção de backup padrão de sete dias;
-- Multi-AZ e deletion protection somente em prod;
+- instância Single-AZ em todos os ambientes; deletion protection somente em prod;
 - final snapshot obrigatório em prod; em dev/QA o código permite ignorá-lo, embora `prevent_destroy` continue bloqueando
   destruição pelo Terraform.
 
@@ -118,7 +129,7 @@ operações de histórico realmente usadas pela aplicação.
 **Amazon ElastiCache for Redis**
 
 - replication group Redis 7.1 por padrão, classe `cache.t4g.micro` em dev/QA e `cache.t4g.small` em prod;
-- um nó em dev/QA e dois nós em prod, com automatic failover e Multi-AZ em prod;
+- um nó em dev/QA e dois nós em prod, sem automatic failover nem Multi-AZ;
 - criptografia em repouso e em trânsito, token de autenticação gerado e armazenado no Secrets Manager;
 - snapshots com retenção padrão de sete dias.
 
@@ -145,24 +156,29 @@ PostgreSQL específico para a aplicação, com privilégios mínimos, antes do u
 
 ### Identidade de deploy GitHub Actions
 
-O módulo configura um provedor OIDC para `token.actions.githubusercontent.com` e uma role de deploy por ambiente. A
-trust policy limita `aud` a `sts.amazonaws.com` e exige igualdade exata do claim `sub` com `github_oidc_subject`.
+O módulo cria um IAM user dedicado por ambiente e uma policy inline restrita ao deploy daquele ambiente. A policy
+permite autenticar no ECR, publicar imagens no repositório da API, registrar/descrever task definitions,
+descrever/atualizar o serviço ECS e passar somente as roles de execução e de task ao ECS.
 
-A policy permite obter token de autenticação e publicar imagens no repositório ECR da API, registrar/descrever task
-definitions, descrever/atualizar o serviço ECS e passar somente as roles de execução e de task ao ECS. O subject padrão
-do módulo é o branch `dev`; QA/prod exigem configurar o subject correspondente de forma explícita. Se a conta já possuir
-o provedor OIDC, sua existência deve ser conferida antes de um apply para evitar tentativa de duplicá-lo.
+O workflow `Deploy AWS` recebe as credenciais por GitHub Environments (`dev`, `qa`, `prod`), cada um com os secrets
+`AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY`. Após o primeiro apply, crie uma access key para o username do output
+`github_deploy_user_name` no IAM e cadastre os valores nos secrets do Environment correspondente. Terraform não cria
+`aws_iam_access_key`: a secret key só é exibida uma vez e armazená-la no state ampliaria o risco de exposição. Essas
+credenciais são de longa duração; restrinja o acesso aos Environments, faça rotação periódica e remova chaves antigas.
+A organização ainda pode bloquear `iam:CreateUser`, `iam:PutUserPolicy` ou `iam:CreateAccessKey` por SCP; uma policy
+IAM permissiva na conta não sobrepõe uma negação explícita da SCP.
 
 ## Diferenças entre ambientes
 
 | Propriedade | dev | qa | prod |
 |---|---|---|---|
 | State S3 | `motordesk/dev/terraform.tfstate` | `motordesk/qa/terraform.tfstate` | `motordesk/prod/terraform.tfstate` |
-| Região padrão | `sa-east-1` | `sa-east-1` | `sa-east-1` |
-| NAT Gateway | Um compartilhado | Um compartilhado | Um por AZ |
-| RDS Multi-AZ | Não | Não | Sim |
+| Região padrão | `us-east-2` | `us-east-2` | `us-east-2` |
+| Zonas de disponibilidade | Duas, selecionadas automaticamente | Duas, selecionadas automaticamente | Duas, selecionadas automaticamente |
+| NAT Gateway | Um compartilhado | Um compartilhado | Dois, um por AZ |
+| RDS Multi-AZ | Não | Não | Não |
 | DocumentDB | Uma instância padrão | Uma instância padrão | Duas instâncias |
-| Redis | Um nó padrão | Um nó padrão | Dois nós, Multi-AZ/failover |
+| Redis | Um nó padrão | Um nó padrão | Dois nós, sem Multi-AZ/failover |
 | Proteções de exclusão RDS/DocumentDB | `prevent_destroy` | `prevent_destroy` | `prevent_destroy` e deletion protection |
 | ECS inicial | `desired_count = 0` | `desired_count = 0` | `desired_count = 0` |
 | Confirmação DocumentDB | Não exigida pelo root | Obrigatória | Obrigatória |
@@ -175,13 +191,12 @@ validado de carga.
 
 Todos os roots configuram:
 
-- `aws_region`, com default `sa-east-1`;
-- `certificate_arn`, cujo certificado ACM cobre o hostname da API;
+- `aws_region`, com default `us-east-2`; o módulo escolhe duas AZs disponíveis na região;
 - `ses_from_address`, identidade de remetente SES;
-- `api_domain_name`;
-- `github_oidc_subject`, subject OIDC permitido para deploy. O root dev tem um default para o branch `dev`; QA e prod
-  exigem valor explícito.
 
+QA e prod exigem `api_domain_name`, usado para solicitar o certificado ACM. Em dev, essa variável é opcional; sem ela,
+`api_url` usa o DNS do ALB por HTTP. A rede e o ALB cobrem duas AZs; o RDS permanece Single-AZ e o Redis sem failover
+automático conforme as configurações atuais.
 `route53_zone_id` é opcional. QA e prod também exigem
 `documentdb_compatibility_confirmed=true` após os testes de compatibilidade. Variáveis sensíveis não devem ser
 versionadas; use `.tfvars` local ignorado ou mecanismo seguro equivalente.
@@ -202,9 +217,9 @@ Exemplo de bootstrap e configuração do root dev:
 terraform -chdir=infra/terraform/aws/backend init -backend=false
 terraform -chdir=infra/terraform/aws/backend apply `
   -var="state_bucket_name=<nome-globalmente-unico>" `
-  -var="aws_region=sa-east-1"
+  -var="aws_region=us-east-2"
 
-$env:AWS_REGION = "sa-east-1"
+$env:AWS_REGION = "us-east-2"
 $env:AWS_TF_BACKEND_BUCKET = "<bucket-criado>"
 terraform -chdir=infra/terraform/aws/envs/dev init `
   -backend-config="bucket=$env:AWS_TF_BACKEND_BUCKET" `
@@ -225,14 +240,14 @@ Revise sempre o plano produzido e confirme a conta, região, environment, recurs
 efeitos sobre os dados antes de aprovar um apply.
 
 O workflow `Terraform AWS Validation` roda `fmt`, `init -backend=false` e `validate` para dev, QA e prod, sem
-credenciais nem provisionamento. O workflow manual `Deploy AWS` executa testes/build, autentica via OIDC, envia a
-imagem ao ECR e atualiza o ECS. Ele pressupõe a configuração das variáveis GitHub:
-`AWS_REGION`, `AWS_DEV_DEPLOY_ROLE_ARN`, `AWS_QA_DEPLOY_ROLE_ARN` e `AWS_PROD_DEPLOY_ROLE_ARN`.
+credenciais nem provisionamento. O workflow manual `Deploy AWS` executa testes/build, usa as access keys do GitHub
+Environment escolhido, envia a imagem ao ECR e atualiza o ECS. Configure a variável de repositório `AWS_REGION` e os
+secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` separadamente em cada GitHub Environment (`dev`, `qa`, `prod`).
 
 ## Outputs
 
-Os roots expõem URL HTTPS da API, URL do repositório ECR, nome de cluster/serviço ECS, ARN da role de deploy e status de
-verificação da identidade SES. O módulo também define endpoints PostgreSQL, DocumentDB e Redis como outputs; os roots
+Os roots expõem URL da API, URL do repositório ECR, nome de cluster/serviço ECS, username do IAM user de deploy e status
+de verificação da identidade SES. O módulo também define endpoints PostgreSQL, DocumentDB e Redis como outputs; os roots
 de ambiente atualmente não os reexportam.
 
 ## Limites e validação antes de produção

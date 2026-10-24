@@ -1,11 +1,11 @@
 terraform {
   required_version = ">= 1.10.0"
 
-  backend "s3" {
-    key          = "motordesk/dev/terraform.tfstate"
-    encrypt      = true
-    use_lockfile = true
-  }
+  # backend "s3" {
+  #   key          = "motordesk/dev/terraform.tfstate"
+  #   encrypt      = true
+  #   use_lockfile = true
+  # }
 
   required_providers {
     aws = {
@@ -34,11 +34,10 @@ provider "aws" {
 module "application" {
   source = "../../modules/application"
 
-  environment         = "dev"
-  aws_region          = var.aws_region
-  certificate_arn     = var.certificate_arn
-  ses_from_address    = var.ses_from_address
-  github_oidc_subject = var.github_oidc_subject
-  api_domain_name     = var.api_domain_name
-  route53_zone_id     = var.route53_zone_id
+  environment           = "dev"
+  aws_region            = var.aws_region
+  backup_retention_days = 1
+  ses_from_address      = var.ses_from_address
+  api_domain_name       = var.api_domain_name
+  route53_zone_id       = var.route53_zone_id
 }

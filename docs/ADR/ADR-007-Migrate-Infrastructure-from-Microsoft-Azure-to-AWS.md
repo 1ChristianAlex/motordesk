@@ -228,7 +228,9 @@ The migration should be performed incrementally, with each phase validated befor
 - Configure the AWS provider and environment-specific Terraform variables.
 - Provision the VPC, subnets, routing, security groups, and required network access.
 - Configure remote Terraform state with appropriate encryption, access control, and state locking.
-- Establish secure access for GitHub Actions, preferably using OpenID Connect (OIDC) and short-lived AWS credentials.
+- Establish secure access for GitHub Actions using OpenID Connect (OIDC) and short-lived credentials where the
+  organization permits it; otherwise use a least-privilege IAM deploy user with credentials stored as GitHub Environment
+  secrets and a documented rotation process.
 
 ### Phase 3 — Data and Supporting Services
 
@@ -263,7 +265,10 @@ The migration should be performed incrementally, with each phase validated befor
 - Remote state must be encrypted and protected by least-privilege access policies.
 - State locking must be configured using a supported backend mechanism.
 - AWS credentials and application secrets must not be hardcoded in Terraform files or committed to Git.
-- GitHub Actions should use OIDC where supported rather than long-lived AWS access keys.
+- GitHub Actions should use OIDC where permitted rather than long-lived AWS access keys. The current implementation
+  uses dedicated IAM deploy users and GitHub Environment secrets because an organization SCP explicitly denied creation
+  of the GitHub OIDC provider. This is a constrained exception: restrict access to deploy environments, rotate keys,
+  and return to short-lived OIDC credentials if the organization policy changes.
 - IAM permissions should follow the principle of least privilege.
 - Network access to databases and internal services must be restricted to authorized workloads.
 - Database backups and recovery procedures must be tested before cutover.

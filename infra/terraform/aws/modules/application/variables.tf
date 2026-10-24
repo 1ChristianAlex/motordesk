@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region for application infrastructure."
   type        = string
-  default     = "sa-east-1"
+  default     = "us-east-2"
 }
 
 variable "project_name" {
@@ -39,11 +39,6 @@ variable "data_subnet_cidrs" {
   default = ["10.40.20.0/24", "10.40.21.0/24"]
 }
 
-variable "postgres_engine_version" {
-  type    = string
-  default = "16.4"
-}
-
 variable "postgres_instance_class" {
   type    = string
   default = "db.t4g.micro"
@@ -57,32 +52,6 @@ variable "postgres_admin_username" {
 variable "postgres_database_name" {
   type    = string
   default = "motordesk"
-}
-
-variable "documentdb_admin_username" {
-  type    = string
-  default = "motordesk_admin"
-}
-
-variable "documentdb_database_name" {
-  type    = string
-  default = "motordesk"
-}
-
-variable "documentdb_instance_class" {
-  type    = string
-  default = "db.t3.medium"
-}
-
-variable "documentdb_engine_version" {
-  type    = string
-  default = "5.0.0"
-}
-
-variable "documentdb_instance_count" {
-  description = "DocumentDB instance count; use at least two for production availability."
-  type        = number
-  default     = 1
 }
 
 variable "redis_engine_version" {
@@ -126,41 +95,27 @@ variable "image_tag" {
   default = ""
 }
 
-variable "certificate_arn" {
-  description = "ACM certificate ARN used by the HTTPS listener."
-  type        = string
-
-  validation {
-    condition     = var.certificate_arn != ""
-    error_message = "An ACM certificate ARN is required because the public load balancer only serves HTTPS."
-  }
-}
-
 variable "ses_from_address" {
   description = "Email identity verified in Amazon SES for this AWS account and region."
   type        = string
+  default     = "christian.alexsander@outlook.com"
 }
 
 variable "api_domain_name" {
-  description = "DNS name covered by the ACM certificate and used to reach the API."
+  description = "DNS name used for the API and its ACM certificate."
   type        = string
+  default     = ""
+
+  validation {
+    condition     = var.api_domain_name != "" || var.environment == "dev"
+    error_message = "api_domain_name is required outside the dev environment."
+  }
 }
 
 variable "route53_zone_id" {
   description = "Optional Route 53 hosted zone ID for an alias record."
   type        = string
   default     = ""
-}
-
-variable "documentdb_compatibility_confirmed" {
-  description = "Operator confirmation that required MongoDB queries and indexes were validated against DocumentDB."
-  type        = bool
-  default     = false
-
-  validation {
-    condition     = var.environment == "dev" || var.documentdb_compatibility_confirmed
-    error_message = "Validate DocumentDB compatibility before provisioning the QA or production service."
-  }
 }
 
 variable "jwt_issuer" {
@@ -176,10 +131,4 @@ variable "jwt_audience" {
 variable "jwt_realm" {
   type    = string
   default = "motordesk"
-}
-
-variable "github_oidc_subject" {
-  description = "Exact GitHub Actions OIDC subject allowed to deploy, e.g. repo:owner/repo:ref:refs/heads/dev."
-  type        = string
-  default     = "repo:1ChristianAlex/motordesk:ref:refs/heads/dev"
 }

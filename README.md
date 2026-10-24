@@ -117,14 +117,14 @@ Bootstrap the remote state bucket once using an AWS profile with narrowly scoped
 terraform -chdir=infra/terraform/aws/backend init -backend=false
 terraform -chdir=infra/terraform/aws/backend apply \
   -var="state_bucket_name=<globally-unique-bucket-name>" \
-  -var="aws_region=sa-east-1"
+  -var="aws_region=us-east-2"
 ```
 
 Then configure backend access and environment-specific values in your local environment (never commit state, plans, or
 secret-bearing variable files):
 
 ```powershell
-$env:AWS_REGION = "sa-east-1"
+$env:AWS_REGION = "us-east-2"
 $env:AWS_TF_BACKEND_BUCKET = "<state-bucket-name>"
 terraform -chdir=infra/terraform/aws/envs/dev init `
   -backend-config="bucket=$env:AWS_TF_BACKEND_BUCKET" `
@@ -133,31 +133,37 @@ terraform -chdir=infra/terraform/aws/envs/dev validate
 terraform -chdir=infra/terraform/aws/envs/dev plan
 ```
 
-Set `certificate_arn`, `api_domain_name`, `ses_from_address`, and `github_oidc_subject` in an ignored local `.tfvars`
-file for each environment before provisioning. Every environment requires an ACM certificate matching its API domain;
-the public ALB redirects HTTP to HTTPS. Set `route53_zone_id` when the matching hosted zone is in Route 53, or create
-the DNS alias externally. QA/production additionally require explicit `documentdb_compatibility_confirmed=true` after integration tests
-against DocumentDB. `desired_count` defaults to zero until an application image exists. Database sizes, availability,
-cost, quotas, SES sending verification, and production backup/restore must be reviewed before any apply. PostgreSQL,
-DocumentDB, and ElastiCache resources are protected against accidental destroy; production enables multi-AZ PostgreSQL,
-two DocumentDB instances, multi-AZ Redis, per-AZ NAT gateways, deletion protection, and final snapshots.
+For dev, `api_domain_name` is optional: when omitted, Terraform uses the ALB-generated DNS name over HTTP. Set a
+custom domain to enable ACM-managed HTTPS. QA and prod require `api_domain_name`. Set `ses_from_address` in ignored
+environment `.tfvars` files as needed. Terraform requests the ACM certificate and,
+when `route53_zone_id` is set, creates the DNS validation record and waits for issuance. Without a Route 53 zone, use the
+`certificate_validation_records` output to publish the DNS validation record externally and wait for ACM issuance
+before applying the HTTPS listener. Those environments redirect HTTP to HTTPS. Set `route53_zone_id` when the matching
+hosted zone is in Route 53, or create the API DNS alias externally. QA/production additionally require explicit
+`documentdb_compatibility_confirmed=true` after integration tests against DocumentDB. `desired_count` defaults to zero
+until an application image exists. Database sizes, availability, cost, quotas, SES sending verification, and production
+backup/restore must be reviewed before any apply. PostgreSQL, DocumentDB, and ElastiCache resources are protected
+against accidental destroy; production enables two DocumentDB instances, two Redis nodes, deletion protection, and final
+snapshots. The VPC and ALB use two available availability zones in the configured region. PostgreSQL remains Single-AZ,
+and Redis automatic failover remains disabled.
 Before production, replace the database administrator credentials currently injected into the application with a
 dedicated least-privilege application database role and validate that role's grants.
 
 The GitHub workflows `Terraform AWS Validation` and `Deploy AWS` validate and deploy only to AWS. Deployment is manual
-and uses GitHub OIDC. After the initial AWS Terraform apply, configure repository variables
-`AWS_REGION`, `AWS_DEV_DEPLOY_ROLE_ARN`, `AWS_QA_DEPLOY_ROLE_ARN`, and `AWS_PROD_DEPLOY_ROLE_ARN`. The OIDC role trust
-subject must exactly match the branch/ref used to dispatch the workflow. SES sender verification and production access
-must be completed in AWS before email delivery is expected to work.
+and uses a dedicated IAM deploy user per environment. After applying Terraform, create an access key for each output
+`github_deploy_user_name` outside Terraform, then save its `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` as secrets in
+the matching GitHub Environment (`dev`, `qa`, or `prod`). Do not put access keys in Terraform state or repository
+variables. Restrict who can run deployments and rotate these long-lived credentials regularly. `AWS_REGION` remains a
+repository variable. Organization SCPs can also restrict creating IAM users or access keys; an organization
+administrator must allow those actions if they are denied. SES sender verification and production access must be
+completed in AWS before email delivery is expected to work.
 
 The ECS service task definition and desired count are owned by the deploy workflow after initial creation, so later
 Terraform applies do not revert the deployed image or scale the service back to zero.
 See [the AWS operations runbook](docs/deployment/aws-migration-runbook.md) for data migration, cutover, AWS rollback,
 and legacy-resource cleanup requirements.
 
-For local automation, use `./gradlew terraformAws -PawsEnvironment=dev -PawsAction=validate`. Planning requires
-`AWS_TF_BACKEND_BUCKET` and AWS credentials. Applying additionally requires the explicit
-`-PawsAction=apply -PconfirmAwsApply=true` and a reviewed plan.
+Terraform planning requires `AWS_TF_BACKEND_BUCKET` and AWS credentials. Review every plan before applying it.
 
 The app always uses AWS SES. ECS injects region, SES sender, and JWT metadata from Parameter Store; database, MongoDB,
 Redis, and JWT credentials come from Secrets Manager. AWS SDK credentials come from the task role, not static access

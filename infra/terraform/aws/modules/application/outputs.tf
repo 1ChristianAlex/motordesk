@@ -1,5 +1,16 @@
 output "api_url" {
-  value = "https://${var.api_domain_name}"
+  value = var.api_domain_name == "" ? aws_apigatewayv2_api.api.api_endpoint : "https://${var.api_domain_name}"
+}
+
+output "certificate_validation_records" {
+  value = var.api_domain_name == "" ? {} : {
+    for option in aws_acm_certificate.api[0].domain_validation_options :
+    option.domain_name => {
+      name  = option.resource_record_name
+      type  = option.resource_record_type
+      value = option.resource_record_value
+    }
+  }
 }
 
 output "ecr_repository_url" {
@@ -12,18 +23,23 @@ output "ecs_cluster_name" {
 
 output "ecs_service_name" {
   value = aws_ecs_service.api.name
+
 }
 
-output "github_deploy_role_arn" {
-  value = aws_iam_role.github_deploy.arn
+output "github_deploy_user_name" {
+  value = aws_iam_user.github_deploy.name
 }
 
 output "postgres_endpoint" {
   value = aws_db_instance.postgres.address
 }
 
-output "documentdb_endpoint" {
-  value = aws_docdb_cluster.main.endpoint
+output "dynamodb_history_table_name" {
+  value = aws_dynamodb_table.history.name
+}
+
+output "dynamodb_history_table_arn" {
+  value = aws_dynamodb_table.history.arn
 }
 
 output "redis_endpoint" {

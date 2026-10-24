@@ -28,7 +28,6 @@ resource "aws_iam_role_policy" "ecs_secrets" {
         Action = ["secretsmanager:GetSecretValue"]
         Resource = [
           aws_db_instance.postgres.master_user_secret[0].secret_arn,
-          aws_secretsmanager_secret.documentdb_password.arn,
           aws_secretsmanager_secret.redis_auth_token.arn,
           aws_secretsmanager_secret.jwt_secret.arn
         ]
@@ -75,6 +74,22 @@ resource "aws_iam_role_policy" "ses_send" {
   })
 }
 
+resource "aws_iam_role_policy" "dynamodb_history" {
+  name = "access-history-table"
+  role = aws_iam_role.ecs_task.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "dynamodb:PutItem",
+        "dynamodb:Query"
+      ]
+      Resource = aws_dynamodb_table.history.arn
+    }]
+  })
+}
+
 resource "aws_ecs_cluster" "main" {
   name = "${var.project_name}-${var.environment}"
 
@@ -85,7 +100,6 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_ecs_task_definition" "api" {
-  count = var.image_tag == "" ? 0 : 1
   family                   = "${var.project_name}-${var.environment}-api"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -110,17 +124,13 @@ resource "aws_ecs_task_definition" "api" {
       { name = "DATABASE_DRIVER", value = "org.postgresql.Driver" },
       { name = "DATABASE_URL", value = "jdbc:postgresql://${aws_db_instance.postgres.address}:${aws_db_instance.postgres.port}/${var.postgres_database_name}" },
       { name = "DATABASE_USER", value = var.postgres_admin_username },
-      { name = "MONGO_URL", value = "${aws_docdb_cluster.main.endpoint}:27017" },
-      { name = "MONGO_USER", value = var.documentdb_admin_username },
-      { name = "MONGO_DATABASE", value = var.documentdb_database_name },
-      { name = "MONGO_OPTIONS", value = "tls=true&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false" },
+      { name = "DYNAMODB_HISTORY_TABLE", value = aws_dynamodb_table.history.name },
       { name = "REDIS_HOST", value = aws_elasticache_replication_group.redis.primary_endpoint_address },
       { name = "REDIS_PORT", value = "6379" },
       { name = "REDIS_TLS", value = "true" },
     ]
     secrets = [
       { name = "DATABASE_PASSWORD", valueFrom = "${aws_db_instance.postgres.master_user_secret[0].secret_arn}:password::" },
-      { name = "MONGO_PASSWORD", valueFrom = aws_secretsmanager_secret.documentdb_password.arn },
       { name = "REDIS_PASSWORD", valueFrom = aws_secretsmanager_secret.redis_auth_token.arn },
       { name = "JWT_SECRET", valueFrom = aws_secretsmanager_secret.jwt_secret.arn },
       { name = "AWS_REGION", valueFrom = aws_ssm_parameter.aws_region.arn },
@@ -141,7 +151,8 @@ resource "aws_ecs_task_definition" "api" {
 
   depends_on = [
     aws_iam_role_policy_attachment.ecs_execution,
-    aws_iam_role_policy.ecs_secrets
+    aws_iam_role_policy.ecs_secrets,
+    aws_iam_role_policy.dynamodb_history
   ]
 }
 
@@ -152,56 +163,30 @@ resource "aws_ecs_service" "api" {
   desired_count   = var.desired_count
   launch_type     = "FARGATE"
 
+  service_registries {
+    registry_arn   = aws_service_discovery_service.api.arn
+    container_name = "api"
+    container_port = 8080
+  }
+
   network_configuration {
     subnets          = aws_subnet.app[*].id
     security_groups  = [aws_security_group.tasks.id]
     assign_public_ip = false
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.api.arn
-    container_name   = "api"
-    container_port   = 8080
-  }
-
-  depends_on = [aws_lb_listener.http]
-
   lifecycle {
     ignore_changes = [task_definition, desired_count]
   }
 }
 
-resource "aws_iam_openid_connect_provider" "github" {
-  url            = "https://token.actions.githubusercontent.com"
-  client_id_list = ["sts.amazonaws.com"]
-  thumbprint_list = [
-    "6938fd4d98bab03faadb97b34396831e3780aea1"
-  ]
-}
-
-resource "aws_iam_role" "github_deploy" {
+resource "aws_iam_user" "github_deploy" {
   name = "${var.project_name}-${var.environment}-github-deploy"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Principal = {
-        Federated = aws_iam_openid_connect_provider.github.arn
-      }
-      Action = "sts:AssumeRoleWithWebIdentity"
-      Condition = {
-        StringEquals = {
-          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          "token.actions.githubusercontent.com:sub" = var.github_oidc_subject
-        }
-      }
-    }]
-  })
 }
 
-resource "aws_iam_role_policy" "github_deploy" {
+resource "aws_iam_user_policy" "github_deploy" {
   name = "publish-and-deploy-api"
-  role = aws_iam_role.github_deploy.id
+  user = aws_iam_user.github_deploy.name
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

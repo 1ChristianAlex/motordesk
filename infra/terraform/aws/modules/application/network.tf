@@ -87,28 +87,13 @@ resource "aws_route_table_association" "data" {
   route_table_id = aws_route_table.data.id
 }
 
-resource "aws_security_group" "alb" {
-  name        = "${var.project_name}-${var.environment}-alb"
-  description = "Public HTTP ingress for the application load balancer."
+resource "aws_security_group" "api_gateway" {
+  name        = "${var.project_name}-${var.environment}-api-gateway"
+  description = "API Gateway VPC link access to application tasks."
   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   egress {
+    description = "HTTP to application tasks"
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
@@ -118,15 +103,15 @@ resource "aws_security_group" "alb" {
 
 resource "aws_security_group" "tasks" {
   name        = "${var.project_name}-${var.environment}-tasks"
-  description = "Application ingress only from the load balancer."
+  description = "Application ingress only from the API Gateway VPC link."
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description     = "Ktor HTTP from the ALB"
+    description     = "Ktor HTTP from API Gateway"
     from_port       = 8080
     to_port         = 8080
     protocol        = "tcp"
-    security_groups = [aws_security_group.alb.id]
+    security_groups = [aws_security_group.api_gateway.id]
   }
 
   egress {
@@ -138,68 +123,88 @@ resource "aws_security_group" "tasks" {
   }
 }
 
-resource "aws_lb" "api" {
-  name               = "${var.project_name}-${var.environment}"
-  internal           = false
-  load_balancer_type = "application"
-  subnets            = aws_subnet.public[*].id
-  security_groups    = [aws_security_group.alb.id]
+resource "aws_service_discovery_private_dns_namespace" "api" {
+  name = "${var.project_name}-${var.environment}.local"
+  vpc  = aws_vpc.main.id
 }
 
-resource "aws_route53_record" "api" {
-  count   = var.route53_zone_id == "" ? 0 : 1
-  zone_id = var.route53_zone_id
-  name    = var.api_domain_name
-  type    = "A"
+resource "aws_service_discovery_service" "api" {
+  name = "api"
 
-  alias {
-    name                   = aws_lb.api.dns_name
-    zone_id                = aws_lb.api.zone_id
-    evaluate_target_health = true
-  }
-}
+  dns_config {
+    namespace_id   = aws_service_discovery_private_dns_namespace.api.id
+    routing_policy = "MULTIVALUE"
 
-resource "aws_lb_target_group" "api" {
-  name        = "${var.project_name}-${var.environment}-api"
-  port        = 8080
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = aws_vpc.main.id
-
-  health_check {
-    enabled             = true
-    path                = "/health"
-    matcher             = "200"
-    interval            = 30
-    healthy_threshold   = 2
-    unhealthy_threshold = 3
-  }
-}
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.api.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
+    dns_records {
+      ttl  = 10
+      type = "SRV"
     }
   }
+
+  health_check_custom_config {
+  }
 }
 
-resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.api.arn
-  port              = 443
-  protocol          = "HTTPS"
-  certificate_arn   = var.certificate_arn
-  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+resource "aws_apigatewayv2_vpc_link" "api" {
+  name               = "${var.project_name}-${var.environment}-api"
+  subnet_ids         = aws_subnet.app[*].id
+  security_group_ids = [aws_security_group.api_gateway.id]
+}
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.api.arn
+resource "aws_apigatewayv2_api" "api" {
+  name          = "${var.project_name}-${var.environment}-api"
+  protocol_type = "HTTP"
+
+  disable_execute_api_endpoint = false
+}
+
+resource "aws_apigatewayv2_integration" "api" {
+  api_id                 = aws_apigatewayv2_api.api.id
+  integration_type       = "HTTP_PROXY"
+  integration_method     = "ANY"
+  integration_uri        = aws_service_discovery_service.api.arn
+  connection_type        = "VPC_LINK"
+  connection_id          = aws_apigatewayv2_vpc_link.api.id
+  payload_format_version = "1.0"
+
+  request_parameters = {
+    "overwrite:path" = "$request.path"
+  }
+}
+
+resource "aws_apigatewayv2_route" "api_root" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "ANY /"
+  target    = "integrations/${aws_apigatewayv2_integration.api.id}"
+}
+
+resource "aws_apigatewayv2_route" "api_proxy" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "ANY /{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.api.id}"
+}
+
+resource "aws_cloudwatch_log_group" "api_gateway" {
+  name              = "/aws/apigateway/${var.project_name}/${var.environment}/api"
+  retention_in_days = 1
+}
+
+resource "aws_apigatewayv2_stage" "api" {
+  api_id      = aws_apigatewayv2_api.api.id
+  name        = "$default"
+  auto_deploy = true
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.api_gateway.arn
+    format = jsonencode({
+      requestId         = "$context.requestId"
+      requestTime       = "$context.requestTime"
+      httpMethod        = "$context.httpMethod"
+      routeKey          = "$context.routeKey"
+      status            = "$context.status"
+      responseLength    = "$context.responseLength"
+      integrationStatus = "$context.integrationStatus"
+      integrationError  = "$context.integrationErrorMessage"
+    })
   }
 }
