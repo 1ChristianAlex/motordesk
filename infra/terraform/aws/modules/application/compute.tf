@@ -85,6 +85,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_ecs_task_definition" "api" {
+  count = var.image_tag == "" ? 0 : 1
   family                   = "${var.project_name}-${var.environment}-api"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"

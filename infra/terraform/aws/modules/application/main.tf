@@ -55,12 +55,12 @@ resource "aws_ecr_lifecycle_policy" "api" {
 
 resource "aws_cloudwatch_log_group" "api" {
   name              = "/ecs/${var.project_name}/${var.environment}/api"
-  retention_in_days = 30
+  retention_in_days = 1
 }
 
 resource "aws_secretsmanager_secret" "documentdb_password" {
   name                    = "${var.project_name}/${var.environment}/documentdb-password"
-  recovery_window_in_days = 7
+  recovery_window_in_days = 1
 }
 
 resource "random_password" "documentdb" {

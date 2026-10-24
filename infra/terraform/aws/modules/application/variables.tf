@@ -123,7 +123,7 @@ variable "desired_count" {
 
 variable "image_tag" {
   type    = string
-  default = "bootstrap"
+  default = ""
 }
 
 variable "certificate_arn" {
