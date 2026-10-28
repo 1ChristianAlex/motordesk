@@ -34,7 +34,7 @@ flowchart TB
     Adapter --> Application --> Domain
 ```
 
-The domain must not depend on Ktor, Exposed, Redis/Lettuce, MongoDB drivers, Azure SDKs, HTTP clients, or adapter
+The domain must not depend on Ktor, Exposed, Redis/Lettuce, MongoDB drivers, AWS SDKs, HTTP clients, or adapter
 configuration.
 
 External providers must be isolated behind appropriate abstractions and adapter adapters.
@@ -76,7 +76,7 @@ Expected architecture:
 
 ```mermaid
 flowchart TB
-    PostgreSQL --> RedisStreams[Redis Streams] --> EmailWorker[Email Worker] --> EmailSender --> AzureEmailSender --> ACS[Azure Communication Services]
+    PostgreSQL --> RedisStreams[Redis Streams] --> EmailWorker[Email Worker] --> EmailSender --> AwsSesEmailSender --> SES[Amazon SES]
 ```
 
 Review email changes for:
@@ -84,8 +84,8 @@ Review email changes for:
 - state being persisted before asynchronous processing;
 - Redis being transport, not business truth;
 - worker loading authoritative data from PostgreSQL;
-- Azure being isolated behind `EmailSender`;
-- Azure SDK types not leaking into domain/application;
+- AWS SES being isolated behind `EmailSender`;
+- AWS SDK types not leaking into domain/application;
 - persisted and bounded retry count;
 - no hardcoded provider credentials;
 - duplicate delivery risks being considered.
@@ -101,7 +101,7 @@ flowchart LR
     HTTP[HTTP] --> DTO --> UseCase[Use Case] --> Domain --> Port --> InfrastructureAdapter[Infrastructure Adapter]
 ```
 
-Do not put business rules, SQL, Redis commands, or Azure SDK calls directly in routes.
+Do not put business rules, SQL, Redis commands, or AWS SDK calls directly in routes.
 
 When an API contract changes, check OpenAPI/Swagger, Bruno, and related documentation.
 

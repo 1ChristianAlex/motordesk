@@ -13,7 +13,7 @@ flowchart TB
     HTTPRequest[HTTP Request] --> RequestDTO[Request DTO] --> UseCase --> Domain --> Port --> Adapter
 ```
 
-Do not put SQL, Redis commands, Azure SDK calls, or complex business rules inside route handlers.
+Do not put SQL, Redis commands, AWS SDK calls, or complex business rules inside route handlers.
 
 ## Ktor Resources
 

@@ -34,11 +34,11 @@ messages, errors, retries, payload shape, coroutine usage, and accidental Pub/Su
 
 Redis is not the business source of truth.
 
-## Azure Communication Services
+## Amazon SES
 
-Check that Azure SDK code remains in adapter, credentials come from configuration/secrets, provider errors are
-handled, `EmailSender` remains the application-facing abstraction, and Azure-specific models do not leak outside
-adapter.
+Check that AWS SDK code remains in the adapter, credentials come from the SDK credential chain or workload role,
+provider errors are handled, `EmailSender` remains the application-facing abstraction, and AWS-specific models do not
+leak outside the adapter.
 
 ## Configuration
 

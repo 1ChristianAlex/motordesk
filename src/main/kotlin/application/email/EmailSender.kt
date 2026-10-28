@@ -9,9 +9,7 @@ data class EmailMessageBody(
     val toRecipients: List<Email>,
     val subject: String,
     val body: String,
-) {
-    val senderAddress: Email = Email("donotreply@14f5bd9c-42b0-4dbf-ac96-f0b48b3d1cff.azurecomm.net")
-}
+)
 
 fun EmailQueueItem.toStatusUpdateEmail(): EmailMessageBody =
     EmailMessageBody(
