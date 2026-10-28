@@ -84,11 +84,12 @@ dependencies {
     implementation(libs.lettuce)
 
     // Database
-    implementation(libs.mongodb)
     implementation(libs.bundles.exposed)
+    implementation(libs.mongodb)
 
     // Cloud
-    implementation(libs.azure.email)
+    implementation(platform(libs.aws.sdk.bom))
+    implementation(libs.bundles.aws.sdk)
 
     // Test
     testImplementation(kotlin("test"))
@@ -119,22 +120,6 @@ tasks.register<JavaExec>("runDev") {
     args = runTask.args ?: emptyList()
 
     jvmArgs = (runTask.jvmArgs ?: emptyList()) + "-Dio.ktor.development=true"
-}
-
-tasks.register<Exec>("terraformLocal") {
-    group = "terraform"
-    description = "Runs the local Terraform orchestration script with Kotlin."
-
-    commandLine(
-        "kotlinc",
-        "-script",
-        "scripts/terraform-local.main.kts",
-        "--",
-        "--environment",
-        "dev",
-        "--action",
-        "apply",
-    )
 }
 
 tasks.jacocoTestReport {

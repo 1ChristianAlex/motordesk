@@ -9,23 +9,28 @@ class MongoConnection(
     private val infraConfig: InfraConfig,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
-    private val client: MongoClient by lazy {
-        try {
-            logger.info("Starting mongo connection")
-            MongoClient.create(infraConfig.mongoConfig.connectionString)
-        } catch (e: Exception) {
-            throw RuntimeException("Failed to create MongoDB client: ${e.message}", e)
+    private val clientDelegate =
+        lazy {
+            try {
+                logger.info("Starting mongo connection")
+                MongoClient.create(infraConfig.mongoConfig.connectionString)
+            } catch (e: Exception) {
+                throw RuntimeException("Failed to create MongoDB client: ${e.message}", e)
+            }
         }
-    }
+    private val client by clientDelegate
 
-    val database: MongoDatabase =
+    val database: MongoDatabase by lazy {
         try {
             client.getDatabase(infraConfig.mongoConfig.database)
         } catch (e: Exception) {
             throw RuntimeException("Failed to get MongoDB database: ${e.message}", e)
         }
+    }
 
     fun close() {
-        client.close()
+        if (clientDelegate.isInitialized()) {
+            client.close()
+        }
     }
 }

@@ -8,7 +8,7 @@ Review domain changes for architectural purity and business correctness.
 
 ## Dependency Rules
 
-Domain code must not depend on Ktor, Ktor Resources, Exposed, JDBC/R2DBC, MongoDB drivers, Redis/Lettuce, Azure SDKs,
+Domain code must not depend on Ktor, Ktor Resources, Exposed, JDBC/R2DBC, MongoDB drivers, Redis/Lettuce, AWS SDKs,
 HTTP clients, or adapter configuration.
 
 Use abstractions when an external capability is required.
@@ -21,7 +21,7 @@ Use `docs/Ubiquitous Language.md` as the source of domain terminology.
 
 Business invariants should be represented in domain behavior when they are independent of transport and adapter.
 
-Do not move business rules into Ktor routes, repositories, Redis consumers, or Azure adapters.
+Do not move business rules into Ktor routes, repositories, Redis consumers, or cloud-provider adapters.
 
 ## Serialization
 
