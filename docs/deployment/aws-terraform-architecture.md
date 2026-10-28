@@ -244,9 +244,13 @@ Revise sempre o plano produzido e confirme a conta, região, environment, recurs
 efeitos sobre os dados antes de aprovar um apply.
 
 O workflow `Terraform AWS Validation` roda `fmt`, `init -backend=false` e `validate` para dev, QA e prod, sem
-credenciais nem provisionamento. O workflow manual `Deploy AWS` executa testes/build, usa as access keys do GitHub
-Environment escolhido, envia a imagem ao ECR e atualiza o ECS. Configure a variável de repositório `AWS_REGION` e os
-secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` separadamente em cada GitHub Environment (`dev`, `qa`, `prod`).
+credenciais nem provisionamento. O job manual `plan-apply` permite selecionar ambiente e operação; `apply` exige
+confirmação explícita e aplica o plano gerado na mesma execução. Configure em cada GitHub Environment (`dev`, `qa`,
+`prod`) as variáveis `AWS_REGION` e `AWS_TF_BACKEND_BUCKET`, os secrets
+`AWS_TERRAFORM_ACCESS_KEY_ID` e `AWS_TERRAFORM_SECRET_ACCESS_KEY` de uma identidade com permissões para provisionar a
+infraestrutura, e `API_DOMAIN_NAME`/`ROUTE53_ZONE_ID` quando aplicável. Proteja os Environments, especialmente `prod`,
+com revisores obrigatórios. As credenciais Terraform são separadas de `AWS_ACCESS_KEY_ID` e
+`AWS_SECRET_ACCESS_KEY`, usados pelo workflow de deploy da aplicação.
 
 ## Outputs
 
