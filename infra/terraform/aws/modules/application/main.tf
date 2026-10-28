@@ -195,7 +195,7 @@ resource "aws_efs_file_system" "mongo" {
   throughput_mode  = "bursting"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 

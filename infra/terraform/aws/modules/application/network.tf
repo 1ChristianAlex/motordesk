@@ -167,7 +167,8 @@ resource "aws_service_discovery_private_dns_namespace" "api" {
 }
 
 resource "aws_service_discovery_service" "mongo" {
-  name = "mongo"
+  name          = "mongo"
+  force_destroy = var.environment != "prod"
 
   dns_config {
     namespace_id   = aws_service_discovery_private_dns_namespace.api.id
@@ -183,7 +184,8 @@ resource "aws_service_discovery_service" "mongo" {
 }
 
 resource "aws_service_discovery_service" "api" {
-  name = "api"
+  name          = "api"
+  force_destroy = var.environment != "prod"
 
   dns_config {
     namespace_id   = aws_service_discovery_private_dns_namespace.api.id

@@ -1,11 +1,11 @@
 terraform {
   required_version = ">= 1.10.0"
 
-  # backend "s3" {
-  #   key          = "motordesk/dev/terraform.tfstate"
-  #   encrypt      = true
-  #   use_lockfile = true
-  # }
+  backend "s3" {
+    key          = "motordesk/dev/terraform.tfstate"
+    encrypt      = true
+    use_lockfile = true
+  }
 
   required_providers {
     aws = {
@@ -25,7 +25,7 @@ provider "aws" {
   default_tags {
     tags = {
       Project     = "motordesk"
-      Environment = "dev"
+      Environment = "dev-cli"
       ManagedBy   = "terraform"
     }
   }
@@ -34,7 +34,7 @@ provider "aws" {
 module "application" {
   source = "../../modules/application"
 
-  environment           = "dev"
+  environment           = "dev-cli"
   aws_region            = var.aws_region
   backup_retention_days = 1
   ses_from_address      = var.ses_from_address
