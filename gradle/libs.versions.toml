@@ -1,5 +1,5 @@
 [versions]
-aws-sdk = "2.31.68"
+aws-sdk = "1.9.24"
 exposed = "1.6.0"
 konform = "0.11.1"
 kotlin = "2.4.21"
@@ -11,12 +11,12 @@ postgresql = "42.7.10"
 r2dbc_h2 = "1.1.0.RELEASE"
 sonarqube = "6.2.0.5505"
 sqids = "0.1.1"
+mongodb = "5.9.2"
 
 [libraries]
 argon2 = { module = "de.mkammerer:argon2-jvm", version = "2.11" }
-aws-sdk-bom = { module = "software.amazon.awssdk:bom", version.ref = "aws-sdk" }
-aws-ses = { module = "software.amazon.awssdk:sesv2" }
-aws-dynamodb = { module = "software.amazon.awssdk:dynamodb" }
+aws-sdk-bom = { module = "aws.sdk.kotlin:bom", version.ref = "aws-sdk" }
+aws-ses = { module = "aws.sdk.kotlin:sesv2" }
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
 exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "exposed" }
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
@@ -33,6 +33,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version = "0.11.0" }
 sqids = { module = "org.sqids:sqids-kotlin", version.ref = "sqids" }
+mongodb = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
 
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
 coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "coroutine" }
@@ -41,7 +42,6 @@ coroutines-reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-corouti
 [bundles]
 aws-sdk = [
     "aws-ses",
-    "aws-dynamodb"
 ]
 coroutines = [
     "coroutines-core",

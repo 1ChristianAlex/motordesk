@@ -54,6 +54,17 @@ variable "postgres_database_name" {
   default = "motordesk"
 }
 
+variable "mongo_database" {
+  type    = string
+  default = "motordesk"
+}
+
+variable "mongo_options" {
+  description = "Optional MongoDB connection options, for example tls=true."
+  type        = string
+  default     = ""
+}
+
 variable "redis_engine_version" {
   type    = string
   default = "7.1"

@@ -123,9 +123,63 @@ resource "aws_security_group" "tasks" {
   }
 }
 
+resource "aws_security_group" "mongo" {
+  name        = "${var.project_name}-${var.environment}-mongo"
+  description = "MongoDB access only from application tasks."
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "MongoDB from application tasks"
+    from_port       = 27017
+    to_port         = 27017
+    protocol        = "tcp"
+    security_groups = [aws_security_group.tasks.id]
+  }
+
+  egress {
+    description = "Outbound traffic for ECR image pulls and CloudWatch Logs"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "mongo_efs" {
+  name        = "${var.project_name}-${var.environment}-mongo-efs"
+  description = "NFS access only from the MongoDB task."
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "NFS from MongoDB task"
+    from_port       = 2049
+    to_port         = 2049
+    protocol        = "tcp"
+    security_groups = [aws_security_group.mongo.id]
+  }
+
+  egress = []
+}
+
 resource "aws_service_discovery_private_dns_namespace" "api" {
   name = "${var.project_name}-${var.environment}.local"
   vpc  = aws_vpc.main.id
+}
+
+resource "aws_service_discovery_service" "mongo" {
+  name = "mongo"
+
+  dns_config {
+    namespace_id   = aws_service_discovery_private_dns_namespace.api.id
+    routing_policy = "MULTIVALUE"
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+  }
+
+  health_check_custom_config {}
 }
 
 resource "aws_service_discovery_service" "api" {

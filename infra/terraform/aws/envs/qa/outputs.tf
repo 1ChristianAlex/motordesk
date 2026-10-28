@@ -18,12 +18,12 @@ output "ecs_service_name" {
   value = module.application.ecs_service_name
 }
 
-output "dynamodb_history_table_name" {
-  value = module.application.dynamodb_history_table_name
+output "mongo_endpoint" {
+  value = module.application.mongo_endpoint
 }
 
-output "dynamodb_history_table_arn" {
-  value = module.application.dynamodb_history_table_arn
+output "mongo_service_name" {
+  value = module.application.mongo_service_name
 }
 
 output "github_deploy_user_name" {

@@ -9,7 +9,7 @@ class InfraConfigTest {
     fun `builds a MongoDB connection string with provider options`() {
         val config =
             MongoConfig(
-                url = "documentdb.example:27017",
+                url = "mongo.example:27017",
                 username = "app",
                 password = "password",
                 database = "motordesk",
@@ -17,7 +17,23 @@ class InfraConfigTest {
             )
 
         assertEquals(
-            "mongodb://app:password@documentdb.example:27017/motordesk?authSource=admin&tls=true&retryWrites=false",
+            "mongodb://app:password@mongo.example:27017/motordesk?authSource=admin&tls=true&retryWrites=false",
+            config.connectionString,
+        )
+    }
+
+    @Test
+    fun `encodes reserved characters in MongoDB credentials`() {
+        val config =
+            MongoConfig(
+                url = "localhost:27017",
+                username = "motor desk",
+                password = "p@ss:/?word",
+                database = "motordesk",
+            )
+
+        assertEquals(
+            "mongodb://motor%20desk:p%40ss%3A%2F%3Fword@localhost:27017/motordesk?authSource=admin",
             config.connectionString,
         )
     }

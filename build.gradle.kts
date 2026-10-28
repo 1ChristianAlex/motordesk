@@ -85,6 +85,7 @@ dependencies {
 
     // Database
     implementation(libs.bundles.exposed)
+    implementation(libs.mongodb)
 
     // Cloud
     implementation(platform(libs.aws.sdk.bom))

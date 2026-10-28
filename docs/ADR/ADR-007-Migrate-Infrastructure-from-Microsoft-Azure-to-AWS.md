@@ -32,7 +32,11 @@ The application, infrastructure-as-code roots, and deployment workflows in this 
 The former Azure adapters, Terraform roots, backend configuration, and deployment workflows have been removed. This
 repository change does not provision AWS or destroy resources, data, or state held in external cloud accounts.
 
-The target architecture will use managed AWS services wherever practical, reducing the operational burden of maintaining databases, application runtime infrastructure, secrets, and monitoring.
+The target architecture will use managed AWS services wherever practical, reducing the operational burden of maintaining databases, application runtime infrastructure, secrets, and monitoring. MongoDB is an exception in the current implementation because a managed MongoDB-compatible service is not available for this project.
+
+### MongoDB deployment decision
+
+The AWS Terraform module runs MongoDB as a single ECS Fargate task with its data on encrypted EFS. ECS service discovery keeps the endpoint private, and Secrets Manager stores separate administrative and application credentials. This is a self-managed, single-instance deployment; it does not provide database replication or task-level failover. EFS performance, backup retention, and restoration must be validated before production use. This decision replaces the proposed DocumentDB or MongoDB Atlas mapping below for the current repository.
 
 The following architecture is proposed:
 
@@ -45,7 +49,7 @@ flowchart TB
     AWS --> ECS["ECS with Fargate"]
     AWS --> ECR["Elastic Container Registry"]
     AWS --> RDS["Amazon RDS for PostgreSQL"]
-    AWS --> DOCDB["DocumentDB or MongoDB Atlas"]
+    AWS --> MONGO["MongoDB on ECS + EFS"]
     AWS --> REDIS["ElastiCache or compatible Redis service"]
     AWS --> SM["Secrets Manager"]
     AWS --> CONFIG["Parameter Store / AppConfig"]
@@ -53,14 +57,14 @@ flowchart TB
     AWS --> CW["CloudWatch"]
 
     ECS --> RDS
-    ECS --> DOCDB
+    ECS --> MONGO
     ECS --> REDIS
     ECS --> SM
     ECS --> CONFIG
     ECS --> SES
 ```
 
-This diagram represents the proposed target architecture. Specific managed services remain subject to compatibility, availability, cost, and implementation validation.
+The diagram represents the target architecture currently implemented in Terraform. Its MongoDB deployment remains subject to compatibility, availability, performance, backup, and cost validation.
 
 ## Why AWS
 
@@ -98,7 +102,7 @@ Retaining Terraform avoids an unnecessary change in both the cloud provider and 
 | Azure Kubernetes Service / Azure Container Apps | Amazon ECS with AWS Fargate                                                                        |
 | Azure Container Registry                        | Amazon Elastic Container Registry (ECR)                                                            |
 | Azure Database for PostgreSQL                   | Amazon RDS for PostgreSQL                                                                          |
-| MongoDB deployment                              | Amazon DocumentDB or MongoDB Atlas, subject to compatibility validation                            |
+| MongoDB deployment                              | Single-task self-managed MongoDB on ECS Fargate with encrypted EFS                                  |
 | Azure Cache for Redis / Redis deployment        | Amazon ElastiCache or another compatible managed Redis service                                     |
 | Azure Key Vault                                 | AWS Secrets Manager                                                                                |
 | Azure App Configuration                         | AWS Systems Manager Parameter Store or AWS AppConfig                                               |
@@ -106,9 +110,9 @@ Retaining Terraform avoids an unnecessary change in both the cloud provider and 
 | Azure Monitor and related diagnostics           | Amazon CloudWatch                                                                                  |
 | Terraform local state or existing backend       | Remote Terraform state backend using Amazon S3, with appropriate state locking and access controls |
 
-The mapping is a proposal rather than a guarantee of direct equivalence. Each replacement must be validated against the application's current usage, configuration, and operational requirements.
+The mapping is not a guarantee of direct equivalence. Each service must be validated against the application's current usage, configuration, and operational requirements.
 
-In particular, Redis Streams support and MongoDB compatibility must be verified before selecting their final managed services.
+In particular, Redis Streams support and MongoDB's behavior and performance on EFS must be validated. The MongoDB setup is not highly available and retains the operational responsibilities of a self-managed database.
 
 ## Alternatives Considered
 
@@ -208,6 +212,7 @@ Rejected. Terraform will be retained.
 - Running Azure and AWS resources in parallel may temporarily increase costs.
 - Database migration introduces data consistency, backup, and recovery risks.
 - Managed MongoDB-compatible and Redis services may not support every feature or behavior used by the application.
+- The current self-managed MongoDB deployment on ECS and EFS has no replica or task-level failover and requires explicit backup/restore and performance validation.
 - AWS IAM, networking, quotas, and service-specific configuration introduce their own operational requirements.
 - Existing Azure integrations, secrets, deployment workflows, and documentation must be updated.
 

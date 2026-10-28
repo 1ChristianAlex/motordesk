@@ -21,3 +21,13 @@ variable "route53_zone_id" {
   type        = string
   default     = ""
 }
+
+variable "mongo_database" {
+  type    = string
+  default = "motordesk"
+}
+
+variable "mongo_options" {
+  type    = string
+  default = ""
+}

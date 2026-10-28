@@ -78,14 +78,39 @@ resource "aws_secretsmanager_secret" "jwt_secret" {
   recovery_window_in_days = 7
 }
 
+resource "aws_secretsmanager_secret" "mongo_credentials" {
+  name                    = "${var.project_name}/${var.environment}/mongo-credentials"
+  recovery_window_in_days = 7
+}
+
 resource "random_password" "jwt_secret" {
   length  = 64
+  special = false
+}
+
+resource "random_password" "mongo_root_password" {
+  length  = 40
+  special = false
+}
+
+resource "random_password" "mongo_app_password" {
+  length  = 40
   special = false
 }
 
 resource "aws_secretsmanager_secret_version" "jwt_secret" {
   secret_id     = aws_secretsmanager_secret.jwt_secret.id
   secret_string = random_password.jwt_secret.result
+}
+
+resource "aws_secretsmanager_secret_version" "mongo_credentials" {
+  secret_id = aws_secretsmanager_secret.mongo_credentials.id
+  secret_string = jsonencode({
+    root_username = "motordesk_admin"
+    root_password = random_password.mongo_root_password.result
+    username      = "motordesk_app"
+    password      = random_password.mongo_app_password.result
+  })
 }
 
 resource "aws_ssm_parameter" "aws_region" {
@@ -160,43 +185,59 @@ resource "aws_db_instance" "postgres" {
   apply_immediately           = var.apply_database_changes_immediately
 
   lifecycle {
+    prevent_destroy = false
+  }
+}
+
+resource "aws_efs_file_system" "mongo" {
+  encrypted        = true
+  performance_mode = "generalPurpose"
+  throughput_mode  = "bursting"
+
+  lifecycle {
     prevent_destroy = true
   }
 }
 
-resource "aws_dynamodb_table" "history" {
-  name                        = "${var.project_name}-${var.environment}-history"
-  billing_mode                = "PAY_PER_REQUEST"
-  hash_key                    = "register_key"
-  range_key                   = "history_key"
-  deletion_protection_enabled = var.environment == "prod"
+resource "aws_efs_backup_policy" "mongo" {
+  file_system_id = aws_efs_file_system.mongo.id
 
-  attribute {
-    name = "register_key"
-    type = "S"
+  backup_policy {
+    status = "ENABLED"
+  }
+}
+
+resource "aws_efs_access_point" "mongo" {
+  file_system_id = aws_efs_file_system.mongo.id
+
+  posix_user {
+    uid = 999
+    gid = 999
   }
 
-  attribute {
-    name = "history_key"
-    type = "S"
-  }
+  root_directory {
+    path = "/mongo"
 
-  point_in_time_recovery {
-    enabled = true
+    creation_info {
+      owner_uid   = 999
+      owner_gid   = 999
+      permissions = "0750"
+    }
   }
+}
 
-  server_side_encryption {
-    enabled = true
-  }
+resource "aws_efs_mount_target" "mongo" {
+  count           = length(aws_subnet.data)
+  file_system_id  = aws_efs_file_system.mongo.id
+  subnet_id       = aws_subnet.data[count.index].id
+  security_groups = [aws_security_group.mongo_efs.id]
+}
 
-  tags = {
-    Project     = var.project_name
-    Environment = var.environment
-    Purpose     = "application-history"
-  }
+removed {
+  from = aws_dynamodb_table.history
 
   lifecycle {
-    prevent_destroy = true
+    destroy = false
   }
 }
 
@@ -243,6 +284,6 @@ resource "aws_elasticache_replication_group" "redis" {
   maintenance_window         = "sun:05:00-sun:06:00"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }

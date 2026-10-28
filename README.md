@@ -81,14 +81,25 @@ src/main/kotlin
 - Docker
 - Docker Compose
 - `kotlinc` (Kotlin compiler) — required for local AWS Terraform automation
-- Terraform 1.10+ (for AWS infrastructure provisioning)
+- Terraform 1.10+ (for AWS infrastructure)
 
 ### Local run
 
-```bash
-docker compose -f docker-compose-dev.yml up -d
-./gradlew runDev
+Start the local dependencies with Docker Compose. Set credentials matching `mongo.user` and `mongo.password` in your
+local `src/main/resources/secrets.properties`:
+
+```powershell
+$env:MONGO_USER = "motordesk"
+$env:MONGO_PASSWORD = "<replace-with-a-strong-local-password>"
+docker compose -f infra/docker/docker-compose-dev.yml up -d
+.\gradlew.bat runDev
 ```
+
+The host-run API connects to `mongodb://localhost:27017`; Compose stores data in the named `mongo_data` volume. The full
+Compose application connects to the MongoDB service by its private Compose hostname. The local volume remains when the
+container is recreated; remove it only when deleting the local database is intentional.
+
+The local Docker MongoDB is separate from the AWS MongoDB service; their data is not shared.
 
 ### AWS Infrastructure
 
@@ -139,13 +150,14 @@ environment `.tfvars` files as needed. Terraform requests the ACM certificate an
 when `route53_zone_id` is set, creates the DNS validation record and waits for issuance. Without a Route 53 zone, use the
 `certificate_validation_records` output to publish the DNS validation record externally and wait for ACM issuance
 before applying the HTTPS listener. Those environments redirect HTTP to HTTPS. Set `route53_zone_id` when the matching
-hosted zone is in Route 53, or create the API DNS alias externally. QA/production additionally require explicit
-`documentdb_compatibility_confirmed=true` after integration tests against DocumentDB. `desired_count` defaults to zero
-until an application image exists. Database sizes, availability, cost, quotas, SES sending verification, and production
-backup/restore must be reviewed before any apply. PostgreSQL, DocumentDB, and ElastiCache resources are protected
-against accidental destroy; production enables two DocumentDB instances, two Redis nodes, deletion protection, and final
-snapshots. The VPC and ALB use two available availability zones in the configured region. PostgreSQL remains Single-AZ,
-and Redis automatic failover remains disabled.
+hosted zone is in Route 53, or create the API DNS alias externally. `desired_count` defaults to zero until an application
+image exists. The AWS module provisions MongoDB as a private, single-task ECS Fargate service with an encrypted EFS data
+volume and credentials in Secrets Manager; the API resolves it through private Cloud Map DNS. It is self-managed
+MongoDB, not a managed database service, and does not provide database replication or multi-node failover. Review backup
+retention, restore procedures, EFS performance, database sizing, cost, quotas, SES sending verification, and production
+availability before any apply. PostgreSQL and ElastiCache settings, the VPC, and ALB must be reviewed against the
+current Terraform plan before applying. The VPC and ALB use two available availability zones in the configured region.
+PostgreSQL remains Single-AZ, and Redis automatic failover remains disabled.
 Before production, replace the database administrator credentials currently injected into the application with a
 dedicated least-privilege application database role and validate that role's grants.
 
@@ -165,8 +177,8 @@ and legacy-resource cleanup requirements.
 
 Terraform planning requires `AWS_TF_BACKEND_BUCKET` and AWS credentials. Review every plan before applying it.
 
-The app always uses AWS SES. ECS injects region, SES sender, and JWT metadata from Parameter Store; database, MongoDB,
-Redis, and JWT credentials come from Secrets Manager. AWS SDK credentials come from the task role, not static access
+The app always uses AWS SES. ECS injects region, SES sender, and JWT metadata from Parameter Store; PostgreSQL, Redis,
+MongoDB, and JWT credentials come from Secrets Manager. AWS SDK credentials come from the task role, not static access
 keys. Local development uses the standard AWS SDK credential chain.
 
 ### Useful Gradle tasks

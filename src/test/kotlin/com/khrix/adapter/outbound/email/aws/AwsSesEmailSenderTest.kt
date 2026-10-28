@@ -1,16 +1,19 @@
 package com.khrix.adapter.outbound.email.aws
 
+import aws.sdk.kotlin.services.sesv2.SesV2Client
+import aws.sdk.kotlin.services.sesv2.model.SendEmailRequest
+import aws.sdk.kotlin.services.sesv2.model.SendEmailResponse
 import com.khrix.adapter.app.AwsEmailConfig
 import com.khrix.application.email.EmailMessageBody
 import com.khrix.domain.valueobject.user.Email
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.Runs
 import io.mockk.slot
-import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import software.amazon.awssdk.services.sesv2.SesV2Client
-import software.amazon.awssdk.services.sesv2.model.SendEmailRequest
-import software.amazon.awssdk.services.sesv2.model.SendEmailResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -20,13 +23,13 @@ class AwsSesEmailSenderTest {
         runBlocking {
             val sesClient = mockk<SesV2Client>()
             val request = slot<SendEmailRequest>()
-            every { sesClient.sendEmail(capture(request)) } returns
-                SendEmailResponse.builder().messageId("message-id").build()
+            coEvery { sesClient.sendEmail(capture(request)) } returns SendEmailResponse {}
+            every { sesClient.close() } just Runs
 
             val sender =
                 AwsSesEmailSender(
                     config = AwsEmailConfig(region = "us-east-1", fromAddress = "service@example.com"),
-                    sesClient = sesClient,
+                    sesClientFactory = { sesClient },
                 )
 
             sender.send(
@@ -37,25 +40,25 @@ class AwsSesEmailSenderTest {
                 ),
             )
 
-            assertEquals("service@example.com", request.captured.fromEmailAddress())
-            assertEquals(listOf("customer@example.com"), request.captured.destination().toAddresses())
+            assertEquals("service@example.com", request.captured.fromEmailAddress)
+            assertEquals(listOf("customer@example.com"), request.captured.destination?.toAddresses)
             assertEquals(
                 "Service order update",
                 request.captured
-                    .content()
-                    .simple()
-                    .subject()
-                    .data(),
+                    .content
+                    ?.simple
+                    ?.subject
+                    ?.data,
             )
             assertEquals(
                 "<p>Your vehicle is ready.</p>",
                 request.captured
-                    .content()
-                    .simple()
-                    .body()
-                    .html()
-                    .data(),
+                    .content
+                    ?.simple
+                    ?.body
+                    ?.html
+                    ?.data,
             )
-            verify(exactly = 1) { sesClient.sendEmail(any<SendEmailRequest>()) }
+            coVerify(exactly = 1) { sesClient.sendEmail(any<SendEmailRequest>()) }
         }
 }

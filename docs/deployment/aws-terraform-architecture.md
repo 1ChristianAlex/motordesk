@@ -59,7 +59,7 @@ configurada. Em cada AZ selecionada são criadas:
 
 - uma subnet pública para o Application Load Balancer e NAT;
 - uma subnet privada de aplicação para as tarefas ECS;
-- uma subnet privada de dados para RDS, DocumentDB e ElastiCache.
+- uma subnet privada de dados para RDS e ElastiCache.
 
 Um Internet Gateway atende as subnets públicas. As subnets de aplicação enviam tráfego de saída por NAT Gateway; dev e
 QA compartilham um NAT Gateway, enquanto produção cria um NAT Gateway por AZ. As subnets de dados não têm rota default
@@ -83,8 +83,8 @@ terraform -chdir=infra/terraform/aws/envs/dev output certificate_validation_reco
 ```
 
 As tarefas ECS não recebem IP público. O security group da aplicação aceita a porta 8080 somente do ALB e libera saída
-para tráfego externo através do NAT. Os security groups de PostgreSQL (5432), DocumentDB (27017) e Redis (6379) aceitam
-conexões somente do security group das tarefas.
+para tráfego externo através do NAT. Os security groups de PostgreSQL (5432) e Redis (6379) aceitam conexões somente do
+security group das tarefas.
 
 ### Runtime, imagem e observabilidade
 
@@ -93,13 +93,15 @@ O módulo cria:
 - um repositório ECR por ambiente, com tags imutáveis, varredura de imagem no push e criptografia AES-256;
 - uma política de ciclo de vida que retém as duas imagens mais recentes;
 - um cluster ECS com Container Insights;
-- uma task definition e um serviço ECS Fargate usando `awsvpc`, CPU padrão de 512 unidades e memória de 1024 MiB;
+- uma task definition e um serviço ECS Fargate da API usando `awsvpc`, CPU padrão de 512 unidades e memória de 1024 MiB;
+- uma task definition e um serviço ECS Fargate dedicado ao MongoDB, com uma tarefa;
 - um grupo de logs CloudWatch com retenção de 30 dias.
 
-O serviço inicia com `desired_count = 0` por padrão, até existir uma imagem inicial no ECR. O workflow de deploy publica a
-imagem, registra uma nova revisão da task definition e configura o serviço para uma tarefa em dev/QA ou duas em prod.
-O recurso ECS ignora mudanças Terraform em `task_definition` e `desired_count` para que um apply posterior não reverta a
-versão ou escala definida pelo deploy.
+O serviço da API inicia com `desired_count = 0` por padrão, até existir uma imagem inicial no ECR. O workflow de deploy
+publica a imagem, registra uma nova revisão da task definition e configura o serviço para uma tarefa em dev/QA ou duas em
+prod. O serviço MongoDB inicia com uma tarefa independente da escala da API.
+O serviço ECS da API ignora mudanças Terraform em `task_definition` e `desired_count` para que um apply posterior não
+reverta a versão ou escala definida pelo deploy.
 
 ### Persistência
 
@@ -114,17 +116,20 @@ versão ou escala definida pelo deploy.
 - final snapshot obrigatório em prod; em dev/QA o código permite ignorá-lo, embora `prevent_destroy` continue bloqueando
   destruição pelo Terraform.
 
-**Amazon DocumentDB**
+**MongoDB**
 
-- cluster compatível com MongoDB, engine 5.0.0 por padrão, em subnets de dados;
-- instância padrão `db.t3.medium`; uma instância em dev/QA por padrão e duas em prod;
-- armazenamento criptografado, TLS habilitado e backups com a retenção configurada;
-- credencial gerada pelo provider Random, guardada no Secrets Manager e injetada no container.
+O módulo executa a imagem oficial MongoDB `8.0.34` em um serviço ECS Fargate privado com uma tarefa. A API conecta pelo
+Cloud Map em `mongo.<project>-<environment>.local:27017`; a porta só aceita tráfego do security group da aplicação.
+As credenciais administrativas e da aplicação são geradas pelo Terraform e armazenadas no Secrets Manager. Um container
+de inicialização cria/atualiza o usuário da aplicação, limitado a leitura e escrita no database configurado; a API não
+recebe a credencial administrativa.
 
-DocumentDB é uma implementação candidata, não uma compatibilidade MongoDB presumida. Em QA e prod, a variável
-`documentdb_compatibility_confirmed` precisa ser `true`; essa validação apenas exige uma declaração do operador. Antes de
-confirmá-la, é necessário executar testes contra a engine escolhida que cubram queries, índices, agregações, TLS e
-operações de histórico realmente usadas pela aplicação.
+Os dados são gravados em um EFS criptografado, montado por access point com criptografia em trânsito e autorização IAM.
+O sistema de arquivos tem proteção contra destruição pelo Terraform e política de backup automático ativada. O serviço
+MongoDB não é um banco gerenciado: há apenas uma instância, sem replicação ou failover entre tarefas. Durante atualização,
+o ECS para a tarefa anterior antes de iniciar a nova para evitar dois processos MongoDB usando o mesmo diretório de dados.
+Antes de produção, teste o comportamento do MongoDB sobre EFS, confirme retenção/restauração dos backups e avalie
+disponibilidade, desempenho, sizing e custo.
 
 **Amazon ElastiCache for Redis**
 
@@ -135,7 +140,9 @@ operações de histórico realmente usadas pela aplicação.
 
 Redis continua sendo transporte/cache para Redis Streams; o state transacional permanece no PostgreSQL.
 
-RDS, DocumentDB e ElastiCache têm `prevent_destroy` para evitar remoção acidental por um plano Terraform.
+O código Terraform não remove automaticamente dados históricos DynamoDB: o recurso antigo é desanexado do state com
+`removed { destroy = false }`. A limpeza física desse recurso, se ainda existir na conta, deve ser avaliada e executada
+separadamente após revisar os dados e o state de cada ambiente.
 
 ### E-mail, parâmetros e segredos
 
@@ -144,7 +151,7 @@ O módulo registra a identidade de e-mail no SES, usando `ses_from_address`, e c
 estar no sandbox. A validação do Terraform não comprova entrega real.
 
 Parâmetros não secretos vão para Systems Manager Parameter Store: região AWS, remetente SES e issuer/audience/realm do
-JWT. Senha do DocumentDB, token do Redis e segredo JWT são gerados e armazenados no Secrets Manager; a senha do RDS é
+JWT. Token do Redis e segredo JWT são gerados e armazenados no Secrets Manager; a senha do RDS é
 gerenciada pelo próprio RDS. A execution role do ECS recebe permissões para buscar os segredos/parâmetros referenciados
 pela task definition. O container recebe essas configurações como variáveis de ambiente no runtime.
 
@@ -177,11 +184,8 @@ IAM permissiva na conta não sobrepõe uma negação explícita da SCP.
 | Zonas de disponibilidade | Duas, selecionadas automaticamente | Duas, selecionadas automaticamente | Duas, selecionadas automaticamente |
 | NAT Gateway | Um compartilhado | Um compartilhado | Dois, um por AZ |
 | RDS Multi-AZ | Não | Não | Não |
-| DocumentDB | Uma instância padrão | Uma instância padrão | Duas instâncias |
 | Redis | Um nó padrão | Um nó padrão | Dois nós, sem Multi-AZ/failover |
-| Proteções de exclusão RDS/DocumentDB | `prevent_destroy` | `prevent_destroy` | `prevent_destroy` e deletion protection |
 | ECS inicial | `desired_count = 0` | `desired_count = 0` | `desired_count = 0` |
-| Confirmação DocumentDB | Não exigida pelo root | Obrigatória | Obrigatória |
 
 O workflow de deploy ajusta ECS para uma tarefa em dev/QA e duas em prod. Custos, quotas, capacidade e parâmetros de
 produção precisam de revisão na região e conta escolhidas; os valores no código são defaults iniciais, não sizing
@@ -197,9 +201,9 @@ Todos os roots configuram:
 QA e prod exigem `api_domain_name`, usado para solicitar o certificado ACM. Em dev, essa variável é opcional; sem ela,
 `api_url` usa o DNS do ALB por HTTP. A rede e o ALB cobrem duas AZs; o RDS permanece Single-AZ e o Redis sem failover
 automático conforme as configurações atuais.
-`route53_zone_id` é opcional. QA e prod também exigem
-`documentdb_compatibility_confirmed=true` após os testes de compatibilidade. Variáveis sensíveis não devem ser
-versionadas; use `.tfvars` local ignorado ou mecanismo seguro equivalente.
+`route53_zone_id` é opcional. `mongo_database` e `mongo_options` configuram o cliente MongoDB usado pela aplicação. A
+credencial do MongoDB é criada pelo módulo e armazenada no Secrets Manager; não é necessário fornecer endpoint ou senha
+externos. Variáveis sensíveis não devem ser versionadas; use `.tfvars` local ignorado ou mecanismo seguro equivalente.
 
 O módulo compartilhado oferece ainda customização de CIDRs da VPC e subnets, classes/versões dos bancos, retenção de
 backups, alterações imediatas de banco, tamanho ECS, imagem e metadados JWT. Os defaults completos estão em
@@ -246,17 +250,17 @@ secrets `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` separadamente em cada GitH
 
 ## Outputs
 
-Os roots expõem URL da API, URL do repositório ECR, nome de cluster/serviço ECS, username do IAM user de deploy e status
-de verificação da identidade SES. O módulo também define endpoints PostgreSQL, DocumentDB e Redis como outputs; os roots
-de ambiente atualmente não os reexportam.
+Os roots expõem URL da API, URL do repositório ECR, nomes de cluster/serviços ECS, endpoint privado do MongoDB, username
+do IAM user de deploy e status de verificação da identidade SES. O módulo também define endpoints PostgreSQL e Redis
+como outputs.
 
 ## Limites e validação antes de produção
 
 - O código Terraform foi formatado e validado localmente, mas não foi aplicado em conta AWS; portanto, não há garantia
   de quotas, disponibilidade regional, custos, políticas efetivas ou entrega SES.
 - Nenhuma migração de banco ou de mensagens é feita pelo Terraform ou pelos workflows descritos aqui.
-- Testar restauração de backups e compatibilidade DocumentDB, além de consumer groups, pending entries e acknowledgements
-  do Redis Streams.
+- Testar integração, desempenho, backup/restauração e atualização do MongoDB com o EFS antes de produção, além de
+  consumer groups, pending entries e acknowledgements do Redis Streams.
 - Verificar certificado ACM, DNS, verificação SES e remoção de restrições de sandbox antes de depender de tráfego real.
 - Usar identidade IAM least-privilege para PostgreSQL em produção em vez da credencial master atualmente injetada.
 - O apply inicial deve ser revisado com cuidado: estados, senhas geradas e planos Terraform são dados sensíveis.

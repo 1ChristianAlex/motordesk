@@ -19,11 +19,11 @@ source data, deployment, and AWS-native rollback. It does not destroy cloud reso
 
 ## Service compatibility
 
-DocumentDB is currently the MongoDB-compatible implementation candidate. Do not set
-`documentdb_compatibility_confirmed=true` for QA or production until representative integration tests pass against the
-selected DocumentDB engine version. Check every query, index, aggregation, update, BSON type, TLS trust chain, and
-history read/write path used by Motor Desk. If a required MongoDB feature is unsupported, select MongoDB Atlas or
-another compatible service and update the Terraform module before production.
+The AWS module runs a single self-managed MongoDB task on ECS Fargate, stores its data on encrypted EFS, and injects
+generated credentials from Secrets Manager. MongoDB is private to the VPC and is not a managed database service; it has
+no replica or task-level failover. Before using production data, test history reads/writes, BSON mappings, ordering,
+EFS behavior and performance, and the configured backup/restore procedure. Do not assume the local Compose volume
+contains or backs up the AWS data.
 
 ElastiCache Redis is configured with TLS and an auth token. Verify Redis Streams commands, consumer group creation,
 pending-entry handling, acknowledgements, retries, and worker behavior using the selected engine version. Redis remains

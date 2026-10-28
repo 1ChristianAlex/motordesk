@@ -2,6 +2,8 @@
 
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.http.URLProtocol
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 data class MongoConfig(
     val url: String,
@@ -13,9 +15,13 @@ data class MongoConfig(
     val connectionString: String
         get() {
             val query = listOfNotNull("authSource=admin", options.takeIf(String::isNotBlank)).joinToString("&")
-            return "mongodb://$username:$password@${url.removePrefix("mongodb://")}/$database?$query"
+            val credentials = "${encodeMongoCredential(username)}:${encodeMongoCredential(password)}"
+            return "mongodb://$credentials@${url.removePrefix("mongodb://")}/$database?$query"
         }
 }
+
+private fun encodeMongoCredential(value: String): String =
+    URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20")
 
 data class RedisConfig(
     val host: String,

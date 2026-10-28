@@ -7,6 +7,7 @@ import com.khrix.domain.history.model.HistoryChanges
 import com.khrix.domain.history.port.repository.RegisterHistoryRepository
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Projections
+import com.mongodb.client.model.Sorts
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 
@@ -40,6 +41,12 @@ abstract class RegisterHistoryRepositoryMongoFactory(
                         id,
                     ),
                 ).projection(projectionFields)
+                .sort(
+                    Sorts.ascending(
+                        RegisterHistoryDocument::changedAt.name,
+                        "_id",
+                    ),
+                )
 
         return documents.map { it.toModel() }.toList()
     }

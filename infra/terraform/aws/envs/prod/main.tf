@@ -39,4 +39,6 @@ module "application" {
   ses_from_address = var.ses_from_address
   api_domain_name  = var.api_domain_name
   route53_zone_id  = var.route53_zone_id
+  mongo_database   = var.mongo_database
+  mongo_options    = var.mongo_options
 }

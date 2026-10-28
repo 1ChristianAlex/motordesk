@@ -23,7 +23,14 @@ output "ecs_cluster_name" {
 
 output "ecs_service_name" {
   value = aws_ecs_service.api.name
+}
 
+output "mongo_endpoint" {
+  value = "mongodb://${aws_service_discovery_service.mongo.name}.${aws_service_discovery_private_dns_namespace.api.name}:27017"
+}
+
+output "mongo_service_name" {
+  value = aws_ecs_service.mongo.name
 }
 
 output "github_deploy_user_name" {
@@ -32,14 +39,6 @@ output "github_deploy_user_name" {
 
 output "postgres_endpoint" {
   value = aws_db_instance.postgres.address
-}
-
-output "dynamodb_history_table_name" {
-  value = aws_dynamodb_table.history.name
-}
-
-output "dynamodb_history_table_arn" {
-  value = aws_dynamodb_table.history.arn
 }
 
 output "redis_endpoint" {
