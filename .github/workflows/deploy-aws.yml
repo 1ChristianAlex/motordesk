@@ -75,6 +75,7 @@ jobs:
       contents: read
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_TF_BACKEND_BUCKET: ${{ vars.AWS_TF_BACKEND_BUCKET }}
     defaults:
       run:
         working-directory: infra/terraform/aws/envs/${{ inputs.environment }}
