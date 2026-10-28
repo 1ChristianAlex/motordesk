@@ -11,3 +11,12 @@ bruno
 README.md
 infra/docker/docker-compose.yml
 infra/terraform/azure/az-secrets.json
+**/secrets.properties
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/*.tfvars.json
+**/*.tfplan
+.env
+.env.*

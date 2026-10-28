@@ -1,7 +1,7 @@
 package com.khrix.adapter.app
 
 import com.khrix.adapter.inbound.http.httpDI
-import com.khrix.adapter.outbound.azure.azureDI
+import com.khrix.adapter.outbound.email.emailDI
 import com.khrix.adapter.outbound.exposed.appDatabase
 import com.khrix.adapter.outbound.mongodb.appMongoDb
 import com.khrix.adapter.outbound.security.securityDI
@@ -20,6 +20,7 @@ private fun getLazyInfraCredentials(isDevelopment: Boolean): InfraConfig {
 
 fun Application.installAdapterDI() {
     val isDevelopment = developmentMode
+    val infraConfig = getLazyInfraCredentials(isDevelopment)
 
     dependencies {
         provide<Boolean>(name = "isDevelopment") { isDevelopment }
@@ -35,17 +36,19 @@ fun Application.installAdapterDI() {
             scope
         }
         provide<InfraConfig> {
-            getLazyInfraCredentials(isDevelopment)
+            infraConfig
         }
     }
+
+    val emailSender = emailDI(dependencies, infraConfig)
 
     monitor.subscribe(
         ApplicationStopping,
     ) {
         scope.shutdown()
+        (emailSender as? AutoCloseable)?.close()
     }
 
-    azureDI(dependencies)
     sqIdsDI(dependencies)
     appDatabase(dependencies)
     appMongoDb(dependencies, monitor)

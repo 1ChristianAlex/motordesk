@@ -1,6 +1,6 @@
 # ADR-006 — Use Terraform and Microsoft Azure for Infrastructure as Code
 
-- **Status:** Accepted
+- **Status:** Superseded by [ADR-007](ADR-007-Migrate-Infrastructure-from-Microsoft-Azure-to-AWS.md).
 - **Date:** 2026-08-28
 - **Decision:** Adopt Terraform as the Infrastructure as Code (IaC) tool and Microsoft Azure as the cloud provider for Motor Desk.
 

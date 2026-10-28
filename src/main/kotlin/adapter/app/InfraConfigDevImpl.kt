@@ -18,6 +18,7 @@ class InfraConfigDevImpl : InfraConfig {
             username = properties.getProperty("mongo.user"),
             password = properties.getProperty("mongo.password"),
             database = properties.getProperty("mongo.database"),
+            options = properties.getProperty("mongo.options").orEmpty(),
         )
     }
     override val redisConfig by lazy {
@@ -25,6 +26,7 @@ class InfraConfigDevImpl : InfraConfig {
             host = properties.getProperty("redis.host"),
             password = properties.getProperty("redis.password"),
             port = properties.getProperty("redis.port"),
+            tls = parseBooleanSetting(properties.getProperty("redis.tls"), "redis.tls"),
         )
     }
     override val exposedConfig by lazy {
@@ -35,10 +37,14 @@ class InfraConfigDevImpl : InfraConfig {
             password = properties.getProperty("db.password"),
         )
     }
-    override val azureConfig by lazy {
-        AzureConfig(
-            accessKey = properties.getProperty("azure.communication.access-key"),
-            communicationEndpoint = properties.getProperty("azure.communication.endpoint"),
+    override val awsEmailConfig: AwsEmailConfig by lazy {
+        AwsEmailConfig(
+            region =
+                properties.getProperty("aws.region")
+                    ?: throw IllegalStateException("aws.region is required for AWS SES"),
+            fromAddress =
+                properties.getProperty("aws.ses.from-address")
+                    ?: throw IllegalStateException("aws.ses.from-address is required for AWS SES"),
         )
     }
     override val jwtConfig: JwtConfig by lazy {

@@ -13,6 +13,7 @@ class InfraConfigEnvImpl : InfraConfig {
             username = requireEnv("MONGO_USER"),
             password = requireEnv("MONGO_PASSWORD"),
             database = requireEnv("MONGO_DATABASE"),
+            options = System.getenv("MONGO_OPTIONS").orEmpty(),
         )
 
     override val redisConfig: RedisConfig =
@@ -20,6 +21,7 @@ class InfraConfigEnvImpl : InfraConfig {
             host = requireEnv("REDIS_HOST"),
             password = requireEnv("REDIS_PASSWORD"),
             port = requireEnv("REDIS_PORT"),
+            tls = parseBooleanSetting(System.getenv("REDIS_TLS"), "REDIS_TLS"),
         )
     override val exposedConfig: ExposedConfig =
         ExposedConfig(
@@ -28,10 +30,15 @@ class InfraConfigEnvImpl : InfraConfig {
             user = requireEnv("DATABASE_USER"),
             password = requireEnv("DATABASE_PASSWORD"),
         )
-    override val azureConfig by lazy {
-        AzureConfig(
-            accessKey = requireEnv("AZURE_COMMUNICATION_ACCESS_KEY"),
-            communicationEndpoint = requireEnv("AZURE_COMMUNICATION_ENDPOINT"),
+    override val awsEmailConfig: AwsEmailConfig by lazy {
+        AwsEmailConfig(
+            region =
+                System.getenv("AWS_REGION")
+                    ?: System.getenv("AWS_DEFAULT_REGION")
+                    ?: throw IllegalStateException("AWS_REGION or AWS_DEFAULT_REGION is required for AWS email"),
+            fromAddress =
+                System.getenv("AWS_SES_FROM_ADDRESS")
+                    ?: throw IllegalStateException("AWS_SES_FROM_ADDRESS is required for AWS email"),
         )
     }
     override val jwtConfig: JwtConfig by lazy {

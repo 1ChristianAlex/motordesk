@@ -31,6 +31,8 @@ import io.ktor.server.plugins.di.dependencies
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.resources.Resources
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
@@ -64,6 +66,9 @@ private fun Application.appRoute() {
 
 private fun Application.bindRoutes() {
     routing {
+        get("/health") {
+            call.respondText("ok")
+        }
         val appControllerList: List<AppController> by dependencies
         appControllerList.forEach {
             it.map(this)
