@@ -37,119 +37,27 @@ on:
         type: boolean
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        environment: [dev, qa, prod]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.10.0
-
-      - name: Terraform Format
-        working-directory: infra/terraform/aws
-        run: terraform fmt -check -recursive
-
-      - name: Terraform Init
-        working-directory: infra/terraform/aws/envs/${{ matrix.environment }}
-        run: terraform init -backend=false -input=false
-
-      - name: Terraform Validate
-        working-directory: infra/terraform/aws/envs/${{ matrix.environment }}
-        run: terraform validate -no-color
-
-  plan-apply:
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-    outputs:
-      ecr_repository_url: ${{ steps.terraform-outputs.outputs.ecr_repository_url }}
-    concurrency:
-      group: terraform-${{ inputs.environment }}
-      cancel-in-progress: false
+  terraform:
+    uses: ./.github/workflows/terraform-aws.yml
     permissions:
       contents: read
-    env:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      AWS_TF_BACKEND_BUCKET: ${{ vars.AWS_TF_BACKEND_BUCKET }}
-    defaults:
-      run:
-        working-directory: infra/terraform/aws/envs/${{ inputs.environment }}
-    steps:
-      - name: Confirm apply request
-        if: inputs.operation == 'apply' && inputs.confirm_apply != true
-        run: |
-          echo "::error::Set confirm_apply to true before running Terraform apply."
-          exit 1
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.10.0
-
-      - name: Validate Terraform backend configuration
-        run: |
-          if [ -z "$AWS_REGION" ]; then
-            echo "::error::Set the AWS_REGION variable in the selected GitHub Environment."
-            exit 1
-          fi
-
-          if [ -z "$AWS_TF_BACKEND_BUCKET" ]; then
-            echo "::error::Set the AWS_TF_BACKEND_BUCKET variable in the selected GitHub Environment."
-            exit 1
-          fi
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Check Terraform state bucket
-        run: |
-          if ! aws s3api head-bucket --bucket "$AWS_TF_BACKEND_BUCKET"; then
-            echo "::error::Terraform state bucket '$AWS_TF_BACKEND_BUCKET' does not exist or is inaccessible. Bootstrap it once with infra/terraform/aws/backend, using the same AWS account and region, before running this workflow."
-            exit 1
-          fi
-
-      - name: Terraform Init
-        run: |
-          terraform init -input=false \
-            -backend-config="bucket=${AWS_TF_BACKEND_BUCKET}" \
-            -backend-config="region=${AWS_REGION}"
-
-      - name: Terraform Plan
-        run: terraform plan -input=false -no-color -out=tfplan
-
-      - name: Terraform Apply
-        if: inputs.operation == 'apply' && inputs.confirm_apply == true
-        run: terraform apply -input=false -auto-approve tfplan
-
-      - name: Export Terraform outputs
-        id: terraform-outputs
-        if: inputs.operation == 'apply' && inputs.confirm_apply == true
-        run: echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> "$GITHUB_OUTPUT"
+    with:
+      environment: ${{ inputs.environment || 'dev' }}
+      operation: ${{ inputs.operation || 'plan' }}
+      confirm_apply: ${{ inputs.confirm_apply || false }}
+      run_terraform: ${{ github.event_name == 'workflow_dispatch' }}
+    secrets: inherit
 
   docker-deploy:
     if: github.event_name == 'workflow_dispatch' && inputs.operation == 'apply' && inputs.confirm_apply == true
-    needs: plan-apply
+    needs: terraform
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     permissions:
       contents: read
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
-      ECR_REPOSITORY_URL: ${{ needs.plan-apply.outputs.ecr_repository_url }}
+      ECR_REPOSITORY_URL: ${{ needs.terraform.outputs.ecr_repository_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

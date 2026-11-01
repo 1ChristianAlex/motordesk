@@ -35,6 +35,37 @@ on:
         required: true
         default: false
         type: boolean
+  workflow_call:
+    inputs:
+      environment:
+        required: false
+        type: string
+        default: dev
+      operation:
+        required: false
+        type: string
+        default: plan
+      confirm_apply:
+        required: false
+        type: boolean
+        default: false
+      run_terraform:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
+      AWS_TERRAFORM_ACCESS_KEY_ID:
+        required: false
+      AWS_TERRAFORM_SECRET_ACCESS_KEY:
+        required: false
+    outputs:
+      ecr_repository_url:
+        description: ECR repository URL created by Terraform
+        value: ${{ jobs.plan-apply.outputs.ecr_repository_url }}
 
 jobs:
   validate:
@@ -65,9 +96,11 @@ jobs:
         run: terraform validate -no-color
 
   plan-apply:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_call' && inputs.run_terraform)
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    outputs:
+      ecr_repository_url: ${{ steps.terraform-outputs.outputs.ecr_repository_url }}
     concurrency:
       group: terraform-${{ inputs.environment }}
       cancel-in-progress: false
@@ -94,11 +127,23 @@ jobs:
         with:
           terraform_version: 1.10.0
 
+      - name: Validate Terraform backend configuration
+        run: |
+          if [ -z "$AWS_REGION" ]; then
+            echo "::error::Set the AWS_REGION variable in the selected GitHub Environment."
+            exit 1
+          fi
+
+          if [ -z "$AWS_TF_BACKEND_BUCKET" ]; then
+            echo "::error::Set the AWS_TF_BACKEND_BUCKET variable in the selected GitHub Environment."
+            exit 1
+          fi
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_TERRAFORM_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_TERRAFORM_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ (inputs.run_terraform && secrets.AWS_ACCESS_KEY_ID) || secrets.AWS_TERRAFORM_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ (inputs.run_terraform && secrets.AWS_SECRET_ACCESS_KEY) || secrets.AWS_TERRAFORM_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Check Terraform state bucket
@@ -125,3 +170,8 @@ jobs:
       - name: Terraform Apply
         if: inputs.operation == 'apply' && inputs.confirm_apply == true
         run: terraform apply -input=false -auto-approve tfplan
+
+      - name: Export Terraform outputs
+        id: terraform-outputs
+        if: inputs.operation == 'apply' && inputs.confirm_apply == true
+        run: echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> "$GITHUB_OUTPUT"
