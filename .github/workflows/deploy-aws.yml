@@ -1,4 +1,4 @@
-name: Terraform AWS Validation
+name: Terraform AWS Deploy
 
 on:
   pull_request:
