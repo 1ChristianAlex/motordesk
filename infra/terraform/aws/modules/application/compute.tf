@@ -200,10 +200,6 @@ resource "aws_ecs_service" "api" {
   }
 
   depends_on = [aws_ecs_service.mongo]
-
-  lifecycle {
-    ignore_changes = [task_definition, desired_count]
-  }
 }
 
 resource "aws_cloudwatch_log_group" "mongo" {

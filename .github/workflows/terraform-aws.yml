@@ -53,6 +53,10 @@ on:
         required: false
         type: boolean
         default: false
+      image_tag:
+        required: false
+        type: string
+        default: ""
     secrets:
       AWS_ACCESS_KEY_ID:
         required: false
@@ -109,6 +113,7 @@ jobs:
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
       AWS_TF_BACKEND_BUCKET: ${{ vars.AWS_TF_BACKEND_BUCKET }}
+      DEPLOY_IMAGE_TAG: ${{ inputs.image_tag }}
     defaults:
       run:
         working-directory: infra/terraform/aws/envs/${{ inputs.environment }}
@@ -165,7 +170,15 @@ jobs:
             -backend-config="region=${AWS_REGION}"
 
       - name: Terraform Plan
-        run: terraform plan -input=false -no-color -out=tfplan
+        run: |
+          desired_count=0
+          if [[ -n "$DEPLOY_IMAGE_TAG" ]]; then
+            desired_count=1
+          fi
+
+          terraform plan -input=false -no-color -out=tfplan \
+            -var="image_tag=$DEPLOY_IMAGE_TAG" \
+            -var="desired_count=$desired_count"
 
       - name: Terraform Apply
         if: inputs.operation == 'apply' && inputs.confirm_apply == true

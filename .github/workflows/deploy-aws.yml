@@ -85,3 +85,17 @@ jobs:
             .
 
           docker push "$ECR_REPOSITORY_URL:$image_tag"
+
+  terraform-deploy:
+    if: github.event_name == 'workflow_dispatch' && inputs.operation == 'apply' && inputs.confirm_apply == true
+    needs: [terraform, docker-deploy]
+    uses: ./.github/workflows/terraform-aws.yml
+    permissions:
+      contents: read
+    with:
+      environment: ${{ inputs.environment }}
+      operation: apply
+      confirm_apply: true
+      run_terraform: true
+      image_tag: ${{ github.sha }}
+    secrets: inherit
