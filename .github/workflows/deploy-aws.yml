@@ -166,7 +166,7 @@ jobs:
           set -euo pipefail
 
           registry="${ECR_REPOSITORY_URL%%/*}"
-          image_tag="$GITHUB_RUN_NUMBER"
+          image_tag="$GITHUB_SHA"
 
           aws ecr get-login-password --region "$AWS_REGION" \
             | docker login --username AWS --password-stdin "$registry"
