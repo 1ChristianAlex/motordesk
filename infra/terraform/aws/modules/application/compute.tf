@@ -184,7 +184,7 @@ resource "aws_ecs_service" "api" {
   name            = "${var.project_name}-${var.environment}-api"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.api.arn
-  desired_count   = var.desired_count
+  desired_count   = var.image_tag != "" ? 1 : 0
   launch_type     = "FARGATE"
 
   service_registries {

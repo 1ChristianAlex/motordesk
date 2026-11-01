@@ -42,4 +42,5 @@ module "application" {
   route53_zone_id       = var.route53_zone_id
   mongo_database        = var.mongo_database
   mongo_options         = var.mongo_options
+  image_tag             = var.image_tag
 }

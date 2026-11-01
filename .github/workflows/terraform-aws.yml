@@ -173,8 +173,7 @@ jobs:
         if: inputs.image_tag != ''
         run: |
           terraform plan -input=false -no-color -out=tfplan \
-            -var="image_tag=$DEPLOY_IMAGE_TAG" \
-            -var="desired_count=1"
+            -var="image_tag=$DEPLOY_IMAGE_TAG"
 
       - name: Terraform Plan no Image
         if: inputs.image_tag == ''

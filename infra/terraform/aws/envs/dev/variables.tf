@@ -31,3 +31,8 @@ variable "mongo_options" {
   type    = string
   default = ""
 }
+
+variable "image_tag" {
+  type    = string
+  default = ""
+}

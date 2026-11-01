@@ -95,12 +95,6 @@ variable "task_memory" {
   default = 1024
 }
 
-variable "desired_count" {
-  description = "Keep at zero until an image has been pushed to ECR."
-  type        = number
-  default     = 0
-}
-
 variable "image_tag" {
   type    = string
   default = ""
