@@ -1,0 +1,11 @@
+name: Motordesk DEV
+variables:
+  - name: baseUrl
+    value: https://1qas0d9jk2.execute-api.us-east-2.amazonaws.com
+    description: ""
+  - secret: true
+    name: token
+    description: ""
+  - secret: true
+    name: clientToken
+    description: ""

@@ -55,6 +55,21 @@ transport/cache; PostgreSQL remains the transactional source of truth.
 6. Monitor API errors/latency, ECS task health, ALB target health, database connections/storage, Redis stream pending
    entries, CloudWatch logs, and SES delivery/bounce signals through the agreed rollback window.
 
+## Deploying an application image
+
+Application deployment is manual through the `Terraform AWS Deploy` GitHub Actions workflow. Select the target GitHub
+Environment, choose `apply`, and set `confirm_apply` to true. The workflow first applies Terraform without an image tag,
+which scales an existing API service down to zero and causes an interruption. It then builds `infra/docker/Dockerfile`
+from the repository root and pushes the image to the selected environment's ECR repository with the commit SHA as its
+immutable tag. A second Terraform invocation receives that tag, creates a new API task-definition revision, and updates
+the ECS service to one task.
+
+Terraform owns the ECS task definition and desired count. An apply with no image tag sets the API service to zero tasks;
+include the currently intended image tag when running an independent Terraform apply that should keep the API available.
+The deployment jobs run only for a confirmed manual `apply`; a push alone does not publish or deploy the
+application image. This sequence is not blue/green and has an availability gap between applies. Verify the ECS deployment
+reaches steady state and the ALB health check passes before considering the release complete.
+
 ## AWS rollback
 
 - Roll back to the last known-good ECS task-definition revision while preserving the AWS database state.

@@ -1,9 +1,8 @@
 # Arquitetura Terraform na AWS
 
 Este documento descreve os recursos AWS declarados em `infra/terraform/aws/`, como os ambientes são separados e como
-Terraform se integra ao runtime e aos workflows do Motor Desk. Ele documenta a configuração versionada; **não afirma que
-os recursos foram criados em uma conta AWS**. A infraestrutura não foi aplicada e ainda depende de configuração e
-validação operacional.
+Terraform se integra ao runtime e aos workflows do Motor Desk. Ele documenta a configuração versionada; a existência e o
+estado dos recursos dependem de uma conta AWS e de applies executados nela.
 
 ## Visão geral
 
@@ -95,13 +94,33 @@ O módulo cria:
 - um cluster ECS com Container Insights;
 - uma task definition e um serviço ECS Fargate da API usando `awsvpc`, CPU padrão de 512 unidades e memória de 1024 MiB;
 - uma task definition e um serviço ECS Fargate dedicado ao MongoDB, com uma tarefa;
-- um grupo de logs CloudWatch com retenção de 30 dias.
+- um grupo de logs CloudWatch da API com retenção de um dia e outro do MongoDB com retenção de sete dias.
 
-O serviço da API inicia com `desired_count = 0` por padrão, até existir uma imagem inicial no ECR. O workflow de deploy
-publica a imagem, registra uma nova revisão da task definition e configura o serviço para uma tarefa em dev/QA ou duas em
-prod. O serviço MongoDB inicia com uma tarefa independente da escala da API.
-O serviço ECS da API ignora mudanças Terraform em `task_definition` e `desired_count` para que um apply posterior não
-reverta a versão ou escala definida pelo deploy.
+O módulo define a imagem da API como `<ECR URL>:<image_tag>`. Com `image_tag` vazio, o serviço tem `desired_count = 0`;
+com uma tag não vazia, tem `desired_count = 1`, em todos os ambientes. O serviço MongoDB inicia com uma tarefa
+independentemente da escala da API. Terraform gerencia diretamente a task definition e a escala do serviço, sem
+`ignore_changes` para esses atributos.
+
+### CI/CD e implantação da API
+
+`CI Tests` executa `./gradlew test` e `./gradlew build` em pull requests e pushes para `dev`/`main`. Os workflows
+`Terraform AWS Deploy` e `Terraform AWS Validation` validam os ambientes Terraform para mudanças de IaC. Esses eventos de
+push/PR não publicam uma imagem da aplicação; o deploy de aplicação é iniciado manualmente pelo `workflow_dispatch` de
+`Terraform AWS Deploy`.
+
+Para implantar, execute manualmente `Terraform AWS Deploy`, selecione o GitHub Environment (`dev`, `qa` ou `prod`), escolha
+`apply` e confirme `confirm_apply`. O workflow segue esta sequência:
+
+1. Executa um plano e apply Terraform sem `image_tag`, criando/atualizando a infraestrutura com o serviço da API em zero
+   tarefas. Em um ambiente já ativo, essa etapa interrompe temporariamente a API.
+2. Constrói a imagem usando `infra/docker/Dockerfile` e a raiz do repositório como contexto; publica no ECR com a tag
+   imutável do commit (`github.sha`).
+3. Chama novamente o workflow Terraform reutilizável, agora passando `image_tag`. O plano registra a nova revisão da task
+   definition e define o serviço ECS da API para uma tarefa; o apply ativa essa revisão.
+
+Um apply executado sem tag redefine `image_tag` para vazio e a escala da API para zero. Inclua a tag de imagem pretendida
+em applies que devam manter o serviço ativo. O fluxo atual não é blue/green e pode causar indisponibilidade entre o
+primeiro apply e a conclusão do segundo. O workflow de deploy e o repositório ECR são separados por ambiente.
 
 ### Persistência
 
@@ -167,13 +186,15 @@ O módulo cria um IAM user dedicado por ambiente e uma policy inline restrita ao
 permite autenticar no ECR, publicar imagens no repositório da API, registrar/descrever task definitions,
 descrever/atualizar o serviço ECS e passar somente as roles de execução e de task ao ECS.
 
-O workflow `Deploy AWS` recebe as credenciais por GitHub Environments (`dev`, `qa`, `prod`), cada um com os secrets
-`AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY`. Após o primeiro apply, crie uma access key para o username do output
-`github_deploy_user_name` no IAM e cadastre os valores nos secrets do Environment correspondente. Terraform não cria
-`aws_iam_access_key`: a secret key só é exibida uma vez e armazená-la no state ampliaria o risco de exposição. Essas
-credenciais são de longa duração; restrinja o acesso aos Environments, faça rotação periódica e remova chaves antigas.
-A organização ainda pode bloquear `iam:CreateUser`, `iam:PutUserPolicy` ou `iam:CreateAccessKey` por SCP; uma policy
-IAM permissiva na conta não sobrepõe uma negação explícita da SCP.
+No fluxo `Terraform AWS Deploy`, `run_terraform=true` faz com que o workflow reutilizável use `AWS_ACCESS_KEY_ID` e
+`AWS_SECRET_ACCESS_KEY` também para os applies Terraform, além do push de imagem. Portanto, as credenciais desses secrets
+precisam estar autorizadas para o provisionamento Terraform e para o deploy. A policy limitada do IAM user
+`github_deploy_user_name`, isoladamente, não autoriza provisionar a infraestrutura completa. O workflow Terraform
+executado independentemente usa `AWS_TERRAFORM_ACCESS_KEY_ID` e `AWS_TERRAFORM_SECRET_ACCESS_KEY`. Terraform não cria
+`aws_iam_access_key`: a secret key só é exibida uma vez e armazená-la no state ampliaria o risco de exposição. Restrinja
+acesso aos GitHub Environments, faça rotação periódica das chaves de longa duração e remova chaves antigas. A organização
+ainda pode bloquear `iam:CreateUser`, `iam:PutUserPolicy` ou `iam:CreateAccessKey` por SCP; uma policy IAM permissiva na
+conta não sobrepõe uma negação explícita da SCP.
 
 ## Diferenças entre ambientes
 
@@ -185,11 +206,11 @@ IAM permissiva na conta não sobrepõe uma negação explícita da SCP.
 | NAT Gateway | Um compartilhado | Um compartilhado | Dois, um por AZ |
 | RDS Multi-AZ | Não | Não | Não |
 | Redis | Um nó padrão | Um nó padrão | Dois nós, sem Multi-AZ/failover |
-| ECS inicial | `desired_count = 0` | `desired_count = 0` | `desired_count = 0` |
+| ECS sem imagem | `desired_count = 0` | `desired_count = 0` | `desired_count = 0` |
+| ECS com `image_tag` | Uma tarefa | Uma tarefa | Uma tarefa |
 
-O workflow de deploy ajusta ECS para uma tarefa em dev/QA e duas em prod. Custos, quotas, capacidade e parâmetros de
-produção precisam de revisão na região e conta escolhidas; os valores no código são defaults iniciais, não sizing
-validado de carga.
+Custos, quotas, capacidade e parâmetros de produção precisam de revisão na região e conta escolhidas; os valores no
+código são defaults iniciais, não sizing validado de carga.
 
 ## Configuração dos roots
 
@@ -244,13 +265,15 @@ Revise sempre o plano produzido e confirme a conta, região, environment, recurs
 efeitos sobre os dados antes de aprovar um apply.
 
 O workflow `Terraform AWS Validation` roda `fmt`, `init -backend=false` e `validate` para dev, QA e prod, sem
-credenciais nem provisionamento. O job manual `plan-apply` permite selecionar ambiente e operação; `apply` exige
-confirmação explícita e aplica o plano gerado na mesma execução. Configure em cada GitHub Environment (`dev`, `qa`,
-`prod`) as variáveis `AWS_REGION` e `AWS_TF_BACKEND_BUCKET`, os secrets
-`AWS_TERRAFORM_ACCESS_KEY_ID` e `AWS_TERRAFORM_SECRET_ACCESS_KEY` de uma identidade com permissões para provisionar a
-infraestrutura, e `API_DOMAIN_NAME`/`ROUTE53_ZONE_ID` quando aplicável. Proteja os Environments, especialmente `prod`,
-com revisores obrigatórios. As credenciais Terraform são separadas de `AWS_ACCESS_KEY_ID` e
-`AWS_SECRET_ACCESS_KEY`, usados pelo workflow de deploy da aplicação.
+provisionamento. O job `plan-apply` permite selecionar ambiente e operação; `apply` exige confirmação explícita e aplica
+o plano gerado na mesma execução. Configure em cada GitHub Environment (`dev`, `qa`, `prod`) as variáveis `AWS_REGION` e
+`AWS_TF_BACKEND_BUCKET`, e `API_DOMAIN_NAME`/`ROUTE53_ZONE_ID` quando aplicável. O workflow reutilizável usa
+`AWS_TERRAFORM_ACCESS_KEY_ID` e `AWS_TERRAFORM_SECRET_ACCESS_KEY` para sua execução independente; quando chamado pela
+implantação, `run_terraform=true` faz com que use `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` para os applies e para o
+push de imagem. As credenciais selecionadas para a implantação precisam autorizar as operações Terraform executadas
+nesse fluxo. O módulo também cria um IAM user de deploy com permissões limitadas a ECR/ECS; essas permissões, por si só,
+não autorizam provisionar todos os recursos Terraform. Proteja os Environments, especialmente `prod`, e limite quem pode
+executar deploys.
 
 ## Outputs
 
@@ -260,8 +283,8 @@ como outputs.
 
 ## Limites e validação antes de produção
 
-- O código Terraform foi formatado e validado localmente, mas não foi aplicado em conta AWS; portanto, não há garantia
-  de quotas, disponibilidade regional, custos, políticas efetivas ou entrega SES.
+- A validação de Terraform e um apply concluído não garantem quotas, disponibilidade regional, custos, políticas IAM
+  efetivas ou entrega SES; esses aspectos devem ser confirmados na conta AWS alvo.
 - Nenhuma migração de banco ou de mensagens é feita pelo Terraform ou pelos workflows descritos aqui.
 - Testar integração, desempenho, backup/restauração e atualização do MongoDB com o EFS antes de produção, além de
   consumer groups, pending entries e acknowledgements do Redis Streams.

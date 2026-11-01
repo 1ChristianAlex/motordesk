@@ -101,6 +101,21 @@ container is recreated; remove it only when deleting the local database is inten
 
 The local Docker MongoDB is separate from the AWS MongoDB service; their data is not shared.
 
+`infra/docker/docker-compose-dev.yml` starts the local PostgreSQL, Redis, MongoDB, and SonarQube services; the API is run
+separately with Gradle as shown above. `infra/docker/docker-compose.yml` also declares the API container and named data
+volumes. The API requires `HTTP_*`, `DATABASE_*`, `MONGO_*`, `REDIS_*`, `JWT_*`, and AWS SES environment variables; the
+full Compose file currently supplies only the MongoDB settings to the API, so configure the remaining values before using
+that variant. Compose credentials in these files are local-development values only and must not be used in a deployed
+environment.
+
+The production Docker image is built from the repository root with `infra/docker/Dockerfile`:
+
+```bash
+docker build --file infra/docker/Dockerfile --tag motordesk:local .
+```
+
+The Dockerfile builds the Gradle distribution with JDK 21 and uses a JRE 21 runtime image.
+
 ### AWS Infrastructure
 
 AWS is the only cloud provider configured by this repository. The application sends email through Amazon SES, and there
@@ -161,17 +176,24 @@ PostgreSQL remains Single-AZ, and Redis automatic failover remains disabled.
 Before production, replace the database administrator credentials currently injected into the application with a
 dedicated least-privilege application database role and validate that role's grants.
 
-The GitHub workflows `Terraform AWS Validation` and `Deploy AWS` validate and deploy only to AWS. Deployment is manual
-and uses a dedicated IAM deploy user per environment. After applying Terraform, create an access key for each output
-`github_deploy_user_name` outside Terraform, then save its `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` as secrets in
-the matching GitHub Environment (`dev`, `qa`, or `prod`). Do not put access keys in Terraform state or repository
-variables. Restrict who can run deployments and rotate these long-lived credentials regularly. `AWS_REGION` remains a
-repository variable. Organization SCPs can also restrict creating IAM users or access keys; an organization
-administrator must allow those actions if they are denied. SES sender verification and production access must be
-completed in AWS before email delivery is expected to work.
+GitHub Actions runs `CI Tests` on pull requests and pushes to `dev`/`main`; it executes `./gradlew test` and
+`./gradlew build`. `Terraform AWS Deploy` and `Terraform AWS Validation` validate the three Terraform environments when
+infrastructure or the reusable Terraform workflow changes. Application deployment is manual: dispatch `Terraform AWS
+Deploy`, choose the GitHub Environment and `apply`, and set `confirm_apply` to true. The workflow first applies
+infrastructure, then builds and pushes the Docker image to that environment's ECR repository using the commit SHA as its
+immutable tag, and finally runs Terraform again with that `image_tag` to register the API task definition and update the
+ECS service. That final apply sets the API service desired count to one; with an empty tag Terraform sets it to zero. The
+first apply also sets the service to zero, so deploying to an already-running environment causes an interruption until the
+image push and final apply complete. A push by itself does not publish or deploy an application image.
 
-The ECS service task definition and desired count are owned by the deploy workflow after initial creation, so later
-Terraform applies do not revert the deployed image or scale the service back to zero.
+Terraform manages the ECS task definition and desired count; there is no `ignore_changes` override. Consequently, an
+independent Terraform apply without an `image_tag` plans the empty image tag and desired count zero. Pass the intended image
+tag for applies that should keep the API running. Configure the GitHub Environment secrets and variables required by the
+workflows, protect production deployment access, and do not store credentials in repository variables or Terraform state.
+The Terraform provisioner credentials must authorize infrastructure operations; the separate deploy IAM user created by
+the module is scoped to ECR publishing and ECS deployment. `AWS_REGION` and `AWS_TF_BACKEND_BUCKET` are configured as
+GitHub Environment variables. SES sender verification and production sending access must be completed in AWS before email
+delivery is expected to work.
 See [the AWS operations runbook](docs/deployment/aws-migration-runbook.md) for data migration, cutover, AWS rollback,
 and legacy-resource cleanup requirements.
 
