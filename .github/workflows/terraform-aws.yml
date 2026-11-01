@@ -77,7 +77,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [dev, qa, prod]
+        environment: [ dev, qa, prod ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -169,16 +169,17 @@ jobs:
             -backend-config="bucket=${AWS_TF_BACKEND_BUCKET}" \
             -backend-config="region=${AWS_REGION}"
 
-      - name: Terraform Plan
+      - name: Terraform Plan with Image
+        if: inputs.image_tag != ''
         run: |
-          desired_count=0
-          if [[ -n "$DEPLOY_IMAGE_TAG" ]]; then
-            desired_count=1
-          fi
-
           terraform plan -input=false -no-color -out=tfplan \
             -var="image_tag=$DEPLOY_IMAGE_TAG" \
-            -var="desired_count=$desired_count"
+            -var="desired_count=1"
+
+      - name: Terraform Plan no Image
+        if: inputs.image_tag == ''
+        run: |
+          terraform plan -input=false -no-color -out=tfplan
 
       - name: Terraform Apply
         if: inputs.operation == 'apply' && inputs.confirm_apply == true
