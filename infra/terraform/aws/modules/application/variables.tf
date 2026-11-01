@@ -118,7 +118,7 @@ variable "api_domain_name" {
   default     = ""
 
   validation {
-    condition     = var.api_domain_name != "" || var.environment == "dev"
+    condition     = var.api_domain_name != "" || var.environment == "dev" || var.environment == "dev-cli"
     error_message = "api_domain_name is required outside the dev environment."
   }
 }
