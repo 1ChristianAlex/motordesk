@@ -434,8 +434,8 @@ resource "aws_eks_cluster" "main" {
   vpc_config {
     subnet_ids              = aws_subnet.app[*].id
     endpoint_private_access = true
-    endpoint_public_access  = length(var.eks_public_access_cidrs) > 0
-    public_access_cidrs     = coalescelist(var.eks_public_access_cidrs, ["127.0.0.1/32"])
+    endpoint_public_access  = true
+    public_access_cidrs     = ["0.0.0.0/0"]
   }
 
   depends_on = [

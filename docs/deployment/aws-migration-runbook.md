@@ -11,8 +11,9 @@ workloads and add-ons. It does not execute AWS operations, migrate database cont
 - `infra/kubernetes/helm` pins and installs AWS Load Balancer Controller, External Secrets Operator, Metrics Server,
   Cluster Autoscaler and optional ExternalDNS.
 - The workflow uses a GitHub-hosted `ubuntu-latest` runner with AWS CLI, Docker, Terraform, kubectl, Helm, envsubst and
-  curl. During an approved deployment, Terraform temporarily enables the EKS public endpoint for only that runner's
-  public IPv4 `/32`; a cleanup step restores private-only access.
+  curl. The EKS API endpoint is public and permits all IPv4 addresses so the runner can reach it without a fixed egress
+  IP. IAM authentication and EKS authorization are still required. This unrestricted network access is for study use;
+  restrict the endpoint CIDRs before production.
 
 Before deploying, confirm the AWS account/region, environment, state bucket, GitHub Environment protections, quotas and
 budget. Configure `AWS_REGION`, `AWS_TF_BACKEND_BUCKET`, `API_DOMAIN_NAME`, `ROUTE53_ZONE_ID` and `SES_FROM_ADDRESS` as

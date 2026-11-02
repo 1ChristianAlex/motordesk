@@ -101,12 +101,6 @@ variable "eks_kubernetes_version" {
   default     = "1.35"
 }
 
-variable "eks_public_access_cidrs" {
-  description = "IPv4 CIDRs allowed to reach the EKS public API endpoint. Empty disables public endpoint access."
-  type        = list(string)
-  default     = []
-}
-
 variable "ses_from_address" {
   description = "Email identity verified in Amazon SES for this AWS account and region."
   type        = string
