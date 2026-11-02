@@ -558,7 +558,7 @@ src/main/resources/secrets.properties.example
 Never commit real credentials.
 
 For AWS SES, configure `aws.region` and `aws.ses.from-address` in local development and use the standard AWS SDK
-credential chain. Production workloads use the ECS task role; do not configure static AWS keys.
+credential chain. Production workloads use EKS Pod Identity; do not configure static AWS keys in application pods.
 
 ---
 

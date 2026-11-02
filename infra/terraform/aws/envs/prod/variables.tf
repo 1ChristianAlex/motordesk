@@ -4,19 +4,24 @@ variable "aws_region" {
   default     = "us-east-2"
 }
 
+variable "terraform_state_bucket" {
+  description = "S3 bucket used to store AWS and Kubernetes Terraform state."
+  type        = string
+}
+
 variable "ses_from_address" {
   description = "Sender identity verified in Amazon SES."
   type        = string
-  default     = "christian.alexsander@outlook.com"
 }
 
 variable "api_domain_name" {
-  description = "DNS name used for the API and its ACM certificate."
+  description = "Optional DNS name used for the API and its ACM certificate."
   type        = string
+  default     = ""
 }
 
 variable "route53_zone_id" {
-  description = "Optional Route 53 hosted zone ID; leave empty to manage the DNS record externally."
+  description = "Optional Route 53 hosted zone ID for API certificate validation and DNS management."
   type        = string
   default     = ""
 }
@@ -27,10 +32,6 @@ variable "mongo_database" {
 }
 
 variable "mongo_options" {
-  type    = string
-  default = ""
-}
-variable "image_tag" {
   type    = string
   default = ""
 }
