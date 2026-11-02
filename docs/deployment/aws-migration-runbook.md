@@ -70,6 +70,12 @@ If an `ExternalSecret` does not become Ready, inspect its conditions and events 
 `motordesk-parameters`, verify that the SSM parameter names under the configured prefix exist and that the External
 Secrets Pod Identity role allows `ssm:GetParameter` and `ssm:GetParameters` on every referenced parameter ARN.
 
+The AWS Load Balancer Controller Helm release preserves its webhook TLS Secret across upgrades. The deployment script
+rolls the controller when that certificate changes and verifies the webhook endpoint before applying workloads. If the
+admission webhook reports a TLS CA verification error, inspect the `aws-load-balancer-webhook` configuration, the
+`aws-load-balancer-tls` Secret and controller logs in `kube-system`; do not delete the Secret or disable webhook
+validation as a workaround.
+
 ## Post-deployment checks
 
 - API `/health`, authentication and representative Service Order operations;

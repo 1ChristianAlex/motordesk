@@ -44,16 +44,45 @@ helm upgrade --install metrics-server metrics-server/metrics-server \
   --wait \
   --timeout 10m
 
-helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller \
-  --version "$AWS_LOAD_BALANCER_CONTROLLER_CHART_VERSION" \
-  --namespace kube-system \
-  --set clusterName="$EKS_CLUSTER_NAME" \
-  --set region="$AWS_REGION" \
-  --set vpcId="$EKS_VPC_ID" \
-  --set serviceAccount.create=true \
-  --set serviceAccount.name=aws-load-balancer-controller \
-  --wait \
+webhook_cert_hash=""
+webhook_cert_data="$(
+  kubectl get secret aws-load-balancer-tls --namespace kube-system \
+    --ignore-not-found --output=jsonpath='{.data.ca\.crt}{.data.tls\.crt}'
+)"
+if [[ -n "$webhook_cert_data" ]]; then
+  webhook_cert_hash="$(printf '%s' "$webhook_cert_data" | sha256sum | cut -d ' ' -f 1)"
+fi
+unset webhook_cert_data
+
+lbc_helm_args=(
+  --version "$AWS_LOAD_BALANCER_CONTROLLER_CHART_VERSION"
+  --namespace kube-system
+  --set "clusterName=$EKS_CLUSTER_NAME"
+  --set "region=$AWS_REGION"
+  --set "vpcId=$EKS_VPC_ID"
+  --set serviceAccount.create=true
+  --set serviceAccount.name=aws-load-balancer-controller
+  --set keepTLSSecret=true
+  --wait
   --timeout 10m
+)
+if [[ -n "$webhook_cert_hash" ]]; then
+  lbc_helm_args+=(--set-string "podAnnotations.webhook-cert-sha256=$webhook_cert_hash")
+fi
+helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  "${lbc_helm_args[@]}"
+
+if ! kubectl wait \
+  --for=jsonpath='{.subsets[0].addresses[0].ip}' \
+  endpoints/aws-load-balancer-webhook-service \
+  --namespace kube-system --timeout=5m; then
+  echo "::error::AWS Load Balancer Controller webhook has no ready endpoints; collecting diagnostics."
+  kubectl get deployment,pods,services,endpoints -n kube-system -o wide || true
+  kubectl describe mutatingwebhookconfiguration aws-load-balancer-webhook || true
+  kubectl logs deployment/aws-load-balancer-controller -n kube-system --all-containers=true --tail=100 || true
+  kubectl get events -n kube-system --sort-by=.lastTimestamp | tail -n 40 || true
+  exit 1
+fi
 
 helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler \
   --version "$CLUSTER_AUTOSCALER_CHART_VERSION" \

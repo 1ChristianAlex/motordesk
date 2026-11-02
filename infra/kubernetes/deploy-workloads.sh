@@ -21,6 +21,14 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR="$SCRIPT_DIR/base"
 
 kubectl apply -f "$BASE_DIR/namespace.yaml"
+if ! kubectl create service clusterip motordesk-webhook-preflight \
+  --tcp=80:80 --namespace motordesk --dry-run=server >/dev/null; then
+  echo "::error::AWS Load Balancer Controller admission webhook preflight failed."
+  kubectl describe mutatingwebhookconfiguration aws-load-balancer-webhook || true
+  kubectl logs deployment/aws-load-balancer-controller --namespace kube-system \
+    --all-containers=true --tail=100 || true
+  exit 1
+fi
 envsubst '${MONGO_OPTIONS}' < "$BASE_DIR/api-configmap.yaml.tpl" | kubectl apply -f -
 kubectl apply -f "$BASE_DIR/aws-serviceaccounts.yaml"
 
