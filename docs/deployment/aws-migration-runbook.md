@@ -65,6 +65,11 @@ If MongoDB will not start, stop API writes, preserve the EFS filesystem/access p
 and follow the tested restore/reconciliation procedure. If deployment fails between AWS and Kubernetes steps, inspect the
 AWS plan/state and cluster before retrying.
 
+If an `ExternalSecret` does not become Ready, inspect its conditions and events with `kubectl describe externalsecret
+<name> -n motordesk`, then check the referenced `SecretStore` and the External Secrets controller logs. For
+`motordesk-parameters`, verify that the SSM parameter names under the configured prefix exist and that the External
+Secrets Pod Identity role allows `ssm:GetParameter` and `ssm:GetParameters` on every referenced parameter ARN.
+
 ## Post-deployment checks
 
 - API `/health`, authentication and representative Service Order operations;

@@ -27,10 +27,21 @@ kubectl apply -f "$BASE_DIR/aws-serviceaccounts.yaml"
 envsubst < "$BASE_DIR/secrets.yaml.tpl" | kubectl apply -f -
 envsubst < "$BASE_DIR/mongo-pv.yaml.tpl" | kubectl apply -f -
 
-kubectl wait --for=condition=Ready externalsecret/motordesk-runtime \
-  --namespace motordesk --timeout=5m
-kubectl wait --for=condition=Ready externalsecret/motordesk-parameters \
-  --namespace motordesk --timeout=5m
+wait_for_external_secret() {
+  local name="$1"
+  local store="$2"
+  if ! kubectl wait --for=condition=Ready "externalsecret/$name" \
+    --namespace motordesk --timeout=5m; then
+    echo "::error::ExternalSecret $name did not become Ready; collecting diagnostics."
+    kubectl describe externalsecret "$name" --namespace motordesk || true
+    kubectl describe secretstore "$store" --namespace motordesk || true
+    kubectl get events --namespace motordesk --sort-by=.lastTimestamp | tail -n 40 || true
+    exit 1
+  fi
+}
+
+wait_for_external_secret motordesk-runtime aws-secrets-manager
+wait_for_external_secret motordesk-parameters aws-parameter-store
 
 kubectl apply -f "$BASE_DIR/mongo.yaml"
 kubectl rollout status statefulset/mongo --namespace motordesk --timeout=15m

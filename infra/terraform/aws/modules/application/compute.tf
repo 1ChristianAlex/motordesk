@@ -360,6 +360,7 @@ resource "aws_iam_role_policy" "external_secrets" {
         Effect = "Allow"
         Action = ["ssm:GetParameter", "ssm:GetParameters"]
         Resource = [
+          aws_ssm_parameter.aws_region.arn,
           aws_ssm_parameter.ses_from_address.arn,
           aws_ssm_parameter.jwt_issuer.arn,
           aws_ssm_parameter.jwt_audience.arn,
