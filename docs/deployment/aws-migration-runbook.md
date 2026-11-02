@@ -65,6 +65,11 @@ If MongoDB will not start, stop API writes, preserve the EFS filesystem/access p
 and follow the tested restore/reconciliation procedure. If deployment fails between AWS and Kubernetes steps, inspect the
 AWS plan/state and cluster before retrying.
 
+If the deployment waits for `statefulset/mongo` to become ready, inspect `kubectl get pods,pvc -n motordesk -o wide`,
+`kubectl describe pod mongo-0 -n motordesk` and `kubectl describe pvc data-mongo-0 -n motordesk`. Pod events distinguish
+scheduling, image-pull and EFS mount failures; if the pod is running, check MongoDB readiness probe results and container
+logs. Verify the EFS CSI controller is healthy before changing or deleting the retained PV/PVC.
+
 If an `ExternalSecret` does not become Ready, inspect its conditions and events with `kubectl describe externalsecret
 <name> -n motordesk`, then check the referenced `SecretStore` and the External Secrets controller logs. For
 `motordesk-parameters`, verify that the SSM parameter names under the configured prefix exist and that the External

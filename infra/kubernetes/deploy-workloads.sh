@@ -52,7 +52,15 @@ wait_for_external_secret motordesk-runtime aws-secrets-manager
 wait_for_external_secret motordesk-parameters aws-parameter-store
 
 kubectl apply -f "$BASE_DIR/mongo.yaml"
-kubectl rollout status statefulset/mongo --namespace motordesk --timeout=15m
+if ! kubectl rollout status statefulset/mongo --namespace motordesk --timeout=15m; then
+  echo "::error::MongoDB StatefulSet did not become ready; collecting diagnostics."
+  kubectl get pods,pvc -n motordesk -o wide || true
+  kubectl describe pod mongo-0 -n motordesk || true
+  kubectl describe pvc data-mongo-0 -n motordesk || true
+  kubectl describe pv mongo-efs-pv || true
+  kubectl get events -n motordesk --sort-by=.lastTimestamp | tail -n 40 || true
+  exit 1
+fi
 
 kubectl apply -f "$BASE_DIR/api.yaml"
 kubectl set image deployment/motordesk-api \
