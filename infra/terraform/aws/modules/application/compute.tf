@@ -472,7 +472,7 @@ resource "aws_eks_cluster" "main" {
 
 resource "aws_eks_node_group" "api" {
   cluster_name    = aws_eks_cluster.main.name
-  node_group_name = "${local.eks_cluster_name}-api"
+  node_group_name = "${local.eks_cluster_name}-api-m7i-flex"
   node_role_arn   = aws_iam_role.eks_nodes.arn
   subnet_ids      = aws_subnet.app[*].id
   instance_types  = [local.eks_node_scaling.instance_type]
@@ -487,7 +487,8 @@ resource "aws_eks_node_group" "api" {
   }
 
   lifecycle {
-    ignore_changes = [scaling_config[0].desired_size]
+    create_before_destroy = true
+    ignore_changes        = [scaling_config[0].desired_size]
   }
 
   update_config {

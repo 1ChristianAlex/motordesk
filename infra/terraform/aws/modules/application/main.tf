@@ -22,9 +22,9 @@ locals {
   eks_cluster_name   = "${var.project_name}-${var.environment}"
   eks_node_scaling = {
     min_size      = 1
-    max_size      = 1
-    desired_size  = 1
-    instance_type = "t8i.small"
+    max_size      = 4
+    desired_size  = 4
+    instance_type = "m7i-flex.large"
   }
 }
 
