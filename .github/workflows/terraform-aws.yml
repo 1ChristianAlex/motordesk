@@ -3,19 +3,27 @@ name: Terraform AWS Validation
 on:
   pull_request:
     paths:
-      - "infra/terraform/aws/**"
+      - "infra/terraform/**"
+      - "infra/kubernetes/**"
+      - ".github/scripts/**"
+      - ".github/workflows/deploy-eks.yml"
       - ".github/workflows/terraform-aws.yml"
   push:
     branches:
       - dev
       - main
     paths:
-      - "infra/terraform/aws/**"
+      - "infra/terraform/**"
+      - "infra/kubernetes/**"
+      - ".github/scripts/**"
+      - ".github/workflows/deploy-eks.yml"
       - ".github/workflows/terraform-aws.yml"
-  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  validate:
+  validate-aws:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -41,3 +49,20 @@ jobs:
       - name: Terraform Validate
         working-directory: infra/terraform/aws/envs/${{ matrix.environment }}
         run: terraform validate -no-color
+
+  validate-kubernetes-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Validate Kubernetes YAML and deployment scripts
+        run: |
+          bun .github/scripts/validate-kubernetes-yaml.js
+          bash -n infra/kubernetes/deploy-workloads.sh
+          bash -n infra/kubernetes/helm/install-addons.sh

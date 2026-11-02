@@ -19,6 +19,16 @@ variable "environment" {
   }
 }
 
+variable "terraform_state_bucket" {
+  description = "S3 state bucket used by the environment-specific Kubernetes Terraform roots."
+  type        = string
+}
+
+variable "terraform_state_prefix" {
+  description = "Prefix of the environment-specific Terraform state objects."
+  type        = string
+}
+
 variable "vpc_cidr" {
   type    = string
   default = "10.40.0.0/16"
@@ -85,46 +95,25 @@ variable "apply_database_changes_immediately" {
   default = false
 }
 
-variable "task_cpu" {
-  type    = number
-  default = 512
-}
-
-variable "task_memory" {
-  type    = number
-  default = 1024
-}
-
-variable "desired_count" {
-  description = "Keep at zero until an image has been pushed to ECR."
-  type        = number
-  default     = 0
-}
-
-variable "image_tag" {
-  type    = string
-  default = ""
+variable "eks_kubernetes_version" {
+  description = "Kubernetes minor version for the EKS cluster. Upgrade the control plane and managed node group deliberately."
+  type        = string
+  default     = "1.35"
 }
 
 variable "ses_from_address" {
   description = "Email identity verified in Amazon SES for this AWS account and region."
   type        = string
-  default     = "christian.alexsander@outlook.com"
 }
 
 variable "api_domain_name" {
-  description = "DNS name used for the API and its ACM certificate."
+  description = "Optional DNS name used for the API and its ACM certificate."
   type        = string
   default     = ""
-
-  validation {
-    condition     = var.api_domain_name != "" || var.environment == "dev"
-    error_message = "api_domain_name is required outside the dev environment."
-  }
 }
 
 variable "route53_zone_id" {
-  description = "Optional Route 53 hosted zone ID for an alias record."
+  description = "Optional Route 53 hosted zone ID for API certificate validation and DNS management."
   type        = string
   default     = ""
 }

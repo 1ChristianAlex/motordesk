@@ -1,6 +1,6 @@
 # ADR-007 — Migrate Infrastructure from Microsoft Azure to AWS
 
-- **Status:** Accepted — the repository and application are AWS-only. Provisioning, live data migration, and cleanup of resources outside this repository remain operational tasks.
+- **Status:** Accepted — the AWS cloud-provider decision remains in effect; the ECS runtime decision was superseded by [ADR-008](ADR-008-Amazon-EKS-Runtime.md).
 - **Date:** 2026-10-22
 - **Decision:** Migrate Motor Desk cloud infrastructure from Microsoft Azure to Amazon Web Services (AWS), keeping Terraform as the Infrastructure as Code (IaC) tool.
 
@@ -27,6 +27,9 @@ The project therefore requires a reassessment of the cloud provider while preser
 ## Decision
 
 AWS was selected as the target cloud provider for Motor Desk, while Terraform will remain the Infrastructure as Code tool.
+
+The ECS/Fargate runtime and MongoDB deployment described below record the original 2026-10-22 decision and are historical.
+ADR-008 supersedes that runtime choice with EKS, Kubernetes YAML and Helm; the AWS provider migration decision remains.
 
 The application, infrastructure-as-code roots, and deployment workflows in this repository target AWS exclusively.
 The former Azure adapters, Terraform roots, backend configuration, and deployment workflows have been removed. This

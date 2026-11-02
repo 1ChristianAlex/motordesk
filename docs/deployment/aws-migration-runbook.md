@@ -1,72 +1,96 @@
 # AWS deployment and operations runbook
 
-The repository and application now target AWS only. This runbook covers AWS provisioning, migration of any retained
-source data, deployment, and AWS-native rollback. It does not destroy cloud resources or manipulate legacy state.
+This runbook covers the EKS-only runtime. Terraform provisions AWS infrastructure; Kubernetes YAML and Helm manage EKS
+workloads and add-ons. It does not execute AWS operations, migrate database contents, or restore backups by itself.
 
-## Before provisioning
+## Ownership and prerequisites
 
-- Confirm AWS account, region, quotas, budget, ownership, and an authorized bootstrap identity.
-- Confirm the organization SCP permits creating the dedicated IAM deploy users, their inline policies, and access keys.
-  SCP denials cannot be overridden by granting broader IAM permissions in the account.
-- Verify the ACM certificate covers the chosen API hostname. Verify its DNS challenge and the SES sender identity
-  separately; SES may also be restricted to sandbox recipients.
-- Decide the DNS ownership, desired retention, recovery point objective, recovery time objective, and approved rollback
-  window for each environment.
-- Review the Terraform plan for public endpoints, data retention, NAT gateway charges, database sizing, IAM permissions,
-  and security-group changes. Terraform state contains generated database, Redis, and JWT credentials; protect both
-  remote and any temporary local state as sensitive data.
-- The backend bootstrap initially uses a local state file. Keep that file out of Git and store a protected backup.
+- `infra/terraform/aws/envs/{dev,qa,prod}` provisions the VPC, EKS and node group, ECR, EFS, databases, IAM, secrets,
+  ACM and related AWS services.
+- `infra/kubernetes/base` contains Kubernetes YAML for API, MongoDB, ingress, scaling, ConfigMaps and External Secrets.
+- `infra/kubernetes/helm` pins and installs AWS Load Balancer Controller, External Secrets Operator, Metrics Server,
+  Cluster Autoscaler and optional ExternalDNS.
+- The workflow uses a GitHub-hosted `ubuntu-latest` runner with AWS CLI, Docker, Terraform, kubectl, Helm, envsubst and
+  curl. The EKS API endpoint is public and permits all IPv4 addresses so the runner can reach it without a fixed egress
+  IP. IAM authentication and EKS authorization are still required. This unrestricted network access is for study use;
+  restrict the endpoint CIDRs before production.
 
-## Service compatibility
+Before deploying, confirm the AWS account/region, environment, state bucket, GitHub Environment protections, quotas and
+budget. Configure `AWS_REGION`, `AWS_TF_BACKEND_BUCKET`, `API_DOMAIN_NAME`, `ROUTE53_ZONE_ID` and `SES_FROM_ADDRESS` as
+GitHub Environment variables. Provisioning and EKS deploy credentials are separate; keep them protected and do not store
+credentials in repository variables or source control.
 
-The AWS module runs a single self-managed MongoDB task on ECS Fargate, stores its data on encrypted EFS, and injects
-generated credentials from Secrets Manager. MongoDB is private to the VPC and is not a managed database service; it has
-no replica or task-level failover. Before using production data, test history reads/writes, BSON mappings, ordering,
-EFS behavior and performance, and the configured backup/restore procedure. Do not assume the local Compose volume
-contains or backs up the AWS data.
+## First EKS-only migration
 
-ElastiCache Redis is configured with TLS and an auth token. Verify Redis Streams commands, consumer group creation,
-pending-entry handling, acknowledgements, retries, and worker behavior using the selected engine version. Redis remains
-transport/cache; PostgreSQL remains the transactional source of truth.
+1. Verify a recent EFS recovery point and a completed restore rehearsal. Confirm the current MongoDB data on EFS is
+   authoritative and that no second writer will use the same directory.
+2. Dispatch `Deploy EKS Runtime` for the target environment with `confirm_apply=false` to inspect the AWS plan.
+3. Confirm the plan removes legacy ECS, API Gateway and Terraform-managed NLB resources, but does not replace or destroy
+   the EFS filesystem/access point, RDS, Redis or unrelated data.
+4. Approve a maintenance window and dispatch again with both `confirm_apply=true` and `confirm_data_cutover=true`.
+5. The workflow applies AWS Terraform, installs pinned Helm add-ons, applies Kubernetes YAML, and checks workload and API
+   health. The API is unavailable between removing API Gateway and the Ingress ALB becoming healthy.
 
-## Data migration rehearsal
+The EKS deploy IAM user has ECR push/describe and EKS access. Its EKS access entry currently grants cluster-admin; protect
+the credentials and restrict that scope as a follow-up hardening measure.
 
-1. Identify any retained source data and record database versions, sizes, indexes, extensions, users, encoding, and
-   backup/retention policies.
-2. Take and verify recoverable source PostgreSQL and MongoDB backups. Perform a restore rehearsal before relying on them.
-3. Provision an isolated AWS environment and restore copies of the data there. Validate row/document counts, constraints,
-   sequences, indexes, application reads/writes, Service Order history, and the email queue state.
-4. Prefer a native replication or managed migration path only after its compatibility and consistency guarantees are
-   confirmed. Otherwise agree on a maintenance window and use a tested export/import procedure with writes paused.
-5. Treat Redis Streams separately: identify queued and pending messages, pause producers and consumers, and drain or
-   explicitly reconcile the stream. Do not assume a cache dump is a safe source of business data.
-6. Record the exact restore commands, expected duration, checksums/counts, and responsible operators without placing
-   credentials or sensitive dumps in the repository.
+## API ingress and DNS
 
-## AWS cutover
+The AWS Load Balancer Controller reconciles `infra/kubernetes/base/ingress.yaml` into an internet-facing ALB. When
+`api_domain_name` and `route53_zone_id` are both optional in every environment. Without a custom domain, use the ALB
+hostname. When both values are configured, Terraform creates the ACM DNS validation record and ExternalDNS manages the
+Ingress alias. If a custom domain is used without a hosted zone, manage ACM validation and the ALB alias externally.
 
-1. Announce a write freeze and confirm that backups and restore points are current.
-2. Pause the source-side email workers/producers as appropriate; prevent both environments from processing the same queue.
-3. Perform the final PostgreSQL and MongoDB synchronization and reconcile Redis pending messages using the rehearsed
-   procedure.
-4. Deploy the tested application image to ECS and validate `/health`, authentication, representative Service Order
-   operations, PostgreSQL persistence, MongoDB history, Redis Streams, and SES delivery.
-5. Switch DNS to the AWS ALB only after the new endpoint passes smoke checks.
-6. Monitor API errors/latency, ECS task health, ALB target health, database connections/storage, Redis stream pending
-   entries, CloudWatch logs, and SES delivery/bounce signals through the agreed rollback window.
+ALB ingress requires the public subnet discovery tags created by Terraform. The controller is configured with region and
+VPC ID explicitly rather than relying on pod access to EC2 instance metadata.
 
-## AWS rollback
+## MongoDB data safety
 
-- Roll back to the last known-good ECS task-definition revision while preserving the AWS database state.
-- If AWS has accepted writes and a data restore is needed, freeze writes and follow the tested AWS restore/reconciliation
-  procedure before resuming service.
-- Avoid split-brain processing: at any point, only one environment should own business writes and each queued email
-  should have one active consumer path.
-- Record the failure, data reconciliation, and recovery decision.
+The MongoDB StatefulSet mounts the existing EFS access point at `/mongo` into `/data/db`. The static CSI PV uses reclaim
+policy `Retain`; Terraform protects the filesystem and access point with `prevent_destroy`. Never run two MongoDB writers
+against the same data directory.
 
-## Completion and decommissioning
+Before migration or recovery, stop/isolate all MongoDB writers, verify the recovery point, wait for the MongoDB pod to stop
+before restoring or mounting the filesystem elsewhere, and reconcile writes accepted since the recovery point. EFS is
+persistent storage, not database replication or a backup replacement. MongoDB remains a single replica.
 
-Remove any legacy cloud resources and credentials through their owning cloud account only after confirming that data has
-been migrated, backups are restorable, traffic and workers have moved, and no consumers remain. The old provider's
-Terraform configuration has been removed from this repository, so decommissioning those external resources requires a
-separately reviewed, account-authorized procedure. The code change does not delete remote resources or state.
+## Regular deployment and rollback
+
+Dispatch `Deploy EKS Runtime` with `confirm_apply=true` only after reviewing the printed AWS plan. The workflow builds and
+pushes the commit-SHA image, installs Helm add-ons, applies Kubernetes manifests and checks API/MongoDB health. For a
+failed application release, deploy the previous known-good immutable image tag. Do not scale MongoDB beyond one replica or
+delete the PV/PVC as an application rollback.
+
+If MongoDB will not start, stop API writes, preserve the EFS filesystem/access point, inspect pod events and EFS CSI logs,
+and follow the tested restore/reconciliation procedure. If deployment fails between AWS and Kubernetes steps, inspect the
+AWS plan/state and cluster before retrying.
+
+If the deployment waits for `statefulset/mongo` to become ready, inspect `kubectl get pods,pvc -n motordesk -o wide`,
+`kubectl describe pod mongo-0 -n motordesk` and `kubectl describe pvc data-mongo-0 -n motordesk`. Pod events distinguish
+scheduling, image-pull and EFS mount failures; if the pod is running, check MongoDB readiness probe results and container
+logs. MongoDB opts out of CloudWatch and OpenTelemetry language auto-instrumentation because those agents do not apply to
+the MongoDB server; after applying the manifest, confirm the Pod has no injected instrumentation init containers. Verify
+the EFS CSI controller is healthy before changing or deleting the retained PV/PVC.
+
+If an `ExternalSecret` does not become Ready, inspect its conditions and events with `kubectl describe externalsecret
+<name> -n motordesk`, then check the referenced `SecretStore` and the External Secrets controller logs. For
+`motordesk-parameters`, verify that the SSM parameter names under the configured prefix exist and that the External
+Secrets Pod Identity role allows `ssm:GetParameter` and `ssm:GetParameters` on every referenced parameter ARN.
+
+The AWS Load Balancer Controller Helm release preserves its webhook TLS Secret across upgrades. The deployment script
+rolls the controller when that certificate changes and verifies the webhook endpoint before applying workloads. If the
+admission webhook reports a TLS CA verification error, inspect the `aws-load-balancer-webhook` configuration, the
+`aws-load-balancer-tls` Secret and controller logs in `kube-system`; do not delete the Secret or disable webhook
+validation as a workaround.
+
+## Post-deployment checks
+
+- API `/health`, authentication and representative Service Order operations;
+- PostgreSQL reads/writes and connection limits;
+- MongoDB history reads/writes and persistence across pod replacement;
+- Redis Streams and SES delivery;
+- ExternalSecret readiness and refresh;
+- API HPA, Cluster Autoscaler bounds, ALB target health and CloudWatch logs.
+
+PostgreSQL remains Single-AZ, Redis automatic failover remains disabled, and the application currently receives the RDS
+master username/password. Replace it with a least-privilege application role before production use.

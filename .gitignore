@@ -89,3 +89,4 @@ buildSrc/build/
 !/.gitignore
 
 infra/terraform/azure/az-secrets.json
+infra/terraform/secret-cookbook.md
