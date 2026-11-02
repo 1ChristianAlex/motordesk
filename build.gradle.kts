@@ -67,6 +67,9 @@ dependencies {
     implementation(ktorLibs.server.resources)
     implementation(ktorLibs.server.statusPages)
 
+    // Telemetry
+    implementation(libs.bundles.observability)
+
     // Ktor docs
     implementation(ktorLibs.server.openapi)
     implementation(ktorLibs.server.routingOpenapi)
@@ -74,7 +77,6 @@ dependencies {
 
     // Validation
     implementation(libs.konform)
-    implementation(libs.logback.classic)
 
     // Security / utility
     implementation(libs.argon2)
@@ -117,9 +119,16 @@ tasks.register<JavaExec>("runDev") {
 
     classpath = runTask.classpath
     mainClass.set(runTask.mainClass)
-    args = runTask.args ?: emptyList()
+    args = runTask.args
 
-    jvmArgs = (runTask.jvmArgs ?: emptyList()) + "-Dio.ktor.development=true"
+    jvmArgs = runTask.jvmArgs +
+        buildList {
+            add("-Dotel.java.global-autoconfigure.enabled=true")
+            add("-Dio.ktor.development=true")
+            add("-Dotel.traces.exporter=otlp")
+            add("-Dotel.exporter.otlp.protocol=grpc")
+            add("-Dotel.exporter.otlp.endpoint=http://localhost:4317")
+        }
 }
 
 tasks.jacocoTestReport {

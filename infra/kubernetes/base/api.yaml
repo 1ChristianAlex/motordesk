@@ -51,6 +51,8 @@ spec:
                 name: motordesk-runtime
             - secretRef:
                 name: motordesk-parameters
+            - secretRef:
+                name: motordesk-observability
           startupProbe:
             httpGet:
               path: /health

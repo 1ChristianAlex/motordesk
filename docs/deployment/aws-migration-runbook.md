@@ -17,8 +17,10 @@ workloads and add-ons. It does not execute AWS operations, migrate database cont
 
 Before deploying, confirm the AWS account/region, environment, state bucket, GitHub Environment protections, quotas and
 budget. Configure `AWS_REGION`, `AWS_TF_BACKEND_BUCKET`, `API_DOMAIN_NAME`, `ROUTE53_ZONE_ID` and `SES_FROM_ADDRESS` as
-GitHub Environment variables. Provisioning and EKS deploy credentials are separate; keep them protected and do not store
-credentials in repository variables or source control.
+GitHub Environment variables. Configure `NEW_RELIC_LICENSE_KEY` as a GitHub Environment secret for each environment;
+the deploy workflow injects it into a Kubernetes Secret for the API, while the other OpenTelemetry exporter settings are
+provided through the API ConfigMap. Provisioning and EKS deploy credentials are separate; keep them protected and do not
+store credentials in repository variables or source control.
 
 ## First EKS-only migration
 
