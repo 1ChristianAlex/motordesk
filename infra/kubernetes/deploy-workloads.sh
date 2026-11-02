@@ -110,11 +110,48 @@ if [[ -z "$ingress_hostname" ]]; then
   exit 1
 fi
 
+collect_ingress_diagnostics() {
+  echo "::group::Ingress and load balancer diagnostics"
+  kubectl describe ingress motordesk-api --namespace motordesk || true
+  kubectl get ingress,service,endpoints,endpointslices,targetgroupbindings \
+    --namespace motordesk -o wide || true
+  kubectl get events --namespace motordesk --sort-by=.lastTimestamp | tail -n 40 || true
+  kubectl logs deployment/aws-load-balancer-controller --namespace kube-system \
+    --all-containers=true --tail=150 || true
+  echo "::endgroup::"
+}
+
+echo "Waiting for the load balancer hostname to resolve: $ingress_hostname"
+dns_resolved=false
+for attempt in {1..60}; do
+  if getent ahostsv4 "$ingress_hostname" >/dev/null 2>&1; then
+    dns_resolved=true
+    break
+  fi
+  sleep 5
+done
+
+if [[ "$dns_resolved" != "true" ]]; then
+  echo "::error::The load balancer hostname did not resolve after 5 minutes: $ingress_hostname"
+  collect_ingress_diagnostics
+  exit 1
+fi
+
 if [[ -n "$API_DOMAIN_NAME" ]]; then
-  curl --fail --silent --show-error --retry 12 --retry-delay 10 --retry-connrefused \
+  if ! curl --fail --silent --show-error --retry 12 --retry-delay 10 --retry-connrefused \
+    --retry-all-errors --max-time 15 \
     --connect-to "$API_DOMAIN_NAME:443:$ingress_hostname:443" \
-    "https://$API_DOMAIN_NAME/health"
+    "https://$API_DOMAIN_NAME/health"; then
+    echo "::error::The API health check failed through the ALB."
+    collect_ingress_diagnostics
+    exit 1
+  fi
 else
-  curl --fail --silent --show-error --retry 12 --retry-delay 10 --retry-connrefused \
-    "http://$ingress_hostname/health"
+  if ! curl --fail --silent --show-error --retry 12 --retry-delay 10 --retry-connrefused \
+    --retry-all-errors --max-time 15 \
+    "http://$ingress_hostname/health"; then
+    echo "::error::The API health check failed through the ALB."
+    collect_ingress_diagnostics
+    exit 1
+  fi
 fi
