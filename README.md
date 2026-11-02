@@ -64,6 +64,7 @@ src/main/kotlin
 - [Current AWS infrastructure diagram](docs/diagrams/aws-current-infrastructure.md)
 - [AWS deployment and migration runbook](docs/deployment/aws-migration-runbook.md)
 - [Kubernetes manifests and Helm deployment](infra/kubernetes/)
+- [New Relic Kubernetes observability](infra/kubernetes/newrelic/README.md)
 - [Email Sending Sequence](docs/diagrams/send-email-sequence.md)
 - [Technical Debt - Serializable in Domain](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
 - [Business flows](docs/storytelling/)
@@ -152,6 +153,12 @@ Terraform provisions AWS infrastructure only. Kubernetes Deployments, Services, 
 External Secrets resources are YAML under `infra/kubernetes/base`; Helm installs External Secrets Operator, Metrics
 Server, AWS Load Balancer Controller and Cluster Autoscaler. EKS is the only application runtime; there are no ECS
 services or Terraform-managed Kubernetes providers.
+
+The CloudWatch Observability EKS add-on remains responsible for Kubernetes and control-plane log delivery to CloudWatch.
+The pinned New Relic `nri-bundle` Helm release collects cluster/node/workload metrics and Kubernetes events; Kubernetes
+log forwarding remains disabled to avoid duplicate collection. The backend's existing OpenTelemetry OTLP export is
+unchanged. See the [New Relic Kubernetes observability runbook](infra/kubernetes/newrelic/README.md) for deployment,
+secrets, validation and troubleshooting.
 
 The API is exposed by an internet-facing ALB created from the Kubernetes Ingress by AWS Load Balancer Controller. ACM
 provides HTTPS when `api_domain_name` is configured, and ExternalDNS manages the Route 53 alias when a hosted zone is

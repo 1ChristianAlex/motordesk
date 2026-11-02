@@ -22,7 +22,7 @@ flowchart TB
         end
 
         subgraph APP["Subnets privadas de aplicação"]
-            subgraph EKS["Amazon EKS<br/>endpoint privado"]
+            subgraph EKS["Amazon EKS<br/>endpoint público e privado"]
                 CONTROL["Control plane"]
                 NODES["Managed node group<br/>capacidade via Terraform"]
                 subgraph NS["Namespace motordesk"]
@@ -38,6 +38,8 @@ flowchart TB
                 ESO["External Secrets Operator"]
                 METRICS["Metrics Server"]
                 CA["Cluster Autoscaler"]
+                NRAGENT["New Relic Kubernetes integration<br/>namespace newrelic"]
+                CWAGENT["CloudWatch Observability<br/>EKS add-on"]
             end
         end
 
@@ -54,6 +56,8 @@ flowchart TB
     SES["Amazon SES"]
     DNS["Route 53<br/>ExternalDNS opcional"]
     ACM["ACM certificate"]
+    NR[("New Relic<br/>métricas, eventos e OTLP")]
+    CW[("CloudWatch Logs<br/>logs de workloads e control plane")]
 
     OP --> GH
     GH --> RUNNER
@@ -76,6 +80,7 @@ flowchart TB
     ES --> API
     ES --> MS
     API -->|"Pod Identity"| SES
+    API -->|"OpenTelemetry OTLP"| NR
     LBC -->|"Pod Identity"| ALB
     DNS -.->|"Ingress alias"| ALB
     ACM --> ALB
@@ -86,8 +91,13 @@ flowchart TB
     HELM --> ESO
     HELM --> METRICS
     HELM --> CA
+    HELM --> NRAGENT
+    GH -->|"sincroniza Secret"| NRAGENT
     HELM -.-> DNS
     CA -->|"ASG bounds from Terraform"| NODES
+    NRAGENT -->|"métricas e eventos"| NR
+    NODES --> CWAGENT --> CW
+    CONTROL -->|"audit/control plane logs"| CW
 
     APP --> NAT
     NAT --> IGW
@@ -98,8 +108,10 @@ flowchart TB
 
 - Terraform provisiona VPC, subnets, Security Groups, EKS, Node Groups, IAM/Pod Identity, RDS, ElastiCache, EFS, ECR e ACM.
 - YAML declara Deployments, Services, Ingress, HPA, PDB, ConfigMaps, SecretStores/ExternalSecrets e StatefulSet.
-- Helm instala AWS Load Balancer Controller, External Secrets Operator, Metrics Server, Cluster Autoscaler e, com Route 53
-  configurado, ExternalDNS.
+- Helm instala AWS Load Balancer Controller, External Secrets Operator, Metrics Server, Cluster Autoscaler, New Relic
+  Kubernetes observability e, com Route 53 configurado, ExternalDNS.
+- CloudWatch permanece como destino dos logs de workloads e control plane; New Relic coleta métricas/eventos Kubernetes e
+  recebe a telemetria OpenTelemetry já exportada pela API.
 - MongoDB reutiliza o EFS/access point existente; PV usa `Retain` e os recursos EFS têm `prevent_destroy`.
 - ALB e endpoint de domínio substituem API Gateway/NLB para o tráfego da aplicação. Verifique a janela de manutenção na
   [ADR-008](../ADR/ADR-008-Amazon-EKS-Runtime.md) e no [runbook](../deployment/aws-migration-runbook.md).
