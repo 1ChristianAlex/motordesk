@@ -50,6 +50,7 @@ src/main/kotlin
 ## Documentation
 
 - [Ubiquitous Language](docs/Ubiquitous%20Language.md)
+- [Database design — relational model, data ownership and performance](docs/database-design.md)
 - [ADR-001 - PostgreSQL + Kotlin Exposed](docs/ADR/ADR-001%20%E2%80%94%20PostgreSQL%20+%20Kotlin%20Exposed.md)
 - [ADR-002 - Redis Streams](docs/ADR/ADR-002-Redis-Streams.md)
 - [ADR-003 - MongoDB Service Order History](docs/ADR/ADR-003-MongoDB-Service-Order-History.md)

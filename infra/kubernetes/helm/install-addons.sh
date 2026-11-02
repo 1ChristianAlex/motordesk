@@ -25,6 +25,19 @@ helm upgrade --install external-secrets external-secrets/external-secrets \
   --wait \
   --timeout 10m
 
+if ! kubectl wait \
+  --for=jsonpath='{.subsets[0].addresses[0].ip}' \
+  endpoints/external-secrets-webhook \
+  --namespace external-secrets \
+  --timeout=5m; then
+  echo "::error::External Secrets webhook has no ready endpoints; collecting diagnostics."
+  kubectl get deployments,pods,services,endpoints -n external-secrets -o wide || true
+  kubectl describe deployment external-secrets-webhook -n external-secrets || true
+  kubectl logs deployment/external-secrets-webhook -n external-secrets --all-containers=true --tail=100 || true
+  kubectl get events -n external-secrets --sort-by=.lastTimestamp | tail -n 40 || true
+  exit 1
+fi
+
 helm upgrade --install metrics-server metrics-server/metrics-server \
   --version "$METRICS_SERVER_CHART_VERSION" \
   --namespace kube-system \
