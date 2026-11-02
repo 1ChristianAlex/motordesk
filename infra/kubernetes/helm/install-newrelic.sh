@@ -22,12 +22,27 @@ printf '%s' "$NEW_RELIC_EKS_LICENSE_KEY" |
   kubectl apply -f -
 unset NEW_RELIC_EKS_LICENSE_KEY
 
-helm upgrade --install newrelic-kubernetes newrelic/nri-bundle \
+collect_newrelic_diagnostics() {
+  echo "::group::New Relic Helm and Kubernetes diagnostics"
+  helm status newrelic-kubernetes --namespace newrelic || true
+  kubectl get pods,daemonsets,deployments,jobs --namespace newrelic --output=wide || true
+  kubectl get events --namespace newrelic --sort-by=.lastTimestamp | tail -n 50 || true
+
+  while IFS= read -r pod; do
+    [[ -z "$pod" ]] || kubectl describe "$pod" --namespace newrelic || true
+  done < <(kubectl get pods --namespace newrelic --output=name 2>/dev/null || true)
+  echo "::endgroup::"
+}
+
+if ! helm upgrade --install newrelic-kubernetes newrelic/nri-bundle \
   --version "$NEW_RELIC_NRI_BUNDLE_CHART_VERSION" \
   --namespace newrelic \
   --values "$VALUES_FILE" \
   --set-string "global.cluster=$EKS_CLUSTER_NAME" \
   --wait \
-  --atomic \
   --timeout 10m \
-  --history-max 10
+  --history-max 10; then
+  echo "::error::New Relic Helm release did not become ready; collecting diagnostics."
+  collect_newrelic_diagnostics
+  exit 1
+fi

@@ -59,9 +59,13 @@ removes it from the process environment before invoking Helm. The chart values r
 key; they contain no credentials. Terraform configures KMS encryption for EKS Kubernetes Secrets. The New Relic namespace
 keeps this credential separate from application Secrets; do not grant application service accounts access to it.
 
-The release is repeatable and uses Helm's atomic upgrade behavior. To upgrade, review the official chart's release notes
-and values, change `NEW_RELIC_NRI_BUNDLE_CHART_VERSION`, update this values file only with settings supported by that
-version, and run the Terraform AWS validation workflow before deploying through `Deploy EKS Runtime`.
+The release is repeatable and upgrades use Helm's normal `upgrade --install` behavior. If readiness times out, the
+installer prints the Helm status, pod/DaemonSet/deployment/job state, events and pod descriptions, then fails without
+automatically uninstalling or rolling back the release. This preserves evidence for diagnosis. A subsequent workflow
+run can retry the same release; after a failed upgrade of an existing release, inspect the reported state and roll back
+to the last known-good Helm revision if needed before retrying. To upgrade intentionally, review the official chart's
+release notes and values, change `NEW_RELIC_NRI_BUNDLE_CHART_VERSION`, update this values file only with settings
+supported by that version, and run the Terraform AWS validation workflow before deploying through `Deploy EKS Runtime`.
 
 ## Validation and operations
 
@@ -86,6 +90,10 @@ agent's logs for configuration or network errors. Do not include license-key fie
 Verify that worker nodes can reach New Relic ingestion endpoints over HTTPS and that the correct account/region license
 key was configured. Review agent resource pressure before increasing limits; low-data mode and the explicit label allowlist
 are intended to control ingestion volume and metadata exposure.
+
+If a failed install previously used Helm's `--atomic` cleanup and removed the resources, the retained namespace and
+license Secret do not identify the readiness failure. Re-run the deployment with this diagnostic-enabled installer or
+inspect the EKS cluster events and node capacity using an authorized Kubernetes context.
 
 ## Official references
 
