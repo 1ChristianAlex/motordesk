@@ -89,8 +89,8 @@ jobs:
         id: terraform_credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_TERRAFORM_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_TERRAFORM_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Plan AWS infrastructure
@@ -179,8 +179,8 @@ jobs:
         if: always() && inputs.confirm_apply && steps.terraform_credentials.outcome == 'success'
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_TERRAFORM_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_TERRAFORM_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_AgCCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Restore private-only EKS endpoint
