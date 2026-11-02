@@ -87,6 +87,7 @@ spec:
                 - --quiet
                 - --eval
                 - db.adminCommand('ping').ok
+            timeoutSeconds: 5
             periodSeconds: 5
             failureThreshold: 60
           readinessProbe:
