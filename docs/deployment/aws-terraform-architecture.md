@@ -91,7 +91,8 @@ Helm add-ons create cluster-scoped resources. Restricting that established deplo
 least-privilege change and should be planned without disrupting the other releases.
 
 See the [New Relic Kubernetes runbook](../../infra/kubernetes/newrelic/README.md) for environment selection, upgrade,
-validation, troubleshooting, retention and cost guidance.
+validation, troubleshooting, retention and cost guidance. The provider and local-development rationale is recorded in
+[ADR-009](../ADR/ADR-009-Observability-New-Relic-and-Grafana.md).
 
 ## Migration behavior
 
