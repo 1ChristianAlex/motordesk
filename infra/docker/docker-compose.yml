@@ -60,8 +60,8 @@ services:
     image: mongo:8.0.34
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:?Set MONGO_USER for the local MongoDB container}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Set MONGO_PASSWORD for the local MongoDB container}
+      MONGO_INITDB_ROOT_USERNAME: motordesk
+      MONGO_INITDB_ROOT_PASSWORD: motordesk_pass
     volumes:
       - mongo_data:/data/db
     healthcheck:

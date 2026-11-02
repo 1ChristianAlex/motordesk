@@ -15,6 +15,7 @@ set -euo pipefail
 : "${JWT_SECRET_ARN:?JWT_SECRET_ARN is required}"
 : "${MONGO_SECRET_ARN:?MONGO_SECRET_ARN is required}"
 : "${PARAMETER_STORE_PREFIX:?PARAMETER_STORE_PREFIX is required}"
+: "${NEW_RELIC_LICENSE_KEY:?NEW_RELIC_LICENSE_KEY is required}"
 export MONGO_OPTIONS="${MONGO_OPTIONS:-}"
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
@@ -30,6 +31,9 @@ if ! kubectl create service clusterip motordesk-webhook-preflight \
   exit 1
 fi
 envsubst '${MONGO_OPTIONS}' < "$BASE_DIR/api-configmap.yaml.tpl" | kubectl apply -f -
+export OTEL_EXPORTER_OTLP_HEADERS_BASE64
+OTEL_EXPORTER_OTLP_HEADERS_BASE64="$(printf 'api-key=%s' "$NEW_RELIC_LICENSE_KEY" | base64 | tr -d '\n')"
+envsubst '${OTEL_EXPORTER_OTLP_HEADERS_BASE64}' < "$BASE_DIR/observability-secret.yaml.tpl" | kubectl apply -f -
 kubectl apply -f "$BASE_DIR/aws-serviceaccounts.yaml"
 
 envsubst < "$BASE_DIR/secrets.yaml.tpl" | kubectl apply -f -

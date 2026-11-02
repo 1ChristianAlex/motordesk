@@ -60,7 +60,17 @@ fun ServiceOrderEmailMetadata.generateHtmlApprovalRequestTemplate(
                                             a(
                                                 href = approvalWebhookUrl,
                                                 target = "_blank",
-                                                style = "display:inline-block; background-color:#18181b; color:#ffffff; text-decoration:none; padding:14px 22px; border-radius:6px; font-weight:bold; font-size:15px;",
+                                                style =
+                                                    buildString {
+                                                        append("display:inline-block; ")
+                                                        append("background-color:#18181b; ")
+                                                        append("color:#ffffff; ")
+                                                        append("text-decoration:none; ")
+                                                        append("padding:14px 22px; ")
+                                                        append("border-radius:6px; ")
+                                                        append("font-weight:bold; ")
+                                                        append("font-size:15px;")
+                                                    },
                                                 text = "Aprovar ordem de serviço",
                                             )
                                         }
@@ -213,7 +223,7 @@ private fun ServiceOrderEmailMetadata.generateServiceOrderDetailsTemplate(builde
                         td(
                             align = "right",
                             style = "padding:10px 0; border-bottom:1px solid #e4e4e7; font-weight:bold;",
-                            "${task.price.toCurrency()}",
+                            task.price.toCurrency(),
                         )
                     }
                 }
@@ -239,7 +249,7 @@ private fun ServiceOrderEmailMetadata.generateServiceOrderDetailsTemplate(builde
                             td(
                                 align = "right",
                                 style = "padding:10px 0; border-bottom:1px solid #e4e4e7; font-weight:bold;",
-                                "${item.total.toCurrency()}",
+                                item.total.toCurrency(),
                             )
                         }
                     }

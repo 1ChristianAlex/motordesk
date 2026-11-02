@@ -689,8 +689,22 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
+            defs["AddressDto"] = {
+  "title" : "AddressDto",
+  "required" : [ "city", "country", "neighborhood", "number", "state", "street", "zipCode" ],
+  "properties" : {
+    "street" : { },
+    "number" : { },
+    "complement" : { },
+    "neighborhood" : { },
+    "city" : { },
+    "state" : { },
+    "country" : { },
+    "zipCode" : { }
+  }
+};
             defs["ApprovesServiceOrderInputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ApprovesServiceOrderInputDto",
+  "title" : "ApprovesServiceOrderInputDto",
   "required" : [ "code", "token" ],
   "properties" : {
     "token" : { },
@@ -698,76 +712,81 @@
   }
 };
             defs["AuthenticateOutputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.core.dto.AuthenticateOutputDto",
+  "title" : "AuthenticateOutputDto",
   "required" : [ "token", "user" ],
   "properties" : {
     "token" : { },
     "user" : {
-      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
-      "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
-      "properties" : {
-        "id" : { },
-        "addressId" : { },
-        "companyId" : { },
-        "firstName" : { },
-        "lastName" : { },
-        "email" : { },
-        "phone" : { },
-        "cpf" : { },
-        "isActive" : { },
-        "createdAt" : { },
-        "updatedAt" : { }
-      }
+      "$ref" : "#/components/schemas/UserOutputDto"
     }
   }
 };
             defs["ClientRegisterDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.ClientRegisterDto",
+  "title" : "ClientRegisterDto",
   "required" : [ "address", "user" ],
   "properties" : {
     "user" : {
-      "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.CreateUserDto",
-      "required" : [ "cpf", "email", "firstName", "lastName", "password", "phone" ],
-      "properties" : {
-        "firstName" : { },
-        "lastName" : { },
-        "email" : { },
-        "phone" : { },
-        "password" : { },
-        "cpf" : { },
-        "role" : {
-          "enum" : [ "ADMIN", "CLIENT", "MANAGER", "ENGINEER" ]
-        }
-      }
+      "$ref" : "#/components/schemas/CreateUserDto"
     },
     "address" : {
-      "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.AddressDto",
-      "required" : [ "city", "country", "neighborhood", "number", "state", "street", "zipCode" ],
-      "properties" : {
-        "street" : { },
-        "number" : { },
-        "complement" : { },
-        "neighborhood" : { },
-        "city" : { },
-        "state" : { },
-        "country" : { },
-        "zipCode" : { }
-      }
+      "$ref" : "#/components/schemas/AddressDto"
     },
     "company" : {
-      "oneOf" : [ {
-        "title" : "com.khrix.adapter.inbound.http.controllers.register.resources.dto.CompanyDto",
-        "required" : [ "cnpj", "name" ],
-        "properties" : {
-          "cnpj" : { },
-          "name" : { }
-        }
-      }, { } ]
+      "$ref" : "#/components/schemas/CompanyDto"
     }
   }
 };
+            defs["CompanyDto"] = {
+  "title" : "CompanyDto",
+  "required" : [ "cnpj", "name" ],
+  "properties" : {
+    "cnpj" : { },
+    "name" : { }
+  }
+};
+            defs["CreateUserDto"] = {
+  "title" : "CreateUserDto",
+  "required" : [ "cpf", "email", "firstName", "lastName", "password", "phone" ],
+  "properties" : {
+    "firstName" : { },
+    "lastName" : { },
+    "email" : { },
+    "phone" : { },
+    "password" : { },
+    "cpf" : { },
+    "role" : {
+      "enum" : [ "ADMIN", "CLIENT", "MANAGER", "ENGINEER" ]
+    }
+  }
+};
+            defs["HistoryChangesDto"] = {
+  "title" : "HistoryChangesDto",
+  "required" : [ "changedAt", "changes" ],
+  "properties" : {
+    "changedAt" : {
+      "format" : "date-time"
+    },
+    "changes" : {
+      "additionalProperties" : { }
+    }
+  }
+};
+            defs["InventoryItemOutputDto"] = {
+  "title" : "InventoryItemOutputDto",
+  "required" : [ "id", "isActive", "minimumQuantity", "name", "quantity", "sku", "unitPrice" ],
+  "properties" : {
+    "id" : { },
+    "sku" : { },
+    "name" : { },
+    "description" : { },
+    "quantity" : { },
+    "minimumQuantity" : { },
+    "unitPrice" : { },
+    "isActive" : { }
+  }
+};
             defs["LoginInputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.login.resources.dto.LoginInputDto",
+  "title" : "LoginInputDto",
   "required" : [ "password", "userName" ],
   "properties" : {
     "userName" : { },
@@ -775,11 +794,11 @@
   }
 };
             defs["Nothing"] = {
-  "title" : "kotlin.Nothing",
+  "title" : "Nothing",
   "properties" : { }
 };
             defs["ServiceOrderInputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderInputDto",
+  "title" : "ServiceOrderInputDto",
   "required" : [ "clientId", "complaint", "operatorId", "tasksIds", "vehicleId" ],
   "properties" : {
     "clientId" : { },
@@ -796,63 +815,18 @@
   }
 };
             defs["ServiceOrderOutputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
+  "title" : "ServiceOrderOutputDto",
   "required" : [ "client", "code", "complaint", "expectedMinutes", "id", "operator", "status", "tasks", "totalPrice", "vehicle" ],
   "properties" : {
     "id" : { },
     "client" : {
-      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
-      "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
-      "properties" : {
-        "id" : { },
-        "addressId" : { },
-        "companyId" : { },
-        "firstName" : { },
-        "lastName" : { },
-        "email" : { },
-        "phone" : { },
-        "cpf" : { },
-        "isActive" : { },
-        "createdAt" : { },
-        "updatedAt" : { }
-      }
+      "$ref" : "#/components/schemas/UserOutputDto"
     },
     "operator" : {
-      "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
-      "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
-      "properties" : {
-        "id" : { },
-        "addressId" : { },
-        "companyId" : { },
-        "firstName" : { },
-        "lastName" : { },
-        "email" : { },
-        "phone" : { },
-        "cpf" : { },
-        "isActive" : { },
-        "createdAt" : { },
-        "updatedAt" : { }
-      }
+      "$ref" : "#/components/schemas/UserOutputDto"
     },
     "vehicle" : {
-      "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
-      "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
-      "properties" : {
-        "id" : { },
-        "userId" : { },
-        "plate" : { },
-        "brand" : { },
-        "model" : { },
-        "color" : { },
-        "year" : { },
-        "mileage" : { },
-        "chassis" : { },
-        "fuelType" : {
-          "enum" : [ "GASOLINE", "ETHANOL", "FLEX", "DIESEL", "ELECTRIC", "HYBRID" ]
-        },
-        "createdAt" : { },
-        "updatedAt" : { }
-      }
+      "$ref" : "#/components/schemas/VehicleOutputDto"
     },
     "status" : {
       "enum" : [ "CREATED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
@@ -863,163 +837,85 @@
     "totalPrice" : { },
     "diagnosis" : { },
     "tasks" : {
-      "$ref" : "#/components/schemas/kotlin.collections.ArrayList"
+      "items" : {
+        "$ref" : "#/components/schemas/TaskOutputDto"
+      }
     },
     "inventoryItems" : {
       "items" : {
-        "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
-        "required" : [ "id", "isActive", "minimumQuantity", "name", "quantity", "sku", "unitPrice" ],
-        "properties" : {
-          "id" : { },
-          "sku" : { },
-          "name" : { },
-          "description" : { },
-          "quantity" : { },
-          "minimumQuantity" : { },
-          "unitPrice" : {
-            "title" : "com.khrix.domain.valueobject.Price",
-            "required" : [ "value" ],
-            "properties" : {
-              "value" : { }
-            }
-          },
-          "isActive" : { }
-        }
+        "$ref" : "#/components/schemas/InventoryItemOutputDto"
+      }
+    }
+  }
+};
+            defs["ServiceOrderOutputDto2"] = {
+  "title" : "ServiceOrderOutputDto2",
+  "required" : [ "client", "code", "complaint", "expectedMinutes", "id", "operator", "status", "tasks", "totalPrice", "vehicle" ],
+  "properties" : {
+    "id" : { },
+    "client" : {
+      "$ref" : "#/components/schemas/UserOutputDto"
+    },
+    "operator" : {
+      "$ref" : "#/components/schemas/UserOutputDto"
+    },
+    "vehicle" : {
+      "$ref" : "#/components/schemas/VehicleOutputDto"
+    },
+    "status" : {
+      "enum" : [ "CREATED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
+    },
+    "complaint" : { },
+    "code" : { },
+    "expectedMinutes" : { },
+    "totalPrice" : { },
+    "diagnosis" : { },
+    "tasks" : {
+      "items" : {
+        "$ref" : "#/components/schemas/TaskOutputDto"
+      }
+    },
+    "inventoryItems" : {
+      "items" : {
+        "$ref" : "#/components/schemas/InventoryItemOutputDto"
       }
     }
   }
 };
             defs["ServiceOrderWithHistoryOutputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderWithHistoryOutputDto",
+  "title" : "ServiceOrderWithHistoryOutputDto",
   "required" : [ "history", "serviceOrder" ],
   "properties" : {
     "serviceOrder" : {
-      "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.ServiceOrderOutputDto",
-      "required" : [ "client", "code", "complaint", "expectedMinutes", "id", "operator", "status", "tasks", "totalPrice", "vehicle" ],
-      "properties" : {
-        "id" : { },
-        "client" : {
-          "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
-          "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
-          "properties" : {
-            "id" : { },
-            "addressId" : { },
-            "companyId" : { },
-            "firstName" : { },
-            "lastName" : { },
-            "email" : { },
-            "phone" : { },
-            "cpf" : { },
-            "isActive" : { },
-            "createdAt" : { },
-            "updatedAt" : { }
-          }
-        },
-        "operator" : {
-          "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
-          "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
-          "properties" : {
-            "id" : { },
-            "addressId" : { },
-            "companyId" : { },
-            "firstName" : { },
-            "lastName" : { },
-            "email" : { },
-            "phone" : { },
-            "cpf" : { },
-            "isActive" : { },
-            "createdAt" : { },
-            "updatedAt" : { }
-          }
-        },
-        "vehicle" : {
-          "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
-          "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
-          "properties" : {
-            "id" : { },
-            "userId" : { },
-            "plate" : { },
-            "brand" : { },
-            "model" : { },
-            "color" : { },
-            "year" : { },
-            "mileage" : { },
-            "chassis" : { },
-            "fuelType" : {
-              "enum" : [ "GASOLINE", "ETHANOL", "FLEX", "DIESEL", "ELECTRIC", "HYBRID" ]
-            },
-            "createdAt" : { },
-            "updatedAt" : { }
-          }
-        },
-        "status" : {
-          "enum" : [ "CREATED", "WAITING_APPROVAL", "REJECT_BY_CLIENT", "IN_DIAGNOSIS", "IN_PROGRESS", "FINISHED", "DELIVERED", "CANCELLED" ]
-        },
-        "complaint" : { },
-        "code" : { },
-        "expectedMinutes" : { },
-        "totalPrice" : { },
-        "diagnosis" : { },
-        "tasks" : {
-          "items" : {
-            "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.TaskOutputDto",
-            "required" : [ "category", "estimatedMinutes", "id", "isActive", "name", "price", "status" ],
-            "properties" : {
-              "id" : { },
-              "name" : { },
-              "description" : { },
-              "estimatedMinutes" : { },
-              "price" : { },
-              "isActive" : { },
-              "category" : {
-                "enum" : [ "ENGINE", "SUSPENSION", "BRAKES", "ELECTRICAL", "ALIGNMENT", "AIR_CONDITIONING", "DIAGNOSTIC", "GENERAL_REVIEW" ]
-              },
-              "status" : {
-                "enum" : [ "NOT_STARTED", "IN_PROGRESS", "COMPLETE" ]
-              }
-            }
-          }
-        },
-        "inventoryItems" : {
-          "items" : {
-            "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.InventoryItemOutputDto",
-            "required" : [ "id", "isActive", "minimumQuantity", "name", "quantity", "sku", "unitPrice" ],
-            "properties" : {
-              "id" : { },
-              "sku" : { },
-              "name" : { },
-              "description" : { },
-              "quantity" : { },
-              "minimumQuantity" : { },
-              "unitPrice" : {
-                "title" : "com.khrix.domain.valueobject.Price",
-                "required" : [ "value" ],
-                "properties" : {
-                  "value" : { }
-                }
-              },
-              "isActive" : { }
-            }
-          }
-        }
-      }
+      "$ref" : "#/components/schemas/ServiceOrderOutputDto2"
     },
     "history" : {
       "items" : {
-        "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.HistoryChangesDto",
-        "required" : [ "changedAt", "changes" ],
-        "properties" : {
-          "changedAt" : { },
-          "changes" : {
-            "additionalProperties" : { }
-          }
-        }
+        "$ref" : "#/components/schemas/HistoryChangesDto"
       }
     }
   }
 };
+            defs["TaskOutputDto"] = {
+  "title" : "TaskOutputDto",
+  "required" : [ "category", "estimatedMinutes", "id", "isActive", "name", "price", "status" ],
+  "properties" : {
+    "id" : { },
+    "name" : { },
+    "description" : { },
+    "estimatedMinutes" : { },
+    "price" : { },
+    "isActive" : { },
+    "category" : {
+      "enum" : [ "ENGINE", "SUSPENSION", "BRAKES", "ELECTRICAL", "ALIGNMENT", "AIR_CONDITIONING", "DIAGNOSTIC", "GENERAL_REVIEW" ]
+    },
+    "status" : {
+      "enum" : [ "NOT_STARTED", "IN_PROGRESS", "COMPLETE" ]
+    }
+  }
+};
             defs["UpdateServiceOrderInputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.serviceorder.resources.dto.UpdateServiceOrderInputDto",
+  "title" : "UpdateServiceOrderInputDto",
   "required" : [ "code", "operatorRole" ],
   "properties" : {
     "code" : { },
@@ -1040,7 +936,7 @@
   }
 };
             defs["UserInputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserInputDto",
+  "title" : "UserInputDto",
   "required" : [ "id" ],
   "properties" : {
     "id" : { },
@@ -1055,7 +951,7 @@
   }
 };
             defs["UserOutputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.user.resources.dto.UserOutputDto",
+  "title" : "UserOutputDto",
   "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
   "properties" : {
     "id" : { },
@@ -1067,12 +963,37 @@
     "phone" : { },
     "cpf" : { },
     "isActive" : { },
-    "createdAt" : { },
-    "updatedAt" : { }
+    "createdAt" : {
+      "format" : "date-time"
+    },
+    "updatedAt" : {
+      "format" : "date-time"
+    }
+  }
+};
+            defs["UserOutputDto2"] = {
+  "title" : "UserOutputDto2",
+  "required" : [ "addressId", "cpf", "createdAt", "email", "firstName", "id", "isActive", "lastName", "phone", "updatedAt" ],
+  "properties" : {
+    "id" : { },
+    "addressId" : { },
+    "companyId" : { },
+    "firstName" : { },
+    "lastName" : { },
+    "email" : { },
+    "phone" : { },
+    "cpf" : { },
+    "isActive" : { },
+    "createdAt" : {
+      "format" : "date-time"
+    },
+    "updatedAt" : {
+      "format" : "date-time"
+    }
   }
 };
             defs["VehicleInputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleInputDto",
+  "title" : "VehicleInputDto",
   "required" : [ "brand", "chassis", "color", "fuelType", "model", "ownerId", "plate", "year" ],
   "properties" : {
     "id" : { },
@@ -1090,7 +1011,7 @@
   }
 };
             defs["VehicleOutputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleOutputDto",
+  "title" : "VehicleOutputDto",
   "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
   "properties" : {
     "id" : { },
@@ -1105,12 +1026,40 @@
     "fuelType" : {
       "enum" : [ "GASOLINE", "ETHANOL", "FLEX", "DIESEL", "ELECTRIC", "HYBRID" ]
     },
-    "createdAt" : { },
-    "updatedAt" : { }
+    "createdAt" : {
+      "format" : "date-time"
+    },
+    "updatedAt" : {
+      "format" : "date-time"
+    }
+  }
+};
+            defs["VehicleOutputDto2"] = {
+  "title" : "VehicleOutputDto2",
+  "required" : [ "brand", "chassis", "color", "createdAt", "fuelType", "mileage", "model", "plate", "updatedAt", "userId", "year" ],
+  "properties" : {
+    "id" : { },
+    "userId" : { },
+    "plate" : { },
+    "brand" : { },
+    "model" : { },
+    "color" : { },
+    "year" : { },
+    "mileage" : { },
+    "chassis" : { },
+    "fuelType" : {
+      "enum" : [ "GASOLINE", "ETHANOL", "FLEX", "DIESEL", "ELECTRIC", "HYBRID" ]
+    },
+    "createdAt" : {
+      "format" : "date-time"
+    },
+    "updatedAt" : {
+      "format" : "date-time"
+    }
   }
 };
             defs["VehicleUpdateInputDto"] = {
-  "title" : "com.khrix.adapter.inbound.http.controllers.vehicles.resources.dto.VehicleUpdateInputDto",
+  "title" : "VehicleUpdateInputDto",
   "required" : [ "id" ],
   "properties" : {
     "id" : { },
@@ -1135,11 +1084,11 @@
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="Default"><a href="#api-Default">API Methods - Default</a></li>
+                    <li data-group="Default" data-name="healthGet" class="">
+                      <a href="#api-Default-healthGet">healthGet</a>
+                    </li>
                     <li data-group="Default" data-name="loginPost" class="">
                       <a href="#api-Default-loginPost">loginPost</a>
-                    </li>
-                    <li data-group="Default" data-name="openapiGet" class="">
-                      <a href="#api-Default-openapiGet">openapiGet</a>
                     </li>
                     <li data-group="Default" data-name="put" class="">
                       <a href="#api-Default-put">put</a>
@@ -1207,6 +1156,203 @@
         <div id="sections">
                 <section id="api-Default">
                   <h1>Default</h1>
+                    <div id="api-Default-healthGet">
+                      <article id="api-Default-healthGet-0" data-group="User" data-name="healthGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>healthGet</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/health</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-healthGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-healthGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-healthGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-healthGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-healthGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-healthGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-healthGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-healthGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-healthGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-healthGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-healthGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-healthGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+"//health"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-healthGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        
+        DefaultApi apiInstance = new DefaultApi();
+        try {
+            apiInstance.healthGet();
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#healthGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-healthGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        try {
+            apiInstance.healthGet();
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#healthGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-healthGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-healthGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+[apiInstance healthGetWithCompletionHandler: 
+              ^(NSError* error) {
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-healthGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var MotorDeskApi = require('motor_desk_api');
+
+var api = new MotorDeskApi.DefaultApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.healthGet(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-healthGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-healthGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class healthGetExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new DefaultApi();
+
+            try
+            {
+                apiInstance.healthGet();
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.healthGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-healthGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+
+try {
+    $api_instance->healthGet();
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->healthGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-healthGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+
+eval { 
+    $api_instance->healthGet();
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->healthGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-healthGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+
+try: 
+    api_instance.health_get()
+except ApiException as e:
+    print("Exception when calling DefaultApi->healthGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+
+                          <h2>Responses</h2>
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Default-loginPost">
                       <article id="api-Default-loginPost-0" data-group="User" data-name="loginPost" data-version="0">
                         <div class="pull-left">
@@ -1488,9 +1634,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/AuthenticateOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/AuthenticateOutputDto"
           },
           "status" : { },
           "errors" : {
@@ -1547,9 +1691,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -1585,203 +1727,6 @@ except ApiException as e:
                                 </div>
                             </div>
 
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Default-openapiGet">
-                      <article id="api-Default-openapiGet-0" data-group="User" data-name="openapiGet" data-version="0">
-                        <div class="pull-left">
-                          <h1>openapiGet</h1>
-                          <p></p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked"></p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/openapi/{**}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-openapiGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-openapiGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-openapiGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-openapiGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-openapiGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-openapiGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-openapiGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-openapiGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-openapiGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-openapiGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-openapiGet-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-openapiGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
-"//openapi/{**}"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Default-openapiGet-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.DefaultApi;
-
-import java.io.File;
-import java.util.*;
-
-public class DefaultApiExample {
-
-    public static void main(String[] args) {
-        
-        DefaultApi apiInstance = new DefaultApi();
-        try {
-            apiInstance.openapiGet();
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#openapiGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Default-openapiGet-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
-
-public class DefaultApiExample {
-
-    public static void main(String[] args) {
-        DefaultApi apiInstance = new DefaultApi();
-        try {
-            apiInstance.openapiGet();
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#openapiGet");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Default-openapiGet-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Default-openapiGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">
-DefaultApi *apiInstance = [[DefaultApi alloc] init];
-
-[apiInstance openapiGetWithCompletionHandler: 
-              ^(NSError* error) {
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-openapiGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var MotorDeskApi = require('motor_desk_api');
-
-var api = new MotorDeskApi.DefaultApi()
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
-};
-api.openapiGet(callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Default-openapiGet-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Default-openapiGet-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class openapiGetExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new DefaultApi();
-
-            try
-            {
-                apiInstance.openapiGet();
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling DefaultApi.openapiGet: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-openapiGet-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiDefaultApi();
-
-try {
-    $api_instance->openapiGet();
-} catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->openapiGet: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-openapiGet-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::DefaultApi;
-
-my $api_instance = WWW::SwaggerClient::DefaultApi->new();
-
-eval { 
-    $api_instance->openapiGet();
-};
-if ($@) {
-    warn "Exception when calling DefaultApi->openapiGet: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-openapiGet-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.DefaultApi()
-
-try: 
-    api_instance.openapi_get()
-except ApiException as e:
-    print("Exception when calling DefaultApi->openapiGet: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-
-
-
-
-
-                          <h2>Responses</h2>
                         </article>
                       </div>
                       <hr>
@@ -2076,9 +2021,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderWithHistoryOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/ServiceOrderWithHistoryOutputDto"
           },
           "status" : { },
           "errors" : {
@@ -2135,9 +2078,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -2457,9 +2398,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/AuthenticateOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/AuthenticateOutputDto"
           },
           "status" : { },
           "errors" : {
@@ -2516,9 +2455,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -2848,9 +2785,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/AuthenticateOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/AuthenticateOutputDto"
           },
           "status" : { },
           "errors" : {
@@ -2907,9 +2842,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -3186,9 +3119,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/UserOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/UserOutputDto2"
           },
           "status" : { },
           "errors" : {
@@ -3245,9 +3176,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -3577,9 +3506,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/AuthenticateOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/AuthenticateOutputDto"
           },
           "status" : { },
           "errors" : {
@@ -3636,9 +3563,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -4028,9 +3953,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -4087,9 +4010,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -4401,9 +4322,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderWithHistoryOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/ServiceOrderWithHistoryOutputDto"
           },
           "status" : { },
           "errors" : {
@@ -4460,9 +4379,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -4740,7 +4657,7 @@ except ApiException as e:
         "properties" : {
           "data" : {
             "items" : {
-              "$ref" : "#/components/schemas/ServiceOrderOutputDto"
+              "$ref" : "#/components/schemas/ServiceOrderOutputDto2"
             }
           },
           "status" : { },
@@ -4798,9 +4715,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -5354,9 +5269,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/ServiceOrderOutputDto"
           },
           "status" : { },
           "errors" : {
@@ -5413,9 +5326,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -5745,9 +5656,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/ServiceOrderOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/ServiceOrderOutputDto"
           },
           "status" : { },
           "errors" : {
@@ -5804,9 +5713,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -6136,9 +6043,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/VehicleOutputDto"
-            }, { } ]
+            "$ref" : "#/components/schemas/VehicleOutputDto2"
           },
           "status" : { },
           "errors" : {
@@ -6195,9 +6100,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -6509,9 +6412,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -6568,9 +6469,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -6906,9 +6805,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -7238,9 +7135,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {
@@ -7297,9 +7192,7 @@ except ApiException as e:
       "schema" : {
         "properties" : {
           "data" : {
-            "oneOf" : [ {
-              "$ref" : "#/components/schemas/Nothing"
-            }, { } ]
+            "$ref" : "#/components/schemas/Nothing"
           },
           "status" : { },
           "errors" : {

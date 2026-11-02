@@ -62,6 +62,8 @@ jobs:
 
       - name: Validate deployment configuration
         shell: bash
+        env:
+          NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
         run: |
           set -euo pipefail
           for tool in aws docker terraform kubectl helm envsubst curl; do
@@ -69,6 +71,7 @@ jobs:
           done
           test -n "$AWS_REGION" || { echo "::error::Set AWS_REGION in the GitHub Environment."; exit 1; }
           test -n "$AWS_TF_BACKEND_BUCKET" || { echo "::error::Set AWS_TF_BACKEND_BUCKET in the GitHub Environment."; exit 1; }
+          test -n "$NEW_RELIC_LICENSE_KEY" || { echo "::error::Set NEW_RELIC_LICENSE_KEY as a GitHub Environment secret."; exit 1; }
           if [[ "${{ inputs.confirm_apply }}" == "true" && "${{ inputs.confirm_data_cutover }}" != "true" ]]; then
             echo "::error::Confirm an EFS recovery point and maintenance window before deploying."
             exit 1
@@ -158,4 +161,6 @@ jobs:
       - name: Apply Kubernetes YAML workloads
         if: inputs.confirm_apply
         shell: bash
+        env:
+          NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
         run: bash infra/kubernetes/deploy-workloads.sh

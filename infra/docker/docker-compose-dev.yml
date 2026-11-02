@@ -54,8 +54,8 @@ services:
     container_name: motordesk_mongo
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:?Set MONGO_USER for the local MongoDB container}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Set MONGO_PASSWORD for the local MongoDB container}
+      MONGO_INITDB_ROOT_USERNAME: motordesk
+      MONGO_INITDB_ROOT_PASSWORD: motordesk_pass
     ports:
       - "127.0.0.1:27017:27017"
     volumes:
@@ -74,6 +74,17 @@ services:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
+
+  grafana-lgtm:
+    image: grafana/otel-lgtm:latest
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver (traces, metrics, logs)
+      - "4318:4318"   # OTLP HTTP receiver
+      - "3000:3000"   # Grafana UI
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    restart: unless-stopped
 
 volumes:
   sonarqube_data:
