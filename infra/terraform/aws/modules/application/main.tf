@@ -219,7 +219,7 @@ resource "aws_efs_file_system" "mongo" {
   throughput_mode  = "bursting"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
@@ -251,7 +251,7 @@ resource "aws_efs_access_point" "mongo" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 

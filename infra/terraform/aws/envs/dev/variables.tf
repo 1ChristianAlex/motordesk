@@ -9,6 +9,12 @@ variable "terraform_state_bucket" {
   type        = string
 }
 
+variable "eks_public_access_cidrs" {
+  description = "IPv4 CIDRs allowed to access the EKS API. Empty keeps the API endpoint private."
+  type        = list(string)
+  default     = []
+}
+
 variable "ses_from_address" {
   description = "Sender identity verified in Amazon SES."
   type        = string

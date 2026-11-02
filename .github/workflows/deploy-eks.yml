@@ -31,7 +31,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, linux, eks-private]
+    runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
@@ -65,7 +65,7 @@ jobs:
         run: |
           set -euo pipefail
           for tool in aws docker terraform kubectl helm envsubst curl; do
-            command -v "$tool" >/dev/null || { echo "::error::$tool is required on the private runner."; exit 1; }
+            command -v "$tool" >/dev/null || { echo "::error::$tool is required on the GitHub-hosted runner."; exit 1; }
           done
           test -n "$AWS_REGION" || { echo "::error::Set AWS_REGION in the GitHub Environment."; exit 1; }
           test -n "$AWS_TF_BACKEND_BUCKET" || { echo "::error::Set AWS_TF_BACKEND_BUCKET in the GitHub Environment."; exit 1; }
@@ -74,7 +74,19 @@ jobs:
             exit 1
           fi
 
+      - name: Restrict EKS endpoint access to this runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          runner_public_ip=$(curl -4fsS https://api.ipify.org)
+          [[ "$runner_public_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]] || {
+            echo "::error::Could not determine a valid IPv4 address for this runner."
+            exit 1
+          }
+          printf 'TF_VAR_eks_public_access_cidrs=["%s/32"]\n' "$runner_public_ip" >> "$GITHUB_ENV"
+
       - name: Configure Terraform credentials
+        id: terraform_credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_TERRAFORM_ACCESS_KEY_ID }}
@@ -147,7 +159,7 @@ jobs:
           docker build --file infra/docker/Dockerfile --tag "$ECR_REPOSITORY_URL:$IMAGE_TAG" .
           docker push "$ECR_REPOSITORY_URL:$IMAGE_TAG"
 
-      - name: Configure private cluster access
+      - name: Configure EKS access from this runner
         if: inputs.confirm_apply
         shell: bash
         run: aws eks update-kubeconfig --name "$EKS_CLUSTER_NAME" --region "$AWS_REGION"
@@ -161,3 +173,27 @@ jobs:
         if: inputs.confirm_apply
         shell: bash
         run: bash infra/kubernetes/deploy-workloads.sh
+
+      - name: Configure Terraform credentials for endpoint cleanup
+        id: cleanup_credentials
+        if: always() && inputs.confirm_apply && steps.terraform_credentials.outcome == 'success'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_TERRAFORM_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_TERRAFORM_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Restore private-only EKS endpoint
+        if: always() && inputs.confirm_apply && steps.cleanup_credentials.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          terraform -chdir="$AWS_TF_ROOT" init -input=false \
+            -backend-config="bucket=$AWS_TF_BACKEND_BUCKET" \
+            -backend-config="region=$AWS_REGION"
+          terraform -chdir="$AWS_TF_ROOT" apply -input=false -auto-approve \
+            -var="aws_region=$AWS_REGION" \
+            -var="terraform_state_bucket=$AWS_TF_BACKEND_BUCKET" \
+            -var="api_domain_name=$API_DOMAIN_NAME" \
+            -var="route53_zone_id=$ROUTE53_ZONE_ID" \
+            -var='eks_public_access_cidrs=[]'

@@ -201,11 +201,13 @@ GitHub Actions runs `CI Tests` on pull requests and pushes to `dev`/`main`; it e
 `./gradlew build`. `Terraform AWS Validation` runs format, initialization and validation for the AWS Terraform roots and checks Kubernetes
 YAML and deployment scripts. Application deployment is manual: dispatch `Deploy EKS Runtime`, select the GitHub
 Environment, and confirm the reviewed AWS plan and EFS recovery point/maintenance window. The workflow runs on a
-VPC-connected `eks-private` runner, applies AWS infrastructure, builds/pushes the immutable API image, installs Helm
-add-ons, applies Kubernetes YAML and checks workload health. The first migration removes legacy ECS/API Gateway resources,
-so this is a maintenance deployment with an outage window, not a blue/green migration. Recover application releases by
-deploying a known-good image tag; recover MongoDB only through the tested EFS restore procedure. Review the AWS plan and
-the [AWS runbook](docs/deployment/aws-migration-runbook.md) before dispatching the workflow.
+GitHub-hosted `ubuntu-latest` runner. During deployment, Terraform temporarily allows only that runner's public IPv4
+address to reach the EKS API, then restores private-only access in a cleanup step. The workflow applies AWS infrastructure,
+builds/pushes the immutable API image, installs Helm add-ons, applies Kubernetes YAML and checks workload health. The first
+migration removes legacy ECS/API Gateway resources, so this is a maintenance deployment with an outage window, not a
+blue/green migration. Roll back application releases by deploying a known-good image tag; recover MongoDB only through the
+tested EFS restore procedure. Review the AWS plan and the [AWS runbook](docs/deployment/aws-migration-runbook.md) before
+dispatching the workflow.
 
 Configure `AWS_REGION`, `AWS_TF_BACKEND_BUCKET`, and applicable API domain variables in each GitHub Environment. The AWS
 provisioning credentials and the EKS deploy credentials are separate; the latter also requires EKS access and narrowly

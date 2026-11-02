@@ -34,14 +34,15 @@ provider "aws" {
 module "application" {
   source = "../../modules/application"
 
-  environment            = "dev-cli"
-  aws_region             = var.aws_region
-  terraform_state_bucket = var.terraform_state_bucket
-  terraform_state_prefix = "dev"
-  backup_retention_days  = 1
-  ses_from_address       = var.ses_from_address
-  api_domain_name        = var.api_domain_name
-  route53_zone_id        = var.route53_zone_id
-  mongo_database         = var.mongo_database
-  mongo_options          = var.mongo_options
+  environment             = "dev-cli"
+  aws_region              = var.aws_region
+  terraform_state_bucket  = var.terraform_state_bucket
+  terraform_state_prefix  = "dev"
+  eks_public_access_cidrs = var.eks_public_access_cidrs
+  backup_retention_days   = 1
+  ses_from_address        = var.ses_from_address
+  api_domain_name         = var.api_domain_name
+  route53_zone_id         = var.route53_zone_id
+  mongo_database          = var.mongo_database
+  mongo_options           = var.mongo_options
 }
