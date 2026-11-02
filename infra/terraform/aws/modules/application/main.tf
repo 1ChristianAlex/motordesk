@@ -20,16 +20,11 @@ data "aws_availability_zones" "available" {
 locals {
   availability_zones = slice(data.aws_availability_zones.available.names, 0, 2)
   eks_cluster_name   = "${var.project_name}-${var.environment}"
-  eks_node_scaling = var.environment == "prod" ? {
+  eks_node_scaling = {
     min_size      = 2
-    max_size      = 6
+    max_size      = 4
     desired_size  = 2
-    instance_type = "t3.small"
-    } : {
-    min_size      = 1
-    max_size      = 3
-    desired_size  = 1
-    instance_type = "t3.micro"
+    instance_type = "t8i.small"
   }
 }
 

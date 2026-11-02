@@ -59,6 +59,7 @@ src/main/kotlin
 - [ADR-007 - Migration from Azure to AWS](docs/ADR/ADR-007-Migrate-Infrastructure-from-Microsoft-Azure-to-AWS.md)
 - [ADR-008 - Amazon EKS runtime migration](docs/ADR/ADR-008-Amazon-EKS-Runtime.md)
 - [TD-003 - Public EKS API endpoint exposure](docs/Technical-Debt/TD-003-Public-EKS-API-Endpoint.md)
+- [TD-004 - OIDC blocked by AWS Organizations SCP](docs/Technical-Debt/TD-004-OIDC-Blocked-by-Organization-SCP.md)
 - [Current AWS infrastructure diagram](docs/diagrams/aws-current-infrastructure.md)
 - [AWS deployment and migration runbook](docs/deployment/aws-migration-runbook.md)
 - [Kubernetes manifests and Helm deployment](infra/kubernetes/)
