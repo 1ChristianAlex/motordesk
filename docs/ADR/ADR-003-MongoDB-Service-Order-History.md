@@ -1,4 +1,4 @@
-# ADR-003 - Using MongoDB for Service Order Update History
+# ADR-003 - Using MongoDB for Service Order History
 
 ## Status
 
@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-The Service Order is the main business entity in MotorDesk. During its lifecycle it changes frequently:
+The Service Order is the main business entity in Motor Desk. During its lifecycle it changes frequently:
 
 - status updates;
 - task additions/removals;
@@ -17,22 +17,26 @@ The Service Order is the main business entity in MotorDesk. During its lifecycle
 - diagnosis updates;
 - customer approval.
 
-Besides the current state, the system must preserve a complete history for auditing and traceability without impacting
-transactional performance.
+The system needs to preserve these changes for traceability without putting history-query workloads on the transactional
+database. PostgreSQL remains the source of truth for the current Service Order state.
 
 ## Decision
 
-MongoDB will store snapshots of the Service Order whenever a relevant update occurs.
+MongoDB is used to store Service Order history entries, separate from transactional state in PostgreSQL.
 
-Each document represents the complete state of a Service Order at a specific point in time.
+The current implementation stores a change record for each history entry, not a complete snapshot of the Service Order.
+Each record contains the register identifier, a `Map<String, String>` of changes, and the change date.
 
-PostgreSQL remains the system of record for transactional data.
+## Implementation Note
 
-## Architecture
+The original snapshot-based description of this decision did not match the implementation. `RegisterHistoryDocument`
+persists `registerId`, `changes`, and `changedAt` (along with MongoDB's document `_id`); it does not persist the complete
+Service Order state. This ADR records that difference so the documented architecture describes the implemented behavior.
 
 ```mermaid
 flowchart TB
-    ServiceOrderUpdate["Service Order Update"] --> PostgreSQL["PostgreSQL<br/>(Current State)"] --> ServiceOrderHistoryRepository["ServiceOrderHistoryRepository"] --> MongoDBCollection["MongoDB Collection"] --> ServiceOrderSnapshot["Service Order Snapshot"]
+    ServiceOrderUpdate["Service Order Update"] --> PostgreSQL["PostgreSQL<br/>(Current State)"]
+    ServiceOrderUpdate --> ServiceOrderHistoryRepository["RegisterHistoryRepository"] --> MongoDBCollection["MongoDB Collection"] --> ChangeRecord["Change Record"]
 ```
 
 ## Document Structure
@@ -40,14 +44,16 @@ flowchart TB
 ``` json
 {
   "_id": "...",
-  "serviceOrder": {
-    "id": 123,
+  "registerId": 123,
+  "changes": {
     "status": "WAITING_APPROVAL"
-  }
+  },
+  "changedAt": "2025-03-08T12:34:56Z"
 }
 ```
 
-Each update creates a new document, preserving previous versions.
+Each history entry creates a new document, preserving the recorded changes and their timestamp. A document is not a
+standalone historical copy of the register.
 
 ## Alternatives Considered
 
@@ -72,10 +78,8 @@ Each update creates a new document, preserving previous versions.
 ### MongoDB
 
 **Pros**
-
 - Natural document storage
-- No normalization required
-- Snapshot-based history
+- Flexible storage for change records
 - Horizontal scalability
 - Low impact on PostgreSQL
 
@@ -83,6 +87,7 @@ Each update creates a new document, preserving previous versions.
 
 - Data duplication
 - Eventual consistency
+- Change records do not independently represent the complete historical state
 
 **Decision:** Accepted.
 
@@ -90,23 +95,23 @@ Each update creates a new document, preserving previous versions.
 
 ### Positive
 
-- Complete audit trail
+- History entries are stored independently from transactional state
 - Independent audit queries
-- Easy historical reconstruction
-- Flexible schema evolution
+- Recorded changes can be queried over time
 
 ### Negative
 
-- Higher storage usage
-- Snapshot synchronization
-- Intentional data duplication
+- The current records do not by themselves provide complete historical snapshots or guarantee reconstruction of past
+  state.
+- Eventual consistency between PostgreSQL updates and MongoDB history.
 
 ## Implementation Notes
 
 - MongoDB is used exclusively for history.
 - PostgreSQL remains the source of truth.
-- Every relevant update generates a new snapshot.
-- Access is abstracted by `ServiceOrderHistoryRepository`.
+- History entries persist the register identifier, changed fields/values, and timestamp; they do not contain a full
+  Service Order snapshot.
+- Access is abstracted by `RegisterHistoryRepository`.
 - Mongo implementation lives in `RegisterHistoryRepositoryMongoFactory`.
 
 ## Architectural Motivation
@@ -117,5 +122,4 @@ This decision aligns with:
 - Domain-Driven Design
 - Hexagonal Architecture
 - Repository single responsibility
-- Flexible document storage
-- Preservation of historical data without affecting transactional performance
+- Separation of history queries from transactional workloads
