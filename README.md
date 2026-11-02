@@ -57,6 +57,10 @@ src/main/kotlin
 - [ADR-005 - Migrating to Hexagonal Architecture](docs/ADR/ADR-005-Migrating-to-Hexagonal-Architecture.md)
 - [ADR-006 - Terraform and Microsoft Azure (superseded)](docs/ADR/ADR-006-terraform-azure.md)
 - [ADR-007 - Migration from Azure to AWS](docs/ADR/ADR-007-Migrate-Infrastructure-from-Microsoft-Azure-to-AWS.md)
+- [ADR-008 - Amazon EKS runtime migration](docs/ADR/ADR-008-Amazon-EKS-Runtime.md)
+- [Current AWS infrastructure diagram](docs/diagrams/aws-current-infrastructure.md)
+- [AWS deployment and migration runbook](docs/deployment/aws-migration-runbook.md)
+- [Kubernetes manifests and Helm deployment](infra/kubernetes/)
 - [Email Sending Sequence](docs/diagrams/send-email-sequence.md)
 - [Technical Debt - Serializable in Domain](docs/Technical-Debt/TD-001-Serializable-in-Domain.md)
 - [Business flows](docs/storytelling/)
@@ -130,12 +134,35 @@ infra/terraform/aws/
 ├── envs/dev/                # Independent dev state
 ├── envs/qa/                 # Independent QA state
 ├── envs/prod/               # Independent production state
-└── modules/application/     # Shared VPC, ECS, data services, IAM and SES
+└── modules/application/     # Shared VPC, EKS-only runtime, data services and IAM
+
+infra/kubernetes/
+├── base/                    # Kubernetes YAML for workloads and ingress
+└── helm/                    # Helm add-on versions and installer
 ```
 
 Terraform state uses S3 server-side encryption, versioning, public-access blocking, TLS-only bucket policy, and native
 S3 locking (`use_lockfile`, Terraform 1.10+). Do not reuse any previous provider's state in AWS. Legacy state and
 cloud resources are not manipulated by this repository.
+
+Terraform provisions AWS infrastructure only. Kubernetes Deployments, Services, Ingress, HPA, PDB, ConfigMaps and
+External Secrets resources are YAML under `infra/kubernetes/base`; Helm installs External Secrets Operator, Metrics
+Server, AWS Load Balancer Controller and Cluster Autoscaler. EKS is the only application runtime; there are no ECS
+services or Terraform-managed Kubernetes providers.
+
+The API is exposed by an internet-facing ALB created from the Kubernetes Ingress by AWS Load Balancer Controller. ACM
+provides HTTPS when `api_domain_name` is configured, and ExternalDNS manages the Route 53 alias when a hosted zone is
+configured. MongoDB runs as a single-replica StatefulSet and mounts the existing encrypted EFS filesystem/access point
+through a static PV with `Retain`. Terraform protects EFS and its access point from accidental destruction. External
+Secrets reads Secrets Manager and Parameter Store values without committing secret data; EKS Pod Identity grants the API
+access to SES, and OIDC/IRSA grants the load balancer controller and ExternalDNS their scoped AWS permissions.
+
+`Deploy EKS Runtime` runs on a VPC-connected runner. It plans AWS changes first; applying requires explicit confirmation
+of both the plan and an EFS recovery point/maintenance window. The first EKS-only migration removes legacy ECS/API Gateway
+resources, so expect an outage until the Ingress ALB and workloads are healthy. Review the plan before deployment.
+EKS control-plane, nodes, ALB, autoscaling, logging, EFS and NAT costs must be reviewed for the target account and region.
+See [ADR-008](docs/ADR/ADR-008-Amazon-EKS-Runtime.md) and the
+[AWS runbook](docs/deployment/aws-migration-runbook.md).
 
 Bootstrap the remote state bucket once using an AWS profile with narrowly scoped setup permissions:
 
@@ -159,49 +186,37 @@ terraform -chdir=infra/terraform/aws/envs/dev validate
 terraform -chdir=infra/terraform/aws/envs/dev plan
 ```
 
-For dev, `api_domain_name` is optional: when omitted, Terraform uses the ALB-generated DNS name over HTTP. Set a
-custom domain to enable ACM-managed HTTPS. QA and prod require `api_domain_name`. Set `ses_from_address` in ignored
-environment `.tfvars` files as needed. Terraform requests the ACM certificate and,
-when `route53_zone_id` is set, creates the DNS validation record and waits for issuance. Without a Route 53 zone, use the
-`certificate_validation_records` output to publish the DNS validation record externally and wait for ACM issuance
-before applying the HTTPS listener. Those environments redirect HTTP to HTTPS. Set `route53_zone_id` when the matching
-hosted zone is in Route 53, or create the API DNS alias externally. `desired_count` defaults to zero until an application
-image exists. The AWS module provisions MongoDB as a private, single-task ECS Fargate service with an encrypted EFS data
-volume and credentials in Secrets Manager; the API resolves it through private Cloud Map DNS. It is self-managed
-MongoDB, not a managed database service, and does not provide database replication or multi-node failover. Review backup
-retention, restore procedures, EFS performance, database sizing, cost, quotas, SES sending verification, and production
-availability before any apply. PostgreSQL and ElastiCache settings, the VPC, and ALB must be reviewed against the
-current Terraform plan before applying. The VPC and ALB use two available availability zones in the configured region.
+`api_domain_name` and `route53_zone_id` are optional in every environment. Without a custom domain, the API is reached
+through the ALB DNS name. When a domain is configured, a Route 53 hosted zone enables Terraform-managed certificate
+validation and ExternalDNS; without one, manage ACM validation and the ALB DNS alias externally. Set `ses_from_address`
+in ignored environment `.tfvars` files as needed. MongoDB remains self-managed with one replica; EFS persistence does not
+provide replication or multi-node failover. Review backup recovery, EFS restore procedures, database sizing, costs,
+quotas, SES sending verification and production availability before any apply. PostgreSQL and ElastiCache settings and
+the VPC must be reviewed against the current Terraform plan.
 PostgreSQL remains Single-AZ, and Redis automatic failover remains disabled.
 Before production, replace the database administrator credentials currently injected into the application with a
 dedicated least-privilege application database role and validate that role's grants.
 
 GitHub Actions runs `CI Tests` on pull requests and pushes to `dev`/`main`; it executes `./gradlew test` and
-`./gradlew build`. `Terraform AWS Deploy` and `Terraform AWS Validation` validate the three Terraform environments when
-infrastructure or the reusable Terraform workflow changes. Application deployment is manual: dispatch `Terraform AWS
-Deploy`, choose the GitHub Environment and `apply`, and set `confirm_apply` to true. The workflow first applies
-infrastructure, then builds and pushes the Docker image to that environment's ECR repository using the commit SHA as its
-immutable tag, and finally runs Terraform again with that `image_tag` to register the API task definition and update the
-ECS service. That final apply sets the API service desired count to one; with an empty tag Terraform sets it to zero. The
-first apply also sets the service to zero, so deploying to an already-running environment causes an interruption until the
-image push and final apply complete. A push by itself does not publish or deploy an application image.
+`./gradlew build`. `Terraform AWS Validation` runs format, initialization and validation for the AWS Terraform roots and checks Kubernetes
+YAML and deployment scripts. Application deployment is manual: dispatch `Deploy EKS Runtime`, select the GitHub
+Environment, and confirm the reviewed AWS plan and EFS recovery point/maintenance window. The workflow runs on a
+VPC-connected `eks-private` runner, applies AWS infrastructure, builds/pushes the immutable API image, installs Helm
+add-ons, applies Kubernetes YAML and checks workload health. The first migration removes legacy ECS/API Gateway resources,
+so this is a maintenance deployment with an outage window, not a blue/green migration. Recover application releases by
+deploying a known-good image tag; recover MongoDB only through the tested EFS restore procedure. Review the AWS plan and
+the [AWS runbook](docs/deployment/aws-migration-runbook.md) before dispatching the workflow.
 
-Terraform manages the ECS task definition and desired count; there is no `ignore_changes` override. Consequently, an
-independent Terraform apply without an `image_tag` plans the empty image tag and desired count zero. Pass the intended image
-tag for applies that should keep the API running. Configure the GitHub Environment secrets and variables required by the
-workflows, protect production deployment access, and do not store credentials in repository variables or Terraform state.
-The Terraform provisioner credentials must authorize infrastructure operations; the separate deploy IAM user created by
-the module is scoped to ECR publishing and ECS deployment. `AWS_REGION` and `AWS_TF_BACKEND_BUCKET` are configured as
-GitHub Environment variables. SES sender verification and production sending access must be completed in AWS before email
-delivery is expected to work.
-See [the AWS operations runbook](docs/deployment/aws-migration-runbook.md) for data migration, cutover, AWS rollback,
-and legacy-resource cleanup requirements.
+Configure `AWS_REGION`, `AWS_TF_BACKEND_BUCKET`, and applicable API domain variables in each GitHub Environment. The AWS
+provisioning credentials and the EKS deploy credentials are separate; the latter also requires EKS access and narrowly
+scoped S3 read/write access for that environment's Terraform state prefix. Protect production credentials and environment
+approvals, and never store credentials in repository variables or source control. Terraform planning requires the state
+bucket and AWS credentials. Review every plan before applying it.
 
-Terraform planning requires `AWS_TF_BACKEND_BUCKET` and AWS credentials. Review every plan before applying it.
-
-The app always uses AWS SES. ECS injects region, SES sender, and JWT metadata from Parameter Store; PostgreSQL, Redis,
-MongoDB, and JWT credentials come from Secrets Manager. AWS SDK credentials come from the task role, not static access
-keys. Local development uses the standard AWS SDK credential chain.
+The app always uses AWS SES. External Secrets Operator syncs PostgreSQL, Redis, MongoDB and JWT credentials from Secrets
+Manager, and connection settings/SES/JWT metadata from Parameter Store, into Kubernetes Secrets using distinct stores.
+The API uses EKS Pod Identity for SES rather than static AWS keys. Local development uses the standard AWS SDK
+credential chain.
 
 ### Useful Gradle tasks
 
@@ -217,5 +232,5 @@ keys. Local development uses the standard AWS SDK credential chain.
 - Domain ports live under `domain/`.
 - Use-case implementations live under `application/`.
 - Technical integrations live under `infrastructure/`.
-- AWS infrastructure is defined under `infra/terraform/aws/` and documented in ADR-007. ADR-004 and ADR-006 record
-  superseded provider decisions for historical context only.
+- AWS infrastructure is defined under `infra/terraform/aws/` and documented in ADR-007 and ADR-008. ADR-004 and ADR-006
+  record superseded provider decisions for historical context only.

@@ -34,12 +34,13 @@ provider "aws" {
 module "application" {
   source = "../../modules/application"
 
-  environment      = "qa"
-  aws_region       = var.aws_region
-  ses_from_address = var.ses_from_address
-  api_domain_name  = var.api_domain_name
-  route53_zone_id  = var.route53_zone_id
-  image_tag        = var.image_tag
-  mongo_database   = var.mongo_database
-  mongo_options    = var.mongo_options
+  environment            = "qa"
+  aws_region             = var.aws_region
+  terraform_state_bucket = var.terraform_state_bucket
+  terraform_state_prefix = "qa"
+  ses_from_address       = var.ses_from_address
+  api_domain_name        = var.api_domain_name
+  route53_zone_id        = var.route53_zone_id
+  mongo_database         = var.mongo_database
+  mongo_options          = var.mongo_options
 }

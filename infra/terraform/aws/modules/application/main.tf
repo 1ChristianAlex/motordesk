@@ -12,12 +12,25 @@ terraform {
 }
 
 data "aws_partition" "current" {}
+data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 locals {
   availability_zones = slice(data.aws_availability_zones.available.names, 0, 2)
+  eks_cluster_name   = "${var.project_name}-${var.environment}"
+  eks_node_scaling = var.environment == "prod" ? {
+    min_size      = 2
+    max_size      = 6
+    desired_size  = 2
+    instance_type = "t3.large"
+    } : {
+    min_size      = 1
+    max_size      = 3
+    desired_size  = 1
+    instance_type = "t3.medium"
+  }
 }
 
 resource "aws_ecr_repository" "api" {
@@ -51,11 +64,6 @@ resource "aws_ecr_lifecycle_policy" "api" {
       }
     }]
   })
-}
-
-resource "aws_cloudwatch_log_group" "api" {
-  name              = "/ecs/${var.project_name}/${var.environment}/api"
-  retention_in_days = 1
 }
 
 resource "aws_secretsmanager_secret" "redis_auth_token" {
@@ -143,6 +151,30 @@ resource "aws_ssm_parameter" "jwt_realm" {
   value = var.jwt_realm
 }
 
+resource "aws_ssm_parameter" "postgres_jdbc_url" {
+  name  = "/${var.project_name}/${var.environment}/database-url"
+  type  = "String"
+  value = "jdbc:postgresql://${aws_db_instance.postgres.address}:5432/${var.postgres_database_name}"
+}
+
+resource "aws_ssm_parameter" "postgres_username" {
+  name  = "/${var.project_name}/${var.environment}/database-user"
+  type  = "String"
+  value = var.postgres_admin_username
+}
+
+resource "aws_ssm_parameter" "redis_endpoint" {
+  name  = "/${var.project_name}/${var.environment}/redis-host"
+  type  = "String"
+  value = aws_elasticache_replication_group.redis.primary_endpoint_address
+}
+
+resource "aws_ssm_parameter" "mongo_database" {
+  name  = "/${var.project_name}/${var.environment}/mongo-database"
+  type  = "String"
+  value = var.mongo_database
+}
+
 resource "aws_db_subnet_group" "postgres" {
   name       = "${var.project_name}-${var.environment}-postgres"
   subnet_ids = aws_subnet.data[*].id
@@ -150,16 +182,8 @@ resource "aws_db_subnet_group" "postgres" {
 
 resource "aws_security_group" "postgres" {
   name        = "${var.project_name}-${var.environment}-postgres"
-  description = "PostgreSQL access only from the application service."
+  description = "PostgreSQL access only from EKS worker nodes."
   vpc_id      = aws_vpc.main.id
-
-  ingress {
-    description     = "PostgreSQL from ECS tasks"
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.tasks.id]
-  }
 
   egress = []
 }
@@ -195,7 +219,7 @@ resource "aws_efs_file_system" "mongo" {
   throughput_mode  = "bursting"
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 }
 
@@ -223,6 +247,11 @@ resource "aws_efs_access_point" "mongo" {
       owner_gid   = 999
       permissions = "0750"
     }
+
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
@@ -248,16 +277,8 @@ resource "aws_elasticache_subnet_group" "main" {
 
 resource "aws_security_group" "redis" {
   name        = "${var.project_name}-${var.environment}-redis"
-  description = "Redis access only from the application service."
+  description = "Redis access only from EKS worker nodes."
   vpc_id      = aws_vpc.main.id
-
-  ingress {
-    description     = "Redis TLS from ECS tasks"
-    from_port       = 6379
-    to_port         = 6379
-    protocol        = "tcp"
-    security_groups = [aws_security_group.tasks.id]
-  }
 
   egress = []
 }

@@ -3,81 +3,32 @@ name: Terraform AWS Validation
 on:
   pull_request:
     paths:
-      - "infra/terraform/aws/**"
+      - "infra/terraform/**"
+      - "infra/kubernetes/**"
+      - ".github/scripts/**"
+      - ".github/workflows/deploy-eks.yml"
       - ".github/workflows/terraform-aws.yml"
   push:
     branches:
       - dev
       - main
     paths:
-      - "infra/terraform/aws/**"
+      - "infra/terraform/**"
+      - "infra/kubernetes/**"
+      - ".github/scripts/**"
+      - ".github/workflows/deploy-eks.yml"
       - ".github/workflows/terraform-aws.yml"
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: AWS environment to manage
-        required: true
-        type: choice
-        options:
-          - dev
-          - qa
-          - prod
-      operation:
-        description: Terraform operation
-        required: true
-        default: plan
-        type: choice
-        options:
-          - plan
-          - apply
-      confirm_apply:
-        description: Confirm applying the generated plan
-        required: true
-        default: false
-        type: boolean
-  workflow_call:
-    inputs:
-      environment:
-        required: false
-        type: string
-        default: dev
-      operation:
-        required: false
-        type: string
-        default: plan
-      confirm_apply:
-        required: false
-        type: boolean
-        default: false
-      run_terraform:
-        required: false
-        type: boolean
-        default: false
-      image_tag:
-        required: false
-        type: string
-        default: ""
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: false
-      AWS_SECRET_ACCESS_KEY:
-        required: false
-      AWS_TERRAFORM_ACCESS_KEY_ID:
-        required: false
-      AWS_TERRAFORM_SECRET_ACCESS_KEY:
-        required: false
-    outputs:
-      ecr_repository_url:
-        description: ECR repository URL created by Terraform
-        value: ${{ jobs.plan-apply.outputs.ecr_repository_url }}
+
+permissions:
+  contents: read
 
 jobs:
-  validate:
+  validate-aws:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        environment: [ dev, qa, prod ]
+        environment: [dev, qa, prod]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -99,92 +50,19 @@ jobs:
         working-directory: infra/terraform/aws/envs/${{ matrix.environment }}
         run: terraform validate -no-color
 
-  plan-apply:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_call' && inputs.run_terraform)
+  validate-kubernetes-manifests:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-    outputs:
-      ecr_repository_url: ${{ steps.terraform-outputs.outputs.ecr_repository_url }}
-    concurrency:
-      group: terraform-${{ inputs.environment }}
-      cancel-in-progress: false
-    permissions:
-      contents: read
-    env:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      AWS_TF_BACKEND_BUCKET: ${{ vars.AWS_TF_BACKEND_BUCKET }}
-      DEPLOY_IMAGE_TAG: ${{ inputs.image_tag }}
-    defaults:
-      run:
-        working-directory: infra/terraform/aws/envs/${{ inputs.environment }}
     steps:
-      - name: Confirm apply request
-        if: inputs.operation == 'apply' && inputs.confirm_apply != true
-        run: |
-          echo "::error::Set confirm_apply to true before running Terraform apply."
-          exit 1
-
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          terraform_version: 1.10.0
+          bun-version: latest
 
-      - name: Validate Terraform backend configuration
+      - name: Validate Kubernetes YAML and deployment scripts
         run: |
-          if [ -z "$AWS_REGION" ]; then
-            echo "::error::Set the AWS_REGION variable in the selected GitHub Environment."
-            exit 1
-          fi
-
-          if [ -z "$AWS_TF_BACKEND_BUCKET" ]; then
-            echo "::error::Set the AWS_TF_BACKEND_BUCKET variable in the selected GitHub Environment."
-            exit 1
-          fi
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ (inputs.run_terraform && secrets.AWS_ACCESS_KEY_ID) || secrets.AWS_TERRAFORM_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ (inputs.run_terraform && secrets.AWS_SECRET_ACCESS_KEY) || secrets.AWS_TERRAFORM_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Check Terraform state bucket
-        run: |
-          if [ -z "$AWS_TF_BACKEND_BUCKET" ]; then
-            echo "::error::Set the AWS_TF_BACKEND_BUCKET variable in the selected GitHub Environment."
-            exit 1
-          fi
-
-          if ! aws s3api head-bucket --bucket "$AWS_TF_BACKEND_BUCKET"; then
-            echo "::error::Terraform state bucket '$AWS_TF_BACKEND_BUCKET' does not exist or is inaccessible. Bootstrap it with infra/terraform/aws/backend before running this workflow."
-            exit 1
-          fi
-
-      - name: Terraform Init
-        run: |
-          terraform init -input=false \
-            -backend-config="bucket=${AWS_TF_BACKEND_BUCKET}" \
-            -backend-config="region=${AWS_REGION}"
-
-      - name: Terraform Plan with Image
-        if: inputs.image_tag != ''
-        run: |
-          terraform plan -input=false -no-color -out=tfplan \
-            -var="image_tag=$DEPLOY_IMAGE_TAG"
-
-      - name: Terraform Plan no Image
-        if: inputs.image_tag == ''
-        run: |
-          terraform plan -input=false -no-color -out=tfplan
-
-      - name: Terraform Apply
-        if: inputs.operation == 'apply' && inputs.confirm_apply == true
-        run: terraform apply -input=false -auto-approve tfplan
-
-      - name: Export Terraform outputs
-        id: terraform-outputs
-        if: inputs.operation == 'apply' && inputs.confirm_apply == true
-        run: echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> "$GITHUB_OUTPUT"
+          bun .github/scripts/validate-kubernetes-yaml.js
+          bash -n infra/kubernetes/deploy-workloads.sh
+          bash -n infra/kubernetes/helm/install-addons.sh
