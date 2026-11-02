@@ -1,0 +1,10 @@
+name: Motordesk DEV
+variables:
+  - name: baseUrl
+    value: http://k8s-motordes-motordes-6ef746aa67-1367220189.us-east-2.elb.amazonaws.com
+  - secret: true
+    name: token
+    description: ""
+  - secret: true
+    name: clientToken
+    description: ""
