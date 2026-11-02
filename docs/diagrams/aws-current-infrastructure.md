@@ -76,7 +76,7 @@ flowchart TB
     ES --> API
     ES --> MS
     API -->|"Pod Identity"| SES
-    LBC -->|"OIDC / IRSA"| ALB
+    LBC -->|"Pod Identity"| ALB
     DNS -.->|"Ingress alias"| ALB
     ACM --> ALB
 
@@ -96,7 +96,7 @@ flowchart TB
 
 ## Operação e persistência
 
-- Terraform provisiona VPC, subnets, Security Groups, EKS, Node Groups, IAM/OIDC, RDS, ElastiCache, EFS, ECR e ACM.
+- Terraform provisiona VPC, subnets, Security Groups, EKS, Node Groups, IAM/Pod Identity, RDS, ElastiCache, EFS, ECR e ACM.
 - YAML declara Deployments, Services, Ingress, HPA, PDB, ConfigMaps, SecretStores/ExternalSecrets e StatefulSet.
 - Helm instala AWS Load Balancer Controller, External Secrets Operator, Metrics Server, Cluster Autoscaler e, com Route 53
   configurado, ExternalDNS.

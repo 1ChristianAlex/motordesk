@@ -45,14 +45,6 @@ output "eks_vpc_id" {
   value = aws_vpc.main.id
 }
 
-output "aws_load_balancer_controller_role_arn" {
-  value = aws_iam_role.load_balancer_controller.arn
-}
-
-output "external_dns_role_arn" {
-  value = var.route53_zone_id == "" || var.api_domain_name == "" ? "" : aws_iam_role.external_dns[0].arn
-}
-
 output "github_deploy_user_name" {
   value = aws_iam_user.github_deploy.name
 }

@@ -34,8 +34,8 @@ Each environment owns a VPC with public, private application and private data su
 - VPC CNI, CoreDNS, kube-proxy, Pod Identity Agent, EFS CSI and CloudWatch Observability EKS add-ons;
 - ECR with immutable tags, push scanning and lifecycle retention;
 - RDS PostgreSQL, ElastiCache Redis, encrypted EFS, `/mongo` access point and backup policy;
-- IAM Pod Identity roles for SES, External Secrets and EFS CSI, plus an EKS OIDC provider and scoped roles for
-  AWS Load Balancer Controller and ExternalDNS;
+- IAM Pod Identity roles for SES, External Secrets, EFS CSI, AWS Load Balancer Controller, Cluster Autoscaler and
+  optional ExternalDNS;
 - Secrets Manager, Parameter Store, ACM certificate and optional Route 53 DNS validation records.
 
 Public subnets are tagged for AWS Load Balancer Controller discovery. The controller creates the ALB from the API Ingress
@@ -53,7 +53,8 @@ ExternalSecrets. The deploy script renders only runtime identifiers from Terrafo
 the repository or workflow logs.
 
 External Secrets Operator reads Secrets Manager and Parameter Store via EKS Pod Identity. The API uses a separate Pod
-Identity role for SES. AWS Load Balancer Controller and ExternalDNS use service-account-scoped IAM roles through OIDC.
+Identity role for SES. AWS Load Balancer Controller and ExternalDNS use service-account-scoped IAM roles through EKS
+Pod Identity.
 Metrics Server provides resource metrics for HPA.
 
 MongoDB mounts the existing EFS access point through a static CSI PV with reclaim policy `Retain`. EFS and its access point

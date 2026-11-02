@@ -5,8 +5,6 @@ set -euo pipefail
 : "${EKS_CLUSTER_NAME:?EKS_CLUSTER_NAME is required}"
 : "${EKS_KUBERNETES_VERSION:?EKS_KUBERNETES_VERSION is required}"
 : "${EKS_VPC_ID:?EKS_VPC_ID is required}"
-: "${AWS_LOAD_BALANCER_CONTROLLER_ROLE_ARN:?AWS_LOAD_BALANCER_CONTROLLER_ROLE_ARN is required}"
-
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/versions.env"
 
@@ -41,7 +39,6 @@ helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-contro
   --set vpcId="$EKS_VPC_ID" \
   --set serviceAccount.create=true \
   --set serviceAccount.name=aws-load-balancer-controller \
-  --set-string "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn=$AWS_LOAD_BALANCER_CONTROLLER_ROLE_ARN" \
   --wait \
   --timeout 10m
 
@@ -58,15 +55,12 @@ helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler \
   --timeout 10m
 
 if [[ -n "${ROUTE53_ZONE_ID:-}" && -n "${API_DOMAIN_NAME:-}" ]]; then
-  : "${EXTERNAL_DNS_ROLE_ARN:?EXTERNAL_DNS_ROLE_ARN is required when Route 53 is configured}"
-
   helm upgrade --install external-dns external-dns/external-dns \
     --version "$EXTERNAL_DNS_CHART_VERSION" \
     --namespace kube-system \
     --set provider.name=aws \
     --set serviceAccount.create=true \
     --set serviceAccount.name=external-dns \
-    --set-string "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn=$EXTERNAL_DNS_ROLE_ARN" \
     --set "domainFilters={$API_DOMAIN_NAME}" \
     --set "extraArgs={--aws-zone-type=public,--zone-id-filter=$ROUTE53_ZONE_ID,--policy=upsert-only}" \
     --wait \

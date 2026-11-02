@@ -24,12 +24,12 @@ locals {
     min_size      = 2
     max_size      = 6
     desired_size  = 2
-    instance_type = "t3.large"
+    instance_type = "t3.small"
     } : {
     min_size      = 1
     max_size      = 3
     desired_size  = 1
-    instance_type = "t3.medium"
+    instance_type = "t3.micro"
   }
 }
 

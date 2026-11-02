@@ -113,8 +113,6 @@ jobs:
           eks_cluster_name EKS_CLUSTER_NAME
           eks_cluster_version EKS_KUBERNETES_VERSION
           eks_vpc_id EKS_VPC_ID
-          aws_load_balancer_controller_role_arn AWS_LOAD_BALANCER_CONTROLLER_ROLE_ARN
-          external_dns_role_arn EXTERNAL_DNS_ROLE_ARN
           api_domain_name API_DOMAIN_NAME
           api_certificate_arn API_CERTIFICATE_ARN
           efs_file_system_id EFS_FILE_SYSTEM_ID

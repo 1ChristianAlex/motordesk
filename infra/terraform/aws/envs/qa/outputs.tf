@@ -38,14 +38,6 @@ output "eks_vpc_id" {
   value = module.application.eks_vpc_id
 }
 
-output "aws_load_balancer_controller_role_arn" {
-  value = module.application.aws_load_balancer_controller_role_arn
-}
-
-output "external_dns_role_arn" {
-  value = module.application.external_dns_role_arn
-}
-
 output "mongo_credentials_secret_arn" {
   value = module.application.mongo_credentials_secret_arn
 }

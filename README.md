@@ -58,6 +58,7 @@ src/main/kotlin
 - [ADR-006 - Terraform and Microsoft Azure (superseded)](docs/ADR/ADR-006-terraform-azure.md)
 - [ADR-007 - Migration from Azure to AWS](docs/ADR/ADR-007-Migrate-Infrastructure-from-Microsoft-Azure-to-AWS.md)
 - [ADR-008 - Amazon EKS runtime migration](docs/ADR/ADR-008-Amazon-EKS-Runtime.md)
+- [TD-003 - Public EKS API endpoint exposure](docs/Technical-Debt/TD-003-Public-EKS-API-Endpoint.md)
 - [Current AWS infrastructure diagram](docs/diagrams/aws-current-infrastructure.md)
 - [AWS deployment and migration runbook](docs/deployment/aws-migration-runbook.md)
 - [Kubernetes manifests and Helm deployment](infra/kubernetes/)
@@ -155,7 +156,7 @@ provides HTTPS when `api_domain_name` is configured, and ExternalDNS manages the
 configured. MongoDB runs as a single-replica StatefulSet and mounts the existing encrypted EFS filesystem/access point
 through a static PV with `Retain`. Terraform protects EFS and its access point from accidental destruction. External
 Secrets reads Secrets Manager and Parameter Store values without committing secret data; EKS Pod Identity grants the API
-access to SES, and OIDC/IRSA grants the load balancer controller and ExternalDNS their scoped AWS permissions.
+access to SES and gives the load balancer controller and ExternalDNS scoped AWS permissions.
 
 `Deploy EKS Runtime` runs on a VPC-connected runner. It plans AWS changes first; applying requires explicit confirmation
 of both the plan and an EFS recovery point/maintenance window. The first EKS-only migration removes legacy ECS/API Gateway

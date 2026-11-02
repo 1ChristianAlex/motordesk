@@ -13,7 +13,7 @@ between Terraform for AWS resources and Kubernetes/Helm for cluster workloads.
 
 - EKS is the only application runtime. Do not provision ECS services, task definitions or clusters.
 - Terraform under `infra/terraform/aws/` provisions the VPC, subnets, security groups, EKS cluster and node groups, AWS
-  databases/services, ECR, IAM, OIDC provider, EFS, ACM and Route 53 validation records.
+  databases/services, ECR, IAM, EFS, ACM and Route 53 validation records.
 - `infra/kubernetes/base/` contains Kubernetes YAML for namespace, Deployments, Services, ConfigMaps, SecretStores,
   ExternalSecrets, Ingress, HPA, PDB and MongoDB storage/workloads.
 - Helm installs AWS Load Balancer Controller, External Secrets Operator, Metrics Server and Cluster Autoscaler. ExternalDNS
@@ -21,8 +21,9 @@ between Terraform for AWS resources and Kubernetes/Helm for cluster workloads.
 - The AWS Load Balancer Controller creates an internet-facing ALB from the API Ingress. Custom API domains and Route 53
   hosted zones are optional; when both are configured, Terraform validates the ACM certificate and ExternalDNS manages
   the API record. Otherwise, DNS and certificate validation can be managed externally.
-- Terraform creates the EKS OIDC provider and scoped IAM roles for AWS Load Balancer Controller and ExternalDNS.
-  EKS Pod Identity remains in use for the API's SES access, External Secrets and EFS CSI.
+- EKS Pod Identity provides scoped IAM roles to the AWS Load Balancer Controller, ExternalDNS, API, External Secrets,
+  EFS CSI and Cluster Autoscaler. This avoids requiring an IAM OIDC provider, whose creation is denied by the
+  organization's service control policy in the development account.
 - Secrets remain in Secrets Manager and Parameter Store. External Secrets Operator synchronizes them into Kubernetes
   Secrets; committed manifests contain references, not secret values.
 - MongoDB remains a single-replica StatefulSet on the existing EFS filesystem/access point, through a static PV with

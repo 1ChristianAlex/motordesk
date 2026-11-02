@@ -144,11 +144,6 @@ resource "aws_iam_role_policy_attachment" "efs_csi" {
   policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
 }
 
-resource "aws_iam_openid_connect_provider" "eks" {
-  url            = aws_eks_cluster.main.identity[0].oidc[0].issuer
-  client_id_list = ["sts.amazonaws.com"]
-}
-
 resource "aws_iam_role" "load_balancer_controller" {
   name = "${local.eks_cluster_name}-aws-load-balancer-controller"
   assume_role_policy = jsonencode({
@@ -156,13 +151,15 @@ resource "aws_iam_role" "load_balancer_controller" {
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Federated = aws_iam_openid_connect_provider.eks.arn
+        Service = "pods.eks.amazonaws.com"
       }
-      Action = "sts:AssumeRoleWithWebIdentity"
+      Action = ["sts:AssumeRole", "sts:TagSession"]
       Condition = {
         StringEquals = {
-          "${replace(aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")}:aud" = "sts.amazonaws.com"
-          "${replace(aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:aws-load-balancer-controller"
+          "aws:SourceAccount" = data.aws_caller_identity.current.account_id
+        }
+        ArnEquals = {
+          "aws:SourceArn" = "arn:${data.aws_partition.current.partition}:eks:${var.aws_region}:${data.aws_caller_identity.current.account_id}:cluster/${local.eks_cluster_name}"
         }
       }
     }]
@@ -188,13 +185,15 @@ resource "aws_iam_role" "external_dns" {
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Federated = aws_iam_openid_connect_provider.eks.arn
+        Service = "pods.eks.amazonaws.com"
       }
-      Action = "sts:AssumeRoleWithWebIdentity"
+      Action = ["sts:AssumeRole", "sts:TagSession"]
       Condition = {
         StringEquals = {
-          "${replace(aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")}:aud" = "sts.amazonaws.com"
-          "${replace(aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:external-dns"
+          "aws:SourceAccount" = data.aws_caller_identity.current.account_id
+        }
+        ArnEquals = {
+          "aws:SourceArn" = "arn:${data.aws_partition.current.partition}:eks:${var.aws_region}:${data.aws_caller_identity.current.account_id}:cluster/${local.eks_cluster_name}"
         }
       }
     }]
@@ -226,6 +225,32 @@ resource "aws_iam_role_policy" "external_dns" {
       }
     ]
   })
+}
+
+resource "aws_eks_pod_identity_association" "load_balancer_controller" {
+  cluster_name    = aws_eks_cluster.main.name
+  namespace       = "kube-system"
+  service_account = "aws-load-balancer-controller"
+  role_arn        = aws_iam_role.load_balancer_controller.arn
+
+  depends_on = [
+    aws_iam_role_policy_attachment.load_balancer_controller,
+    aws_eks_addon.pod_identity_agent
+  ]
+}
+
+resource "aws_eks_pod_identity_association" "external_dns" {
+  count = var.route53_zone_id == "" || var.api_domain_name == "" ? 0 : 1
+
+  cluster_name    = aws_eks_cluster.main.name
+  namespace       = "kube-system"
+  service_account = "external-dns"
+  role_arn        = aws_iam_role.external_dns[0].arn
+
+  depends_on = [
+    aws_iam_role_policy.external_dns,
+    aws_eks_addon.pod_identity_agent
+  ]
 }
 
 resource "aws_iam_role" "cluster_autoscaler" {
