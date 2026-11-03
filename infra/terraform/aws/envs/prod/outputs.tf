@@ -34,6 +34,10 @@ output "api_domain_name" {
   value = module.application.api_domain_name
 }
 
+output "api_waf_web_acl_arn" {
+  value = module.application.api_waf_web_acl_arn
+}
+
 output "eks_vpc_id" {
   value = module.application.eks_vpc_id
 }
