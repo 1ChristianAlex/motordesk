@@ -25,10 +25,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: eks-deploy-${{ inputs.environment }}
-  cancel-in-progress: false
-
 jobs:
   deploy:
     uses: 1ChristianAlex/motordesk-infrastructure/.github/workflows/deploy-eks.yml@main

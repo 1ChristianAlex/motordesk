@@ -61,6 +61,7 @@ src/main/kotlin
 - [ADR-008 - Amazon EKS runtime migration](docs/ADR/ADR-008-Amazon-EKS-Runtime.md)
 - [ADR-009 - New Relic online observability and Grafana localhost use](docs/ADR/ADR-009-Observability-New-Relic-and-Grafana.md)
 - [ADR-010 - AWS WAF API authentication boundary](docs/ADR/ADR-010-AWS-WAF-API-authentication-boundary.md)
+- [ADR-011 - Separating application and infrastructure repositories](docs/ADR/ADR-011-GitHub-Actions-Infrastructure-Repository.md)
 - [API authentication boundary and route classification](docs/security/api-authentication-boundary.md)
 - [TD-003 - Public EKS API endpoint exposure](docs/Technical-Debt/TD-003-Public-EKS-API-Endpoint.md)
 - [TD-004 - OIDC blocked by AWS Organizations SCP](docs/Technical-Debt/TD-004-OIDC-Blocked-by-Organization-SCP.md)
