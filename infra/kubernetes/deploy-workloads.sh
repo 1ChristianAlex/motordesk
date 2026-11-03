@@ -171,7 +171,7 @@ check_auth_boundary() {
   local expected_edge_response="$2"
   local authorization_header="${3:-}"
   local request_path="${4:-/service-order/manager/list}"
-  local headers_file status
+  local headers_file status attempt
   local -a request_args
 
   headers_file="$(mktemp)"
@@ -193,13 +193,35 @@ check_auth_boundary() {
   fi
 
   local has_edge_marker=false
-  if grep --ignore-case --quiet '^X-MotorDesk-Edge-Auth: required' "$headers_file"; then
-    has_edge_marker=true
-  fi
+  for attempt in {1..12}; do
+    has_edge_marker=false
+    if grep --ignore-case --quiet '^X-MotorDesk-Edge-Auth: required' "$headers_file"; then
+      has_edge_marker=true
+    fi
+
+    if [[ "$status" == "401" && "$has_edge_marker" == "$expected_edge_response" ]]; then
+      break
+    fi
+
+    if [[ "$attempt" -lt 12 ]]; then
+      sleep 5
+      if ! status="$(curl --silent --show-error --max-time 15 \
+        "${request_args[@]}" \
+        --dump-header "$headers_file" \
+        --output /dev/null \
+        --write-out '%{http_code}' \
+        "$api_base_url$request_path")"; then
+        rm -f "$headers_file"
+        echo "::error::Authentication-boundary request failed for $test_name."
+        collect_ingress_diagnostics
+        exit 1
+      fi
+    fi
+  done
   rm -f "$headers_file"
 
   if [[ "$status" != "401" || "$has_edge_marker" != "$expected_edge_response" ]]; then
-    echo "::error::Authentication-boundary check failed for $test_name (HTTP $status, edge response: $has_edge_marker)."
+    echo "::error::Authentication-boundary check failed for $test_name after waiting for WAF propagation (HTTP $status, edge response: $has_edge_marker)."
     collect_ingress_diagnostics
     exit 1
   fi
