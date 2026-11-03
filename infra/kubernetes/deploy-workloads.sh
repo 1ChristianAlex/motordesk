@@ -16,6 +16,7 @@ set -euo pipefail
 : "${MONGO_SECRET_ARN:?MONGO_SECRET_ARN is required}"
 : "${PARAMETER_STORE_PREFIX:?PARAMETER_STORE_PREFIX is required}"
 : "${NEW_RELIC_LICENSE_KEY:?NEW_RELIC_LICENSE_KEY is required}"
+: "${WAF_WEB_ACL_ARN:?WAF_WEB_ACL_ARN is required}"
 export MONGO_OPTIONS="${MONGO_OPTIONS:-}"
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
@@ -77,8 +78,10 @@ if [[ "$ENVIRONMENT" == "prod" ]]; then
 fi
 
 kubectl rollout status deployment/motordesk-api --namespace motordesk --timeout=10m
-kubectl apply -f "$BASE_DIR/ingress.yaml"
+envsubst '${WAF_WEB_ACL_ARN}' < "$BASE_DIR/ingress.yaml" | kubectl apply -f -
 
+api_base_url=""
+curl_connection_args=()
 if [[ -n "$API_DOMAIN_NAME" ]]; then
   if [[ -z "$API_CERTIFICATE_ARN" ]]; then
     echo "::error::A custom API domain requires a validated ACM certificate."
@@ -142,20 +145,68 @@ if [[ "$dns_resolved" != "true" ]]; then
 fi
 
 if [[ -n "$API_DOMAIN_NAME" ]]; then
+  api_base_url="https://$API_DOMAIN_NAME"
+  curl_connection_args=(--connect-to "$API_DOMAIN_NAME:443:$ingress_hostname:443")
   if ! curl --fail --silent --show-error --retry 12 --retry-delay 10 --retry-connrefused \
     --retry-all-errors --max-time 15 \
-    --connect-to "$API_DOMAIN_NAME:443:$ingress_hostname:443" \
-    "https://$API_DOMAIN_NAME/health"; then
+    "${curl_connection_args[@]}" \
+    "$api_base_url/health"; then
     echo "::error::The API health check failed through the ALB."
     collect_ingress_diagnostics
     exit 1
   fi
 else
+  api_base_url="http://$ingress_hostname"
   if ! curl --fail --silent --show-error --retry 12 --retry-delay 10 --retry-connrefused \
     --retry-all-errors --max-time 15 \
-    "http://$ingress_hostname/health"; then
+    "$api_base_url/health"; then
     echo "::error::The API health check failed through the ALB."
     collect_ingress_diagnostics
     exit 1
   fi
 fi
+
+check_auth_boundary() {
+  local test_name="$1"
+  local expected_edge_response="$2"
+  local authorization_header="${3:-}"
+  local request_path="${4:-/service-order/manager/list}"
+  local headers_file status
+  local -a request_args
+
+  headers_file="$(mktemp)"
+  request_args=("${curl_connection_args[@]}")
+  if [[ -n "$authorization_header" ]]; then
+    request_args+=(--header "$authorization_header")
+  fi
+
+  if ! status="$(curl --silent --show-error --max-time 15 \
+    "${request_args[@]}" \
+    --dump-header "$headers_file" \
+    --output /dev/null \
+    --write-out '%{http_code}' \
+    "$api_base_url$request_path")"; then
+    rm -f "$headers_file"
+    echo "::error::Authentication-boundary request failed for $test_name."
+    collect_ingress_diagnostics
+    exit 1
+  fi
+
+  local has_edge_marker=false
+  if grep --ignore-case --quiet '^X-MotorDesk-Edge-Auth: required' "$headers_file"; then
+    has_edge_marker=true
+  fi
+  rm -f "$headers_file"
+
+  if [[ "$status" != "401" || "$has_edge_marker" != "$expected_edge_response" ]]; then
+    echo "::error::Authentication-boundary check failed for $test_name (HTTP $status, edge response: $has_edge_marker)."
+    collect_ingress_diagnostics
+    exit 1
+  fi
+}
+
+check_auth_boundary "missing Authorization header" true
+check_auth_boundary "non-Bearer Authorization header" true "Authorization: Basic invalid"
+check_auth_boundary "syntactically present Bearer header" false "Authorization: Bearer invalid"
+check_auth_boundary "unclassified route with Bearer header" true "Authorization: Bearer invalid" "/unclassified"
+check_auth_boundary "trailing-slash route variant with Bearer header" true "Authorization: Bearer invalid" "/service-order/manager/list/"

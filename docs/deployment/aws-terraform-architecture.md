@@ -46,6 +46,13 @@ Public subnets are tagged for AWS Load Balancer Controller discovery. The contro
 and manages its target groups/security-group rules. ExternalDNS manages the custom-domain alias only when a Route 53 zone
 is configured. If no hosted zone is configured, DNS records must be created externally.
 
+Terraform provisions a regional AWS WAFv2 Web ACL and the Ingress attaches it to the ALB. The ACL allows only documented
+public routes and known protected routes with a Bearer scheme, returning 401 for unclassified method/path combinations.
+Ktor remains responsible for JWT verification and authorization. See the [API route
+classification](../security/api-authentication-boundary.md) and [ADR-010](../ADR/ADR-010-AWS-WAF-API-authentication-boundary.md).
+WAF metrics are enabled, but sampled requests and request logging are disabled to avoid collecting Authorization values.
+AWS WAF adds per-ACL, per-rule and request charges; confirm current regional pricing before deployment.
+
 Review current EKS, EC2, ALB, NAT, EFS, database and CloudWatch costs and regional quotas before apply. Node sizes and
 database defaults are not load-tested recommendations.
 

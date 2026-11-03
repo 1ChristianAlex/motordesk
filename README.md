@@ -60,6 +60,8 @@ src/main/kotlin
 - [ADR-007 - Migration from Azure to AWS](docs/ADR/ADR-007-Migrate-Infrastructure-from-Microsoft-Azure-to-AWS.md)
 - [ADR-008 - Amazon EKS runtime migration](docs/ADR/ADR-008-Amazon-EKS-Runtime.md)
 - [ADR-009 - New Relic online observability and Grafana localhost use](docs/ADR/ADR-009-Observability-New-Relic-and-Grafana.md)
+- [ADR-010 - AWS WAF API authentication boundary](docs/ADR/ADR-010-AWS-WAF-API-authentication-boundary.md)
+- [API authentication boundary and route classification](docs/security/api-authentication-boundary.md)
 - [TD-003 - Public EKS API endpoint exposure](docs/Technical-Debt/TD-003-Public-EKS-API-Endpoint.md)
 - [TD-004 - OIDC blocked by AWS Organizations SCP](docs/Technical-Debt/TD-004-OIDC-Blocked-by-Organization-SCP.md)
 - [Current AWS infrastructure diagram](docs/diagrams/aws-current-infrastructure.md)
@@ -161,9 +163,12 @@ log forwarding remains disabled to avoid duplicate collection. The backend's exi
 unchanged. See the [New Relic Kubernetes observability runbook](infra/kubernetes/newrelic/README.md) for deployment,
 secrets, validation and troubleshooting.
 
-The API is exposed by an internet-facing ALB created from the Kubernetes Ingress by AWS Load Balancer Controller. ACM
+The API is exposed by an internet-facing ALB created from the Kubernetes Ingress by AWS Load Balancer Controller and
+protected by an AWS WAFv2 authentication boundary. Ktor remains responsible for JWT validation and authorization. ACM
 provides HTTPS when `api_domain_name` is configured, and ExternalDNS manages the Route 53 alias when a hosted zone is
-configured. MongoDB runs as a single-replica StatefulSet and mounts the existing encrypted EFS filesystem/access point
+configured. Without a custom domain and ACM certificate, the ALB DNS endpoint is HTTP-only. See the [API security route
+classification](docs/security/api-authentication-boundary.md) and [ADR-010](docs/ADR/ADR-010-AWS-WAF-API-authentication-boundary.md).
+MongoDB runs as a single-replica StatefulSet and mounts the existing encrypted EFS filesystem/access point
 through a static PV with `Retain`. Terraform protects EFS and its access point from accidental destruction. External
 Secrets reads Secrets Manager and Parameter Store values without committing secret data; EKS Pod Identity grants the API
 access to SES and gives the load balancer controller and ExternalDNS scoped AWS permissions.

@@ -38,13 +38,17 @@ the credentials and restrict that scope as a follow-up hardening measure.
 
 ## API ingress and DNS
 
-The AWS Load Balancer Controller reconciles `infra/kubernetes/base/ingress.yaml` into an internet-facing ALB. When
-`api_domain_name` and `route53_zone_id` are both optional in every environment. Without a custom domain, use the ALB
-hostname. When both values are configured, Terraform creates the ACM DNS validation record and ExternalDNS manages the
-Ingress alias. If a custom domain is used without a hosted zone, manage ACM validation and the ALB alias externally.
+The AWS Load Balancer Controller reconciles `infra/kubernetes/base/ingress.yaml` into an internet-facing ALB.
+`api_domain_name` and `route53_zone_id` are optional in every environment. Without a custom domain, use the ALB hostname
+over HTTP; the ALB DNS name does not provide TLS. When both values are configured, Terraform creates the ACM DNS
+validation record and ExternalDNS manages the Ingress alias. If a custom domain is used without a hosted zone, manage ACM
+validation and the ALB alias externally.
 
 ALB ingress requires the public subnet discovery tags created by Terraform. The controller is configured with region and
-VPC ID explicitly rather than relying on pod access to EC2 instance metadata.
+VPC ID explicitly rather than relying on pod access to EC2 instance metadata. Terraform provisions a regional AWS WAFv2
+Web ACL and exports its ARN to the deploy workflow; the Ingress is applied with that ARN before the ALB is reconciled.
+Do not remove the WAF annotation or apply the Ingress with an empty `WAF_WEB_ACL_ARN`. See the [API authentication
+boundary](../security/api-authentication-boundary.md) for routes and manual checks.
 
 ## MongoDB data safety
 
@@ -87,7 +91,8 @@ validation as a workaround.
 
 ## Post-deployment checks
 
-- API `/health`, authentication and representative Service Order operations;
+- API `/health` and the deployment checks for missing, non-Bearer, and invalid Bearer credentials on a protected Service
+  Order route;
 - PostgreSQL reads/writes and connection limits;
 - MongoDB history reads/writes and persistence across pod replacement;
 - Redis Streams and SES delivery;

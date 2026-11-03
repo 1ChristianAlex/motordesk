@@ -6,6 +6,10 @@ output "api_domain_name" {
   value = var.api_domain_name
 }
 
+output "api_waf_web_acl_arn" {
+  value = aws_wafv2_web_acl.api.arn
+}
+
 output "api_certificate_arn" {
   value = var.api_domain_name == "" ? "" : aws_acm_certificate_validation.api[0].certificate_arn
 }
