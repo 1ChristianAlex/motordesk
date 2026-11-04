@@ -1,6 +1,10 @@
 name: Deploy EKS Runtime
 
 on:
+  push:
+    tags:
+      - '**'
+
   workflow_dispatch:
     inputs:
       environment:
@@ -26,13 +30,13 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  build-deploy-eks:
     uses: 1ChristianAlex/motordesk-infrastructure/.github/workflows/deploy-eks.yml@main
 
     with:
-      environment: ${{ inputs.environment }}
-      confirm_apply: ${{ inputs.confirm_apply }}
-      confirm_data_cutover: ${{ inputs.confirm_data_cutover }}
+      environment: ${{ github.event_name == 'push' && 'dev' || inputs.environment }}
+      confirm_apply: ${{ github.event_name == 'push' && true || inputs.confirm_apply }}
+      confirm_data_cutover: ${{ github.event_name == 'push' && true || inputs.confirm_data_cutover }}
 
       aws_region: ${{ vars.AWS_REGION }}
       aws_tf_backend_bucket: ${{ vars.AWS_TF_BACKEND_BUCKET }}
